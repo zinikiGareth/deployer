@@ -1,0 +1,26 @@
+{
+	"folders": [
+		{
+			"name": "GoldenTester",
+			"path": "golden"
+		}
+	],
+	"launch": {
+		"configurations": [
+			{
+				"name": "golden tests",
+				"type": "go",
+				"request": "launch",
+				"program": "${workspaceFolder}/cmd/golden",
+				"args": [
+						"${workspaceFolder}/goldencases"
+				]
+			},
+		],
+		"compounds": []
+	},
+	"tasks": {
+		"version": "2.0.0",
+		"tasks": []
+	}
+}
