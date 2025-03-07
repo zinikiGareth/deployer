@@ -1,2 +1,4 @@
 golden/cmd/golden/golden
+vsix/out/
 *.so
+*.vsix

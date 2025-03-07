@@ -15,6 +15,10 @@
 		{
 			"name": "TestMod",
 			"path": "testmod"
+		},
+		{
+			"name": "VSCode",
+			"path": "vsix"
 		}
 	],
 	"launch": {
