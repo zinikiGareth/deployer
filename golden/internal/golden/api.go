@@ -86,7 +86,6 @@ func mergeOrders(curr, coll []string) []string {
 }
 
 func runCase(root, dir string) {
-	fmt.Printf("Run Case %s under %s\n", dir, root)
 	run, err := runner.NewTestRunner(root, dir)
 	if err != nil {
 		fmt.Println(err)

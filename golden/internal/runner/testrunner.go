@@ -2,35 +2,36 @@ package runner
 
 import (
 	"fmt"
-	"os"
 	"path/filepath"
-	"strings"
+
+	"ziniki.org/deployer/deployer/pkg/deployer"
 )
 
 type TestRunner struct {
-	base  string
-	input []string
+	deployer *deployer.Deployer
+	base     string
+	test     string
+	scripts  string
 }
 
 func (r *TestRunner) Run() {
-	fmt.Printf("%s\n", r.base)
-	for _, f := range r.input {
-		fmt.Printf("Process input file %s\n", f)
+	fmt.Printf("%s:\n", r.test)
+	err := r.deployer.ReadScriptsFrom(r.scripts)
+	if err != nil {
+		fmt.Printf("Error reading scripts from %s: %v\n", r.scripts, err)
+		return
+	}
+	err = r.deployer.Deploy()
+	if err != nil {
+		fmt.Printf("Error deploying: %v\n", err)
+		return
 	}
 }
 
 func NewTestRunner(root, test string) (*TestRunner, error) {
 	base := filepath.Join(root, test)
 	scripts := filepath.Join(base, "scripts")
-	files, err := os.ReadDir(scripts)
-	if err != nil {
-		return nil, fmt.Errorf("could not read script directory %s: %v", scripts, err)
-	}
-	deployFiles := make([]string, 0)
-	for _, f := range files {
-		if !f.IsDir() && strings.HasSuffix(f.Name(), ".dply") {
-			deployFiles = append(deployFiles, f.Name())
-		}
-	}
-	return &TestRunner{base: base, input: deployFiles}, nil
+	deployer := deployer.NewDeployer()
+
+	return &TestRunner{base: base, test: test, scripts: scripts, deployer: deployer}, nil
 }
