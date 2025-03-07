@@ -1,0 +1,3 @@
+This is a simple file that just has one target in it that does nothing
+
+    target installOnAws
