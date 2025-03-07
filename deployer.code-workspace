@@ -1,6 +1,10 @@
 {
 	"folders": [
 		{
+			"name": "Deployer",
+			"path": "deployer"
+		},
+		{
 			"name": "GoldenTester",
 			"path": "golden"
 		}
@@ -11,9 +15,9 @@
 				"name": "golden tests",
 				"type": "go",
 				"request": "launch",
-				"program": "${workspaceFolder}/cmd/golden",
+				"program": "${workspaceFolder:GoldenTester}/cmd/golden",
 				"args": [
-						"${workspaceFolder}/goldencases"
+						"${workspaceFolder:GoldenTester}/goldencases"
 				]
 			},
 		],
