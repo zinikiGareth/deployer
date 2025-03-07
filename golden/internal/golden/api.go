@@ -6,12 +6,14 @@ import (
 	"os"
 	"path/filepath"
 	"slices"
+
+	"ziniki.org/deployer/golden/internal/runner"
 )
 
 func RunTestsUnder(root string) {
 	merged := gatherTestsInOrder(root)
 	for _, s := range merged {
-		fmt.Printf("Run Case %s\n", s)
+		runCase(root, s)
 	}
 }
 
@@ -81,4 +83,14 @@ func mergeOrders(curr, coll []string) []string {
 		}
 	}
 	return curr
+}
+
+func runCase(root, dir string) {
+	fmt.Printf("Run Case %s under %s\n", dir, root)
+	run, err := runner.NewTestRunner(root, dir)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	run.Run()
 }
