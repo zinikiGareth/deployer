@@ -10,11 +10,76 @@ import (
 	"ziniki.org/deployer/golden/internal/runner"
 )
 
-func RunTestsUnder(root string) {
+type GoldenRunner struct {
+	modules  []string
+	testdirs []string
+}
+
+func NewGoldenRunner(args []string) (*GoldenRunner, error) {
+	ret := &GoldenRunner{}
+	i := 0
+	for i < len(args) {
+		switch args[i] {
+		case "-m":
+			fallthrough
+		case "--module":
+			i++
+			mod, err := nextArg(args, i, "there is no argument module")
+			if err != nil {
+				return nil, err
+			}
+			ret.UseModule(mod)
+		default:
+			ret.RunTestsUnder(args[i])
+		}
+		i++
+	}
+
+	return ret, nil
+}
+
+func nextArg(args []string, i int, err string) (string, error) {
+	if i == len(args) {
+		return "", fmt.Errorf("%v", err)
+	}
+	return args[i], nil
+}
+
+func (r *GoldenRunner) UseModule(path string) {
+	r.modules = append(r.modules, path)
+}
+
+func (r *GoldenRunner) RunTestsUnder(root string) {
+	r.testdirs = append(r.testdirs, root)
+}
+
+func (r *GoldenRunner) RunAll() {
+	for _, p := range r.testdirs {
+		r.runOne(p)
+	}
+}
+
+func (r *GoldenRunner) runOne(root string) {
 	merged := gatherTestsInOrder(root)
 	for _, s := range merged {
-		runCase(root, s)
+		r.runCase(root, s)
 	}
+}
+
+func (r *GoldenRunner) runCase(root, dir string) {
+	run, err := runner.NewTestRunner(root, dir)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	for _, m := range r.modules {
+		err := run.Module(m)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+	}
+	run.Run()
 }
 
 func gatherTestsInOrder(root string) []string {
@@ -83,13 +148,4 @@ func mergeOrders(curr, coll []string) []string {
 		}
 	}
 	return curr
-}
-
-func runCase(root, dir string) {
-	run, err := runner.NewTestRunner(root, dir)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	run.Run()
 }

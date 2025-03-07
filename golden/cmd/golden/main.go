@@ -13,7 +13,11 @@ func main() {
 		return
 	}
 
-	for _, d := range os.Args[1:] {
-		golden.RunTestsUnder(d)
+
+	harness, err := golden.NewGoldenRunner(os.Args[1:])
+	if err != nil {
+		fmt.Println(err)
+		return
 	}
+	harness.RunAll()
 }

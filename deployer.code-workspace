@@ -7,6 +7,14 @@
 		{
 			"name": "GoldenTester",
 			"path": "golden"
+		},
+		{
+			"name": "CoreMod",
+			"path": "coremod"
+		},
+		{
+			"name": "TestMod",
+			"path": "testmod"
 		}
 	],
 	"launch": {
@@ -17,7 +25,11 @@
 				"request": "launch",
 				"program": "${workspaceFolder:GoldenTester}/cmd/golden",
 				"args": [
-						"${workspaceFolder:GoldenTester}/goldencases"
+					"--module",
+					"${workspaceFolder:CoreMod}/plugin/coremod.so",
+					"--module",
+					"${workspaceFolder:TestMod}/plugin/testmod.so",
+					"${workspaceFolder:GoldenTester}/goldencases"
 				]
 			},
 		],
