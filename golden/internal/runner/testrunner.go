@@ -42,7 +42,7 @@ func (r *TestRunner) Setup(modules []string) error {
 		return err
 	}
 
-	r.tracker.UseDirectory(r.out)
+	r.tracker.NewCase(r.test, r.out)
 
 	return r.LoadModules(modules)
 }

@@ -3,7 +3,6 @@ package errors
 import (
 	"fmt"
 	"os"
-	"path/filepath"
 
 	"ziniki.org/deployer/deployer/pkg/deployer"
 )
@@ -14,9 +13,10 @@ type TestErrorHandler interface {
 }
 
 type FileErrorHandler struct {
-	tofile string
-	file   *os.File
-	failed bool
+	tracker *CaseTracker
+	tofile  string
+	file    *os.File
+	failed  bool
 }
 
 func (eh *FileErrorHandler) Write(bs []byte) (int, error) {
@@ -48,6 +48,7 @@ func (eh *FileErrorHandler) Writef(msg string, args ...any) {
 
 func (eh *FileErrorHandler) Fail() {
 	eh.failed = true
+	eh.tracker.Fail()
 }
 
 func (eh *FileErrorHandler) Close() {
@@ -63,10 +64,4 @@ func (eh *FileErrorHandler) ensureOpen() error {
 	var err error
 	eh.file, err = os.Create(eh.tofile)
 	return err
-}
-
-// TODO: this should be part of something bigger
-func NewErrorHandler(outdir, purpose string) TestErrorHandler {
-	file := filepath.Join(outdir, "errors-"+purpose)
-	return &FileErrorHandler{tofile: file}
 }

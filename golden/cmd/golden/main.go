@@ -19,4 +19,6 @@ func main() {
 		return
 	}
 	harness.RunAll()
+	errs := harness.Report()
+	os.Exit(errs)
 }

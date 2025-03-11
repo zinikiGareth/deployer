@@ -27,6 +27,10 @@ func (r *GoldenRunner) RunAll() {
 	}
 }
 
+func (r *GoldenRunner) Report() int {
+	return r.tracker.Report()
+}
+
 func (r *GoldenRunner) runOne(root string) {
 	merged := gatherTestsInOrder(root)
 	for _, s := range merged {
