@@ -1,4 +1,4 @@
-package runner
+package errors
 
 import (
 	"fmt"
@@ -7,6 +7,11 @@ import (
 
 	"ziniki.org/deployer/deployer/pkg/deployer"
 )
+
+type TestErrorHandler interface {
+	deployer.ErrorHandler
+	Fail()
+}
 
 type FileErrorHandler struct {
 	tofile string
@@ -61,7 +66,7 @@ func (eh *FileErrorHandler) ensureOpen() error {
 }
 
 // TODO: this should be part of something bigger
-func NewErrorHandler(outdir, purpose string) deployer.ErrorHandler {
+func NewErrorHandler(outdir, purpose string) TestErrorHandler {
 	file := filepath.Join(outdir, "errors-"+purpose)
 	return &FileErrorHandler{tofile: file}
 }

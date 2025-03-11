@@ -9,16 +9,52 @@ import (
 
 	"ziniki.org/deployer/deployer/pkg/deployer"
 	"ziniki.org/deployer/deployer/pkg/utils"
+	"ziniki.org/deployer/golden/internal/errors"
 )
 
 type TestRunner struct {
-	deployer    *deployer.Deployer
-	base        string
-	test        string
-	out         string
-	scripts     string
-	scopes      string
-	errhandlers map[string]deployer.ErrorHandler
+	tracker  *errors.CaseTracker
+	deployer *deployer.Deployer
+	base     string
+	test     string
+	out      string
+	scripts  string
+	scopes   string
+}
+
+func (r *TestRunner) Run(modules []string) {
+	err := r.Setup(modules)
+	if err != nil {
+		fmt.Printf("Error during setup: %v\n", err)
+		return
+	}
+
+	r.TestScopes(r.tracker.ErrorHandlerFor("scopes").(errors.TestErrorHandler))
+	r.TestDeployment(r.tracker.ErrorHandlerFor("deploy").(errors.TestErrorHandler))
+
+	r.WrapUp()
+}
+
+func (r *TestRunner) Setup(modules []string) error {
+	fmt.Printf("%s:\n", r.test)
+	err := utils.EnsureCleanDir(r.out)
+	if err != nil {
+		return err
+	}
+
+	r.tracker.UseDirectory(r.out)
+
+	return r.LoadModules(modules)
+}
+
+func (r *TestRunner) LoadModules(modules []string) error {
+	for _, m := range modules {
+		err := r.Module(m)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func (r *TestRunner) Module(mod string) error {
@@ -41,56 +77,11 @@ func (r *TestRunner) Module(mod string) error {
 	return init.(func(*deployer.Deployer) error)(r.deployer)
 }
 
-func (r *TestRunner) ErrorHandlerFor(what string) deployer.ErrorHandler {
-	eh := r.errhandlers[what]
-	if eh == nil {
-		eh = NewErrorHandler(r.out, what)
-		r.errhandlers[what] = eh
-	}
-	return eh
-}
-
-func (r *TestRunner) Run(modules []string) {
-	fmt.Printf("%s:\n", r.test)
-	err := utils.EnsureDir(r.out)
-	if err != nil {
-		fmt.Printf("Error ensuring %s: %v\n", r.out, err)
-		return
-	}
-
-	for _, m := range modules {
-		err := r.Module(m)
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-	}
-
-	r.TestScopes(r.ErrorHandlerFor("scopes"))
-	err = r.deployer.ReadScriptsFrom(r.scripts)
-	if err != nil {
-		fmt.Printf("Error reading scripts from %s: %v\n", r.scripts, err)
-		return
-	}
-	err = r.deployer.Deploy()
-	if err != nil {
-		fmt.Printf("Error deploying: %v\n", err)
-		return
-	}
-	r.WrapUp()
-}
-
-func (r *TestRunner) WrapUp() {
-	for _, eh := range r.errhandlers {
-		eh.Close()
-	}
-}
-
-func (r *TestRunner) TestScopes(eh deployer.ErrorHandler) {
+func (r *TestRunner) TestScopes(eh errors.TestErrorHandler) {
 	testIn := filepath.Join(r.base, "scope-test")
 
 	// Make sure clean directory exists
-	err := utils.EnsureDir(testIn)
+	err := utils.EnsureCleanDir(testIn)
 	if err != nil {
 		fmt.Printf("error ensuring %s: %v\n", testIn, err)
 		return
@@ -100,6 +91,11 @@ func (r *TestRunner) TestScopes(eh deployer.ErrorHandler) {
 	nin, err := utils.CopyFilesFrom(r.scripts, testIn, ".dply")
 	if err != nil {
 		fmt.Printf("error copying files from %s to %s: %v\n", r.scripts, testIn, err)
+		return
+	}
+	err = utils.EnsureDir(r.scopes)
+	if err != nil {
+		fmt.Printf("error ensuring %s: %v\n", r.scopes, err)
 		return
 	}
 	nout, err := utils.CopyFilesFrom(r.scopes, testIn, ".snap")
@@ -138,7 +134,29 @@ func (r *TestRunner) TestScopes(eh deployer.ErrorHandler) {
 	}
 }
 
-func NewTestRunner(root, test string) (*TestRunner, error) {
+func (r *TestRunner) TestDeployment(eh errors.TestErrorHandler) {
+	err := r.deployer.ReadScriptsFrom(r.scripts)
+	if err != nil {
+		fmt.Printf("Error reading scripts from %s: %v\n", r.scripts, err)
+		return
+	}
+	err = r.deployer.Deploy()
+	if err != nil {
+		fmt.Printf("Error deploying: %v\n", err)
+		return
+	}
+}
+
+func (r *TestRunner) WrapUp() {
+	r.tracker.Done()
+}
+
+func (r *TestRunner) ErrorHandlerFor(purpose string) deployer.ErrorHandler {
+	return r.tracker.ErrorHandlerFor(purpose)
+}
+
+// These things belong elsewhere ...
+func NewTestRunner(tracker *errors.CaseTracker, root, test string) (*TestRunner, error) {
 	base := filepath.Join(root, test)
 	outdir := filepath.Join(base, "out")
 	scripts := filepath.Join(base, "scripts")
@@ -146,5 +164,5 @@ func NewTestRunner(root, test string) (*TestRunner, error) {
 
 	deployerInst := deployer.NewDeployer()
 
-	return &TestRunner{base: base, out: outdir, test: test, scripts: scripts, scopes: scopes, deployer: deployerInst, errhandlers: make(map[string]deployer.ErrorHandler)}, nil
+	return &TestRunner{tracker: tracker, base: base, out: outdir, test: test, scripts: scripts, scopes: scopes, deployer: deployerInst}, nil
 }

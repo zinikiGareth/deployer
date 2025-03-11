@@ -9,10 +9,9 @@ import (
 
 func main() {
 	if len(os.Args) == 1 {
-		fmt.Println("Usage: golden <test-dir-root> ...")
+		golden.Usage()
 		return
 	}
-
 
 	harness, err := golden.NewGoldenRunner(os.Args[1:])
 	if err != nil {
