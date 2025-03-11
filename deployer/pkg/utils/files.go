@@ -8,6 +8,21 @@ import (
 	"strings"
 )
 
+func EnsureDir(path string) error {
+	_, err := os.Stat(path)
+	if err == nil {
+		err = os.RemoveAll(path)
+		if err != nil {
+			return err
+		}
+	}
+	err = os.MkdirAll(path, 0777)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func FindFiles(indir, suffix string) ([]string, error) {
 	files, err := os.ReadDir(indir)
 	if err != nil {
