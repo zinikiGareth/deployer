@@ -10,6 +10,9 @@ type Deployer struct {
 	input []string
 }
 
+type TestRunner interface {
+}
+
 func (d *Deployer) ReadScriptsFrom(indir string) error {
 	input, err := utils.FindFiles(indir, ".dply")
 	if err != nil {

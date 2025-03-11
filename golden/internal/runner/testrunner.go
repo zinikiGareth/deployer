@@ -26,6 +26,13 @@ func (r *TestRunner) Module(mod string) error {
 	if err != nil {
 		return err
 	}
+	test, err := p.Lookup("ProvideTestRunner")
+	if err == nil {
+		err = test.(func(deployer.TestRunner) error)(r)
+		if err != nil {
+			return err
+		}
+	}
 	init, err := p.Lookup("RegisterWithDeployer")
 	if err != nil {
 		log.Printf("ignoring module " + mod + " as it does not have RegisterWithDeployer")
