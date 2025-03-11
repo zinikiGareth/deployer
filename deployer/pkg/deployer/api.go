@@ -2,8 +2,8 @@ package deployer
 
 import (
 	"fmt"
-	"os"
-	"strings"
+
+	"ziniki.org/deployer/deployer/pkg/utils"
 )
 
 type Deployer struct {
@@ -11,7 +11,7 @@ type Deployer struct {
 }
 
 func (d *Deployer) ReadScriptsFrom(indir string) error {
-	input, err := findFiles(indir)
+	input, err := utils.FindFiles(indir, ".dply")
 	if err != nil {
 		return err
 	}
@@ -24,20 +24,6 @@ func (d *Deployer) Deploy() error {
 		fmt.Printf("  %s\n", f)
 	}
 	return nil
-}
-
-func findFiles(indir string) ([]string, error) {
-	files, err := os.ReadDir(indir)
-	if err != nil {
-		return nil, fmt.Errorf("could not read script directory %s: %v", indir, err)
-	}
-	deployFiles := make([]string, 0)
-	for _, f := range files {
-		if !f.IsDir() && strings.HasSuffix(f.Name(), ".dply") {
-			deployFiles = append(deployFiles, f.Name())
-		}
-	}
-	return deployFiles, nil
 }
 
 func NewDeployer() *Deployer {

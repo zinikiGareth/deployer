@@ -1,0 +1,8 @@
+>This is a simple file that just has one target in it that does nothing
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>
+>    target installOnAws
+#^^^^ source.deployer-dply
+#    ^^^^^^ source.deployer-dply keyword.target
+#          ^^^^^^^^^^^^^^ source.deployer-dply
+>
