@@ -18,7 +18,7 @@ type TestRunner struct {
 	out         string
 	scripts     string
 	scopes      string
-	errhandlers map[string]ErrorHandler
+	errhandlers map[string]deployer.ErrorHandler
 }
 
 func (r *TestRunner) Module(mod string) error {
@@ -41,14 +41,32 @@ func (r *TestRunner) Module(mod string) error {
 	return init.(func(*deployer.Deployer) error)(r.deployer)
 }
 
-func (r *TestRunner) Run() {
+func (r *TestRunner) ErrorHandlerFor(what string) deployer.ErrorHandler {
+	eh := r.errhandlers[what]
+	if eh == nil {
+		eh = NewErrorHandler(r.out, what)
+		r.errhandlers[what] = eh
+	}
+	return eh
+}
+
+func (r *TestRunner) Run(modules []string) {
 	fmt.Printf("%s:\n", r.test)
 	err := utils.EnsureDir(r.out)
 	if err != nil {
 		fmt.Printf("Error ensuring %s: %v\n", r.out, err)
 		return
 	}
-	r.TestScopes(NewErrorHandler(r.out, "scopes"))
+
+	for _, m := range modules {
+		err := r.Module(m)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+	}
+
+	r.TestScopes(r.ErrorHandlerFor("scopes"))
 	err = r.deployer.ReadScriptsFrom(r.scripts)
 	if err != nil {
 		fmt.Printf("Error reading scripts from %s: %v\n", r.scripts, err)
@@ -68,7 +86,7 @@ func (r *TestRunner) WrapUp() {
 	}
 }
 
-func (r *TestRunner) TestScopes(eh ErrorHandler) {
+func (r *TestRunner) TestScopes(eh deployer.ErrorHandler) {
 	testIn := filepath.Join(r.base, "scope-test")
 
 	// Make sure clean directory exists
@@ -126,7 +144,7 @@ func NewTestRunner(root, test string) (*TestRunner, error) {
 	scripts := filepath.Join(base, "scripts")
 	scopes := filepath.Join(base, "scopes")
 
-	deployer := deployer.NewDeployer()
+	deployerInst := deployer.NewDeployer()
 
-	return &TestRunner{base: base, out: outdir, test: test, scripts: scripts, scopes: scopes, deployer: deployer}, nil
+	return &TestRunner{base: base, out: outdir, test: test, scripts: scripts, scopes: scopes, deployer: deployerInst, errhandlers: make(map[string]deployer.ErrorHandler)}, nil
 }

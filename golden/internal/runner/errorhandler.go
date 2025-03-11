@@ -2,18 +2,11 @@ package runner
 
 import (
 	"fmt"
-	"io"
 	"os"
 	"path/filepath"
-)
 
-type ErrorHandler interface {
-	io.Writer
-	WriteMsg(msg string)
-	Writef(fmt string, args ...any)
-	Fail()
-	Close()
-}
+	"ziniki.org/deployer/deployer/pkg/deployer"
+)
 
 type FileErrorHandler struct {
 	tofile string
@@ -53,7 +46,9 @@ func (eh *FileErrorHandler) Fail() {
 }
 
 func (eh *FileErrorHandler) Close() {
-	eh.file.Close()
+	if eh.file != nil {
+		eh.file.Close()
+	}
 }
 
 func (eh *FileErrorHandler) ensureOpen() error {
@@ -66,7 +61,7 @@ func (eh *FileErrorHandler) ensureOpen() error {
 }
 
 // TODO: this should be part of something bigger
-func NewErrorHandler(outdir, purpose string) ErrorHandler {
+func NewErrorHandler(outdir, purpose string) deployer.ErrorHandler {
 	file := filepath.Join(outdir, "errors-"+purpose)
 	return &FileErrorHandler{tofile: file}
 }

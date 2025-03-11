@@ -2,6 +2,7 @@ package deployer
 
 import (
 	"fmt"
+	"io"
 
 	"ziniki.org/deployer/deployer/pkg/utils"
 )
@@ -11,6 +12,15 @@ type Deployer struct {
 }
 
 type TestRunner interface {
+	ErrorHandlerFor(purpose string) ErrorHandler
+}
+
+type ErrorHandler interface {
+	io.Writer
+	WriteMsg(msg string)
+	Writef(fmt string, args ...any)
+	Fail()
+	Close()
 }
 
 func (d *Deployer) ReadScriptsFrom(indir string) error {

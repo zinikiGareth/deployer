@@ -72,14 +72,8 @@ func (r *GoldenRunner) runCase(root, dir string) {
 		fmt.Println(err)
 		return
 	}
-	for _, m := range r.modules {
-		err := run.Module(m)
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-	}
-	run.Run()
+
+	run.Run(r.modules)
 }
 
 func gatherTestsInOrder(root string) []string {
