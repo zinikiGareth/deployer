@@ -15,15 +15,16 @@ import (
 )
 
 type TestRunner struct {
-	tracker  *errors.CaseTracker
-	deployer deployer.Deployer
-	base     string
-	test     string
-	out      string
-	scripts  string
-	scopes   string
-	repoIn   string
-	repoOut  string
+	tracker    *errors.CaseTracker
+	deployer   deployer.Deployer
+	symbolLsnr *lsnrs.RepoListener
+	base       string
+	test       string
+	out        string
+	scripts    string
+	scopes     string
+	repoIn     string
+	repoOut    string
 }
 
 func (r *TestRunner) Run(modules []string) {
@@ -45,9 +46,17 @@ func (r *TestRunner) Setup(modules []string) error {
 	if err != nil {
 		return err
 	}
+	err = utils.EnsureCleanDir(r.repoOut)
+	if err != nil {
+		return err
+	}
 
 	r.tracker.NewCase(r.test, r.out)
-	r.deployer.AddSymbolListener(lsnrs.NewRepoListener(r.repoOut))
+	r.symbolLsnr, err = lsnrs.NewRepoListener(r.repoOut)
+	if err != nil {
+		return err
+	}
+	r.deployer.AddSymbolListener(r.symbolLsnr)
 
 	return r.LoadModules(modules)
 }
@@ -177,6 +186,7 @@ func (r *TestRunner) compareGoldenFiles(golden, gen string) {
 }
 
 func (r *TestRunner) WrapUp() {
+	r.symbolLsnr.Close()
 	r.tracker.Done()
 }
 

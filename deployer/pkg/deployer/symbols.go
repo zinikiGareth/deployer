@@ -1,6 +1,9 @@
 package deployer
 
+import "fmt"
+
 type SymbolListener interface {
+	ReadingFile(file string)
 	Symbol(where Location, what SymbolType, who SymbolName)
 }
 
@@ -12,6 +15,10 @@ type Location struct {
 	File   string
 	Line   int
 	Offset int
+}
+
+func (loc *Location) String() string {
+	return fmt.Sprintf("%d.%d", loc.Line, loc.Offset)
 }
 
 func NewLocation(file string, line, offset int) Location {

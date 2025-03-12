@@ -1,10 +1,13 @@
 package parser
 
-import "fmt"
+import (
+	"fmt"
+
+	"ziniki.org/deployer/deployer/pkg/deployer"
+)
 
 type BaseToken struct {
-	LineNo int
-	Offset int
+	Loc deployer.Location
 }
 
 type IdentifierToken struct {
@@ -13,13 +16,13 @@ type IdentifierToken struct {
 }
 
 func (tok *BaseToken) String() string {
-	return fmt.Sprintf("%d.%d", tok.LineNo, tok.Offset)
+	return tok.Loc.String()
 }
 
 func (tok *IdentifierToken) String() string {
 	return fmt.Sprintf("%s %s", tok.BaseToken.String(), tok.Id)
 }
 
-func NewIdentifierToken(line, offset int, text string) Token {
-	return &IdentifierToken{BaseToken: BaseToken{LineNo: line, Offset: offset}, Id: text}
+func NewIdentifierToken(file string, line, offset int, text string) Token {
+	return &IdentifierToken{BaseToken: BaseToken{Loc: deployer.NewLocation(file, line, offset)}, Id: text}
 }

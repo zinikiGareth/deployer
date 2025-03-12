@@ -30,7 +30,8 @@ func (d *DeployerImpl) Deploy() error {
 	for _, f := range d.input {
 		fmt.Printf("  %s\n", f)
 		from := filepath.Join(d.srcdir, f)
-		parser.Parse(d.repo, from)
+		d.repo.ReadingFile(f)
+		parser.Parse(d.repo, f, from)
 	}
 	return nil
 }

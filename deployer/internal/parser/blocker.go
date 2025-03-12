@@ -6,7 +6,7 @@ import (
 
 type Blocker struct {
 	indents  []string
-	handlers []ProvideLine
+	handlers []ProvideBlockedLine
 }
 
 // deffo need an error handler as well
@@ -23,7 +23,7 @@ func (b *Blocker) HaveLine(n int, txt string) {
 			panic("need to actually do blocking")
 		}
 	}
-	b.handlers[len(b.handlers)-1].HaveLine(n, line)
+	b.handlers[len(b.handlers)-1].BlockedLine(n, len(ind), line)
 }
 
 func Split(txt string) (string, string) {
@@ -46,8 +46,8 @@ func mapSpace(ch rune) rune {
 	}
 }
 
-func NewBlocker(topLevel ProvideLine) *Blocker {
+func NewBlocker(topLevel ProvideBlockedLine) *Blocker {
 	ret := &Blocker{}
-	ret.handlers = []ProvideLine{topLevel}
+	ret.handlers = []ProvideBlockedLine{topLevel}
 	return ret
 }

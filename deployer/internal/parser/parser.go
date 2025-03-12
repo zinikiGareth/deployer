@@ -5,10 +5,10 @@ import (
 )
 
 // deffo need an error handler as well
-func Parse(repo repo.Repository, file string) {
+func Parse(repo repo.Repository, fileName, file string) {
 	globalScope := &ScopedHandlers{}
-	globalInterpreter := NewInterpreter(globalScope)
-	lineLexicator := NewLineLexicator(globalInterpreter)
+	globalInterpreter := NewInterpreter(repo, globalScope)
+	lineLexicator := NewLineLexicator(globalInterpreter, fileName)
 	blocker := NewBlocker(lineLexicator)
 	provideLines(file, blocker)
 }
