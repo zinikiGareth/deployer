@@ -2,18 +2,22 @@ package impl
 
 import (
 	"fmt"
+	"path/filepath"
 
+	"ziniki.org/deployer/deployer/internal/parser"
 	"ziniki.org/deployer/deployer/internal/repo"
 	"ziniki.org/deployer/deployer/pkg/deployer"
 	"ziniki.org/deployer/deployer/pkg/utils"
 )
 
 type DeployerImpl struct {
-	repo  repo.Repository
-	input []string
+	repo   repo.Repository
+	srcdir string
+	input  []string
 }
 
 func (d *DeployerImpl) ReadScriptsFrom(indir string) error {
+	d.srcdir = indir
 	input, err := utils.FindFiles(indir, ".dply")
 	if err != nil {
 		return err
@@ -25,6 +29,8 @@ func (d *DeployerImpl) ReadScriptsFrom(indir string) error {
 func (d *DeployerImpl) Deploy() error {
 	for _, f := range d.input {
 		fmt.Printf("  %s\n", f)
+		from := filepath.Join(d.srcdir, f)
+		parser.Parse(d.repo, from)
 	}
 	return nil
 }

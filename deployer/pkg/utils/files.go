@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"bufio"
 	"fmt"
 	"io"
 	"os"
@@ -82,4 +83,19 @@ func CopyFilesFrom(from, to, suffix string) (int, error) {
 		}
 	}
 	return len(files), nil
+}
+
+func FileAsLines(file string) ([]string, error) {
+	stream, err := os.Open(file)
+	if err != nil {
+		return nil, err
+	}
+	defer stream.Close()
+	ret := make([]string, 0)
+	scanner := bufio.NewScanner(stream)
+	for scanner.Scan() {
+		f := scanner.Text()
+		ret = append(ret, f)
+	}
+	return ret, nil
 }
