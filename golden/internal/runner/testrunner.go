@@ -126,6 +126,7 @@ func (r *TestRunner) TestScopes(eh errors.TestErrorHandler) {
 		cmd.Stderr = eh
 		err := cmd.Run()
 		if err != nil {
+			eh.Writef("failed running vscode-tmgrammar-snap: %v\n", err)
 			eh.Fail()
 			return
 		}
@@ -136,6 +137,7 @@ func (r *TestRunner) TestScopes(eh errors.TestErrorHandler) {
 		cmd.Stderr = eh
 		err := cmd.Run()
 		if err != nil {
+			eh.Writef("failed running vscode-tmgrammar-snap: %v\n", err)
 			eh.Fail()
 			return
 		}
