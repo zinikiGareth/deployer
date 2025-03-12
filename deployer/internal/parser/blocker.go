@@ -1,17 +1,29 @@
 package parser
 
 import (
-	"fmt"
 	"unicode"
 )
 
 type Blocker struct {
+	indents  []string
+	handlers []ProvideLine
 }
 
 // deffo need an error handler as well
 func (b *Blocker) HaveLine(n int, txt string) {
 	ind, line := Split(txt)
-	fmt.Printf("%d: %s %s\n", n, ind, line)
+	if ind == "" {
+		return
+	}
+	if len(b.indents) == 0 {
+		b.indents = append(b.indents, ind)
+	} else {
+		last := b.indents[len(b.indents)-1]
+		if last != ind {
+			panic("need to actually do blocking")
+		}
+	}
+	b.handlers[len(b.handlers)-1].HaveLine(n, line)
 }
 
 func Split(txt string) (string, string) {
@@ -34,6 +46,8 @@ func mapSpace(ch rune) rune {
 	}
 }
 
-func NewBlocker() *Blocker {
-	return &Blocker{}
+func NewBlocker(topLevel ProvideLine) *Blocker {
+	ret := &Blocker{}
+	ret.handlers = []ProvideLine{topLevel}
+	return ret
 }
