@@ -17,7 +17,6 @@ type CaseTracker struct {
 func (tracker *CaseTracker) NewCase(caseName, dir string) {
 	tracker.caseName = caseName
 	tracker.errorDir = dir
-	tracker.failures = make(map[string][]string)
 	tracker.errhandlers = make(map[string]TestErrorHandler)
 }
 
@@ -63,5 +62,5 @@ func (tracker *CaseTracker) Report() int {
 }
 
 func NewCaseTracker() *CaseTracker {
-	return &CaseTracker{}
+	return &CaseTracker{failures: make(map[string][]string)}
 }

@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -98,4 +99,29 @@ func FileAsLines(file string) ([]string, error) {
 		ret = append(ret, f)
 	}
 	return ret, nil
+}
+
+func CompareFiles(left, right string) bool {
+	llines, e1 := FileAsLines(left)
+	if e1 != nil {
+		log.Printf("error reading %s: %v\n", left, e1)
+		return false
+	}
+	rlines, e2 := FileAsLines(right)
+	if e2 != nil {
+		log.Printf("error reading %s: %v\n", right, e2)
+		return false
+	}
+
+	if len(llines) != len(rlines) {
+		return false
+	}
+
+	for k, l := range llines {
+		if l != rlines[k] {
+			return false
+		}
+	}
+
+	return true
 }

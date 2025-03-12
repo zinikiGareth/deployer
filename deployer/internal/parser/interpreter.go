@@ -1,8 +1,6 @@
 package parser
 
 import (
-	"fmt"
-
 	"ziniki.org/deployer/deployer/internal/repo"
 )
 
@@ -12,10 +10,6 @@ type ScopeInterpreter struct {
 }
 
 func (si *ScopeInterpreter) HaveTokens(tokens []Token) {
-	for i, t := range tokens {
-		fmt.Printf("token: %d %s\n", i, t)
-	}
-
 	// There are probably a "number" of cases here, but the two I am aware of are:
 	// <verb> <arg>...
 	// <var> "<-" <verb> <arg> ...  ||  <var> "<-" <expr>

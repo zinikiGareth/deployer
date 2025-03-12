@@ -164,7 +164,8 @@ func (r *TestRunner) TestDeployment(eh errors.TestErrorHandler) {
 
 // TODO: I would like to make this its own thing
 func (r *TestRunner) compareGoldenFiles(golden, gen string) {
-	log.Printf("comparing %s to %s\n", golden, gen)
+	eh := r.tracker.ErrorHandlerFor("golden")
+	eh.Writef("comparing %s to %s\n", golden, gen)
 	goldenFiles, err1 := utils.FindFiles(golden, "")
 	genFiles, err2 := utils.FindFiles(gen, "")
 	if err1 != nil && err2 != nil {
@@ -177,11 +178,34 @@ func (r *TestRunner) compareGoldenFiles(golden, gen string) {
 	}
 	if err2 != nil {
 		// Presumably if there is a golden dir, there should be a gen dir
-		fmt.Printf("error collecting generated files from %s\n", gen)
+		eh.Writef("error collecting generated files from %s\n", gen)
 		return
 	}
+
+	// Go through the golden files, comparing to the generated ones
+	genmap := make(map[string]int)
+	for k, g := range genFiles {
+		genmap[g] = k + 1
+	}
 	for _, f := range goldenFiles {
-		log.Printf("%s %s\n", f, genFiles)
+		if genmap[f] != 0 {
+			if !utils.CompareFiles(filepath.Join(gen, f), filepath.Join(golden, f)) {
+				eh.Writef("generated file %s did not match golden file\n", f)
+				eh.Fail()
+			}
+			delete(genmap, f)
+		} else { // if there is no generated file, complain: that's a failure
+			eh.Writef("there is no gen file for %s\n", f)
+			eh.Fail()
+		}
+	}
+	// If there are any generated files which don't have golden files, let the user know and copy them
+	if len(genmap) > 0 {
+		eh.Writef("generated files were not present ... copying\n")
+		for f := range genmap {
+			fmt.Printf("  %s\n", f)
+			utils.CopyFile(filepath.Join(gen, f), filepath.Join(golden, f))
+		}
 	}
 }
 

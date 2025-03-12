@@ -17,5 +17,6 @@ type ErrorHandler interface {
 	io.Writer
 	WriteMsg(msg string)
 	Writef(fmt string, args ...any)
+	Fail()
 	Close()
 }
