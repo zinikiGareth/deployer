@@ -9,14 +9,16 @@ import (
 
 type CaseTracker struct {
 	caseName    string
-	failures    []string
 	errorDir    string
+	failures    map[string][]string
 	errhandlers map[string]TestErrorHandler
 }
 
 func (tracker *CaseTracker) NewCase(caseName, dir string) {
 	tracker.caseName = caseName
 	tracker.errorDir = dir
+	tracker.failures = make(map[string][]string)
+	tracker.errhandlers = make(map[string]TestErrorHandler)
 }
 
 func (tracker *CaseTracker) ErrorHandlerFor(what string) deployer.ErrorHandler {
@@ -30,12 +32,16 @@ func (tracker *CaseTracker) ErrorHandlerFor(what string) deployer.ErrorHandler {
 
 func (tracker *CaseTracker) NewErrorHandler(purpose string) *FileErrorHandler {
 	file := filepath.Join(tracker.errorDir, "errors-"+purpose)
-	return &FileErrorHandler{tracker: tracker, tofile: file}
+	return &FileErrorHandler{tracker: tracker, purpose: purpose, tofile: file}
 }
 
-func (tracker *CaseTracker) Fail() {
-	tracker.failures = append(tracker.failures, tracker.caseName)
+func (tracker *CaseTracker) Fail(area string) {
+	fmt.Printf("  FAIL %s\n", area)
+	areas := tracker.failures[tracker.caseName]
+	areas = append(areas, area)
+	tracker.failures[tracker.caseName] = areas
 }
+
 func (tracker *CaseTracker) Done() {
 	for _, eh := range tracker.errhandlers {
 		eh.Close()
@@ -44,9 +50,9 @@ func (tracker *CaseTracker) Done() {
 
 func (tracker *CaseTracker) Report() int {
 	if len(tracker.failures) > 0 {
-		fmt.Printf("%d failures:\n", len(tracker.failures))
-		for _, f := range tracker.failures {
-			fmt.Printf("  %s\n", f)
+		fmt.Printf("\n%d failures:\n", len(tracker.failures))
+		for f, as := range tracker.failures {
+			fmt.Printf("  %s %s\n", f, as)
 		}
 	}
 	if len(tracker.failures) > 127 {
@@ -57,5 +63,5 @@ func (tracker *CaseTracker) Report() int {
 }
 
 func NewCaseTracker() *CaseTracker {
-	return &CaseTracker{errhandlers: make(map[string]TestErrorHandler)}
+	return &CaseTracker{}
 }

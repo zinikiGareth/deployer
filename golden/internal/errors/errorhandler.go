@@ -14,6 +14,7 @@ type TestErrorHandler interface {
 
 type FileErrorHandler struct {
 	tracker *CaseTracker
+	purpose string
 	tofile  string
 	file    *os.File
 	failed  bool
@@ -48,7 +49,7 @@ func (eh *FileErrorHandler) Writef(msg string, args ...any) {
 
 func (eh *FileErrorHandler) Fail() {
 	eh.failed = true
-	eh.tracker.Fail()
+	eh.tracker.Fail(eh.purpose)
 }
 
 func (eh *FileErrorHandler) Close() {

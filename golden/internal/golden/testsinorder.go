@@ -8,12 +8,11 @@ import (
 	"slices"
 )
 
-
 func gatherTestsInOrder(root string) []string {
 	coll := make([]string, 0)
 	coll = collectFiles(coll, root, "")
 	saveTo := filepath.Join(root, "testorder")
-	curr := loadTestOrder(saveTo)
+	curr := loadTestOrder(root, saveTo)
 	merged := mergeOrders(curr, coll)
 	saveTestOrder(saveTo, merged)
 	return merged
@@ -52,7 +51,7 @@ func saveTestOrder(saveTo string, coll []string) {
 	file.Sync()
 }
 
-func loadTestOrder(loadFrom string) []string {
+func loadTestOrder(root, loadFrom string) []string {
 	file, err := os.Open(loadFrom)
 	if err != nil {
 		fmt.Printf("could not read from %s\n", loadFrom)
@@ -63,7 +62,13 @@ func loadTestOrder(loadFrom string) []string {
 	ret := make([]string, 0)
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		ret = append(ret, scanner.Text())
+		f := scanner.Text()
+		_, err := os.Stat(filepath.Join(root, f))
+		if err != nil {
+			fmt.Printf("cannot find test %s in %s, ignoring\n", f, loadFrom)
+			continue
+		}
+		ret = append(ret, f)
 	}
 	return ret
 }
