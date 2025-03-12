@@ -1,8 +1,6 @@
 package main
 
-import (
-	"ziniki.org/deployer/deployer/pkg/deployer"
-)
+import "ziniki.org/deployer/deployer/pkg/deployer"
 
 var testRunner deployer.TestRunner
 
@@ -11,7 +9,7 @@ func ProvideTestRunner(runner deployer.TestRunner) error {
 	return nil
 }
 
-func RegisterWithDeployer(deployer *deployer.Deployer) error {
+func RegisterWithDeployer(deployer deployer.Deployer) error {
 	eh := testRunner.ErrorHandlerFor("log")
 	eh.WriteMsg("Need to install things from coremod\n")
 	return nil

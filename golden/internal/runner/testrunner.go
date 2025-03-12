@@ -7,19 +7,23 @@ import (
 	"path/filepath"
 	"plugin"
 
+	"ziniki.org/deployer/deployer/pkg/creator"
 	"ziniki.org/deployer/deployer/pkg/deployer"
 	"ziniki.org/deployer/deployer/pkg/utils"
 	"ziniki.org/deployer/golden/internal/errors"
+	"ziniki.org/deployer/golden/internal/lsnrs"
 )
 
 type TestRunner struct {
 	tracker  *errors.CaseTracker
-	deployer *deployer.Deployer
+	deployer deployer.Deployer
 	base     string
 	test     string
 	out      string
 	scripts  string
 	scopes   string
+	repoIn   string
+	repoOut  string
 }
 
 func (r *TestRunner) Run(modules []string) {
@@ -43,6 +47,7 @@ func (r *TestRunner) Setup(modules []string) error {
 	}
 
 	r.tracker.NewCase(r.test, r.out)
+	r.deployer.AddSymbolListener(lsnrs.NewRepoListener(r.repoOut))
 
 	return r.LoadModules(modules)
 }
@@ -74,7 +79,7 @@ func (r *TestRunner) Module(mod string) error {
 		log.Printf("ignoring module " + mod + " as it does not have RegisterWithDeployer")
 		return nil
 	}
-	return init.(func(*deployer.Deployer) error)(r.deployer)
+	return init.(func(deployer.Deployer) error)(r.deployer)
 }
 
 func (r *TestRunner) TestScopes(eh errors.TestErrorHandler) {
@@ -145,6 +150,30 @@ func (r *TestRunner) TestDeployment(eh errors.TestErrorHandler) {
 		fmt.Printf("Error deploying: %v\n", err)
 		return
 	}
+	r.compareGoldenFiles(r.repoIn, r.repoOut)
+}
+
+// TODO: I would like to make this its own thing
+func (r *TestRunner) compareGoldenFiles(golden, gen string) {
+	log.Printf("comparing %s to %s\n", golden, gen)
+	goldenFiles, err1 := utils.FindFiles(golden, "")
+	genFiles, err2 := utils.FindFiles(gen, "")
+	if err1 != nil && err2 != nil {
+		// it's "safe" to assume it's an empty case
+		return
+	}
+	if err1 != nil {
+		// OK, it should be there.  Create it and we'll copy the files in
+		utils.EnsureDir(golden)
+	}
+	if err2 != nil {
+		// Presumably if there is a golden dir, there should be a gen dir
+		fmt.Printf("error collecting generated files from %s\n", gen)
+		return
+	}
+	for _, f := range goldenFiles {
+		log.Printf("%s %s\n", f, genFiles)
+	}
 }
 
 func (r *TestRunner) WrapUp() {
@@ -155,14 +184,15 @@ func (r *TestRunner) ErrorHandlerFor(purpose string) deployer.ErrorHandler {
 	return r.tracker.ErrorHandlerFor(purpose)
 }
 
-// These things belong elsewhere ...
 func NewTestRunner(tracker *errors.CaseTracker, root, test string) (*TestRunner, error) {
 	base := filepath.Join(root, test)
 	outdir := filepath.Join(base, "out")
+	repoin := filepath.Join(base, "repository")
+	repoout := filepath.Join(base, "repository-gen")
 	scripts := filepath.Join(base, "scripts")
 	scopes := filepath.Join(base, "scopes")
 
-	deployerInst := deployer.NewDeployer()
+	deployerInst := creator.NewDeployer()
 
-	return &TestRunner{tracker: tracker, base: base, out: outdir, test: test, scripts: scripts, scopes: scopes, deployer: deployerInst}, nil
+	return &TestRunner{tracker: tracker, base: base, out: outdir, test: test, scripts: scripts, scopes: scopes, repoIn: repoin, repoOut: repoout, deployer: deployerInst}, nil
 }
