@@ -1,6 +1,7 @@
-#!/bin/bash
+#!/bin/bash -x
 
 (cd golden/cmd/golden ; go build)
+(cd lsp/cmd/deployer-lsp ; go build)
 # (cd deployer/cmd/deployer ; go build)
 (cd coremod/plugin ; go build --buildmode=plugin -gcflags=all="-N -l" -o coremod.so)
 (cd testmod/plugin ; go build --buildmode=plugin -gcflags=all="-N -l" -o testmod.so)
