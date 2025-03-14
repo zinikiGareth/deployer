@@ -1,5 +1,5 @@
 >This is a simple file that just has one target in it that does nothing
-#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
 >
 >    target installOnAws
 #^^^^ source.deployer-dply
