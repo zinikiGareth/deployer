@@ -1,6 +1,6 @@
 package parser
 
-import "ziniki.org/deployer/deployer/internal/repo"
+import "ziniki.org/deployer/deployer/pkg/pluggable"
 
 type ProvideLine interface {
 	HaveLine(lineNo int, text string)
@@ -11,16 +11,9 @@ type ProvideBlockedLine interface {
 }
 
 type Interpreter interface {
-	HaveTokens(tokens []Token)
-}
-
-type Token interface {
-}
-
-type Action interface {
-	Handle(repo repo.Repository, tokens []Token)
+	HaveTokens(tokens []pluggable.Token)
 }
 
 type Scoper interface {
-	FindVerb(v *IdentifierToken) Action
+	FindVerb(v pluggable.Identifier) pluggable.Action
 }

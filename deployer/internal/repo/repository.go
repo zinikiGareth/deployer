@@ -1,15 +1,9 @@
 package repo
 
-import "ziniki.org/deployer/deployer/pkg/deployer"
-
-type Repository interface {
-	ReadingFile(file string)
-	IntroduceSymbol(where deployer.Location, what deployer.SymbolType, who deployer.SymbolName)
-	AddSymbolListener(lsnr deployer.SymbolListener)
-}
+import "ziniki.org/deployer/deployer/pkg/pluggable"
 
 type SimpleRepository struct {
-	symbolLsnrs []deployer.SymbolListener
+	symbolLsnrs []pluggable.SymbolListener
 }
 
 func (d *SimpleRepository) ReadingFile(file string) {
@@ -18,16 +12,16 @@ func (d *SimpleRepository) ReadingFile(file string) {
 	}
 }
 
-func (d *SimpleRepository) IntroduceSymbol(where deployer.Location, what deployer.SymbolType, who deployer.SymbolName) {
+func (d *SimpleRepository) IntroduceSymbol(where pluggable.Location, what pluggable.SymbolType, who pluggable.SymbolName) {
 	for _, lsnr := range d.symbolLsnrs {
 		lsnr.Symbol(where, what, who)
 	}
 }
 
-func (d *SimpleRepository) AddSymbolListener(lsnr deployer.SymbolListener) {
+func (d *SimpleRepository) AddSymbolListener(lsnr pluggable.SymbolListener) {
 	d.symbolLsnrs = append(d.symbolLsnrs, lsnr)
 }
 
-func NewRepository() Repository {
+func NewRepository() pluggable.Repository {
 	return &SimpleRepository{}
 }

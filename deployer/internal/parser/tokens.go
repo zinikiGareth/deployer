@@ -3,26 +3,34 @@ package parser
 import (
 	"fmt"
 
-	"ziniki.org/deployer/deployer/pkg/deployer"
+	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
 type BaseToken struct {
-	Loc deployer.Location
+	loc pluggable.Location
 }
 
 type IdentifierToken struct {
 	BaseToken
-	Id string
+	id string
+}
+
+func (tok *BaseToken) Loc() pluggable.Location {
+	return tok.loc
 }
 
 func (tok *BaseToken) String() string {
-	return tok.Loc.String()
+	return tok.loc.String()
+}
+
+func (tok *IdentifierToken) Id() string {
+	return tok.id
 }
 
 func (tok *IdentifierToken) String() string {
-	return fmt.Sprintf("%s %s", tok.BaseToken.String(), tok.Id)
+	return fmt.Sprintf("%s %s", tok.BaseToken.String(), tok.id)
 }
 
-func NewIdentifierToken(file string, line, offset int, text string) Token {
-	return &IdentifierToken{BaseToken: BaseToken{Loc: deployer.NewLocation(file, line, offset)}, Id: text}
+func NewIdentifierToken(file string, line, offset int, text string) pluggable.Identifier {
+	return &IdentifierToken{BaseToken: BaseToken{loc: pluggable.NewLocation(file, line, offset)}, id: text}
 }

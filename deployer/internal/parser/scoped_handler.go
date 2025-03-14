@@ -1,29 +1,20 @@
 package parser
 
 import (
-	"ziniki.org/deployer/deployer/internal/repo"
-	"ziniki.org/deployer/deployer/pkg/deployer"
+	"ziniki.org/deployer/deployer/internal/registry"
+	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
 type ScopedHandlers struct {
-	repo repo.Repository
+	repo   pluggable.Repository
+	recall registry.Recall
 }
 
-func (sh *ScopedHandlers) FindVerb(v *IdentifierToken) Action {
-	if v.Id == "target" {
-		return &CoreTarget{} // TODO: this should come from CoreMod
-	}
-	return nil
+func (sh *ScopedHandlers) FindVerb(v pluggable.Identifier) pluggable.Action {
+	return sh.recall.FindVerb(v.Id())
 }
 
-type CoreTarget struct {
-}
-
-func (t *CoreTarget) Handle(repo repo.Repository, tokens []Token) {
-	t1 := tokens[1].(*IdentifierToken)
-	repo.IntroduceSymbol(t1.Loc, deployer.SymbolType("core.Target"), deployer.SymbolName(t1.Id))
-}
-
-func NewScopeHandlers(repo repo.Repository) Scoper {
-	return &ScopedHandlers{repo: repo}
+func NewScopedHandlers(registry registry.Recall, repo pluggable.Repository) Scoper {
+	ret := &ScopedHandlers{repo: repo, recall: registry}
+	return ret
 }

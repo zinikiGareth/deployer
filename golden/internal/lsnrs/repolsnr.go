@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"ziniki.org/deployer/deployer/pkg/deployer"
+	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
 type RepoListener struct {
@@ -17,7 +17,7 @@ func (r *RepoListener) ReadingFile(file string) {
 	r.writeTo.WriteString(":\n")
 }
 
-func (r *RepoListener) Symbol(where deployer.Location, what deployer.SymbolType, who deployer.SymbolName) {
+func (r *RepoListener) Symbol(where pluggable.Location, what pluggable.SymbolType, who pluggable.SymbolName) {
 	r.writeTo.WriteString(fmt.Sprintf("%s %s %s\n", where.String(), what, who))
 }
 

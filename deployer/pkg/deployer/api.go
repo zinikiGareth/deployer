@@ -1,11 +1,17 @@
 package deployer
 
-import "io"
+import (
+	"io"
+
+	"ziniki.org/deployer/deployer/pkg/pluggable"
+)
 
 type Deployer interface {
-	AddSymbolListener(lsnr SymbolListener)
+	AddSymbolListener(lsnr pluggable.SymbolListener)
 	ReadScriptsFrom(indir string) error
 	Deploy() error
+
+	ObtainRegister() pluggable.Register // for the benefit of plugins
 }
 
 type TestRunner interface {

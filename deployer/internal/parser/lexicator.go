@@ -2,6 +2,8 @@ package parser
 
 import (
 	"unicode"
+
+	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
 type LineLexicator struct {
@@ -10,7 +12,7 @@ type LineLexicator struct {
 }
 
 func (ll *LineLexicator) BlockedLine(n, ind int, txt string) {
-	var toks []Token
+	var toks []pluggable.Token
 	from := 0
 	runes := []rune(txt)
 	for k, r := range runes {
@@ -25,7 +27,7 @@ func (ll *LineLexicator) BlockedLine(n, ind int, txt string) {
 	ll.interpreter.HaveTokens(toks)
 }
 
-func (ll *LineLexicator) token(toks []Token, line, start int, text []rune) []Token {
+func (ll *LineLexicator) token(toks []pluggable.Token, line, start int, text []rune) []pluggable.Token {
 	tok := NewIdentifierToken(ll.file, line, start, string(text))
 	return append(toks, tok)
 }

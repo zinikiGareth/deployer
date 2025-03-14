@@ -1,21 +1,21 @@
 package parser
 
 import (
-	"ziniki.org/deployer/deployer/internal/repo"
+	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
 type ScopeInterpreter struct {
-	repo   repo.Repository
+	repo   pluggable.Repository
 	scoper Scoper
 }
 
-func (si *ScopeInterpreter) HaveTokens(tokens []Token) {
+func (si *ScopeInterpreter) HaveTokens(tokens []pluggable.Token) {
 	// There are probably a "number" of cases here, but the two I am aware of are:
 	// <verb> <arg>...
 	// <var> "<-" <verb> <arg> ...  ||  <var> "<-" <expr>
 	// And it should be fairly easy to tell this with little more than a verb-scoping thing ...
 
-	verb, ok := tokens[0].(*IdentifierToken)
+	verb, ok := tokens[0].(pluggable.Identifier)
 	if !ok {
 		panic("first token must be an identifier")
 	}
@@ -26,6 +26,6 @@ func (si *ScopeInterpreter) HaveTokens(tokens []Token) {
 	action.Handle(si.repo, tokens) // Will need other things as well as time goes on ...
 }
 
-func NewInterpreter(repo repo.Repository, s Scoper) Interpreter {
+func NewInterpreter(repo pluggable.Repository, s Scoper) Interpreter {
 	return &ScopeInterpreter{repo: repo, scoper: s}
 }
