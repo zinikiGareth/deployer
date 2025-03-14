@@ -34,7 +34,12 @@
 					"--module",
 					"${workspaceFolder:TestMod}/plugin/testmod.so",
 					"${workspaceFolder:GoldenTester}/goldencases"
-				]
+				],
+				"linux": {
+					"env": {
+						"PATH":"/home/gareth/.nvm/versions/node/v22.14.0/bin:/home/gareth/.cargo/bin:/home/gareth/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/gareth/bin:/home/gareth/Android/Sdk/build-tools:/home/gareth/Android/Sdk/tools:/home/gareth/Android/Sdk/platform-tools:/home/gareth/aws/bin:/home/gareth/Ziniki/scripts:/Library/PostgreSQL/9.3/bin:/home/gareth/aws/bin:/home/gareth/.rvm/bin:/home/gareth/gradle-6.6.1/bin:/home/gareth/apache-maven-3.3.3/bin:/Applications/Couchbase Server.app/Contents/Resources/couchbase-core/bin:/home/gareth/android-sdk-macosx/platform-tools:/home/gareth/android-sdk-macosx/tools:/usr/local/go/bin:/home/gareth/bin:/home/gareth/Android/Sdk/build-tools:/home/gareth/Android/Sdk/tools:/home/gareth/Android/Sdk/platform-tools:/home/gareth/aws/bin:/home/gareth/Ziniki/scripts:/Library/PostgreSQL/9.3/bin:/home/gareth/aws/bin:/home/gareth/.rvm/bin:/home/gareth/gradle-6.6.1/bin:/home/gareth/apache-maven-3.3.3/bin:/Applications/Couchbase Server.app/Contents/Resources/couchbase-core/bin:/home/gareth/android-sdk-macosx/platform-tools:/home/gareth/android-sdk-macosx/tools:/usr/local/go/bin"
+					}
+				}
 			},
 		],
 		"compounds": []
