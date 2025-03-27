@@ -2,15 +2,19 @@ package parser
 
 import (
 	"unicode"
+
+	"ziniki.org/deployer/deployer/pkg/errors"
 )
 
 type Blocker struct {
+	errors   *errors.ErrorReporter
 	indents  []string
 	handlers []ProvideBlockedLine
 }
 
 // deffo need an error handler as well
 func (b *Blocker) HaveLine(lineNo int, txt string) {
+	b.errors.At(lineNo, txt)
 	ind, line := Split(txt)
 	if ind == "" {
 		return
@@ -33,7 +37,7 @@ func (b *Blocker) matchIndent(ind string) int {
 		if ind == curr {
 			return idx
 		} else if len(curr) >= len(ind) {
-			panic("invalid indent should be an error")
+			b.errors.Report(0, "invalid indent")
 		}
 	}
 	return len(b.indents)
@@ -59,6 +63,6 @@ func mapSpace(ch rune) rune {
 	}
 }
 
-func NewBlocker(topLevel ProvideBlockedLine) *Blocker {
-	return &Blocker{handlers: []ProvideBlockedLine{topLevel}}
+func NewBlocker(sink errors.ErrorSink, topLevel ProvideBlockedLine) *Blocker {
+	return &Blocker{errors: errors.NewErrorReporter(sink), handlers: []ProvideBlockedLine{topLevel}}
 }

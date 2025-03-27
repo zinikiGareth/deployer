@@ -1,10 +1,12 @@
 package parser
 
 import (
+	"ziniki.org/deployer/deployer/pkg/errors"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
 type ScopeInterpreter struct {
+	sink   errors.ErrorSink
 	repo   pluggable.Repository
 	scoper Scoper
 }
@@ -24,9 +26,9 @@ func (si *ScopeInterpreter) HaveTokens(tokens []pluggable.Token) ProvideBlockedL
 		panic("this is obvs an error, but I don't have an error handler")
 	}
 	action.Handle(si.repo, tokens) // Will need other things as well as time goes on ...
-	return nil
+	return DisallowInnerScope(si.sink)
 }
 
-func NewInterpreter(repo pluggable.Repository, s Scoper) Interpreter {
-	return &ScopeInterpreter{repo: repo, scoper: s}
+func NewInterpreter(repo pluggable.Repository, sink errors.ErrorSink, s Scoper) Interpreter {
+	return &ScopeInterpreter{repo: repo, sink: sink, scoper: s}
 }

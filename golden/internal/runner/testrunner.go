@@ -9,6 +9,7 @@ import (
 
 	"ziniki.org/deployer/deployer/pkg/creator"
 	"ziniki.org/deployer/deployer/pkg/deployer"
+	sink "ziniki.org/deployer/deployer/pkg/errors"
 	"ziniki.org/deployer/deployer/pkg/utils"
 	"ziniki.org/deployer/golden/internal/errors"
 	"ziniki.org/deployer/golden/internal/lsnrs"
@@ -222,13 +223,23 @@ func (r *TestRunner) ErrorHandlerFor(purpose string) deployer.ErrorHandler {
 
 func NewTestRunner(tracker *errors.CaseTracker, root, test string) (*TestRunner, error) {
 	base := filepath.Join(root, test)
+	errdir := filepath.Join(base, "errors")
+	errfile := filepath.Join(errdir, "errors.txt")
 	outdir := filepath.Join(base, "out")
 	repoin := filepath.Join(base, "repository")
 	repoout := filepath.Join(base, "repository-gen")
 	scripts := filepath.Join(base, "scripts")
 	scopes := filepath.Join(base, "scopes")
 
-	deployerInst := creator.NewDeployer()
+	err := utils.EnsureCleanDir(errdir)
+	if err != nil {
+		panic(fmt.Sprintf("error creating error dir %s: %v", errdir, err))
+	}
+	sink, err := sink.NewFileSink(errfile)
+	if err != nil {
+		panic(fmt.Sprintf("error creating error sink %s: %v", errfile, err))
+	}
+	deployerInst := creator.NewDeployer(sink)
 
 	return &TestRunner{tracker: tracker, base: base, out: outdir, test: test, scripts: scripts, scopes: scopes, repoIn: repoin, repoOut: repoout, deployer: deployerInst}, nil
 }

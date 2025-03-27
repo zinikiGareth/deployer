@@ -5,6 +5,7 @@ import (
 	"log"
 	"testing"
 
+	"ziniki.org/deployer/deployer/pkg/errors"
 	"ziniki.org/deployer/deployer/internal/parser"
 )
 
@@ -44,11 +45,21 @@ type line struct {
 	indent     string
 	text       string
 	seen       bool
-	inner      parser.ProvideBlockedLine
+	inner      *tmp
 }
 
 type tmp struct {
+	sink  errors.ErrorSink
 	lines []line
+}
+
+func (t *tmp) applySink(sink errors.ErrorSink) {
+	t.sink = sink
+	for _, l := range t.lines {
+		if l.inner != nil {
+			l.inner.applySink(sink)
+		}
+	}
 }
 
 func (t *tmp) BlockedLine(lineNo, lenIndent int, text string) parser.ProvideBlockedLine {
@@ -67,16 +78,25 @@ func (t *tmp) BlockedLine(lineNo, lenIndent int, text string) parser.ProvideBloc
 			if l.inner != nil {
 				return l.inner
 			} else {
-				return &parser.NoInnerScope{}
+				return parser.DisallowInnerScope(t.sink)
 			}
 		}
 	}
 	panic(fmt.Sprintf("line %d was unexpected: %s", lineNo, text))
 }
 
+type testSink struct {
+}
+
+func (s *testSink) Report(lineNo int, indent int, lineText string, msg string) {
+
+}
+
 func blockerTest(lines []line) {
+	sink := &testSink{}
 	mock := innerBlock(lines)
-	blocker := parser.NewBlocker(mock)
+	mock.applySink(sink)
+	blocker := parser.NewBlocker(sink, mock)
 	for _, b := range mock.lines {
 		blocker.HaveLine(b.lineNo, b.indent+b.text)
 	}

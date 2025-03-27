@@ -1,9 +1,16 @@
 package parser
 
-type NoInnerScope struct {
+import "ziniki.org/deployer/deployer/pkg/errors"
+
+type noInnerScope struct {
+	sink errors.ErrorSink
 }
 
-func (b *NoInnerScope) BlockedLine(lineNo, lenIndent int, text string) ProvideBlockedLine {
-	// TODO: should be an error
-	panic("nested content is not allowed here")
+func (b *noInnerScope) BlockedLine(lineNo, lenIndent int, text string) ProvideBlockedLine {
+	b.sink.Report(lineNo, 0, text, "nested content is not allowed here")
+	return b
+}
+
+func DisallowInnerScope(sink errors.ErrorSink) ProvideBlockedLine {
+	return &noInnerScope{sink: sink}
 }

@@ -2,14 +2,14 @@ package parser
 
 import (
 	"ziniki.org/deployer/deployer/internal/registry"
+	"ziniki.org/deployer/deployer/pkg/errors"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
-// deffo need an error handler as well
-func Parse(registry registry.Recall, repo pluggable.Repository, fileName, file string) {
+func Parse(registry registry.Recall, repo pluggable.Repository, errorSink errors.ErrorSink, fileName, file string) {
 	globalScope := NewScopedHandlers(registry, repo)
-	globalInterpreter := NewInterpreter(repo, globalScope)
+	globalInterpreter := NewInterpreter(repo, errorSink, globalScope)
 	lineLexicator := NewLineLexicator(globalInterpreter, fileName)
-	blocker := NewBlocker(lineLexicator)
+	blocker := NewBlocker(errorSink, lineLexicator)
 	provideLines(file, blocker)
 }

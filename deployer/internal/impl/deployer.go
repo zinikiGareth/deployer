@@ -8,6 +8,7 @@ import (
 	"ziniki.org/deployer/deployer/internal/registry"
 	"ziniki.org/deployer/deployer/internal/repo"
 	"ziniki.org/deployer/deployer/pkg/deployer"
+	"ziniki.org/deployer/deployer/pkg/errors"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 	"ziniki.org/deployer/deployer/pkg/utils"
 )
@@ -15,6 +16,7 @@ import (
 type DeployerImpl struct {
 	registry *registry.Registry
 	repo     pluggable.Repository
+	sink     errors.ErrorSink
 	srcdir   string
 	input    []string
 }
@@ -38,7 +40,7 @@ func (d *DeployerImpl) Deploy() error {
 		fmt.Printf("  %s\n", f)
 		from := filepath.Join(d.srcdir, f)
 		d.repo.ReadingFile(f)
-		parser.Parse(d.registry, d.repo, f, from)
+		parser.Parse(d.registry, d.repo, d.sink, f, from)
 	}
 	return nil
 }
@@ -48,6 +50,6 @@ func (d *DeployerImpl) AddSymbolListener(lsnr pluggable.SymbolListener) {
 	d.repo.AddSymbolListener(lsnr)
 }
 
-func NewDeployer() deployer.Deployer {
-	return &DeployerImpl{registry: registry.NewRegistry(), repo: repo.NewRepository()}
+func NewDeployer(sink errors.ErrorSink) deployer.Deployer {
+	return &DeployerImpl{registry: registry.NewRegistry(), repo: repo.NewRepository(), sink: sink}
 }
