@@ -1,4 +1,5 @@
 golden/cmd/golden/golden
+lsp/cmd/deployer-lsp/deployer-lsp
 vsix/out/
 *.so
 *.vsix

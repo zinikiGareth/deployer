@@ -1,0 +1,4 @@
+This uses the test mod to simulate testing an aws bucket exists
+
+    target ensureABucketExists
+		ensure test.S3.Bucket "org.ziniki.launch_bucket"

@@ -11,7 +11,7 @@ type LineLexicator struct {
 	file        string
 }
 
-func (ll *LineLexicator) BlockedLine(n, ind int, txt string) {
+func (ll *LineLexicator) BlockedLine(n, ind int, txt string) ProvideBlockedLine {
 	var toks []pluggable.Token
 	from := 0
 	runes := []rune(txt)
@@ -24,7 +24,7 @@ func (ll *LineLexicator) BlockedLine(n, ind int, txt string) {
 	if len(runes) > from {
 		toks = ll.token(toks, n, ind+from, runes[from:])
 	}
-	ll.interpreter.HaveTokens(toks)
+	return ll.interpreter.HaveTokens(toks)
 }
 
 func (ll *LineLexicator) token(toks []pluggable.Token, line, start int, text []rune) []pluggable.Token {

@@ -10,20 +10,33 @@ type Blocker struct {
 }
 
 // deffo need an error handler as well
-func (b *Blocker) HaveLine(n int, txt string) {
+func (b *Blocker) HaveLine(lineNo int, txt string) {
 	ind, line := Split(txt)
 	if ind == "" {
 		return
 	}
-	if len(b.indents) == 0 {
+	level := b.matchIndent(ind)
+	if level >= len(b.indents) {
 		b.indents = append(b.indents, ind)
 	} else {
-		last := b.indents[len(b.indents)-1]
-		if last != ind {
-			panic("need to actually do blocking")
+		// TODO: clean up old handlers if any (but not indents)
+	}
+	hdlr := b.handlers[level].BlockedLine(lineNo, len(ind), line)
+	if hdlr == nil {
+		panic("handler cannot return nil; if no nested scope, return NoInnerScope")
+	}
+	b.handlers = append(b.handlers, hdlr)
+}
+
+func (b *Blocker) matchIndent(ind string) int {
+	for idx, curr := range b.indents {
+		if ind == curr {
+			return idx
+		} else if len(curr) >= len(ind) {
+			panic("invalid indent should be an error")
 		}
 	}
-	b.handlers[len(b.handlers)-1].BlockedLine(n, len(ind), line)
+	return len(b.indents)
 }
 
 func Split(txt string) (string, string) {
@@ -47,7 +60,5 @@ func mapSpace(ch rune) rune {
 }
 
 func NewBlocker(topLevel ProvideBlockedLine) *Blocker {
-	ret := &Blocker{}
-	ret.handlers = []ProvideBlockedLine{topLevel}
-	return ret
+	return &Blocker{handlers: []ProvideBlockedLine{topLevel}}
 }

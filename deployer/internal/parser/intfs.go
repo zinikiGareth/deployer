@@ -7,11 +7,11 @@ type ProvideLine interface {
 }
 
 type ProvideBlockedLine interface {
-	BlockedLine(lineNo, indent int, text string)
+	BlockedLine(lineNo, indent int, text string) ProvideBlockedLine
 }
 
 type Interpreter interface {
-	HaveTokens(tokens []pluggable.Token)
+	HaveTokens(tokens []pluggable.Token) ProvideBlockedLine
 }
 
 type Scoper interface {

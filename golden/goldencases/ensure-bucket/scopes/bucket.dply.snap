@@ -1,0 +1,10 @@
+>This uses the test mod to simulate testing an aws bucket exists
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
+>
+>    target ensureABucketExists
+#^^^^ source.deployer-dply
+#    ^^^^^^ source.deployer-dply keyword.target
+#          ^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>		ensure test.S3.Bucket "org.ziniki.launch_bucket"
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>

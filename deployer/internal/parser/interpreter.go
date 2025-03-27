@@ -9,7 +9,7 @@ type ScopeInterpreter struct {
 	scoper Scoper
 }
 
-func (si *ScopeInterpreter) HaveTokens(tokens []pluggable.Token) {
+func (si *ScopeInterpreter) HaveTokens(tokens []pluggable.Token) ProvideBlockedLine {
 	// There are probably a "number" of cases here, but the two I am aware of are:
 	// <verb> <arg>...
 	// <var> "<-" <verb> <arg> ...  ||  <var> "<-" <expr>
@@ -24,6 +24,7 @@ func (si *ScopeInterpreter) HaveTokens(tokens []pluggable.Token) {
 		panic("this is obvs an error, but I don't have an error handler")
 	}
 	action.Handle(si.repo, tokens) // Will need other things as well as time goes on ...
+	return nil
 }
 
 func NewInterpreter(repo pluggable.Repository, s Scoper) Interpreter {
