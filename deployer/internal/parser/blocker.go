@@ -20,7 +20,10 @@ func (b *Blocker) HaveLine(lineNo int, txt string) {
 		return
 	}
 	level := b.matchIndent(ind)
-	if level >= len(b.indents) {
+	if level == -1 {
+		// that's an error, already reported
+		return
+	} else if level >= len(b.indents) {
 		b.indents = append(b.indents, ind)
 	} else {
 		// TODO: clean up old handlers if any (but not indents)
@@ -38,6 +41,7 @@ func (b *Blocker) matchIndent(ind string) int {
 			return idx
 		} else if len(curr) >= len(ind) {
 			b.errors.Report(0, "invalid indent")
+			return -1
 		}
 	}
 	return len(b.indents)

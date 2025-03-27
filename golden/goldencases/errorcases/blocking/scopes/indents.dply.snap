@@ -1,0 +1,21 @@
+>This is a test that the blocker correctly reports incorrect indentation
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
+>
+>So this line is indented with four spaces, which is fine:
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
+>
+>    target foo
+#^^^^ source.deployer-dply
+#    ^^^^^^ source.deployer-dply keyword.target
+#          ^^^^^ source.deployer-dply
+>
+>But while this line may look the same, its prefix is one tab:
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
+>
+>	target bar
+#^ source.deployer-dply
+# ^^^^^^ source.deployer-dply keyword.target
+#       ^^^^^ source.deployer-dply
+>
+>And so we should get an error that the indentation is wrong.
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block

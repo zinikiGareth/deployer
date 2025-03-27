@@ -19,6 +19,7 @@ type TestRunner struct {
 	tracker    *errors.CaseTracker
 	deployer   deployer.Deployer
 	symbolLsnr *lsnrs.RepoListener
+	root       string
 	base       string
 	test       string
 	out        string
@@ -26,6 +27,8 @@ type TestRunner struct {
 	scopes     string
 	repoIn     string
 	repoOut    string
+	errorsIn   string
+	errorsOut  string
 }
 
 func (r *TestRunner) Run(modules []string) {
@@ -121,8 +124,8 @@ func (r *TestRunner) TestScopes(eh errors.TestErrorHandler) {
 	if nin == 0 && nout == 0 {
 		// fmt.Printf("no input or output files in %s\n", r.test)
 	} else if nin == nout {
-		cmd := exec.Command("vscode-tmgrammar-snap", "--config", "../../../vsix/package.json", testIn+"/*.dply")
-		cmd.Dir = r.base
+		cmd := exec.Command("vscode-tmgrammar-snap", "--config", "../../vsix/package.json", testIn+"/*.dply")
+		cmd.Dir = r.root
 		cmd.Stdout = eh
 		cmd.Stderr = eh
 		err := cmd.Run()
@@ -132,8 +135,8 @@ func (r *TestRunner) TestScopes(eh errors.TestErrorHandler) {
 			return
 		}
 	} else {
-		cmd := exec.Command("vscode-tmgrammar-snap", "--config", "../../../vsix/package.json", "--updateSnapshot", testIn+"/*.dply")
-		cmd.Dir = r.base
+		cmd := exec.Command("vscode-tmgrammar-snap", "--config", "../../vsix/package.json", "--updateSnapshot", testIn+"/*.dply")
+		cmd.Dir = r.root
 		cmd.Stdout = eh
 		cmd.Stderr = eh
 		err := cmd.Run()
@@ -162,6 +165,7 @@ func (r *TestRunner) TestDeployment(eh errors.TestErrorHandler) {
 		fmt.Printf("Error deploying: %v\n", err)
 		return
 	}
+	r.compareGoldenFiles(r.errorsIn, r.errorsOut)
 	r.compareGoldenFiles(r.repoIn, r.repoOut)
 }
 
@@ -223,7 +227,8 @@ func (r *TestRunner) ErrorHandlerFor(purpose string) deployer.ErrorHandler {
 
 func NewTestRunner(tracker *errors.CaseTracker, root, test string) (*TestRunner, error) {
 	base := filepath.Join(root, test)
-	errdir := filepath.Join(base, "errors")
+	errin := filepath.Join(base, "errors")
+	errdir := filepath.Join(base, "errors-gen")
 	errfile := filepath.Join(errdir, "errors.txt")
 	outdir := filepath.Join(base, "out")
 	repoin := filepath.Join(base, "repository")
@@ -241,5 +246,5 @@ func NewTestRunner(tracker *errors.CaseTracker, root, test string) (*TestRunner,
 	}
 	deployerInst := creator.NewDeployer(sink)
 
-	return &TestRunner{tracker: tracker, base: base, out: outdir, test: test, scripts: scripts, scopes: scopes, repoIn: repoin, repoOut: repoout, deployer: deployerInst}, nil
+	return &TestRunner{tracker: tracker, root: root, base: base, out: outdir, test: test, scripts: scripts, scopes: scopes, repoIn: repoin, repoOut: repoout, errorsIn: errin, errorsOut: errdir, deployer: deployerInst}, nil
 }
