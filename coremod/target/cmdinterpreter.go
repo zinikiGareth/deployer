@@ -1,20 +1,17 @@
 package target
 
 import (
-	"log"
-
+	"ziniki.org/deployer/coremod/basic"
 	"ziniki.org/deployer/deployer/pkg/errors"
-	"ziniki.org/deployer/deployer/pkg/interpreters"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
 type commandScope struct {
-	reporter errors.ErrorRepI
+	repo pluggable.Repository
 }
 
 func (b *commandScope) HaveTokens(reporter errors.ErrorRepI, tokens []pluggable.Token) pluggable.Interpreter {
 	// I am hacking this in first, and then I need to come back and do more on it
-	log.Printf("hello %d %v?\n", len(tokens), tokens[1])
 
 	if len(tokens) != 3 {
 		panic("tokens are wrong")
@@ -29,10 +26,19 @@ func (b *commandScope) HaveTokens(reporter errors.ErrorRepI, tokens []pluggable.
 		panic("token[2] is wrong")
 	}
 
-	log.Printf("needs work")
-	return interpreters.DisallowInnerScope()
+	cmd, ok := tokens[0].(pluggable.Identifier)
+	if !ok {
+		panic("command token must be an identifier")
+	}
+	var action pluggable.Action
+	if cmd.Id() == "ensure" {
+		action = &basic.EnsureCommandHandler{}
+	} else {
+		panic("invalid target command")
+	}
+	return action.Handle(reporter, b.repo, tokens)
 }
 
-func TargetCommandInterpreter(reporter errors.ErrorRepI) pluggable.Interpreter {
-	return &commandScope{reporter: reporter}
+func TargetCommandInterpreter(repo pluggable.Repository) pluggable.Interpreter {
+	return &commandScope{repo: repo}
 }
