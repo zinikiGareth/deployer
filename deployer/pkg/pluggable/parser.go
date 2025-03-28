@@ -15,7 +15,7 @@ type Scoper interface {
 }
 
 type Token interface {
-	Loc() Location
+	Locatable
 }
 
 type Identifier interface {
@@ -29,5 +29,5 @@ type String interface {
 }
 
 type Action interface {
-	Handle(reporter errors.ErrorRepI, repo Repository, tokens []Token) Interpreter
+	Handle(reporter errors.ErrorRepI, repo Repository, parent ContainingContext, tokens []Token) Interpreter
 }

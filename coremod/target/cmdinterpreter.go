@@ -6,8 +6,17 @@ import (
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
+type commandList struct {
+	commands []pluggable.Locatable
+}
+
+func (cc *commandList) Add(entry pluggable.Locatable) {
+	cc.commands = append(cc.commands, entry)
+}
+
 type commandScope struct {
-	repo pluggable.Repository
+	repo     pluggable.Repository
+	commands *commandList
 }
 
 func (b *commandScope) HaveTokens(reporter errors.ErrorRepI, tokens []pluggable.Token) pluggable.Interpreter {
@@ -36,9 +45,9 @@ func (b *commandScope) HaveTokens(reporter errors.ErrorRepI, tokens []pluggable.
 	} else {
 		panic("invalid target command")
 	}
-	return action.Handle(reporter, b.repo, tokens)
+	return action.Handle(reporter, b.repo, b.commands, tokens)
 }
 
 func TargetCommandInterpreter(repo pluggable.Repository) pluggable.Interpreter {
-	return &commandScope{repo: repo}
+	return &commandScope{repo: repo, commands: &commandList{}}
 }

@@ -8,6 +8,7 @@ import (
 
 type EnsureCommandHandler struct{}
 
-func (ensure *EnsureCommandHandler) Handle(reporter errors.ErrorRepI, repo pluggable.Repository, tokens []pluggable.Token) pluggable.Interpreter {
+func (ensure *EnsureCommandHandler) Handle(reporter errors.ErrorRepI, repo pluggable.Repository, parent pluggable.ContainingContext, tokens []pluggable.Token) pluggable.Interpreter {
+	parent.Add(tokens[0])
 	return interpreters.DisallowInnerScope()
 }

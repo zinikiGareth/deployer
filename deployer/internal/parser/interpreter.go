@@ -5,6 +5,13 @@ import (
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
+type mayNotAddToParentOfTop struct {
+}
+
+func (cc *mayNotAddToParentOfTop) Add(entry pluggable.Locatable) {
+	panic("cannot add to parent of top level; store in repo instead")
+}
+
 type ScopeInterpreter struct {
 	repo   pluggable.Repository
 	scoper pluggable.Scoper
@@ -24,7 +31,7 @@ func (si *ScopeInterpreter) HaveTokens(reporter errors.ErrorRepI, tokens []plugg
 	if action == nil {
 		panic("this is obvs an error, but I don't have an error handler")
 	}
-	return action.Handle(reporter, si.repo, tokens) // Will need other things as well as time goes on ...
+	return action.Handle(reporter, si.repo, &mayNotAddToParentOfTop{}, tokens) // Will need other things as well as time goes on ...
 }
 
 func NewInterpreter(repo pluggable.Repository, s pluggable.Scoper) pluggable.Interpreter {
