@@ -11,6 +11,11 @@ type Identifier interface {
 	Id() string
 }
 
+type String interface {
+	Token
+	Text() string
+}
+
 type Action interface {
-	Handle(reporter *errors.ErrorReporter, repo Repository, tokens []Token) Interpreter
+	Handle(reporter errors.ErrorRepI, repo Repository, tokens []Token) Interpreter
 }

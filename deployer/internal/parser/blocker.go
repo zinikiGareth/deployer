@@ -8,7 +8,7 @@ import (
 )
 
 type Blocker struct {
-	errors   *errors.ErrorReporter
+	errors   errors.ErrorRepI
 	indents  []string
 	lex      Lexicator
 	handlers []pluggable.Interpreter
@@ -70,6 +70,6 @@ func mapSpace(ch rune) rune {
 	}
 }
 
-func NewBlocker(reporter *errors.ErrorReporter, lex Lexicator, topLevel pluggable.Interpreter) *Blocker {
+func NewBlocker(reporter errors.ErrorRepI, lex Lexicator, topLevel pluggable.Interpreter) *Blocker {
 	return &Blocker{errors: reporter, lex: lex, handlers: []pluggable.Interpreter{topLevel}}
 }

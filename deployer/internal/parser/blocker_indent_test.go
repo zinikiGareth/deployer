@@ -2,7 +2,6 @@ package parser_test
 
 import (
 	"fmt"
-	"log"
 	"testing"
 
 	"ziniki.org/deployer/deployer/internal/parser"
@@ -64,7 +63,7 @@ func (t *tmp) applySink(sink errors.ErrorSink) {
 	}
 }
 
-func (t *tmp) HaveTokens(_ *errors.ErrorReporter, toks []pluggable.Token) pluggable.Interpreter {
+func (t *tmp) HaveTokens(_ errors.ErrorRepI, toks []pluggable.Token) pluggable.Interpreter {
 	tok := toks[0].(*LineToken)
 	lineNo := tok.Loc().Line
 	lenIndent := tok.Loc().Offset
@@ -79,7 +78,6 @@ func (t *tmp) HaveTokens(_ *errors.ErrorReporter, toks []pluggable.Token) plugga
 			} else if l.text != text {
 				panic(fmt.Sprintf("line %d wrong: %s != %s", l.lineNo, text, l.text))
 			}
-			log.Println(text)
 			l.seen = true
 			if l.inner != nil {
 				return l.inner

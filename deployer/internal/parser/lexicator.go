@@ -12,7 +12,7 @@ type Lexicator interface {
 }
 
 type LineLexicator struct {
-	reporter *errors.ErrorReporter
+	reporter errors.ErrorRepI
 	file     string
 }
 
@@ -22,6 +22,9 @@ func (ll *LineLexicator) BlockedLine(n, ind int, txt string) []pluggable.Token {
 	runes := []rune(txt)
 	for k, r := range runes {
 		if unicode.IsSpace(r) {
+			if from == 0 {
+				panic("cannot have leading spaces on a line")
+			}
 			toks = ll.token(toks, n, ind+from, runes[from:k])
 			from = k + 1
 		}
@@ -37,6 +40,6 @@ func (ll *LineLexicator) token(toks []pluggable.Token, line, start int, text []r
 	return append(toks, tok)
 }
 
-func NewLineLexicator(reporter *errors.ErrorReporter, file string) Lexicator {
+func NewLineLexicator(reporter errors.ErrorRepI, file string) Lexicator {
 	return &LineLexicator{reporter: reporter, file: file}
 }

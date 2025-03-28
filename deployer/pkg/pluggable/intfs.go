@@ -7,7 +7,7 @@ type ProvideLine interface {
 }
 
 type Interpreter interface {
-	HaveTokens(reporter *errors.ErrorReporter, tokens []Token) Interpreter
+	HaveTokens(reporter errors.ErrorRepI, tokens []Token) Interpreter
 }
 
 type Scoper interface {

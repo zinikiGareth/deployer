@@ -8,7 +8,7 @@ import (
 type noInnerScope struct {
 }
 
-func (b *noInnerScope) HaveTokens(reporter *errors.ErrorReporter, tokens []pluggable.Token) pluggable.Interpreter {
+func (b *noInnerScope) HaveTokens(reporter errors.ErrorRepI, tokens []pluggable.Token) pluggable.Interpreter {
 	reporter.Report(0, "nested content is not allowed here")
 	return b
 }
