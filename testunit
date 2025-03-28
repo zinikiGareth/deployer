@@ -1,3 +1,5 @@
 #!/bin/bash -x
 
-(cd deployer ; go test -v ./...)
+cd deployer
+go test -v ./...
+exit $?

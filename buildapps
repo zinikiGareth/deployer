@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash -ex
 
 (cd golden/cmd/golden ; go build -gcflags=all="-N -l")
 # (cd deployer/cmd/deployer ; go build -gcflags=all="-N -l")

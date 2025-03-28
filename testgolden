@@ -1,3 +1,5 @@
 #!/bin/bash -x
 
-(cd golden ; cmd/golden/golden --module ../coremod/plugin/coremod.so --module ../testmod/plugin/testmod.so goldencases)
+cd golden
+cmd/golden/golden --module ../coremod/plugin/coremod.so --module ../testmod/plugin/testmod.so goldencases
+exit $?
