@@ -1,16 +1,8 @@
 #!/bin/bash -x
 
-(cd golden/cmd/golden ; go build -gcflags=all="-N -l")
-(cd lsp/cmd/deployer-lsp ; go build -gcflags=all="-N -l")
-# (cd deployer/cmd/deployer ; go build -gcflags=all="-N -l")
-(cd coremod/plugin ; go build --buildmode=plugin -gcflags=all="-N -l" -o coremod.so)
-(cd testmod/plugin ; go build --buildmode=plugin -gcflags=all="-N -l" -o testmod.so)
+./buildapps
+./buildmods
+./buildlsp
 
-(cd vsix ; npm i ; npm run compile ; node_modules/@vscode/vsce/vsce package)
-
-
-# and run tests
-
-(cd deployer ; go test -v ./...)
-
-(cd golden ; cmd/golden/golden --module ../coremod/plugin/coremod.so --module ../testmod/plugin/testmod.so goldencases)
+./testunit
+./testgolden
