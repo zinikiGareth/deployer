@@ -12,11 +12,11 @@ type commandScope struct {
 	reporter *errors.ErrorReporter
 }
 
-func (b *commandScope) BlockedLine(lineNo, lenIndent int, text string) pluggable.ProvideBlockedLine {
+func (b *commandScope) HaveTokens(reporter *errors.ErrorReporter, tokens []pluggable.Token) pluggable.Interpreter {
 	log.Printf("needs work")
-	return interpreters.DisallowInnerScope(b.reporter.Sink())
+	return interpreters.DisallowInnerScope()
 }
 
-func TargetCommandInterpreter(reporter *errors.ErrorReporter) pluggable.ProvideBlockedLine {
+func TargetCommandInterpreter(reporter *errors.ErrorReporter) pluggable.Interpreter {
 	return &commandScope{reporter: reporter}
 }

@@ -124,8 +124,8 @@ func (r *TestRunner) TestScopes(eh errors.TestErrorHandler) {
 	if nin == 0 && nout == 0 {
 		// fmt.Printf("no input or output files in %s\n", r.test)
 	} else if nin == nout {
-		cmd := exec.Command("vscode-tmgrammar-snap", "--config", "../../vsix/package.json", testIn+"/*.dply")
-		cmd.Dir = r.root
+		cmd := exec.Command("vscode-tmgrammar-snap", "--config", "../vsix/package.json", testIn+"/*.dply")
+		// cmd.Dir = r.root
 		cmd.Stdout = eh
 		cmd.Stderr = eh
 		err := cmd.Run()
@@ -135,8 +135,8 @@ func (r *TestRunner) TestScopes(eh errors.TestErrorHandler) {
 			return
 		}
 	} else {
-		cmd := exec.Command("vscode-tmgrammar-snap", "--config", "../../vsix/package.json", "--updateSnapshot", testIn+"/*.dply")
-		cmd.Dir = r.root
+		cmd := exec.Command("vscode-tmgrammar-snap", "--config", "../vsix/package.json", "--updateSnapshot", testIn+"/*.dply")
+		// cmd.Dir = r.root
 		cmd.Stdout = eh
 		cmd.Stderr = eh
 		err := cmd.Run()

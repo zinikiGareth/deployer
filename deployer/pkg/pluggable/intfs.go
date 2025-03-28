@@ -6,12 +6,8 @@ type ProvideLine interface {
 	HaveLine(lineNo int, text string)
 }
 
-type ProvideBlockedLine interface {
-	BlockedLine(lineNo, indent int, text string) ProvideBlockedLine
-}
-
 type Interpreter interface {
-	HaveTokens(reporter *errors.ErrorReporter, tokens []Token) ProvideBlockedLine
+	HaveTokens(reporter *errors.ErrorReporter, tokens []Token) Interpreter
 }
 
 type Scoper interface {

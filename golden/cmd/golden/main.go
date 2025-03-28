@@ -8,6 +8,7 @@ import (
 )
 
 func main() {
+	fmt.Println(os.Getwd())
 	if len(os.Args) == 1 {
 		golden.Usage()
 		return

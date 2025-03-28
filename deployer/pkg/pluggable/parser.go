@@ -12,5 +12,5 @@ type Identifier interface {
 }
 
 type Action interface {
-	Handle(reporter *errors.ErrorReporter, repo Repository, tokens []Token) ProvideBlockedLine
+	Handle(reporter *errors.ErrorReporter, repo Repository, tokens []Token) Interpreter
 }

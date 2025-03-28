@@ -1,2 +1,2 @@
 bucket.dply:
-3.11 core.Target ensureABucketExists
+3.8 core.Target ensureABucketExists

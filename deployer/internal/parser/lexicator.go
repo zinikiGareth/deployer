@@ -7,13 +7,16 @@ import (
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
-type LineLexicator struct {
-	reporter    *errors.ErrorReporter
-	interpreter pluggable.Interpreter
-	file        string
+type Lexicator interface {
+	BlockedLine(n, ind int, txt string) []pluggable.Token
 }
 
-func (ll *LineLexicator) BlockedLine(n, ind int, txt string) pluggable.ProvideBlockedLine {
+type LineLexicator struct {
+	reporter *errors.ErrorReporter
+	file     string
+}
+
+func (ll *LineLexicator) BlockedLine(n, ind int, txt string) []pluggable.Token {
 	var toks []pluggable.Token
 	from := 0
 	runes := []rune(txt)
@@ -26,7 +29,7 @@ func (ll *LineLexicator) BlockedLine(n, ind int, txt string) pluggable.ProvideBl
 	if len(runes) > from {
 		toks = ll.token(toks, n, ind+from, runes[from:])
 	}
-	return ll.interpreter.HaveTokens(ll.reporter, toks)
+	return toks
 }
 
 func (ll *LineLexicator) token(toks []pluggable.Token, line, start int, text []rune) []pluggable.Token {
@@ -34,6 +37,6 @@ func (ll *LineLexicator) token(toks []pluggable.Token, line, start int, text []r
 	return append(toks, tok)
 }
 
-func NewLineLexicator(reporter *errors.ErrorReporter, i pluggable.Interpreter, file string) *LineLexicator {
-	return &LineLexicator{reporter: reporter, interpreter: i, file: file}
+func NewLineLexicator(reporter *errors.ErrorReporter, file string) Lexicator {
+	return &LineLexicator{reporter: reporter, file: file}
 }

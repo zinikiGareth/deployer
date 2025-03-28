@@ -10,7 +10,7 @@ type ScopeInterpreter struct {
 	scoper pluggable.Scoper
 }
 
-func (si *ScopeInterpreter) HaveTokens(reporter *errors.ErrorReporter, tokens []pluggable.Token) pluggable.ProvideBlockedLine {
+func (si *ScopeInterpreter) HaveTokens(reporter *errors.ErrorReporter, tokens []pluggable.Token) pluggable.Interpreter {
 	// There are probably a "number" of cases here, but the two I am aware of are:
 	// <verb> <arg>...
 	// <var> "<-" <verb> <arg> ...  ||  <var> "<-" <expr>

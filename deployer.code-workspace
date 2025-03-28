@@ -32,6 +32,7 @@
 				"type": "go",
 				"request": "launch",
 				"program": "${workspaceFolder:GoldenTester}/cmd/golden",
+				"cwd": "${workspaceFolder:GoldenTester}",
 				"args": [
 					"--module",
 					"${workspaceFolder:CoreMod}/plugin/coremod.so",

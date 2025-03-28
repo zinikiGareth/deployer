@@ -10,7 +10,8 @@ import (
 type Blocker struct {
 	errors   *errors.ErrorReporter
 	indents  []string
-	handlers []pluggable.ProvideBlockedLine
+	lex      Lexicator
+	handlers []pluggable.Interpreter
 }
 
 // deffo need an error handler as well
@@ -29,7 +30,8 @@ func (b *Blocker) HaveLine(lineNo int, txt string) {
 	} else {
 		// TODO: clean up old handlers if any (but not indents)
 	}
-	hdlr := b.handlers[level].BlockedLine(lineNo, len(ind), line)
+	toks := b.lex.BlockedLine(lineNo, len(ind), line)
+	hdlr := b.handlers[level].HaveTokens(b.errors, toks)
 	if hdlr == nil {
 		panic("handler cannot return nil; if no nested scope, return NoInnerScope")
 	}
@@ -68,6 +70,6 @@ func mapSpace(ch rune) rune {
 	}
 }
 
-func NewBlocker(reporter *errors.ErrorReporter, topLevel pluggable.ProvideBlockedLine) *Blocker {
-	return &Blocker{errors: reporter, handlers: []pluggable.ProvideBlockedLine{topLevel}}
+func NewBlocker(reporter *errors.ErrorReporter, lex Lexicator, topLevel pluggable.Interpreter) *Blocker {
+	return &Blocker{errors: reporter, lex: lex, handlers: []pluggable.Interpreter{topLevel}}
 }
