@@ -1,11 +1,12 @@
 package parser
 
 import (
+	"ziniki.org/deployer/deployer/pkg/pluggable"
 	"ziniki.org/deployer/deployer/pkg/utils"
 )
 
 // deffo need an error handler as well
-func provideLines(fromFile string, to ProvideLine) {
+func provideLines(fromFile string, to pluggable.ProvideLine) {
 	lines, err := utils.FileAsLines(fromFile)
 	if err != nil {
 		panic("need an error handler")

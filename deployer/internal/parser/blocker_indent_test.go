@@ -5,8 +5,10 @@ import (
 	"log"
 	"testing"
 
-	"ziniki.org/deployer/deployer/pkg/errors"
 	"ziniki.org/deployer/deployer/internal/parser"
+	"ziniki.org/deployer/deployer/pkg/errors"
+	"ziniki.org/deployer/deployer/pkg/interpreters"
+	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
 func TestCommentLinesAreDiscarded(t *testing.T) {
@@ -62,7 +64,7 @@ func (t *tmp) applySink(sink errors.ErrorSink) {
 	}
 }
 
-func (t *tmp) BlockedLine(lineNo, lenIndent int, text string) parser.ProvideBlockedLine {
+func (t *tmp) BlockedLine(lineNo, lenIndent int, text string) pluggable.ProvideBlockedLine {
 	for ln := range t.lines {
 		l := &t.lines[ln]
 		if l.lineNo == lineNo {
@@ -78,7 +80,7 @@ func (t *tmp) BlockedLine(lineNo, lenIndent int, text string) parser.ProvideBloc
 			if l.inner != nil {
 				return l.inner
 			} else {
-				return parser.DisallowInnerScope(t.sink)
+				return interpreters.DisallowInnerScope(t.sink)
 			}
 		}
 	}
@@ -96,7 +98,8 @@ func blockerTest(lines []line) {
 	sink := &testSink{}
 	mock := innerBlock(lines)
 	mock.applySink(sink)
-	blocker := parser.NewBlocker(sink, mock)
+	reporter := errors.NewErrorReporter(sink)
+	blocker := parser.NewBlocker(reporter, mock)
 	for _, b := range mock.lines {
 		blocker.HaveLine(b.lineNo, b.indent+b.text)
 	}

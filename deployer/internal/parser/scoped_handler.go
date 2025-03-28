@@ -14,7 +14,7 @@ func (sh *ScopedHandlers) FindVerb(v pluggable.Identifier) pluggable.Action {
 	return sh.recall.FindVerb(v.Id())
 }
 
-func NewScopedHandlers(registry registry.Recall, repo pluggable.Repository) Scoper {
+func NewScopedHandlers(registry registry.Recall, repo pluggable.Repository) pluggable.Scoper {
 	ret := &ScopedHandlers{repo: repo, recall: registry}
 	return ret
 }

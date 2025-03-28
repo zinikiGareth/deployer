@@ -15,6 +15,10 @@ func (r *ErrorReporter) Report(indent int, msg string) {
 	r.sink.Report(r.lineNo, indent, r.lineText, msg)
 }
 
+func (r *ErrorReporter) Sink() ErrorSink {
+	return r.sink
+}
+
 func NewErrorReporter(sink ErrorSink) *ErrorReporter {
 	return &ErrorReporter{sink: sink}
 }

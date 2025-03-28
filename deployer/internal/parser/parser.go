@@ -7,9 +7,10 @@ import (
 )
 
 func Parse(registry registry.Recall, repo pluggable.Repository, errorSink errors.ErrorSink, fileName, file string) {
+	reporter := errors.NewErrorReporter(errorSink)
 	globalScope := NewScopedHandlers(registry, repo)
-	globalInterpreter := NewInterpreter(repo, errorSink, globalScope)
-	lineLexicator := NewLineLexicator(globalInterpreter, fileName)
-	blocker := NewBlocker(errorSink, lineLexicator)
+	globalInterpreter := NewInterpreter(repo, globalScope)
+	lineLexicator := NewLineLexicator(reporter, globalInterpreter, fileName)
+	blocker := NewBlocker(reporter, lineLexicator)
 	provideLines(file, blocker)
 }

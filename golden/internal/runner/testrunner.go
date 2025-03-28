@@ -165,13 +165,14 @@ func (r *TestRunner) TestDeployment(eh errors.TestErrorHandler) {
 		fmt.Printf("Error deploying: %v\n", err)
 		return
 	}
-	r.compareGoldenFiles(r.errorsIn, r.errorsOut)
-	r.compareGoldenFiles(r.repoIn, r.repoOut)
+	r.compareGoldenFiles(r.errorsIn, r.errorsOut, false)
+	r.compareGoldenFiles(r.repoIn, r.repoOut, true)
 }
 
 // TODO: I would like to make this its own thing
-func (r *TestRunner) compareGoldenFiles(golden, gen string) {
-	eh := r.tracker.ErrorHandlerFor("golden")
+func (r *TestRunner) compareGoldenFiles(golden, gen string, copyNewFiles bool) {
+	base := filepath.Base(golden)
+	eh := r.tracker.ErrorHandlerFor("golden-" + base)
 	eh.Writef("comparing %s to %s\n", golden, gen)
 	goldenFiles, err1 := utils.FindFiles(golden, "")
 	genFiles, err2 := utils.FindFiles(gen, "")
@@ -206,12 +207,20 @@ func (r *TestRunner) compareGoldenFiles(golden, gen string) {
 			eh.Fail()
 		}
 	}
+
 	// If there are any generated files which don't have golden files, let the user know and copy them
 	if len(genmap) > 0 {
-		eh.Writef("generated files were not present ... copying\n")
-		for f := range genmap {
-			fmt.Printf("  %s\n", f)
-			utils.CopyFile(filepath.Join(gen, f), filepath.Join(golden, f))
+		if copyNewFiles {
+			eh.Writef("generated files were not present ... copying\n")
+			for f := range genmap {
+				fmt.Printf("  %s\n", f)
+				utils.CopyFile(filepath.Join(gen, f), filepath.Join(golden, f))
+			}
+		} else {
+			for _, f := range genFiles {
+				eh.Writef("there is no golden file for generated %s\n", f)
+				eh.Fail()
+			}
 		}
 	}
 }
@@ -240,10 +249,7 @@ func NewTestRunner(tracker *errors.CaseTracker, root, test string) (*TestRunner,
 	if err != nil {
 		panic(fmt.Sprintf("error creating error dir %s: %v", errdir, err))
 	}
-	sink, err := sink.NewFileSink(errfile)
-	if err != nil {
-		panic(fmt.Sprintf("error creating error sink %s: %v", errfile, err))
-	}
+	sink := sink.NewFileSink(errfile)
 	deployerInst := creator.NewDeployer(sink)
 
 	return &TestRunner{tracker: tracker, root: root, base: base, out: outdir, test: test, scripts: scripts, scopes: scopes, repoIn: repoin, repoOut: repoout, errorsIn: errin, errorsOut: errdir, deployer: deployerInst}, nil

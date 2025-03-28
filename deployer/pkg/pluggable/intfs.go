@@ -1,6 +1,6 @@
-package parser
+package pluggable
 
-import "ziniki.org/deployer/deployer/pkg/pluggable"
+import "ziniki.org/deployer/deployer/pkg/errors"
 
 type ProvideLine interface {
 	HaveLine(lineNo int, text string)
@@ -11,9 +11,9 @@ type ProvideBlockedLine interface {
 }
 
 type Interpreter interface {
-	HaveTokens(tokens []pluggable.Token) ProvideBlockedLine
+	HaveTokens(reporter *errors.ErrorReporter, tokens []Token) ProvideBlockedLine
 }
 
 type Scoper interface {
-	FindVerb(v pluggable.Identifier) pluggable.Action
+	FindVerb(v Identifier) Action
 }

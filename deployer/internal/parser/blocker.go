@@ -4,12 +4,13 @@ import (
 	"unicode"
 
 	"ziniki.org/deployer/deployer/pkg/errors"
+	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
 type Blocker struct {
 	errors   *errors.ErrorReporter
 	indents  []string
-	handlers []ProvideBlockedLine
+	handlers []pluggable.ProvideBlockedLine
 }
 
 // deffo need an error handler as well
@@ -67,6 +68,6 @@ func mapSpace(ch rune) rune {
 	}
 }
 
-func NewBlocker(sink errors.ErrorSink, topLevel ProvideBlockedLine) *Blocker {
-	return &Blocker{errors: errors.NewErrorReporter(sink), handlers: []ProvideBlockedLine{topLevel}}
+func NewBlocker(reporter *errors.ErrorReporter, topLevel pluggable.ProvideBlockedLine) *Blocker {
+	return &Blocker{errors: reporter, handlers: []pluggable.ProvideBlockedLine{topLevel}}
 }

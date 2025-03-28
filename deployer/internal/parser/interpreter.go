@@ -6,12 +6,11 @@ import (
 )
 
 type ScopeInterpreter struct {
-	sink   errors.ErrorSink
 	repo   pluggable.Repository
-	scoper Scoper
+	scoper pluggable.Scoper
 }
 
-func (si *ScopeInterpreter) HaveTokens(tokens []pluggable.Token) ProvideBlockedLine {
+func (si *ScopeInterpreter) HaveTokens(reporter *errors.ErrorReporter, tokens []pluggable.Token) pluggable.ProvideBlockedLine {
 	// There are probably a "number" of cases here, but the two I am aware of are:
 	// <verb> <arg>...
 	// <var> "<-" <verb> <arg> ...  ||  <var> "<-" <expr>
@@ -25,10 +24,9 @@ func (si *ScopeInterpreter) HaveTokens(tokens []pluggable.Token) ProvideBlockedL
 	if action == nil {
 		panic("this is obvs an error, but I don't have an error handler")
 	}
-	action.Handle(si.repo, tokens) // Will need other things as well as time goes on ...
-	return DisallowInnerScope(si.sink)
+	return action.Handle(reporter, si.repo, tokens) // Will need other things as well as time goes on ...
 }
 
-func NewInterpreter(repo pluggable.Repository, sink errors.ErrorSink, s Scoper) Interpreter {
-	return &ScopeInterpreter{repo: repo, sink: sink, scoper: s}
+func NewInterpreter(repo pluggable.Repository, s pluggable.Scoper) pluggable.Interpreter {
+	return &ScopeInterpreter{repo: repo, scoper: s}
 }

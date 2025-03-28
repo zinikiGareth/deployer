@@ -1,2 +1,0 @@
-  4.0   nested content is not allowed here
-  ==> ensure test.S3.Bucket "org.ziniki.launch_bucket"

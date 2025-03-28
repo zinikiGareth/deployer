@@ -1,5 +1,7 @@
 package pluggable
 
+import "ziniki.org/deployer/deployer/pkg/errors"
+
 type Token interface {
 	Loc() Location
 }
@@ -10,5 +12,5 @@ type Identifier interface {
 }
 
 type Action interface {
-	Handle(repo Repository, tokens []Token)
+	Handle(reporter *errors.ErrorReporter, repo Repository, tokens []Token) ProvideBlockedLine
 }
