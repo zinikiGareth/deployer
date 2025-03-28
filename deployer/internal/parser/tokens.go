@@ -15,6 +15,11 @@ type IdentifierToken struct {
 	id string
 }
 
+type StringToken struct {
+	BaseToken
+	text string
+}
+
 func (tok *BaseToken) Loc() pluggable.Location {
 	return tok.loc
 }
@@ -33,4 +38,16 @@ func (tok *IdentifierToken) String() string {
 
 func NewIdentifierToken(file string, line, offset int, text string) pluggable.Identifier {
 	return &IdentifierToken{BaseToken: BaseToken{loc: pluggable.NewLocation(file, line, offset)}, id: text}
+}
+
+func (tok *StringToken) Text() string {
+	return tok.text
+}
+
+func (tok *StringToken) String() string {
+	return fmt.Sprintf("%s %s", tok.BaseToken.String(), tok.text)
+}
+
+func NewStringToken(file string, line, offset int, text string) pluggable.String {
+	return &StringToken{BaseToken: BaseToken{loc: pluggable.NewLocation(file, line, offset)}, text: text}
 }

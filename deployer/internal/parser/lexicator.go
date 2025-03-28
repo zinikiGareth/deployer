@@ -20,13 +20,25 @@ func (ll *LineLexicator) BlockedLine(n, ind int, txt string) []pluggable.Token {
 	var toks []pluggable.Token
 	from := 0
 	runes := []rune(txt)
+	inString := false
+	var quoteRune rune
 	for k, r := range runes {
-		if unicode.IsSpace(r) {
-			if from == 0 {
+		if inString {
+			if r == quoteRune {
+				toks = ll.strtok(toks, n, ind+from, runes[from:k])
+				inString = false
+				from = k + 1
+			}
+		} else if unicode.IsSpace(r) {
+			if k == 0 {
 				panic("cannot have leading spaces on a line")
 			}
 			toks = ll.token(toks, n, ind+from, runes[from:k])
 			from = k + 1
+		} else if r == '"' || r == '\'' {
+			from = k + 1
+			inString = true
+			quoteRune = r
 		}
 	}
 	if len(runes) > from {
@@ -37,6 +49,11 @@ func (ll *LineLexicator) BlockedLine(n, ind int, txt string) []pluggable.Token {
 
 func (ll *LineLexicator) token(toks []pluggable.Token, line, start int, text []rune) []pluggable.Token {
 	tok := NewIdentifierToken(ll.file, line, start, string(text))
+	return append(toks, tok)
+}
+
+func (ll *LineLexicator) strtok(toks []pluggable.Token, line, start int, text []rune) []pluggable.Token {
+	tok := NewStringToken(ll.file, line, start, string(text))
 	return append(toks, tok)
 }
 

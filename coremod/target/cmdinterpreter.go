@@ -14,7 +14,7 @@ type commandScope struct {
 
 func (b *commandScope) HaveTokens(reporter errors.ErrorRepI, tokens []pluggable.Token) pluggable.Interpreter {
 	// I am hacking this in first, and then I need to come back and do more on it
-	log.Printf("hello %d %v?\n", len(tokens), tokens[0])
+	log.Printf("hello %d %v?\n", len(tokens), tokens[1])
 
 	if len(tokens) != 3 {
 		panic("tokens are wrong")
@@ -22,10 +22,10 @@ func (b *commandScope) HaveTokens(reporter errors.ErrorRepI, tokens []pluggable.
 	if tokens[0].(pluggable.Identifier).Id() != "ensure" {
 		panic("token[0] is wrong")
 	}
-	if tokens[1].(pluggable.Identifier).Id() != "test.aws.Bucket" {
+	if tokens[1].(pluggable.Identifier).Id() != "test.S3.Bucket" {
 		panic("token[1] is wrong")
 	}
-	if tokens[1].(pluggable.String).Text() != "org.ziniki.launch_bucket" {
+	if tokens[2].(pluggable.String).Text() != "org.ziniki.launch_bucket" {
 		panic("token[2] is wrong")
 	}
 
