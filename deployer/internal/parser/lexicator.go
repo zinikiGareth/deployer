@@ -55,6 +55,9 @@ func (ll *LineLexicator) BlockedLine(lineNo, ind int, txt string) []pluggable.To
 				toks = ll.token(toks, lineNo, ind+from, tok)
 				tok = []rune{}
 				mode = starting
+			} else if r == '"' || r == '\'' {
+				ll.reporter.Report(k, "space required after identifier before string")
+				return nil
 			} else { // TODO: stop on non-valid identifier char
 				tok = append(tok, r)
 			}
@@ -68,6 +71,9 @@ func (ll *LineLexicator) BlockedLine(lineNo, ind int, txt string) []pluggable.To
 			if r == quoteRune { // it was "" in the middle of the string, add one of them
 				tok = append(tok, quoteRune)
 				mode = inString
+			} else if !unicode.IsSpace(r) {
+				ll.reporter.Report(k, "space required after string before identifier")
+				return nil
 			} else {
 				toks = ll.strtok(toks, lineNo, ind+from, tok)
 				tok = []rune{}

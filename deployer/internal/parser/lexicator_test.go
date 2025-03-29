@@ -118,6 +118,28 @@ func TestAStringMustNotEndWithNetedQuote(t *testing.T) {
 	}
 }
 
+func TestThereMustBeASpaceBetweenIDAndAString(t *testing.T) {
+	reporter, sink := mockReporter(t)
+	tx := "system'hello'"
+	lex := parser.NewLineLexicator(reporter, "test")
+	sink.Expect(1, 6, tx, "space required after identifier before string")
+	toks := lex.BlockedLine(1, 1, tx)
+	if toks != nil {
+		t.Fatalf("expected nil")
+	}
+}
+
+func TestThereMustBeASpaceBetweenAStringAndAnID(t *testing.T) {
+	reporter, sink := mockReporter(t)
+	tx := "'hello'system"
+	lex := parser.NewLineLexicator(reporter, "test")
+	sink.Expect(1, 7, tx, "space required after string before identifier")
+	toks := lex.BlockedLine(1, 1, tx)
+	if toks != nil {
+		t.Fatalf("expected nil")
+	}
+}
+
 // test of ids/strings/symbols butted up against each other
 // id"hello" is an error - must be a space
 // id<-x is probably fine, though, because we want x*3, and think about calc in css
@@ -188,17 +210,17 @@ func (s *mockSink) Report(line, ind int, text, msg string) {
 	}
 	es := s.errors[0]
 	s.errors = s.errors[1:]
+	if es.msg != msg {
+		s.t.Fatalf("msg was '%s' not '%s'", msg, es.msg)
+	}
 	if es.line != line {
 		s.t.Fatalf("was line %d not %d", line, es.line)
 	}
 	if es.ind != ind {
-		s.t.Fatalf("was line %d not %d", ind, es.ind)
+		s.t.Fatalf("was ind %d not %d", ind, es.ind)
 	}
 	if es.text != text {
 		s.t.Fatalf("text was '%s' not '%s'", text, es.text)
-	}
-	if es.msg != msg {
-		s.t.Fatalf("msg was '%s' not '%s'", msg, es.msg)
 	}
 }
 
