@@ -25,7 +25,8 @@ const (
 	stringEnding
 )
 
-func (ll *LineLexicator) BlockedLine(n, ind int, txt string) []pluggable.Token {
+func (ll *LineLexicator) BlockedLine(lineNo, ind int, txt string) []pluggable.Token {
+	ll.reporter.At(lineNo, txt)
 	var toks []pluggable.Token
 	from := 0
 	runes := []rune(txt)
@@ -51,7 +52,7 @@ func (ll *LineLexicator) BlockedLine(n, ind int, txt string) []pluggable.Token {
 			}
 		case inIdentifier:
 			if unicode.IsSpace(r) {
-				toks = ll.token(toks, n, ind+from, tok)
+				toks = ll.token(toks, lineNo, ind+from, tok)
 				tok = []rune{}
 				mode = starting
 			} else { // TODO: stop on non-valid identifier char
@@ -68,7 +69,7 @@ func (ll *LineLexicator) BlockedLine(n, ind int, txt string) []pluggable.Token {
 				tok = append(tok, quoteRune)
 				mode = inString
 			} else {
-				toks = ll.strtok(toks, n, ind+from, tok)
+				toks = ll.strtok(toks, lineNo, ind+from, tok)
 				tok = []rune{}
 				mode = starting
 			}
@@ -77,9 +78,12 @@ func (ll *LineLexicator) BlockedLine(n, ind int, txt string) []pluggable.Token {
 	if len(tok) != 0 {
 		switch mode {
 		case inIdentifier:
-			toks = ll.token(toks, n, ind+from, tok)
+			toks = ll.token(toks, lineNo, ind+from, tok)
 		case stringEnding:
-			toks = ll.strtok(toks, n, ind+from, tok)
+			toks = ll.strtok(toks, lineNo, ind+from, tok)
+		case inString:
+			ll.reporter.Report(from, "unterminated string")
+			return nil
 		default:
 			panic("should not have leftover tok:" + string(tok))
 		}
