@@ -48,6 +48,28 @@ func TestAStringCanBeFoundBetweenDoubleQuotes(t *testing.T) {
 	}
 }
 
+func TestAStringCanIncludeANestedDQPairBetweenDoubleQuotes(t *testing.T) {
+	reporter := mockReporter()
+	lex := parser.NewLineLexicator(reporter, "test")
+	toks := lex.BlockedLine(1, 1, "\"hello, \"\"world\"\"\"")
+	if len(toks) != 1 {
+		t.Fatalf("not one arg returned but %v", toks)
+	}
+	str, ok := toks[0].(pluggable.String)
+	if !ok {
+		t.Fatalf("token 0 was not a string")
+	}
+	if str.Text() != "hello, \"world\"" {
+		t.Fatalf("token 0 was not the string \"hello, \"world\"\" but %s", str)
+	}
+}
+
+// single quote cases
+// string error cases: unterminated, ends with double quote
+// test of ids/strings/symbols butted up against each other
+// id"hello" is an error - must be a space
+// id<-x is probably fine, though, because we want x*3, and think about calc in css
+
 func TestTwoIdsCanBeSeparatedByASpace(t *testing.T) {
 	reporter := mockReporter()
 	lex := parser.NewLineLexicator(reporter, "test")
@@ -56,10 +78,10 @@ func TestTwoIdsCanBeSeparatedByASpace(t *testing.T) {
 		t.Fatalf("not two args returned")
 	}
 	if toks[0].(pluggable.Identifier).Id() != "hello" {
-		t.Fatalf("token 0 was not hello")
+		t.Fatalf("token 0 was not hello, but %s", toks[0])
 	}
 	if toks[1].(pluggable.Identifier).Id() != "world" {
-		t.Fatalf("token 1 was not world")
+		t.Fatalf("token 1 was not world, but %s", toks[1])
 	}
 }
 
@@ -91,6 +113,9 @@ func TestTwoIdsAndASimpleStringCanBeSeparatedBySpaces(t *testing.T) {
 		t.Fatalf("token 2 was not org.ziniki.launch_bucket")
 	}
 }
+
+// TODO: numbers of all forms
+// TODO: symbols
 
 func mockReporter() errors.ErrorRepI {
 	return &errors.ErrorReporter{}
