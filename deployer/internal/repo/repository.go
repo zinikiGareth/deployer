@@ -1,9 +1,12 @@
 package repo
 
-import "ziniki.org/deployer/deployer/pkg/pluggable"
+import (
+	"ziniki.org/deployer/deployer/pkg/pluggable"
+)
 
 type SimpleRepository struct {
 	symbolLsnrs []pluggable.SymbolListener
+	symbols     map[pluggable.SymbolName]pluggable.Definition
 }
 
 func (d *SimpleRepository) ReadingFile(file string) {
@@ -13,6 +16,7 @@ func (d *SimpleRepository) ReadingFile(file string) {
 }
 
 func (d *SimpleRepository) IntroduceSymbol(who pluggable.SymbolName, is pluggable.Definition) {
+	d.symbols[who] = is
 	for _, lsnr := range d.symbolLsnrs {
 		lsnr.Symbol(who, is)
 	}
@@ -22,6 +26,12 @@ func (d *SimpleRepository) AddSymbolListener(lsnr pluggable.SymbolListener) {
 	d.symbolLsnrs = append(d.symbolLsnrs, lsnr)
 }
 
+func (d *SimpleRepository) Traverse(lsnr pluggable.RepositoryTraverser) {
+	for who, what := range d.symbols {
+		lsnr.Visit(who, what)
+	}
+}
+
 func NewRepository() pluggable.Repository {
-	return &SimpleRepository{}
+	return &SimpleRepository{symbols: make(map[pluggable.SymbolName]pluggable.Definition)}
 }

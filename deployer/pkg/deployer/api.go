@@ -11,6 +11,7 @@ type Deployer interface {
 	ReadScriptsFrom(indir string) error
 	Deploy() error
 
+	Traverse(lsnr pluggable.RepositoryTraverser)
 	ObtainRegister() pluggable.Register // for the benefit of plugins
 }
 

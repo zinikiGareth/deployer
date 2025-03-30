@@ -1,5 +1,5 @@
 #!/bin/bash -x
 
 cd deployer
-go test -v ./...
+go test ./...
 exit $?

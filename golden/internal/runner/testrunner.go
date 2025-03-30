@@ -165,6 +165,10 @@ func (r *TestRunner) TestDeployment(eh errors.TestErrorHandler) {
 		fmt.Printf("Error deploying: %v\n", err)
 		return
 	}
+	storer := lsnrs.NewGoldenRepoStorer()
+	r.deployer.Traverse(storer)
+	storer.DumpNamesTo(r.repoOut)
+	storer.DumpDefnsTo(r.repoOut)
 	r.compareGoldenFiles(r.errorsIn, r.errorsOut, false)
 	r.compareGoldenFiles(r.repoIn, r.repoOut, true)
 }
@@ -195,6 +199,7 @@ func (r *TestRunner) compareGoldenFiles(golden, gen string, copyNewFiles bool) {
 	for k, g := range genFiles {
 		genmap[g] = k + 1
 	}
+	failed := false
 	for _, f := range goldenFiles {
 		if genmap[f] != 0 {
 			if !utils.CompareFiles(filepath.Join(gen, f), filepath.Join(golden, f)) {
@@ -204,7 +209,10 @@ func (r *TestRunner) compareGoldenFiles(golden, gen string, copyNewFiles bool) {
 			delete(genmap, f)
 		} else { // if there is no generated file, complain: that's a failure
 			eh.Writef("there is no gen file for %s\n", f)
-			eh.Fail()
+			if !failed {
+				eh.Fail()
+				failed = true
+			}
 		}
 	}
 

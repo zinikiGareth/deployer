@@ -17,8 +17,12 @@ type Location struct {
 	Offset int
 }
 
-func (loc Location) String() string {
+func (loc Location) InFile() string {
 	return fmt.Sprintf("%d.%d", loc.Line, loc.Offset)
+}
+
+func (loc Location) String() string {
+	return fmt.Sprintf("%s:%d.%d", loc.File, loc.Line, loc.Offset)
 }
 
 func NewLocation(file string, line, offset int) Location {

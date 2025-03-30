@@ -50,6 +50,10 @@ func (d *DeployerImpl) AddSymbolListener(lsnr pluggable.SymbolListener) {
 	d.repo.AddSymbolListener(lsnr)
 }
 
+func (d *DeployerImpl) Traverse(lsnr pluggable.RepositoryTraverser) {
+	d.repo.Traverse(lsnr)
+}
+
 func NewDeployer(sink errors.ErrorSink) deployer.Deployer {
 	return &DeployerImpl{registry: registry.NewRegistry(), repo: repo.NewRepository(), sink: sink}
 }
