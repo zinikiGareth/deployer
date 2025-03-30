@@ -1,3 +1,5 @@
 target foo {
-    _where_: indents.dply:5.11
+	_where_: indents.dply:5.11
+	actions: [
+	]
 }

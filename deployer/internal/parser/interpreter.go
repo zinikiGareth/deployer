@@ -8,7 +8,7 @@ import (
 type mayNotAddToParentOfTop struct {
 }
 
-func (cc *mayNotAddToParentOfTop) Add(entry pluggable.Locatable) {
+func (cc *mayNotAddToParentOfTop) Add(entry pluggable.Definition) {
 	panic("cannot add to parent of top level; store in repo instead")
 }
 

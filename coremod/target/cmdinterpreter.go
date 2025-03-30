@@ -7,10 +7,10 @@ import (
 )
 
 type commandList struct {
-	commands []pluggable.Locatable
+	commands []pluggable.Definition
 }
 
-func (cc *commandList) Add(entry pluggable.Locatable) {
+func (cc *commandList) Add(entry pluggable.Definition) {
 	cc.commands = append(cc.commands, entry)
 }
 
@@ -48,6 +48,6 @@ func (b *commandScope) HaveTokens(reporter errors.ErrorRepI, tokens []pluggable.
 	return action.Handle(reporter, b.repo, b.commands, tokens)
 }
 
-func TargetCommandInterpreter(repo pluggable.Repository) pluggable.Interpreter {
-	return &commandScope{repo: repo, commands: &commandList{}}
+func TargetCommandInterpreter(repo pluggable.Repository, commands *commandList) pluggable.Interpreter {
+	return &commandScope{repo: repo, commands: commands}
 }

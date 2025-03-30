@@ -16,5 +16,5 @@ type Locatable interface {
 }
 
 type ContainingContext interface {
-	Add(entry Locatable)
+	Add(entry Definition)
 }

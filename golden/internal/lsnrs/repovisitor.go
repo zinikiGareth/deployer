@@ -8,6 +8,7 @@ import (
 	"slices"
 
 	"ziniki.org/deployer/deployer/pkg/pluggable"
+	"ziniki.org/deployer/deployer/pkg/utils"
 )
 
 type RepositoryStorer interface {
@@ -42,11 +43,12 @@ func (s *goldenRepoStorer) DumpDefnsTo(outdir string) {
 		fmt.Printf("could not save to %s: %v\n", path, err)
 		return
 	}
+	iw := utils.NewIndentWriter(writeTo)
 	keys := slices.Collect(maps.Keys(s.defns))
 	slices.Sort(keys)
 	for _, key := range keys {
 		d := s.defns[key]
-		d.DumpTo(writeTo)
+		d.DumpTo(iw)
 	}
 	writeTo.Close()
 }
