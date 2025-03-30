@@ -4,7 +4,7 @@ import "fmt"
 
 type SymbolListener interface {
 	ReadingFile(file string)
-	Symbol(where Location, what SymbolType, who SymbolName, is Definition)
+	Symbol(who SymbolName, is Definition)
 }
 
 // These may want to change in the fullness of time
@@ -17,7 +17,7 @@ type Location struct {
 	Offset int
 }
 
-func (loc *Location) String() string {
+func (loc Location) String() string {
 	return fmt.Sprintf("%d.%d", loc.Line, loc.Offset)
 }
 
