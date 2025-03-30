@@ -17,7 +17,7 @@ func (r *RepoListener) ReadingFile(file string) {
 	r.writeTo.WriteString(":\n")
 }
 
-func (r *RepoListener) Symbol(where pluggable.Location, what pluggable.SymbolType, who pluggable.SymbolName) {
+func (r *RepoListener) Symbol(where pluggable.Location, what pluggable.SymbolType, who pluggable.SymbolName, is pluggable.Definition) {
 	r.writeTo.WriteString(fmt.Sprintf("%s %s %s\n", where.String(), what, who))
 }
 

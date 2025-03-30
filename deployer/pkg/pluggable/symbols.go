@@ -4,7 +4,7 @@ import "fmt"
 
 type SymbolListener interface {
 	ReadingFile(file string)
-	Symbol(where Location, what SymbolType, who SymbolName)
+	Symbol(where Location, what SymbolType, who SymbolName, is Definition)
 }
 
 // These may want to change in the fullness of time

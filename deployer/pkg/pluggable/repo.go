@@ -2,7 +2,7 @@ package pluggable
 
 type Repository interface {
 	ReadingFile(file string)
-	IntroduceSymbol(where Location, what SymbolType, who SymbolName)
+	IntroduceSymbol(where Location, what SymbolType, who SymbolName, is Definition)
 	AddSymbolListener(lsnr SymbolListener)
 }
 

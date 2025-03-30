@@ -12,9 +12,9 @@ func (d *SimpleRepository) ReadingFile(file string) {
 	}
 }
 
-func (d *SimpleRepository) IntroduceSymbol(where pluggable.Location, what pluggable.SymbolType, who pluggable.SymbolName) {
+func (d *SimpleRepository) IntroduceSymbol(where pluggable.Location, what pluggable.SymbolType, who pluggable.SymbolName, is pluggable.Definition) {
 	for _, lsnr := range d.symbolLsnrs {
-		lsnr.Symbol(where, what, who)
+		lsnr.Symbol(where, what, who, is)
 	}
 }
 

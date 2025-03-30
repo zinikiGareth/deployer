@@ -10,6 +10,6 @@ type CoreTarget struct {
 
 func (t *CoreTarget) Handle(reporter errors.ErrorRepI, repo pluggable.Repository, parent pluggable.ContainingContext, tokens []pluggable.Token) pluggable.Interpreter {
 	t1 := tokens[1].(pluggable.Identifier)
-	repo.IntroduceSymbol(t1.Loc(), pluggable.SymbolType("core.Target"), pluggable.SymbolName(t1.Id()))
+	repo.IntroduceSymbol(t1.Loc(), pluggable.SymbolType("core.Target"), pluggable.SymbolName(t1.Id()), nil)
 	return TargetCommandInterpreter(repo)
 }
