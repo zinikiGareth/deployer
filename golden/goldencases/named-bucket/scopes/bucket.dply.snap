@@ -1,0 +1,12 @@
+>This test not only wants to ensure a bucket exists, but wants to store it and provide options
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
+>
+>	target ensureABucketExists
+#^ source.deployer-dply
+# ^^^^^^ source.deployer-dply keyword.target
+#       ^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>		ensure test.S3.Bucket "org.ziniki.launch_bucket" => launch_bucket
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>			retentionLength <- 24
+#^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>

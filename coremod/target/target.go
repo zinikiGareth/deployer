@@ -8,7 +8,7 @@ import (
 type coreTarget struct {
 	loc     pluggable.Location
 	name    pluggable.SymbolName
-	actions *commandList
+	actions *[]pluggable.Definition
 }
 
 func (t *coreTarget) Loc() pluggable.Location {
@@ -30,10 +30,8 @@ func (t *coreTarget) ShortDescription() string {
 func (t *coreTarget) DumpTo(w pluggable.IndentWriter) {
 	w.Intro("target %s", t.name)
 	w.AttrsWhere(t)
-	// w.Printf("target %s {\n", t.name)
-	// w.Printf("    _where_: %s\n", t.loc.String())
 	w.ListAttr("actions")
-	for _, a := range t.actions.commands {
+	for _, a := range *t.actions {
 		a.DumpTo(w)
 	}
 	w.EndList()
@@ -46,8 +44,8 @@ type CoreTargetVerb struct {
 func (t *CoreTargetVerb) Handle(reporter errors.ErrorRepI, repo pluggable.Repository, parent pluggable.ContainingContext, tokens []pluggable.Token) pluggable.Interpreter {
 	t1 := tokens[1].(pluggable.Identifier)
 	name := pluggable.SymbolName(t1.Id())
-	actions := &commandList{}
-	target := &coreTarget{loc: t1.Loc(), name: name, actions: actions}
+	actions := []pluggable.Definition{}
+	target := &coreTarget{loc: t1.Loc(), name: name, actions: &actions}
 	repo.IntroduceSymbol(name, target)
-	return TargetCommandInterpreter(repo, actions)
+	return TargetCommandInterpreter(repo, &actions)
 }

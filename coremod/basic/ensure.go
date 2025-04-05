@@ -41,6 +41,18 @@ func (ea EnsureAction) ShortDescription() string {
 type EnsureCommandHandler struct{}
 
 func (ensure *EnsureCommandHandler) Handle(reporter errors.ErrorRepI, repo pluggable.Repository, parent pluggable.ContainingContext, tokens []pluggable.Token) pluggable.Interpreter {
+	// TODO: allow 2 or 3
+	// TODO: errors not panics
+	if len(tokens) != 3 {
+		panic("tokens are wrong")
+	}
+	if tokens[1].(pluggable.Identifier).Id() != "test.S3.Bucket" {
+		panic("token[1] is wrong")
+	}
+	if tokens[2].(pluggable.String).Text() != "org.ziniki.launch_bucket" {
+		panic("token[2] is wrong")
+	}
+
 	ea := &EnsureAction{loc: tokens[0].Loc(), what: pluggable.SymbolType(tokens[1].(pluggable.Identifier).Id()), named: tokens[2].(pluggable.String).Text()}
 	parent.Add(ea)
 	return interpreters.DisallowInnerScope()

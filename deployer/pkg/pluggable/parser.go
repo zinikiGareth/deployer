@@ -28,6 +28,12 @@ type String interface {
 	Text() string
 }
 
+type Operator interface {
+	Token
+	Is(op string) bool
+	Op() string
+}
+
 type Action interface {
 	Handle(reporter errors.ErrorRepI, repo Repository, parent ContainingContext, tokens []Token) Interpreter
 }

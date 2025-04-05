@@ -6,35 +6,33 @@ import (
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
-type commandList struct {
-	commands []pluggable.Definition
-}
-
-func (cc *commandList) Add(entry pluggable.Definition) {
-	cc.commands = append(cc.commands, entry)
-}
-
 type commandScope struct {
 	repo     pluggable.Repository
-	commands *commandList
+	commands *[]pluggable.Definition
+	storeAs  pluggable.Identifier
+}
+
+func (cc *commandScope) Add(entry pluggable.Definition) {
+	*cc.commands = append(*cc.commands, entry)
+	if cc.storeAs != nil {
+		cc.repo.IntroduceSymbol(pluggable.SymbolName(cc.storeAs.Id()), entry)
+	}
 }
 
 func (b *commandScope) HaveTokens(reporter errors.ErrorRepI, tokens []pluggable.Token) pluggable.Interpreter {
 	// I am hacking this in first, and then I need to come back and do more on it
 
-	if len(tokens) != 3 {
-		panic("tokens are wrong")
+	if len(tokens) < 1 {
+		panic("need a command")
 	}
 	if tokens[0].(pluggable.Identifier).Id() != "ensure" {
 		panic("token[0] is wrong")
 	}
-	if tokens[1].(pluggable.Identifier).Id() != "test.S3.Bucket" {
-		panic("token[1] is wrong")
-	}
-	if tokens[2].(pluggable.String).Text() != "org.ziniki.launch_bucket" {
-		panic("token[2] is wrong")
-	}
 
+	var assignTo pluggable.Identifier
+	if len(tokens) >= 3 && tokens[len(tokens)-2].(pluggable.Operator).Is("=>") {
+		assignTo = tokens[len(tokens)-1].(pluggable.Identifier)
+	}
 	cmd, ok := tokens[0].(pluggable.Identifier)
 	if !ok {
 		panic("command token must be an identifier")
@@ -45,9 +43,11 @@ func (b *commandScope) HaveTokens(reporter errors.ErrorRepI, tokens []pluggable.
 	} else {
 		panic("invalid target command")
 	}
-	return action.Handle(reporter, b.repo, b.commands, tokens)
+	b.storeAs = assignTo
+	// TODO: refactor context handler so that it can also store in the repo
+	return action.Handle(reporter, b.repo, b, tokens)
 }
 
-func TargetCommandInterpreter(repo pluggable.Repository, commands *commandList) pluggable.Interpreter {
+func TargetCommandInterpreter(repo pluggable.Repository, commands *[]pluggable.Definition) pluggable.Interpreter {
 	return &commandScope{repo: repo, commands: commands}
 }

@@ -1,0 +1,5 @@
+This test not only wants to ensure a bucket exists, but wants to store it and provide options
+
+	target ensureABucketExists
+		ensure test.S3.Bucket "org.ziniki.launch_bucket" => launch_bucket
+			retentionLength <- 24
