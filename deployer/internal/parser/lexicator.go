@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"strings"
 	"unicode"
 
 	"ziniki.org/deployer/deployer/pkg/errors"
@@ -22,6 +23,7 @@ const (
 	starting lexmode = iota
 	inIdentifier
 	inString
+	inSymbol
 	stringEnding
 )
 
@@ -33,6 +35,7 @@ func (ll *LineLexicator) BlockedLine(lineNo, ind int, txt string) []pluggable.To
 	var quoteRune rune
 	mode := starting
 	var tok []rune
+loop:
 	for k, r := range runes {
 		switch mode {
 		case starting:
@@ -45,7 +48,11 @@ func (ll *LineLexicator) BlockedLine(lineNo, ind int, txt string) []pluggable.To
 				from = k + 1
 				mode = inString
 				quoteRune = r
-			} else { // TODO: numbers, symbols
+			} else if isSymbol(r) {
+				from = k
+				mode = inSymbol
+				tok = append(tok, r)
+			} else { // TODO: numbers, symbols, punc
 				from = k
 				mode = inIdentifier
 				tok = append(tok, r)
@@ -59,6 +66,14 @@ func (ll *LineLexicator) BlockedLine(lineNo, ind int, txt string) []pluggable.To
 				ll.reporter.Report(k, "space required after identifier before string")
 				return nil
 			} else { // TODO: stop on non-valid identifier char
+				tok = append(tok, r)
+			}
+		case inSymbol:
+			if !isSymbol(r) {
+				if strings.HasPrefix(string(tok), "//") {
+					break loop
+				}
+			} else {
 				tok = append(tok, r)
 			}
 		case inString:
@@ -87,6 +102,10 @@ func (ll *LineLexicator) BlockedLine(lineNo, ind int, txt string) []pluggable.To
 			toks = ll.token(toks, lineNo, ind+from, tok)
 		case stringEnding:
 			toks = ll.strtok(toks, lineNo, ind+from, tok)
+		case inSymbol:
+			if !strings.HasPrefix(string(tok), "//") {
+				toks = ll.strtok(toks, lineNo, ind+from, tok)
+			}
 		case inString:
 			ll.reporter.Report(from, "unterminated string")
 			return nil
@@ -95,6 +114,14 @@ func (ll *LineLexicator) BlockedLine(lineNo, ind int, txt string) []pluggable.To
 		}
 	}
 	return toks
+}
+
+func isSymbol(r rune) bool {
+	if r == '/' {
+		return true
+	} else {
+		return false
+	}
 }
 
 func (ll *LineLexicator) token(toks []pluggable.Token, line, start int, text []rune) []pluggable.Token {
