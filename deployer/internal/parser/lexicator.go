@@ -27,6 +27,9 @@ const (
 	stringEnding
 )
 
+// TODO: still need to handle PUNC chars: ( ) { } [ ] ,
+// Don't handle @ # & ? | yet (prob symbol but could be punc)
+
 func (ll *LineLexicator) BlockedLine(lineNo, ind int, txt string) []pluggable.Token {
 	ll.reporter.At(lineNo, txt)
 	var toks []pluggable.Token
@@ -38,7 +41,6 @@ func (ll *LineLexicator) BlockedLine(lineNo, ind int, txt string) []pluggable.To
 loop:
 	for k, r := range runes {
 		goAgain := true
-	again:
 		for goAgain {
 			goAgain = false
 			switch mode {
@@ -62,15 +64,17 @@ loop:
 					tok = append(tok, r)
 				}
 			case inIdentifier:
-				if unicode.IsSpace(r) {
+				if unicode.IsSpace(r) || isSymbol(r) {
 					toks = ll.token(toks, lineNo, ind+from, tok)
 					tok = []rune{}
 					mode = starting
+					goAgain = true
 				} else if r == '"' || r == '\'' {
 					ll.reporter.Report(k, "space required after identifier before string")
 					return nil
-				} else { // TODO: stop on non-valid identifier char
+				} else if isIdentifierChar(r) {
 					tok = append(tok, r)
+				} else { // TODO: stop on non-valid identifier char
 				}
 			case inSymbol:
 				if !isSymbol(r) {
@@ -80,7 +84,7 @@ loop:
 						toks = ll.symbol(toks, lineNo, ind+from, tok)
 						tok = []rune{}
 						mode = starting
-						continue again
+						goAgain = true
 					}
 				} else {
 					tok = append(tok, r)
@@ -126,8 +130,25 @@ loop:
 	return toks
 }
 
+func isIdentifierChar(r rune) bool {
+	if unicode.IsLetter(r) {
+		return true
+	}
+	if unicode.IsDigit(r) {
+		return true
+	}
+	if r == '_' || r == '.' {
+		return true
+	}
+	return false
+}
+
 func isSymbol(r rune) bool {
-	if r == '/' {
+	if r == '/' || r == '*' || r == '+' || r == '-' {
+		return true
+	} else if r == '!' || r == '$' || r == '%' {
+		return true
+	} else if r == '<' || r == '=' || r == '>' {
 		return true
 	} else {
 		return false

@@ -30,8 +30,9 @@ func (b *commandScope) HaveTokens(reporter errors.ErrorRepI, tokens []pluggable.
 	}
 
 	var assignTo pluggable.Identifier
-	if len(tokens) >= 3 && tokens[len(tokens)-2].(pluggable.Operator).Is("=>") {
+	if len(tokens) > 3 && tokens[len(tokens)-2].(pluggable.Operator).Is("=>") {
 		assignTo = tokens[len(tokens)-1].(pluggable.Identifier)
+		tokens = tokens[0 : len(tokens)-2]
 	}
 	cmd, ok := tokens[0].(pluggable.Identifier)
 	if !ok {
