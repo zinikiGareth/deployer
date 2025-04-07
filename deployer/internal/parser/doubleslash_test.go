@@ -21,7 +21,7 @@ func TestALineWithDoubleSlashSpaceIsTerminated(t *testing.T) {
 	lex := parser.NewLineLexicator(reporter, "test")
 	toks := lex.BlockedLine(1, 1, "hello // , world")
 	if len(toks) != 1 {
-		t.Fatalf("%d args returned, not 0", len(toks))
+		t.Fatalf("%d args returned, not 1", len(toks))
 	}
 	if toks[0].(pluggable.Identifier).Id() != "hello" {
 		t.Fatalf("token was not hello")
