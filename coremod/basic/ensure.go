@@ -12,6 +12,7 @@ type EnsureAction struct {
 	loc   pluggable.Location
 	what  pluggable.SymbolType
 	named string
+	props map[pluggable.Identifier]any
 }
 
 func (ea EnsureAction) Loc() pluggable.Location {
@@ -31,11 +32,22 @@ func (ea EnsureAction) DumpTo(w pluggable.IndentWriter) {
 	w.AttrsWhere(ea)
 	w.TextAttr("what", string(ea.what))
 	w.TextAttr("named", ea.named)
+	if len(ea.props) > 0 {
+		w.Indent()
+		for k, v := range ea.props {
+			w.IndPrintf("%s <- %v\n", k, v)
+		}
+		w.UnIndent()
+	}
 	w.EndAttrs()
 }
 
 func (ea EnsureAction) ShortDescription() string {
 	return fmt.Sprintf("Ensure[%s: %s]", ea.what, ea.named)
+}
+
+func (ea *EnsureAction) AddProperty(name pluggable.Identifier, value any) {
+	ea.props[name] = value
 }
 
 type EnsureCommandHandler struct{}
@@ -53,7 +65,7 @@ func (ensure *EnsureCommandHandler) Handle(reporter errors.ErrorRepI, repo plugg
 		panic("token[2] is wrong")
 	}
 
-	ea := &EnsureAction{loc: tokens[0].Loc(), what: pluggable.SymbolType(tokens[1].(pluggable.Identifier).Id()), named: tokens[2].(pluggable.String).Text()}
+	ea := &EnsureAction{loc: tokens[0].Loc(), what: pluggable.SymbolType(tokens[1].(pluggable.Identifier).Id()), named: tokens[2].(pluggable.String).Text(), props: make(map[pluggable.Identifier]any)}
 	parent.Add(ea)
-	return interpreters.DisallowInnerScope()
+	return interpreters.PropertiesInnerScope(ea)
 }

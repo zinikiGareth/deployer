@@ -28,7 +28,7 @@ const (
 )
 
 // TODO: still need to handle PUNC chars: ( ) { } [ ] ,
-// Don't handle @ # & ? | yet (prob symbol but could be punc)
+// Don't handle @ # ^ & ? | yet (prob symbol but could be punc)
 
 func (ll *LineLexicator) BlockedLine(lineNo, ind int, txt string) []pluggable.Token {
 	ll.reporter.At(lineNo, txt)

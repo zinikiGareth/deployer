@@ -9,5 +9,7 @@ type IndentWriter interface {
 	EndAttrs()
 
 	// And to cope with everything else
-	Printf(format string, args ...any)
+	Indent()
+	UnIndent()
+	IndPrintf(format string, args ...any)
 }
