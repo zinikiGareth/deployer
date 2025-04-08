@@ -1,6 +1,8 @@
 package parser
 
 import (
+	"fmt"
+	"strconv"
 	"strings"
 	"unicode"
 
@@ -22,6 +24,7 @@ type lexmode int
 const (
 	starting lexmode = iota
 	inIdentifier
+	inNumber
 	inString
 	inSymbol
 	stringEnding
@@ -54,14 +57,20 @@ loop:
 					from = k + 1
 					mode = inString
 					quoteRune = r
+				} else if unicode.IsDigit(r) {
+					from = k
+					mode = inNumber
+					tok = append(tok, r)
 				} else if isSymbol(r) {
 					from = k
 					mode = inSymbol
 					tok = append(tok, r)
-				} else { // TODO: numbers, symbols, punc
+				} else if isIdentifierChar(r) {
 					from = k
 					mode = inIdentifier
 					tok = append(tok, r)
+				} else { // TODO: punc
+					ll.reporter.Report(k, fmt.Sprintf("invalid char '%c'", r))
 				}
 			case inIdentifier:
 				if unicode.IsSpace(r) || isSymbol(r) {
@@ -120,6 +129,8 @@ loop:
 			if !strings.HasPrefix(string(tok), "//") {
 				toks = ll.strtok(toks, lineNo, ind+from, tok)
 			}
+		case inNumber:
+			toks = ll.numtok(toks, lineNo, ind+from, tok)
 		case inString:
 			ll.reporter.Report(from, "unterminated string")
 			return nil
@@ -167,6 +178,15 @@ func (ll *LineLexicator) symbol(toks []pluggable.Token, line, start int, text []
 
 func (ll *LineLexicator) strtok(toks []pluggable.Token, line, start int, text []rune) []pluggable.Token {
 	tok := NewStringToken(ll.file, line, start, string(text))
+	return append(toks, tok)
+}
+
+func (ll *LineLexicator) numtok(toks []pluggable.Token, line, start int, text []rune) []pluggable.Token {
+	f64, err := strconv.ParseFloat(string(text), 64)
+	if err != nil {
+		ll.reporter.Report(start, fmt.Sprintf("not a valid number: %s", string(text)))
+	}
+	tok := NewNumberToken(ll.file, line, start, f64)
 	return append(toks, tok)
 }
 

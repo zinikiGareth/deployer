@@ -23,6 +23,11 @@ type Identifier interface {
 	Id() string
 }
 
+type Number interface {
+	Token
+	Value() float64
+}
+
 type String interface {
 	Token
 	Text() string

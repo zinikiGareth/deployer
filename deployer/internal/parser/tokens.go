@@ -15,6 +15,11 @@ type IdentifierToken struct {
 	id string
 }
 
+type NumberToken struct {
+	BaseToken
+	value float64
+}
+
 type OperatorToken struct {
 	BaseToken
 	op string
@@ -41,6 +46,14 @@ func (tok *IdentifierToken) String() string {
 	return fmt.Sprintf("%s %s", tok.BaseToken.String(), tok.id)
 }
 
+func (tok *NumberToken) Value() float64 {
+	return tok.value
+}
+
+func (tok *NumberToken) String() string {
+	return fmt.Sprintf("%s %v", tok.BaseToken.String(), tok.value)
+}
+
 func (tok *OperatorToken) Is(op string) bool {
 	return tok.op == op
 }
@@ -55,6 +68,10 @@ func (tok *OperatorToken) String() string {
 
 func NewIdentifierToken(file string, line, offset int, text string) pluggable.Identifier {
 	return &IdentifierToken{BaseToken: BaseToken{loc: pluggable.NewLocation(file, line, offset)}, id: text}
+}
+
+func NewNumberToken(file string, line, offset int, value float64) pluggable.Number {
+	return &NumberToken{BaseToken: BaseToken{loc: pluggable.NewLocation(file, line, offset)}, value: value}
 }
 
 func NewOperatorToken(file string, line, offset int, text string) pluggable.Operator {
