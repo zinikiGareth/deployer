@@ -18,3 +18,16 @@ func Test0IsANumber(t *testing.T) {
 		t.Fatalf("val != 0")
 	}
 }
+
+
+func TestWeCanParse24hours(t *testing.T) {
+	reporter, _ := mockReporter(t)
+	lex := parser.NewLineLexicator(reporter, "test")
+	toks := lex.BlockedLine(1, 1, "24 hours")
+	if len(toks) != 2 {
+		t.Fatalf("%d args returned, not 2", len(toks))
+	}
+	if toks[0].(pluggable.Number).Value() != 24 {
+		t.Fatalf("val != 24")
+	}
+}

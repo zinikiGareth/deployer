@@ -85,6 +85,18 @@ loop:
 					tok = append(tok, r)
 				} else { // TODO: stop on non-valid identifier char
 				}
+			case inNumber:
+				if r == '"' || r == '\'' {
+					ll.reporter.Report(k, "space required after identifier before string")
+					return nil
+				} else if isNumberChar(r) {
+					tok = append(tok, r)
+				} else {
+					toks = ll.numtok(toks, lineNo, ind+from, tok)
+					tok = []rune{}
+					mode = starting
+					goAgain = true
+				}
 			case inSymbol:
 				if !isSymbol(r) {
 					if strings.HasPrefix(string(tok), "//") {
@@ -149,6 +161,22 @@ func isIdentifierChar(r rune) bool {
 		return true
 	}
 	if r == '_' || r == '.' {
+		return true
+	}
+	return false
+}
+
+func isNumberChar(r rune) bool {
+	if unicode.IsDigit(r) {
+		return true
+	}
+	if unicode.IsLetter(r) {
+		return true
+	}
+	if r == 'e' || r == '+' || r == '-' || r == '.' { // floating point things
+		return true
+	}
+	if r == 'x' { // radix things
 		return true
 	}
 	return false
