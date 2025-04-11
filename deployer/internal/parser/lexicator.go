@@ -210,7 +210,16 @@ func (ll *LineLexicator) strtok(toks []pluggable.Token, line, start int, text []
 }
 
 func (ll *LineLexicator) numtok(toks []pluggable.Token, line, start int, text []rune) []pluggable.Token {
-	f64, err := strconv.ParseFloat(string(text), 64)
+	tx := string(text)
+	var f64 float64
+	var err error
+	if len(tx) > 2 && strings.HasPrefix(tx, "0x") {
+		var i64 int64
+		i64, err = strconv.ParseInt(tx[2:], 16, 64)
+		f64 = float64(i64)
+	} else {
+		f64, err = strconv.ParseFloat(tx, 64)
+	}
 	if err != nil {
 		ll.reporter.Report(start, fmt.Sprintf("not a valid number: %s", string(text)))
 	}
