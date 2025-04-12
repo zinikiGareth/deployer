@@ -113,6 +113,10 @@ func (s *testSink) Report(lineNo int, indent int, lineText string, msg string) {
 
 }
 
+func (s *testSink) Reportf(lineNo int, indent int, lineText string, format string, args ...any) {
+	s.Report(lineNo, indent, lineText, fmt.Sprintf(format, args...))
+}
+
 func blockerTest(lines []line) {
 	mocklex := &testLex{}
 	sink := &testSink{}

@@ -11,7 +11,7 @@ import (
 type EnsureAction struct {
 	loc      pluggable.Location
 	what     pluggable.Identifier
-	resolved pluggable.Definition
+	resolved pluggable.Noun
 	named    string
 	props    map[pluggable.Identifier]any
 }
@@ -49,7 +49,7 @@ func (ea EnsureAction) DumpTo(w pluggable.IndentWriter) {
 }
 
 func (ea EnsureAction) ShortDescription() string {
-	return fmt.Sprintf("Ensure[%s: %s]", ea.what, ea.named)
+	return fmt.Sprintf("Ensure[%s: %s]", ea.what.Id(), ea.named)
 }
 
 func (ea *EnsureAction) AddProperty(name pluggable.Identifier, value any) {

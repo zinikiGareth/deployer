@@ -62,6 +62,16 @@
             			"label": "testall",
             			"args": ["test", "-v", "./..."],
             			"group": "test",
+        		},
+        		{
+				"type": "shell",
+				"options": {
+					"cwd": "${workspaceFolder:Deployer}/..",
+				},
+				"command": "${workspaceFolder:Deployer}/../buildtest",
+            			"label": "buildtest",
+            			"args": [],
+            			"group": "test",
         		}
     		]
 	}

@@ -42,3 +42,8 @@ type Operator interface {
 type Action interface {
 	Handle(reporter errors.ErrorRepI, repo Repository, parent ContainingContext, tokens []Token) Interpreter
 }
+
+type Noun interface {
+	ShortDescription() string
+	// Handle(reporter errors.ErrorRepI, repo Repository, parent ContainingContext, tokens []Token) Interpreter
+}

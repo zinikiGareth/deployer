@@ -25,6 +25,10 @@ func (w *writerSink) Report(lineNo int, indent int, lineText string, msg string)
 	w.writer.Sync()
 }
 
+func (w *writerSink) Reportf(lineNo int, indent int, lineText string, format string, args ...any) {
+	w.Report(lineNo, indent, lineText, fmt.Sprintf(format, args...))
+}
+
 func NewConsoleSink() ErrorSink {
 	return &writerSink{writer: os.Stdout}
 }

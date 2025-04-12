@@ -1,6 +1,7 @@
 package parser_test
 
 import (
+	"fmt"
 	"testing"
 
 	"ziniki.org/deployer/deployer/pkg/errors"
@@ -10,6 +11,7 @@ type errorStruct struct {
 	line, ind int
 	text, msg string
 }
+
 type mockSink struct {
 	t      *testing.T
 	errors []errorStruct
@@ -37,6 +39,10 @@ func (s *mockSink) Report(line, ind int, text, msg string) {
 	if es.text != text {
 		s.t.Fatalf("text was '%s' not '%s'", text, es.text)
 	}
+}
+
+func (s *mockSink) Reportf(lineNo int, indent int, lineText string, format string, args ...any) {
+	s.Report(lineNo, indent, lineText, fmt.Sprintf(format, args...))
 }
 
 func mockReporter(t *testing.T) (errors.ErrorRepI, *mockSink) {

@@ -14,11 +14,11 @@ type Repository interface {
 	AddSymbolListener(lsnr SymbolListener)
 	Traverse(lsnr RepositoryTraverser)
 
-	ResolveAll(sink errors.ErrorSink)
+	ResolveAll(sink errors.ErrorSink, registry Recall)
 }
 
 type Resolver interface {
-	Resolve(name Identifier) Definition
+	Resolve(name Identifier) Noun
 }
 
 type Locatable interface {

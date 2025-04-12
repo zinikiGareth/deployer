@@ -42,7 +42,7 @@ func (d *DeployerImpl) Deploy() error {
 		d.repo.ReadingFile(f)
 		parser.Parse(d.registry, d.repo, d.sink, f, from)
 	}
-	d.repo.ResolveAll(d.sink)
+	d.repo.ResolveAll(d.sink, d.registry)
 	return nil
 }
 

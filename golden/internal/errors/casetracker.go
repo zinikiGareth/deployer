@@ -3,6 +3,7 @@ package errors
 import (
 	"fmt"
 	"path/filepath"
+	"slices"
 
 	"ziniki.org/deployer/deployer/pkg/deployer"
 )
@@ -35,10 +36,12 @@ func (tracker *CaseTracker) NewErrorHandler(purpose string) *FileErrorHandler {
 }
 
 func (tracker *CaseTracker) Fail(area string) {
-	fmt.Printf("  FAIL %s\n", area)
 	areas := tracker.failures[tracker.caseName]
-	areas = append(areas, area)
-	tracker.failures[tracker.caseName] = areas
+	if !slices.Contains(areas, area) {
+		fmt.Printf("  FAIL %s\n", area)
+		areas = append(areas, area)
+		tracker.failures[tracker.caseName] = areas
+	}
 }
 
 func (tracker *CaseTracker) Done() {
