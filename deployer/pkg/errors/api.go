@@ -7,4 +7,5 @@ type ErrorSink interface {
 type ErrorRepI interface {
 	At(lineNo int, lineText string)
 	Report(indent int, msg string)
+	Reportf(indent int, fmt string, args ...any)
 }

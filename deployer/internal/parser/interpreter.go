@@ -25,11 +25,11 @@ func (si *ScopeInterpreter) HaveTokens(reporter errors.ErrorRepI, tokens []plugg
 
 	verb, ok := tokens[0].(pluggable.Identifier)
 	if !ok {
-		panic("first token must be an identifier")
+		reporter.Report(0, "first token must be an identifier")
 	}
 	action := si.scoper.FindVerb(verb)
 	if action == nil {
-		panic("this is obvs an error, but I don't have an error handler")
+		reporter.Reportf(0, "there is no error handler for %s", verb)
 	}
 	return action.Handle(reporter, si.repo, &mayNotAddToParentOfTop{}, tokens) // Will need other things as well as time goes on ...
 }

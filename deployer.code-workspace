@@ -23,6 +23,10 @@
 		{
 			"name": "LSP",
 			"path": "lsp"
+		},
+		{
+			"name": "Samples",
+			"path": "samples"
 		}
 	],
 	"launch": {
