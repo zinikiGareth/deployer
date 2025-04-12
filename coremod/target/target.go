@@ -38,6 +38,12 @@ func (t *coreTarget) DumpTo(w pluggable.IndentWriter) {
 	w.EndAttrs()
 }
 
+func (t *coreTarget) Resolve(r pluggable.Resolver) {
+	for _, a := range *t.actions {
+		a.Resolve(r)
+	}
+}
+
 type CoreTargetVerb struct {
 }
 

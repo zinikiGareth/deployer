@@ -4,6 +4,7 @@ target ensureABucketExists {
 		EnsureCommand {
 			_where_: bucket.dply:4.2
 			what: test.S3.Bucket
+			resolved: test.S3.Bucket[]
 			named: org.ziniki.launch_bucket
 		}
 	]

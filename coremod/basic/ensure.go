@@ -9,10 +9,11 @@ import (
 )
 
 type EnsureAction struct {
-	loc   pluggable.Location
-	what  pluggable.SymbolType
-	named string
-	props map[pluggable.Identifier]any
+	loc      pluggable.Location
+	what     pluggable.Identifier
+	resolved pluggable.Definition
+	named    string
+	props    map[pluggable.Identifier]any
 }
 
 func (ea EnsureAction) Loc() pluggable.Location {
@@ -24,13 +25,18 @@ func (ea EnsureAction) Where() pluggable.Location {
 }
 
 func (ea EnsureAction) What() pluggable.SymbolType {
-	return ea.what
+	return pluggable.SymbolType(ea.what.Id())
 }
 
 func (ea EnsureAction) DumpTo(w pluggable.IndentWriter) {
 	w.Intro("EnsureCommand")
 	w.AttrsWhere(ea)
-	w.TextAttr("what", string(ea.what))
+	w.TextAttr("what", ea.what.Id())
+	if ea.resolved == nil {
+		w.TextAttr("not-resolved", ea.what.Id())
+	} else {
+		w.TextAttr("resolved", ea.resolved.ShortDescription())
+	}
 	w.TextAttr("named", ea.named)
 	if len(ea.props) > 0 {
 		w.Indent()
@@ -50,6 +56,10 @@ func (ea *EnsureAction) AddProperty(name pluggable.Identifier, value any) {
 	ea.props[name] = value
 }
 
+func (ea *EnsureAction) Resolve(r pluggable.Resolver) {
+	ea.resolved = r.Resolve(ea.what)
+}
+
 type EnsureCommandHandler struct{}
 
 func (ensure *EnsureCommandHandler) Handle(reporter errors.ErrorRepI, repo pluggable.Repository, parent pluggable.ContainingContext, tokens []pluggable.Token) pluggable.Interpreter {
@@ -65,7 +75,7 @@ func (ensure *EnsureCommandHandler) Handle(reporter errors.ErrorRepI, repo plugg
 		panic("token[2] is wrong")
 	}
 
-	ea := &EnsureAction{loc: tokens[0].Loc(), what: pluggable.SymbolType(tokens[1].(pluggable.Identifier).Id()), named: tokens[2].(pluggable.String).Text(), props: make(map[pluggable.Identifier]any)}
+	ea := &EnsureAction{loc: tokens[0].Loc(), what: tokens[1].(pluggable.Identifier), named: tokens[2].(pluggable.String).Text(), props: make(map[pluggable.Identifier]any)}
 	parent.Add(ea)
 	return interpreters.PropertiesInnerScope(ea)
 }
