@@ -7,11 +7,13 @@ import (
 )
 
 type writerSink struct {
-	path   string
-	writer *os.File
+	path      string
+	writer    *os.File
+	hasErrors bool
 }
 
 func (w *writerSink) Report(lineNo int, indent int, lineText string, msg string) {
+	w.hasErrors = true
 	if w.writer == nil {
 		var err error
 		w.writer, err = os.Create(w.path)
@@ -27,6 +29,10 @@ func (w *writerSink) Report(lineNo int, indent int, lineText string, msg string)
 
 func (w *writerSink) Reportf(lineNo int, indent int, lineText string, format string, args ...any) {
 	w.Report(lineNo, indent, lineText, fmt.Sprintf(format, args...))
+}
+
+func (s *writerSink) HasErrors() bool {
+	return s.hasErrors
 }
 
 func NewConsoleSink() ErrorSink {

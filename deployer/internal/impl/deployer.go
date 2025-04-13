@@ -42,7 +42,13 @@ func (d *DeployerImpl) Deploy() error {
 		d.repo.ReadingFile(f)
 		parser.Parse(d.registry, d.repo, d.sink, f, from)
 	}
+	if d.sink.HasErrors() {
+		return fmt.Errorf("errors during parsing")
+	}
 	d.repo.ResolveAll(d.sink, d.registry)
+	if d.sink.HasErrors() {
+		return fmt.Errorf("errors during resolving")
+	}
 	return nil
 }
 

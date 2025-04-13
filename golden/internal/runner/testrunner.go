@@ -162,8 +162,10 @@ func (r *TestRunner) TestDeployment(eh errors.TestErrorHandler) {
 	}
 	err = r.deployer.Deploy()
 	if err != nil {
-		fmt.Printf("Error deploying: %v\n", err)
-		return
+		// this is really just repeating information
+		// should it go in a file?
+		eh := r.ErrorHandlerFor("log")
+		eh.Writef("Error deploying: %v\n", err)
 	}
 	storer := lsnrs.NewGoldenRepoStorer()
 	r.deployer.Traverse(storer)

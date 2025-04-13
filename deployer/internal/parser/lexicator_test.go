@@ -45,6 +45,10 @@ func (s *mockSink) Reportf(lineNo int, indent int, lineText string, format strin
 	s.Report(lineNo, indent, lineText, fmt.Sprintf(format, args...))
 }
 
+func (s *mockSink) HasErrors() bool {
+	return len(s.errors) > 0
+}
+
 func mockReporter(t *testing.T) (errors.ErrorRepI, *mockSink) {
 	sink := &mockSink{t: t}
 	return errors.NewErrorReporter(sink), sink

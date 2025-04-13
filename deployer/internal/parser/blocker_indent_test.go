@@ -107,14 +107,19 @@ func (l *testLex) BlockedLine(lineNo, indent int, tx string) []pluggable.Token {
 }
 
 type testSink struct {
+	errorCount int
 }
 
 func (s *testSink) Report(lineNo int, indent int, lineText string, msg string) {
-
+	s.errorCount++
 }
 
 func (s *testSink) Reportf(lineNo int, indent int, lineText string, format string, args ...any) {
 	s.Report(lineNo, indent, lineText, fmt.Sprintf(format, args...))
+}
+
+func (s *testSink) HasErrors() bool {
+	return s.errorCount > 0
 }
 
 func blockerTest(lines []line) {
