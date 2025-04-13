@@ -7,6 +7,7 @@ import (
 	"ziniki.org/deployer/deployer/internal/parser"
 	"ziniki.org/deployer/deployer/internal/registry"
 	"ziniki.org/deployer/deployer/internal/repo"
+	"ziniki.org/deployer/deployer/internal/runtime"
 	"ziniki.org/deployer/deployer/pkg/deployer"
 	"ziniki.org/deployer/deployer/pkg/errors"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
@@ -35,7 +36,7 @@ func (d *DeployerImpl) ReadScriptsFrom(indir string) error {
 	return nil
 }
 
-func (d *DeployerImpl) Deploy() error {
+func (d *DeployerImpl) Deploy(targetNames ...string) error {
 	for _, f := range d.input {
 		fmt.Printf("  %s\n", f)
 		from := filepath.Join(d.srcdir, f)
@@ -49,6 +50,15 @@ func (d *DeployerImpl) Deploy() error {
 	if d.sink.HasErrors() {
 		return fmt.Errorf("errors during resolving")
 	}
+	targets, err := d.findTargets(targetNames...)
+	if err != nil {
+		return err
+	}
+	storage := runtime.NewRuntimeStorage()
+
+	for _, t := range targets {
+		t.Execute(storage)
+	}
 	return nil
 }
 
@@ -59,6 +69,18 @@ func (d *DeployerImpl) AddSymbolListener(lsnr pluggable.SymbolListener) {
 
 func (d *DeployerImpl) Traverse(lsnr pluggable.RepositoryTraverser) {
 	d.repo.Traverse(lsnr)
+}
+
+func (d *DeployerImpl) findTargets(names ...string) ([]pluggable.Target, error) {
+	var targets []pluggable.Target
+	for _, n := range names {
+		t := d.repo.FindTarget(pluggable.SymbolName(n))
+		if t == nil {
+			return nil, fmt.Errorf("there is no target %s", n)
+		}
+		targets = append(targets, t)
+	}
+	return targets, nil
 }
 
 func NewDeployer(sink errors.ErrorSink) deployer.Deployer {

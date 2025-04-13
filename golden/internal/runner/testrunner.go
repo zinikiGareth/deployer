@@ -3,9 +3,11 @@ package runner
 import (
 	"fmt"
 	"log"
+	"os"
 	"os/exec"
 	"path/filepath"
 	"plugin"
+	"syscall"
 
 	"ziniki.org/deployer/deployer/pkg/creator"
 	"ziniki.org/deployer/deployer/pkg/deployer"
@@ -160,7 +162,13 @@ func (r *TestRunner) TestDeployment(eh errors.TestErrorHandler) {
 		fmt.Printf("Error reading scripts from %s: %v\n", r.scripts, err)
 		return
 	}
-	err = r.deployer.Deploy()
+	targetFile := filepath.Join(r.scripts, "targets")
+	targets, err := r.ReadTargets(targetFile)
+	if err != nil {
+		fmt.Printf("Error reading target list from %s: %v\n", targetFile, err)
+		return
+	}
+	err = r.deployer.Deploy(targets...)
 	if err != nil {
 		// this is really just repeating information
 		// should it go in a file?
@@ -173,6 +181,27 @@ func (r *TestRunner) TestDeployment(eh errors.TestErrorHandler) {
 	storer.DumpDefnsTo(r.repoOut)
 	r.compareGoldenFiles(r.errorsIn, r.errorsOut, false)
 	r.compareGoldenFiles(r.repoIn, r.repoOut, true)
+}
+
+func (r *TestRunner) ReadTargets(file string) ([]string, error) {
+	lines, err := utils.FileAsLines(file)
+
+	if err != nil {
+		pe, ok := err.(*os.PathError)
+		if !ok {
+			return nil, err
+		}
+		if (pe.Op == "open" && pe.Err == syscall.ENOENT) {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	// TODO: I feel we will want to do some cleaning up here
+	// Specifically: 
+	//   * remove "blank" and "comment (#)" lines
+	//   * allow multiple targets on one line and break them up
+	return lines, nil
 }
 
 // TODO: I would like to make this its own thing

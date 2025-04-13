@@ -9,7 +9,7 @@ import (
 type Deployer interface {
 	AddSymbolListener(lsnr pluggable.SymbolListener)
 	ReadScriptsFrom(indir string) error
-	Deploy() error
+	Deploy(targets ...string) error
 
 	Traverse(lsnr pluggable.RepositoryTraverser)
 	ObtainRegister() pluggable.Register // for the benefit of plugins

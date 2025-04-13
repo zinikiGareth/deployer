@@ -32,6 +32,18 @@ func (d *SimpleRepository) Traverse(lsnr pluggable.RepositoryTraverser) {
 	}
 }
 
+func (d *SimpleRepository) FindTarget(name pluggable.SymbolName) pluggable.Target {
+	defn := d.symbols[name]
+	if defn == nil {
+		return nil
+	}
+	target, ok := defn.(pluggable.Target)
+	if !ok {
+		return nil
+	}
+	return target
+}
+
 func NewRepository() pluggable.Repository {
 	return &SimpleRepository{symbols: make(map[pluggable.SymbolName]pluggable.Definition)}
 }
