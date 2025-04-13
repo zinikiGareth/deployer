@@ -1,0 +1,186 @@
+Right, so the first thing I think I want is the ability to "ensure" some critical piece of infrastructure
+exists.
+
+We put everything in a "target" just like you would in make, and you can say then ask to "build" that target.
+
+Obviously the target has a "name", which is how you specify what it is that you want to build.
+
+	target website
+
+OK, now inside the target we need to have a set of "actions".  Now, there is a very real sense in which we
+want this to be "declarative" but at the same time it is very definitely the case that things are going to have to happen,
+so for anything that is going to "happen" we have to say "do this now" and there is an imperative feel to that.
+
+So the actions are going to be sequential.
+
+The "main" action I keep thinking about is "ensure".  "Ensure" is a verb which says that there is a thing which you
+want to exist and when you run "ensure" it makes sure that it does exist.  So, for example, we can say we want to ensure
+an AWS bucket exists.  This obviously requires a name.  I think this will be a typical pattern, so you can specify
+that on the line with the verb and the type.  If you want to use it again - for example to copy files into it or to
+make it the source of files for a website - you can save it as a variable.  This is different to just tracking its name
+because you can then "do" operations on it.  That is, you are making an "object" out of it.
+
+		ensure aws.S3.Bucket "news.consolidator.info" => consolidator_bucket
+
+Now, apart from a name a bucket can have all sorts of properties, such as a retention policy.  These can be provided by
+properties.  Syntactically, all we want to say about a property is that it has a name and takes a value from an expression.
+But when we want to come and execute that, we want to be sure that it makes sense.  This has at least two points to it:
+
+1. That the property must be a valid property on the object type;
+2. That the expression must have a value or type that is a good fit.
+
+			retention_policy <- 24 hours
+
+I think at the same time we can object if there are required properties that are not specified
+
+Now, I want to try a radical experiment here.  The parsing phase just makes sure that the syntax is correct.
+Then there is a "wiring up" phase where we track down all the names and make sure they exist and that we have those definitions;
+remember that this is all modular so there's a good chance you used something in a module you don't have.
+Then I want to "run" everything in "dry-run" or "typechecking" mode and have it require that everything lines up:
+
+* all the value expressions must end up returning some kind of value;
+* the type of the value must be what the item wants in the property to which it is being assigned.
+
+We want to go through and do ALL of this typechecking before we start actually CHANGING anything.
+
+Now, this may or may not involving going out and ASKING things of infrastructure, such as "does this bucket exist?" but
+we will never want to ACTUALLY create it, although we will want to create something representing it in memory.  We might
+also want to look and see whether it is POSSIBLE to create it, for example if some other user has already allocated the
+resource that we want to allocate.  If so, then we can't.
+
+When we have done ALL OF THAT, we will then be in a position to ACTUALLY create all the items.  Things can still go wrong,
+but I hope that most of the errors will already have been spotted either:
+
+* missing property errors
+* type errors
+* evaluation errors
+* inconsistent state errors
+
+And so on.
+
+In order to do any of this in the context of (say) AWS, we need something that is an AWS context.  This will have,
+for example, the region we want to work in, any user account we may have and so on.  It feels weird to put these in
+"targets" but at the same time I would ask what is the difference?  But I think it's reasonable to allow users 
+to use a more natural word, and something like "config" or "resource" seems reasonable.
+
+	resource AWS-AsFred-InEast
+		aws.region "us-east-1"
+		aws.profile "fred"	
+
+While I am thinking this, it also seems reasonable to say that *some* targets may only make sense in particular regions.
+It would thus be fine for such a target to have a requirement that it is in a certain region.  The AWS module could provide
+some such test
+
+//		require aws.Region "us-east-1" "us-west-1"
+
+Here I think "require" is a generic verb, and "aws.Region" is a noun or a type or something (unlike "aws.region" which is a
+function which selects a Region) and then the remaining arguments are all valid options.  Should I be worried that they
+are strings when we are looking at Regions?  Well, I'm not.  So there.  It's up to the "Region" object to be able to answer
+the question given a list of <<anything>>.
+
+It also raises another question which is: "is a Region 'static' or is it a 'variable'"?  I think I'm fine with both, and I
+think it is OK to say that there are "global" values associated with types and also possible to have instances of a type.
+And I think the global one would be an instance as well.
+
+So,
+
+//		aws.region "us-east-1" => us_east
+
+would create a var "us_east" with an "aws.Region" object in it that is associated with the "us-east-1" region.  At the same
+time, it would make the "default region" be "us-east-1" and anybody who wanted that could get it by asking the "aws.Region"
+type what the "default" value was.  It is an error, when asked, for there not to be one, but people can handle errors if they
+want (no, I don't know how either).
+
+Then we want to be able to copy files into the bucket:
+
+	target upload
+
+This requires the "files" command.  I'm not sure this is the best name for it, but I deffo don't want to think of it as
+"copy" because what I want is to have more an "ensure" semantics.  Although it seems reasonable to have the option to 
+specify the semantics.  There is a "source" and a "destination" although these may not be the best descriptions
+
+		files dist consolidator_bucket
+			latest "index.html" "js/" "css/"
+
+This says that we want to make sure that the latest versions of "index.html" and the directories "js/" and "css/" from
+the "dist" location should be present in the "consolidator_bucket".  What is the "dist" location?  Well, its something
+that implements some API called "FilesSource"; the dest is in the case a bucket but it is anything that implements 
+"FilesDestination".
+
+The obvious implementation of either of these is the local file system, "LFS":
+
+	resource jenkins
+		sys.env "JENKINS_BUILT" => jenkins // this is just a string obvs
+		lfs.path jenkins => jenkins_path // this is now a "reference to the LFS"
+		jenkins_path->folder "dist" => dist // this is an "LFS reference" which is a folder under "jenkins_path"
+
+All of this is initially just accepted on face value.  The "wiring up" phase connects the use of "jenkins" and "jenkins_path"
+and then the dryrun phase checks that there is an env var "JENKINS_BUILT" and that there is a "folder" method on
+"jenkins_path" and then asserts that there can be a "dist" object which is also a folder.  NONE OF THESE NEED TO EXIST YET.
+
+But when we use "dist" as a "source folder" it is required to exist.  It is also possible to check it exists first:
+
+//		check dist
+
+If no arguments are given, then it is just an "existence" check but it could be a folder, file, whatever
+
+//		check dist "folder"
+
+or
+
+//		check dist
+//			"folder"
+
+Expression Evaluation
+
+So I've said that expressions exist on the right hand side of properties, and I'm sure they exist in all sorts of other
+places too - I don't see any reason to conclude that each of the arguments to "files" is not an expression.
+
+So saying that we can have expressions is one thing, but what does that mean?  Well, I think the first thing is just to say
+that we need to figure this out in "interpretation".
+
+Now, if there is nothing else going on, all the available tokens will constitute an expression, so if we say
+
+//		timeout <- 30 seconds
+
+Then the property interpreter will say "timeout is the property", "<- is the syntax" and therefore "30 seconds" must be
+an expression.
+
+Now, typically, we want our expressions to be "prefix" functions such as "hours(24)" or "seconds(30)" but when I wrote
+this "24 hours" or "30 seconds" seemed more natural, so let's see if we can get it to fit.
+
+On the other hand, if we want to put multiple expressions in a place, we need to use parens to *wrap* an expression,
+just as we would in a functional language, so:
+
+//		files (root->folder "dist") to_bucket
+
+And this makes it clear that there are two expressions: "root.folder "dist"" and "to_bucket".  
+
+Likewise, an expression can have sub-expressions:
+
+//		timeout <- (30 * 60) seconds
+
+Obviously in this case, the sub-expression must be "understood" before the outer expression can be interpreted.
+
+In each "level" of each "expression" we must find *at least* one item (after evaluation of sub-expressions) which
+identifies as a "verb" or a "function".  If we find more than one, we choose the first one.  We then call it with
+two lists: "pre" and "post".  So we will have:
+
+//		timeout <- (30 * 60) seconds
+//			*: pre: [30], post: [60] => 1800
+//			seconds: pre: [1800] post: [] => Time[1800, TimeUnit.SECONDS]
+
+Claro?
+
+It would be possible to implement HoFs and curried functions such as:
+
+//	map (*2) [12,16]
+
+In this case, both map and *2 will show up as verbs, so order is important anad we HAVE TO put "map" first.
+
+//	*2 looks like: * pre:[], post:[2] => Function(x) { return x*2; }
+//	And then map: map: pre:[], post: [Function(x), List(Number)]
+
+or some such
+
+
