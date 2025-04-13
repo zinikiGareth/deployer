@@ -4,3 +4,4 @@ empty-target
 ensure-bucket
 errorcases/blocking
 named-bucket
+errorcases/missing-target

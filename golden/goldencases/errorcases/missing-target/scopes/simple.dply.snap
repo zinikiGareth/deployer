@@ -1,0 +1,8 @@
+>We declare a target here and then use a different target name in the targets file, which is an error
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
+>
+>    target installOnAws
+#^^^^ source.deployer-dply
+#    ^^^^^^ source.deployer-dply keyword.target
+#          ^^^^^^^^^^^^^^ source.deployer-dply
+>

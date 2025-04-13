@@ -2,6 +2,7 @@ package impl
 
 import (
 	"fmt"
+	"io"
 	"path/filepath"
 
 	"ziniki.org/deployer/deployer/internal/parser"
@@ -15,11 +16,12 @@ import (
 )
 
 type DeployerImpl struct {
-	registry *registry.Registry
-	repo     pluggable.Repository
-	sink     errors.ErrorSink
-	srcdir   string
-	input    []string
+	registry     *registry.Registry
+	repo         pluggable.Repository
+	sink         errors.ErrorSink
+	userErrorsTo io.StringWriter
+	srcdir       string
+	input        []string
 }
 
 func (d *DeployerImpl) ObtainRegister() pluggable.Register {
@@ -73,16 +75,24 @@ func (d *DeployerImpl) Traverse(lsnr pluggable.RepositoryTraverser) {
 
 func (d *DeployerImpl) findTargets(names ...string) ([]pluggable.Target, error) {
 	var targets []pluggable.Target
+	var ue error
 	for _, n := range names {
 		t := d.repo.FindTarget(pluggable.SymbolName(n))
 		if t == nil {
-			return nil, fmt.Errorf("there is no target %s", n)
+			msg := fmt.Sprintf("there is no target %s\n", n)
+			d.userErrorsTo.WriteString(msg)
+			if ue == nil {
+				ue = deployer.UserError(msg)
+			}
 		}
 		targets = append(targets, t)
+	}
+	if ue != nil {
+		return nil, ue
 	}
 	return targets, nil
 }
 
-func NewDeployer(sink errors.ErrorSink) deployer.Deployer {
-	return &DeployerImpl{registry: registry.NewRegistry(), repo: repo.NewRepository(), sink: sink}
+func NewDeployer(sink errors.ErrorSink, userErrorsTo io.StringWriter) deployer.Deployer {
+	return &DeployerImpl{registry: registry.NewRegistry(), repo: repo.NewRepository(), sink: sink, userErrorsTo: userErrorsTo}
 }

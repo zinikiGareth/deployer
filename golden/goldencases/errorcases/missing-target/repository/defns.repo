@@ -1,0 +1,5 @@
+target installOnAws {
+	_where_: simple.dply:3.11
+	actions: [
+	]
+}

@@ -191,14 +191,14 @@ func (r *TestRunner) ReadTargets(file string) ([]string, error) {
 		if !ok {
 			return nil, err
 		}
-		if (pe.Op == "open" && pe.Err == syscall.ENOENT) {
+		if pe.Op == "open" && pe.Err == syscall.ENOENT {
 			return nil, nil
 		}
 		return nil, err
 	}
 
 	// TODO: I feel we will want to do some cleaning up here
-	// Specifically: 
+	// Specifically:
 	//   * remove "blank" and "comment (#)" lines
 	//   * allow multiple targets on one line and break them up
 	return lines, nil
@@ -288,8 +288,13 @@ func NewTestRunner(tracker *errors.CaseTracker, root, test string) (*TestRunner,
 	if err != nil {
 		panic(fmt.Sprintf("error creating error dir %s: %v", errdir, err))
 	}
+	ueTxt := filepath.Join(errdir, "usererrors.txt")
+	userErrorsTo, err := os.Create(ueTxt)
+	if err != nil {
+		panic(fmt.Sprintf("error creating error file %s: %v", ueTxt, err))
+	}
 	sink := sink.NewFileSink(errfile)
-	deployerInst := creator.NewDeployer(sink)
+	deployerInst := creator.NewDeployer(sink, userErrorsTo)
 
 	return &TestRunner{tracker: tracker, root: root, base: base, out: outdir, test: test, scripts: scripts, scopes: scopes, repoIn: repoin, repoOut: repoout, errorsIn: errin, errorsOut: errdir, deployer: deployerInst}, nil
 }

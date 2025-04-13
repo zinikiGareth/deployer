@@ -1,0 +1,3 @@
+We declare a target here and then use a different target name in the targets file, which is an error
+
+    target installOnAws
