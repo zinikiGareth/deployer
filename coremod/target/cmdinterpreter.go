@@ -1,6 +1,8 @@
 package target
 
 import (
+	"fmt"
+
 	"ziniki.org/deployer/coremod/basic"
 	"ziniki.org/deployer/deployer/pkg/errors"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
@@ -8,12 +10,16 @@ import (
 
 type commandScope struct {
 	repo     pluggable.Repository
-	commands *[]pluggable.Definition
+	commands *[]action
 	storeAs  pluggable.Identifier
 }
 
 func (cc *commandScope) Add(entry pluggable.Definition) {
-	*cc.commands = append(*cc.commands, entry)
+	a, ok := entry.(action)
+	if !ok {
+		panic(fmt.Sprintf("entry %v is not an action", entry))
+	}
+	*cc.commands = append(*cc.commands, a)
 	if cc.storeAs != nil {
 		cc.repo.IntroduceSymbol(pluggable.SymbolName(cc.storeAs.Id()), entry)
 	}
@@ -49,6 +55,6 @@ func (b *commandScope) HaveTokens(reporter errors.ErrorRepI, tokens []pluggable.
 	return action.Handle(reporter, b.repo, b, tokens)
 }
 
-func TargetCommandInterpreter(repo pluggable.Repository, commands *[]pluggable.Definition) pluggable.Interpreter {
+func TargetCommandInterpreter(repo pluggable.Repository, commands *[]action) pluggable.Interpreter {
 	return &commandScope{repo: repo, commands: commands}
 }

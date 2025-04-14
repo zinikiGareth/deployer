@@ -15,7 +15,7 @@ type Repository interface {
 	Traverse(lsnr RepositoryTraverser)
 
 	ResolveAll(sink errors.ErrorSink, registry Recall)
-	FindTarget(name SymbolName) Target
+	FindTarget(name SymbolName) Executable
 }
 
 type Resolver interface {

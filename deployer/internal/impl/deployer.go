@@ -60,7 +60,7 @@ func (d *DeployerImpl) Deploy(targetNames ...string) error {
 
 	storage.SetMode(pluggable.DRYRUN_MODE)
 	for _, t := range targets {
-		t.Execute(storage)
+		t.Prepare(storage)
 	}
 
 	storage.SetMode(pluggable.EXECUTE_MODE)
@@ -80,8 +80,8 @@ func (d *DeployerImpl) Traverse(lsnr pluggable.RepositoryTraverser) {
 	d.repo.Traverse(lsnr)
 }
 
-func (d *DeployerImpl) findTargets(names ...string) ([]pluggable.Target, error) {
-	var targets []pluggable.Target
+func (d *DeployerImpl) findTargets(names ...string) ([]pluggable.Executable, error) {
+	var targets []pluggable.Executable
 	var ue error
 	for _, n := range names {
 		t := d.repo.FindTarget(pluggable.SymbolName(n))

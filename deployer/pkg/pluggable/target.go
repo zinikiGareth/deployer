@@ -19,9 +19,8 @@ type InitMe interface {
 	InitMe(storage RuntimeStorage)
 }
 
-// There is a part of me that thinks this should be in coremod too,
-// but given it is so central to what we do - command line arguments are targets - I don't think that's reasonable.
-type Target interface {
+type Executable interface {
+	Prepare(runtime RuntimeStorage) any
 	Execute(runtime RuntimeStorage)
 }
 

@@ -16,19 +16,19 @@ type EnsureAction struct {
 	props    map[pluggable.Identifier]any
 }
 
-func (ea EnsureAction) Loc() pluggable.Location {
+func (ea *EnsureAction) Loc() pluggable.Location {
 	return ea.loc
 }
 
-func (ea EnsureAction) Where() pluggable.Location {
+func (ea *EnsureAction) Where() pluggable.Location {
 	return ea.loc
 }
 
-func (ea EnsureAction) What() pluggable.SymbolType {
+func (ea *EnsureAction) What() pluggable.SymbolType {
 	return pluggable.SymbolType(ea.what.Id())
 }
 
-func (ea EnsureAction) DumpTo(w pluggable.IndentWriter) {
+func (ea *EnsureAction) DumpTo(w pluggable.IndentWriter) {
 	w.Intro("EnsureCommand")
 	w.AttrsWhere(ea)
 	w.TextAttr("what", ea.what.Id())
@@ -48,7 +48,7 @@ func (ea EnsureAction) DumpTo(w pluggable.IndentWriter) {
 	w.EndAttrs()
 }
 
-func (ea EnsureAction) ShortDescription() string {
+func (ea *EnsureAction) ShortDescription() string {
 	return fmt.Sprintf("Ensure[%s: %s]", ea.what.Id(), ea.named)
 }
 
@@ -65,6 +65,10 @@ func (ea *EnsureAction) Resolve(r pluggable.Resolver) {
 // We need to have some way of associating this with the var
 // Using a map from "action" (or other) to runtime value seems a reasonable way to go
 func (ea *EnsureAction) Execute(runtime pluggable.RuntimeStorage) {
+
+}
+
+func (ea *EnsureAction) Prepare(runtime pluggable.RuntimeStorage) any {
 	// So the logic for ensure is that we create an object "locally" that represents the thing we want to ensure
 	// Then we call the "ensure" method on that
 	// It is an error for the object created not to implement the Ensurable contract
@@ -73,9 +77,10 @@ func (ea *EnsureAction) Execute(runtime pluggable.RuntimeStorage) {
 	ens, ok := obj.(pluggable.Ensurable)
 	if !ok {
 		runtime.Errorf(ea.loc, "the type "+ea.what.Id()+" is not ensurable")
-		return
+		return nil
 	}
 	ens.Ensure(runtime)
+	return obj
 }
 
 type EnsureCommandHandler struct{}

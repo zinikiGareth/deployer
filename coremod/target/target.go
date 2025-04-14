@@ -5,10 +5,19 @@ import (
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
+type action interface {
+	pluggable.Definition
+	pluggable.Executable
+}
+
 type coreTarget struct {
-	loc     pluggable.Location
-	name    pluggable.SymbolName
-	actions *[]pluggable.Definition
+	loc  pluggable.Location
+	name pluggable.SymbolName
+
+	// Odd as this looks, there is a very good reason for it which is that as the action are assembled (elsewhere)
+	// we need to make sure that the slice reference is updated here.  If you take the "*" away, you will find you end
+	// up with no actions
+	actions *[]action
 }
 
 func (t *coreTarget) Loc() pluggable.Location {
@@ -44,6 +53,13 @@ func (t *coreTarget) Resolve(r pluggable.Resolver) {
 	}
 }
 
+func (t *coreTarget) Prepare(storage pluggable.RuntimeStorage) any {
+	for _, a := range *t.actions {
+		a.Prepare(storage)
+	}
+	return nil
+}
+
 func (t *coreTarget) Execute(storage pluggable.RuntimeStorage) {
 	for _, a := range *t.actions {
 		a.Execute(storage)
@@ -56,7 +72,7 @@ type CoreTargetVerb struct {
 func (t *CoreTargetVerb) Handle(reporter errors.ErrorRepI, repo pluggable.Repository, parent pluggable.ContainingContext, tokens []pluggable.Token) pluggable.Interpreter {
 	t1 := tokens[1].(pluggable.Identifier)
 	name := pluggable.SymbolName(t1.Id())
-	actions := []pluggable.Definition{}
+	actions := []action{}
 	target := &coreTarget{loc: t1.Loc(), name: name, actions: &actions}
 	repo.IntroduceSymbol(name, target)
 	return TargetCommandInterpreter(repo, &actions)

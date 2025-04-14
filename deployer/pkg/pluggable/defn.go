@@ -15,7 +15,4 @@ type Definition interface {
 
 	// Resolve asks the definition to examine all of its structure and ask for resolution of any unresolved names
 	Resolve(r Resolver)
-
-	// Execute the action in a given context
-	Execute(runtime RuntimeStorage)
 }
