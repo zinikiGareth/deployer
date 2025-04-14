@@ -58,9 +58,16 @@ func (d *DeployerImpl) Deploy(targetNames ...string) error {
 	}
 	storage := runtime.NewRuntimeStorage(d.sink)
 
+	storage.SetMode(pluggable.DRYRUN_MODE)
 	for _, t := range targets {
 		t.Execute(storage)
 	}
+
+	storage.SetMode(pluggable.EXECUTE_MODE)
+	for _, t := range targets {
+		t.Execute(storage)
+	}
+
 	return nil
 }
 

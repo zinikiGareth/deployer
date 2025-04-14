@@ -1,13 +1,26 @@
 package testS3
 
-import "ziniki.org/deployer/deployer/pkg/pluggable"
+import (
+	"fmt"
+	"reflect"
 
-type bucket struct{
+	"ziniki.org/deployer/deployer/pkg/pluggable"
+)
+
+type bucket struct {
 	name string
 }
 
 func (b *bucket) Ensure(runtime pluggable.RuntimeStorage) {
+	if runtime.IsMode(pluggable.EXECUTE_MODE) {
+		tmp := runtime.ObtainDriver(reflect.TypeOf(TestAwsEnv{}))
+		testAwsEnv, ok := tmp.(*TestAwsEnv)
+		if !ok {
+			panic("could not cast env to TestAwsEnv")
+		}
 
+		fmt.Printf("we want to ensure a bucket in region %s\n", testAwsEnv.Region)
+	}
 }
 
 type BucketNoun struct{}

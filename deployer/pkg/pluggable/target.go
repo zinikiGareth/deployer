@@ -1,8 +1,22 @@
 package pluggable
 
+import "reflect"
+
+const (
+	DRYRUN_MODE int = iota
+	EXECUTE_MODE
+)
+
 type RuntimeStorage interface {
 	Bind(name SymbolName, value any)
 	Errorf(loc Location, msg string, args ...any)
+	SetMode(mode int)
+	IsMode(mode int) bool
+	ObtainDriver(forType reflect.Type) any
+}
+
+type InitMe interface {
+	InitMe(storage RuntimeStorage)
 }
 
 // There is a part of me that thinks this should be in coremod too,
