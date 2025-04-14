@@ -8,12 +8,12 @@ import (
 )
 
 type Storage struct {
-	sink errors.ErrorSink
-	mode int
+	sink    errors.ErrorSink
+	mode    int
+	actions map[pluggable.Executable]pluggable.ExecuteAction
 }
 
 func (s *Storage) Bind(name pluggable.SymbolName, value any) {
-
 }
 
 func (s *Storage) Errorf(loc pluggable.Location, msg string, args ...any) {
@@ -37,6 +37,14 @@ func (s *Storage) ObtainDriver(forType reflect.Type) any {
 	return ret
 }
 
+func (s *Storage) BindAction(a pluggable.Executable, av pluggable.ExecuteAction) {
+	s.actions[a] = av
+}
+
+func (s *Storage) RetrieveAction(a pluggable.Executable) pluggable.ExecuteAction {
+	return s.actions[a]
+}
+
 func NewRuntimeStorage(sink errors.ErrorSink) pluggable.RuntimeStorage {
-	return &Storage{sink: sink}
+	return &Storage{sink: sink, actions: make(map[pluggable.Executable]pluggable.ExecuteAction)}
 }

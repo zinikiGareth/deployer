@@ -32,12 +32,12 @@ func (d *SimpleRepository) Traverse(lsnr pluggable.RepositoryTraverser) {
 	}
 }
 
-func (d *SimpleRepository) FindTarget(name pluggable.SymbolName) pluggable.Executable {
+func (d *SimpleRepository) FindTarget(name pluggable.SymbolName) pluggable.TargetThing {
 	defn := d.symbols[name]
 	if defn == nil {
 		return nil
 	}
-	target, ok := defn.(pluggable.Executable)
+	target, ok := defn.(pluggable.TargetThing)
 	if !ok {
 		return nil
 	}

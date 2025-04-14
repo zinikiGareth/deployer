@@ -1,11 +1,18 @@
 package pluggable
 
-import "reflect"
+import (
+	"reflect"
+)
 
 const (
 	DRYRUN_MODE int = iota
 	EXECUTE_MODE
 )
+
+type TargetThing interface {
+	Executable
+	ExecuteAction
+}
 
 type RuntimeStorage interface {
 	Bind(name SymbolName, value any)
@@ -13,6 +20,8 @@ type RuntimeStorage interface {
 	SetMode(mode int)
 	IsMode(mode int) bool
 	ObtainDriver(forType reflect.Type) any
+	BindAction(a Executable, av ExecuteAction)
+	RetrieveAction(a Executable) ExecuteAction
 }
 
 type InitMe interface {
@@ -20,12 +29,15 @@ type InitMe interface {
 }
 
 type Executable interface {
-	Prepare(runtime RuntimeStorage) any
+	Prepare(runtime RuntimeStorage) (ExecuteAction, any)
+}
+
+type ExecuteAction interface {
 	Execute(runtime RuntimeStorage)
 }
 
 // TODO: I feel this should "logically" be in coremod, because that's where the ensure logic is, but I'm not sure I know
 // how to work that module magic yet.  So move it later.
 type Ensurable interface {
-	Ensure(runtime RuntimeStorage)
+	Ensure(runtime RuntimeStorage) ExecuteAction
 }

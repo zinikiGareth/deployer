@@ -80,8 +80,8 @@ func (d *DeployerImpl) Traverse(lsnr pluggable.RepositoryTraverser) {
 	d.repo.Traverse(lsnr)
 }
 
-func (d *DeployerImpl) findTargets(names ...string) ([]pluggable.Executable, error) {
-	var targets []pluggable.Executable
+func (d *DeployerImpl) findTargets(names ...string) ([]pluggable.TargetThing, error) {
+	var targets []pluggable.TargetThing
 	var ue error
 	for _, n := range names {
 		t := d.repo.FindTarget(pluggable.SymbolName(n))

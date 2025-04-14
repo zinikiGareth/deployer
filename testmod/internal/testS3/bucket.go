@@ -11,16 +11,25 @@ type bucket struct {
 	name string
 }
 
-func (b *bucket) Ensure(runtime pluggable.RuntimeStorage) {
-	if runtime.IsMode(pluggable.EXECUTE_MODE) {
-		tmp := runtime.ObtainDriver(reflect.TypeOf(TestAwsEnv{}))
-		testAwsEnv, ok := tmp.(*TestAwsEnv)
-		if !ok {
-			panic("could not cast env to TestAwsEnv")
-		}
+type ensureBucket struct {
+	env    *TestAwsEnv
+	bucket *bucket
+}
 
-		fmt.Printf("we want to ensure a bucket in region %s\n", testAwsEnv.Region)
+func (eb *ensureBucket) Execute(runtime pluggable.RuntimeStorage) {
+
+}
+
+func (b *bucket) Ensure(runtime pluggable.RuntimeStorage) pluggable.ExecuteAction {
+	tmp := runtime.ObtainDriver(reflect.TypeOf(TestAwsEnv{}))
+	testAwsEnv, ok := tmp.(*TestAwsEnv)
+	if !ok {
+		panic("could not cast env to TestAwsEnv")
 	}
+
+	fmt.Printf("we want to ensure a bucket in region %s\n", testAwsEnv.Region)
+
+	return &ensureBucket{env: testAwsEnv, bucket: b}
 }
 
 type BucketNoun struct{}

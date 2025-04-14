@@ -53,16 +53,23 @@ func (t *coreTarget) Resolve(r pluggable.Resolver) {
 	}
 }
 
-func (t *coreTarget) Prepare(storage pluggable.RuntimeStorage) any {
+func (t *coreTarget) Prepare(storage pluggable.RuntimeStorage) (pluggable.ExecuteAction, any) {
 	for _, a := range *t.actions {
-		a.Prepare(storage)
+		act, val := a.Prepare(storage)
+		storage.BindAction(a, act)
+		if val != nil {
+			// TODO: if there's a var, store this in that ...
+		}
 	}
-	return nil
+	return nil, nil
 }
 
 func (t *coreTarget) Execute(storage pluggable.RuntimeStorage) {
 	for _, a := range *t.actions {
-		a.Execute(storage)
+		av := storage.RetrieveAction(a)
+		if av != nil {
+			av.Execute(storage)
+		}
 	}
 }
 
