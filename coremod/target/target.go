@@ -44,6 +44,10 @@ func (t *coreTarget) Resolve(r pluggable.Resolver) {
 	}
 }
 
+func (t *coreTarget) Execute(storage pluggable.RuntimeStorage) {
+
+}
+
 type CoreTargetVerb struct {
 }
 
