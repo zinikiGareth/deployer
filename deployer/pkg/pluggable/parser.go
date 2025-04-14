@@ -45,5 +45,6 @@ type Action interface {
 
 type Noun interface {
 	ShortDescription() string
-	// Handle(reporter errors.ErrorRepI, repo Repository, parent ContainingContext, tokens []Token) Interpreter
+	CreateWithName(named string) any
 }
+

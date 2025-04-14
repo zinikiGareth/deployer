@@ -45,7 +45,9 @@ func (t *coreTarget) Resolve(r pluggable.Resolver) {
 }
 
 func (t *coreTarget) Execute(storage pluggable.RuntimeStorage) {
-
+	for _, a := range *t.actions {
+		a.Execute(storage)
+	}
 }
 
 type CoreTargetVerb struct {

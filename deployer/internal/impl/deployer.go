@@ -56,7 +56,7 @@ func (d *DeployerImpl) Deploy(targetNames ...string) error {
 	if err != nil {
 		return err
 	}
-	storage := runtime.NewRuntimeStorage()
+	storage := runtime.NewRuntimeStorage(d.sink)
 
 	for _, t := range targets {
 		t.Execute(storage)

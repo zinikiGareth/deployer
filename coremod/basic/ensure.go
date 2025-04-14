@@ -60,6 +60,24 @@ func (ea *EnsureAction) Resolve(r pluggable.Resolver) {
 	ea.resolved = r.Resolve(ea.what)
 }
 
+// TODO: we need to consider multiple phases here
+// We need to store the thing we create first time for second time
+// We need to have some way of associating this with the var
+// Using a map from "action" (or other) to runtime value seems a reasonable way to go
+func (ea *EnsureAction) Execute(runtime pluggable.RuntimeStorage) {
+	// So the logic for ensure is that we create an object "locally" that represents the thing we want to ensure
+	// Then we call the "ensure" method on that
+	// It is an error for the object created not to implement the Ensurable contract
+
+	obj := ea.resolved.CreateWithName(ea.named)
+	ens, ok := obj.(pluggable.Ensurable)
+	if !ok {
+		runtime.Errorf(ea.loc, "the type "+ea.what.Id()+" is not ensurable")
+		return
+	}
+	ens.Ensure(runtime)
+}
+
 type EnsureCommandHandler struct{}
 
 func (ensure *EnsureCommandHandler) Handle(reporter errors.ErrorRepI, repo pluggable.Repository, parent pluggable.ContainingContext, tokens []pluggable.Token) pluggable.Interpreter {
