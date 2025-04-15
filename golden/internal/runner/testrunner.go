@@ -22,19 +22,16 @@ type TestRunner struct {
 	tracker    *errors.CaseTracker
 	deployer   deployer.Deployer
 	symbolLsnr *lsnrs.RepoListener
+	golden     *goldenComparator
 	root       string
 	base       string
 	test       string
 	out        string
 	scripts    string
 	scopes     string
-	repoIn     string
 	repoOut    string
-	prepIn     string
 	prepOut    string
-	execIn     string
 	execOut    string
-	errorsIn   string
 	errorsOut  string
 }
 
@@ -200,10 +197,7 @@ func (r *TestRunner) TestDeployment(eh errors.TestErrorHandler) {
 	r.deployer.Traverse(storer)
 	storer.DumpNamesTo(r.repoOut)
 	storer.DumpDefnsTo(r.repoOut)
-	r.compareGoldenFiles(r.errorsIn, r.errorsOut, false)
-	r.compareGoldenFiles(r.repoIn, r.repoOut, true)
-	r.compareGoldenFiles(r.prepIn, r.prepOut, true)
-	r.compareGoldenFiles(r.execIn, r.execOut, true)
+	r.golden.compareAll()
 }
 
 func (r *TestRunner) ReadTargets(file string) ([]string, error) {
@@ -225,66 +219,6 @@ func (r *TestRunner) ReadTargets(file string) ([]string, error) {
 	//   * remove "blank" and "comment (#)" lines
 	//   * allow multiple targets on one line and break them up
 	return lines, nil
-}
-
-// TODO: I would like to make this its own thing
-func (r *TestRunner) compareGoldenFiles(golden, gen string, copyNewFiles bool) {
-	base := filepath.Base(golden)
-	eh := r.tracker.ErrorHandlerFor("golden-" + base)
-	eh.Writef("comparing %s to %s\n", golden, gen)
-	goldenFiles, err1 := utils.FindFiles(golden, "")
-	genFiles, err2 := utils.FindFiles(gen, "")
-	if err1 != nil && err2 != nil {
-		// it's "safe" to assume it's an empty case
-		return
-	}
-	if err1 != nil {
-		// OK, it should be there.  Create it and we'll copy the files in
-		utils.EnsureDir(golden)
-	}
-	if err2 != nil {
-		// Presumably if there is a golden dir, there should be a gen dir
-		eh.Writef("error collecting generated files from %s\n", gen)
-		return
-	}
-
-	// Go through the golden files, comparing to the generated ones
-	genmap := make(map[string]int)
-	for k, g := range genFiles {
-		genmap[g] = k + 1
-	}
-	failed := false
-	for _, f := range goldenFiles {
-		if genmap[f] != 0 {
-			if !utils.CompareFiles(filepath.Join(gen, f), filepath.Join(golden, f)) {
-				eh.Writef("generated file %s did not match golden file\n", f)
-				eh.Fail()
-			}
-			delete(genmap, f)
-		} else { // if there is no generated file, complain: that's a failure
-			eh.Writef("there is no gen file for %s\n", f)
-			if !failed {
-				eh.Fail()
-				failed = true
-			}
-		}
-	}
-
-	// If there are any generated files which don't have golden files, let the user know and copy them
-	if len(genmap) > 0 {
-		if copyNewFiles {
-			eh.Writef("generated files in %s were not present in %s ... copying:\n", gen, golden)
-			for f := range genmap {
-				eh.Writef("  %s\n", f)
-				utils.CopyFile(filepath.Join(gen, f), filepath.Join(golden, f))
-			}
-		} else {
-			for _, f := range genFiles {
-				eh.Writef("there is no golden file for generated %s\n", f)
-				eh.Fail()
-			}
-		}
-	}
 }
 
 func (r *TestRunner) WrapUp() {
@@ -323,5 +257,7 @@ func NewTestRunner(tracker *errors.CaseTracker, root, test string) (*TestRunner,
 	sink := sink.NewFileSink(errfile)
 	deployerInst := creator.NewDeployer(sink, userErrorsTo)
 
-	return &TestRunner{tracker: tracker, root: root, base: base, out: outdir, test: test, scripts: scripts, scopes: scopes, repoIn: repoin, repoOut: repoout, errorsIn: errin, errorsOut: errdir, prepOut: prepout, prepIn: prepin, execIn: execin, execOut: execout, deployer: deployerInst}, nil
+	gc := newGoldenComparator(tracker, errin, errdir, repoin, repoout, prepin, prepout, execin, execout)
+
+	return &TestRunner{tracker: tracker, golden: gc, root: root, base: base, out: outdir, test: test, scripts: scripts, scopes: scopes, repoOut: repoout, errorsOut: errdir, prepOut: prepout, execOut: execout, deployer: deployerInst}, nil
 }
