@@ -39,25 +39,12 @@ func (gc *goldenComparator) compareDirectory(golden, gen string, copyNewFiles bo
 		return
 	}
 
-	// Go through the golden files, comparing to the generated ones
+	// record the generated files
 	genmap := gc.catalogGenned(genFiles)
+	// Go through the golden files, comparing to the generated ones
 	gc.traverseGolden(eh, genmap, golden, gen, goldenFiles)
-
 	// If there are any generated files which don't have golden files, let the user know and copy them
-	if len(genmap) > 0 {
-		if copyNewFiles {
-			eh.Writef("generated files in %s were not present in %s ... copying:\n", gen, golden)
-			for f := range genmap {
-				eh.Writef("  %s\n", f)
-				utils.CopyFile(filepath.Join(gen, f), filepath.Join(golden, f))
-			}
-		} else {
-			for _, f := range genFiles {
-				eh.Writef("there is no golden file for generated %s\n", f)
-				eh.Fail()
-			}
-		}
-	}
+	gc.copyGenned(eh, genmap, golden, gen, copyNewFiles)
 }
 
 func (gc *goldenComparator) prepare(eh deployer.ErrorHandler, golden, gen string) ([]string, []string, error) {
@@ -103,6 +90,23 @@ func (gc *goldenComparator) traverseGolden(eh deployer.ErrorHandler, genmap map[
 			if !failed {
 				eh.Fail()
 				failed = true
+			}
+		}
+	}
+}
+
+func (gc *goldenComparator) copyGenned(eh deployer.ErrorHandler, genmap map[string]int, golden, gen string, copyNewFiles bool) {
+	if len(genmap) > 0 {
+		if copyNewFiles {
+			eh.Writef("generated files in %s were not present in %s ... copying:\n", gen, golden)
+			for f := range genmap {
+				eh.Writef("  %s\n", f)
+				utils.CopyFile(filepath.Join(gen, f), filepath.Join(golden, f))
+			}
+		} else {
+			for f := range genmap {
+				eh.Writef("there is no golden file for generated %s\n", f)
+				eh.Fail()
 			}
 		}
 	}
