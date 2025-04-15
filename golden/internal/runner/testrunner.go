@@ -32,6 +32,8 @@ type TestRunner struct {
 	repoOut    string
 	prepIn     string
 	prepOut    string
+	execIn     string
+	execOut    string
 	errorsIn   string
 	errorsOut  string
 }
@@ -63,6 +65,10 @@ func (r *TestRunner) Setup(modules []string) error {
 	if err != nil {
 		return err
 	}
+	err = utils.EnsureCleanDir(r.execOut)
+	if err != nil {
+		return err
+	}
 
 	r.tracker.NewCase(r.test, r.out)
 	r.symbolLsnr, err = lsnrs.NewRepoListener(r.repoOut)
@@ -71,8 +77,9 @@ func (r *TestRunner) Setup(modules []string) error {
 	}
 	r.deployer.AddSymbolListener(r.symbolLsnr)
 
+	storage := r.deployer.ObtainStorage()
 	register := r.deployer.ObtainRegister()
-	tsl, err := testing.NewTestStepLogger(filepath.Join(r.prepOut, "steps.txt"))
+	tsl, err := testing.NewTestStepLogger(storage, filepath.Join(r.prepOut, "steps.txt"), filepath.Join(r.execOut, "steps.txt"))
 	if err != nil {
 		return err
 	}
@@ -297,6 +304,8 @@ func NewTestRunner(tracker *errors.CaseTracker, root, test string) (*TestRunner,
 	repoout := filepath.Join(base, "repository-gen")
 	prepin := filepath.Join(base, "prepare")
 	prepout := filepath.Join(base, "prepare-gen")
+	execin := filepath.Join(base, "execute")
+	execout := filepath.Join(base, "execute-gen")
 	scripts := filepath.Join(base, "scripts")
 	scopes := filepath.Join(base, "scopes")
 
@@ -312,5 +321,5 @@ func NewTestRunner(tracker *errors.CaseTracker, root, test string) (*TestRunner,
 	sink := sink.NewFileSink(errfile)
 	deployerInst := creator.NewDeployer(sink, userErrorsTo)
 
-	return &TestRunner{tracker: tracker, root: root, base: base, out: outdir, test: test, scripts: scripts, scopes: scopes, repoIn: repoin, repoOut: repoout, errorsIn: errin, errorsOut: errdir, prepOut: prepout, prepIn: prepin, deployer: deployerInst}, nil
+	return &TestRunner{tracker: tracker, root: root, base: base, out: outdir, test: test, scripts: scripts, scopes: scopes, repoIn: repoin, repoOut: repoout, errorsIn: errin, errorsOut: errdir, prepOut: prepout, prepIn: prepin, execIn: execin, execOut: execout, deployer: deployerInst}, nil
 }

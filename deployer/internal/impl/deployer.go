@@ -17,6 +17,7 @@ import (
 
 type DeployerImpl struct {
 	registry     *registry.Registry
+	storage      pluggable.RuntimeStorage
 	repo         pluggable.Repository
 	sink         errors.ErrorSink
 	userErrorsTo io.StringWriter
@@ -26,6 +27,10 @@ type DeployerImpl struct {
 
 func (d *DeployerImpl) ObtainRegister() pluggable.Register {
 	return d.registry
+}
+
+func (d *DeployerImpl) ObtainStorage() pluggable.RuntimeStorage {
+	return d.storage
 }
 
 func (d *DeployerImpl) ReadScriptsFrom(indir string) error {
@@ -56,16 +61,15 @@ func (d *DeployerImpl) Deploy(targetNames ...string) error {
 	if err != nil {
 		return err
 	}
-	storage := runtime.NewRuntimeStorage(d.registry, d.sink)
 
-	storage.SetMode(pluggable.DRYRUN_MODE)
+	d.storage.SetMode(pluggable.PREPARE_MODE)
 	for _, t := range targets {
-		t.Prepare(storage)
+		t.Prepare(d.storage)
 	}
 
-	storage.SetMode(pluggable.EXECUTE_MODE)
+	d.storage.SetMode(pluggable.EXECUTE_MODE)
 	for _, t := range targets {
-		t.Execute(storage)
+		t.Execute(d.storage)
 	}
 
 	return nil
@@ -101,5 +105,7 @@ func (d *DeployerImpl) findTargets(names ...string) ([]pluggable.TargetThing, er
 }
 
 func NewDeployer(sink errors.ErrorSink, userErrorsTo io.StringWriter) deployer.Deployer {
-	return &DeployerImpl{registry: registry.NewRegistry(), repo: repo.NewRepository(), sink: sink, userErrorsTo: userErrorsTo}
+	reg := registry.NewRegistry()
+	storage := runtime.NewRuntimeStorage(reg, sink)
+	return &DeployerImpl{registry: reg, repo: repo.NewRepository(), sink: sink, userErrorsTo: userErrorsTo, storage: storage}
 }

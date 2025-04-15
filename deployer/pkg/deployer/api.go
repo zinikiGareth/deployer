@@ -13,6 +13,7 @@ type Deployer interface {
 
 	Traverse(lsnr pluggable.RepositoryTraverser)
 	ObtainRegister() pluggable.Register // for the benefit of plugins
+	ObtainStorage() pluggable.RuntimeStorage
 }
 
 type TestRunner interface {

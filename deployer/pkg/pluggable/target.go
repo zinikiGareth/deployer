@@ -1,7 +1,7 @@
 package pluggable
 
 const (
-	DRYRUN_MODE int = iota
+	PREPARE_MODE int = iota
 	EXECUTE_MODE
 )
 

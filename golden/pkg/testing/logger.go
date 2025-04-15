@@ -3,6 +3,8 @@ package testing
 import (
 	"fmt"
 	"os"
+
+	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
 type TestStepLogger interface {
@@ -10,17 +12,29 @@ type TestStepLogger interface {
 }
 
 type TestStepLoggerFile struct {
-	toFile *os.File
+	storage  pluggable.RuntimeStorage
+	prepFile *os.File
+	execFile *os.File
 }
 
 func (logger *TestStepLoggerFile) Log(format string, args ...any) {
-	fmt.Fprintf(logger.toFile, format, args...)
+	var toFile *os.File
+	if logger.storage.IsMode(pluggable.PREPARE_MODE) {
+		toFile = logger.prepFile
+	} else {
+		toFile = logger.execFile
+	}
+	fmt.Fprintf(toFile, format, args...)
 }
 
-func NewTestStepLogger(toFile string) (TestStepLogger, error) {
-	out, err := os.Create(toFile)
+func NewTestStepLogger(storage pluggable.RuntimeStorage, prepFile string, execFile string) (TestStepLogger, error) {
+	prep, err := os.Create(prepFile)
 	if err != nil {
 		return nil, err
 	}
-	return &TestStepLoggerFile{toFile: out}, nil
+	exec, err := os.Create(execFile)
+	if err != nil {
+		return nil, err
+	}
+	return &TestStepLoggerFile{storage: storage, prepFile: prep, execFile: exec}, nil
 }
