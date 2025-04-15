@@ -56,7 +56,7 @@ func (d *DeployerImpl) Deploy(targetNames ...string) error {
 	if err != nil {
 		return err
 	}
-	storage := runtime.NewRuntimeStorage(d.sink)
+	storage := runtime.NewRuntimeStorage(d.registry, d.sink)
 
 	storage.SetMode(pluggable.DRYRUN_MODE)
 	for _, t := range targets {

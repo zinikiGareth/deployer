@@ -1,9 +1,5 @@
 package pluggable
 
-import (
-	"reflect"
-)
-
 const (
 	DRYRUN_MODE int = iota
 	EXECUTE_MODE
@@ -19,13 +15,13 @@ type RuntimeStorage interface {
 	Errorf(loc Location, msg string, args ...any)
 	SetMode(mode int)
 	IsMode(mode int) bool
-	ObtainDriver(forType reflect.Type) any
+	ObtainDriver(forType string) any
 	BindAction(a Executable, av ExecuteAction)
 	RetrieveAction(a Executable) ExecuteAction
 }
 
 type InitMe interface {
-	InitMe(storage RuntimeStorage)
+	InitMe(storage RuntimeStorage) any
 }
 
 type Executable interface {

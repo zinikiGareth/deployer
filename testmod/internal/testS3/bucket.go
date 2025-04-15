@@ -1,8 +1,7 @@
 package testS3
 
 import (
-	"fmt"
-	"reflect"
+	"ziniki.org/deployer/golden/pkg/testing"
 
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
@@ -17,17 +16,21 @@ type ensureBucket struct {
 }
 
 func (eb *ensureBucket) Execute(runtime pluggable.RuntimeStorage) {
+	tmp := runtime.ObtainDriver("testing.TestStepLogger")
+	testLogger, ok := tmp.(testing.TestStepLogger)
+	if !ok {
+		panic("could not cast logger to TestStepLogger")
+	}
 
+	testLogger.Log("we want to ensure a bucket called %s in region %s\n", eb.bucket.name, eb.env.Region)
 }
 
 func (b *bucket) Ensure(runtime pluggable.RuntimeStorage) pluggable.ExecuteAction {
-	tmp := runtime.ObtainDriver(reflect.TypeOf(TestAwsEnv{}))
+	tmp := runtime.ObtainDriver("testS3.TestAwsEnv")
 	testAwsEnv, ok := tmp.(*TestAwsEnv)
 	if !ok {
 		panic("could not cast env to TestAwsEnv")
 	}
-
-	fmt.Printf("we want to ensure a bucket in region %s\n", testAwsEnv.Region)
 
 	return &ensureBucket{env: testAwsEnv, bucket: b}
 }

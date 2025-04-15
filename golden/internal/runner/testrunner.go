@@ -15,6 +15,7 @@ import (
 	"ziniki.org/deployer/deployer/pkg/utils"
 	"ziniki.org/deployer/golden/internal/errors"
 	"ziniki.org/deployer/golden/internal/lsnrs"
+	"ziniki.org/deployer/golden/pkg/testing"
 )
 
 type TestRunner struct {
@@ -29,6 +30,8 @@ type TestRunner struct {
 	scopes     string
 	repoIn     string
 	repoOut    string
+	prepIn     string
+	prepOut    string
 	errorsIn   string
 	errorsOut  string
 }
@@ -56,6 +59,10 @@ func (r *TestRunner) Setup(modules []string) error {
 	if err != nil {
 		return err
 	}
+	err = utils.EnsureCleanDir(r.prepOut)
+	if err != nil {
+		return err
+	}
 
 	r.tracker.NewCase(r.test, r.out)
 	r.symbolLsnr, err = lsnrs.NewRepoListener(r.repoOut)
@@ -63,6 +70,13 @@ func (r *TestRunner) Setup(modules []string) error {
 		return err
 	}
 	r.deployer.AddSymbolListener(r.symbolLsnr)
+
+	register := r.deployer.ObtainRegister()
+	tsl, err := testing.NewTestStepLogger(filepath.Join(r.prepOut, "steps.txt"))
+	if err != nil {
+		return err
+	}
+	register.ProvideDriver("testing.TestStepLogger", tsl)
 
 	return r.LoadModules(modules)
 }
@@ -281,6 +295,8 @@ func NewTestRunner(tracker *errors.CaseTracker, root, test string) (*TestRunner,
 	outdir := filepath.Join(base, "out")
 	repoin := filepath.Join(base, "repository")
 	repoout := filepath.Join(base, "repository-gen")
+	prepin := filepath.Join(base, "prepare")
+	prepout := filepath.Join(base, "prepare-gen")
 	scripts := filepath.Join(base, "scripts")
 	scopes := filepath.Join(base, "scopes")
 
@@ -296,5 +312,5 @@ func NewTestRunner(tracker *errors.CaseTracker, root, test string) (*TestRunner,
 	sink := sink.NewFileSink(errfile)
 	deployerInst := creator.NewDeployer(sink, userErrorsTo)
 
-	return &TestRunner{tracker: tracker, root: root, base: base, out: outdir, test: test, scripts: scripts, scopes: scopes, repoIn: repoin, repoOut: repoout, errorsIn: errin, errorsOut: errdir, deployer: deployerInst}, nil
+	return &TestRunner{tracker: tracker, root: root, base: base, out: outdir, test: test, scripts: scripts, scopes: scopes, repoIn: repoin, repoOut: repoout, errorsIn: errin, errorsOut: errdir, prepOut: prepout, prepIn: prepin, deployer: deployerInst}, nil
 }

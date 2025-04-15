@@ -16,6 +16,9 @@ func RegisterWithDeployer(deployer deployer.Deployer) error {
 	// eh := testRunner.ErrorHandlerFor("log")
 	// eh.WriteMsg("Need to install things from testmod\n")
 	register := deployer.ObtainRegister()
+	register.ProvideDriver("testS3.TestAwsEnv", &testS3.TestAwsEnv{})
+	// TODO: move this to where it belongs ...
+	// register.ProvideDriver("testing.TestStepLogger", &testing.TestStepLoggerImpl{})
 	register.RegisterNoun("test.S3.Bucket", &testS3.BucketNoun{})
 	return nil
 }
