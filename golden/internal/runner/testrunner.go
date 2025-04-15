@@ -202,6 +202,8 @@ func (r *TestRunner) TestDeployment(eh errors.TestErrorHandler) {
 	storer.DumpDefnsTo(r.repoOut)
 	r.compareGoldenFiles(r.errorsIn, r.errorsOut, false)
 	r.compareGoldenFiles(r.repoIn, r.repoOut, true)
+	r.compareGoldenFiles(r.prepIn, r.prepOut, true)
+	r.compareGoldenFiles(r.execIn, r.execOut, true)
 }
 
 func (r *TestRunner) ReadTargets(file string) ([]string, error) {
@@ -271,9 +273,9 @@ func (r *TestRunner) compareGoldenFiles(golden, gen string, copyNewFiles bool) {
 	// If there are any generated files which don't have golden files, let the user know and copy them
 	if len(genmap) > 0 {
 		if copyNewFiles {
-			eh.Writef("generated files were not present ... copying\n")
+			eh.Writef("generated files in %s were not present in %s ... copying:\n", gen, golden)
 			for f := range genmap {
-				fmt.Printf("  %s\n", f)
+				eh.Writef("  %s\n", f)
 				utils.CopyFile(filepath.Join(gen, f), filepath.Join(golden, f))
 			}
 		} else {
