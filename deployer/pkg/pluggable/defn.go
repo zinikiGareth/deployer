@@ -1,8 +1,10 @@
 package pluggable
 
+import "ziniki.org/deployer/deployer/pkg/errors"
+
 type Definition interface {
 	// Where identifies when the definition came into being
-	Where() Location
+	Where() *errors.Location
 
 	// What identifies the name of the definition
 	What() SymbolType

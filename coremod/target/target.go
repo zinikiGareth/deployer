@@ -11,7 +11,7 @@ type action interface {
 }
 
 type coreTarget struct {
-	loc  pluggable.Location
+	loc  *errors.Location
 	name pluggable.SymbolName
 
 	// Odd as this looks, there is a very good reason for it which is that as the action are assembled (elsewhere)
@@ -20,11 +20,11 @@ type coreTarget struct {
 	actions *[]action
 }
 
-func (t *coreTarget) Loc() pluggable.Location {
+func (t *coreTarget) Loc() *errors.Location {
 	return t.loc
 }
 
-func (t *coreTarget) Where() pluggable.Location {
+func (t *coreTarget) Where() *errors.Location {
 	return t.loc
 }
 

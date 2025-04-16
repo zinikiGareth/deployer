@@ -4,13 +4,18 @@ import (
 	"testing"
 
 	"ziniki.org/deployer/deployer/internal/parser"
+	"ziniki.org/deployer/deployer/pkg/errors"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
+
+func lineOf(tx string) *errors.LineLoc {
+	return errors.InFile("test-file").AtLine(1, 1, tx)
+}
 
 func TestForSingleSlashWithSpaces(t *testing.T) {
 	reporter, _ := mockReporter(t)
 	lex := parser.NewLineLexicator(reporter, "test")
-	toks := lex.BlockedLine(1, 1, "hello / world")
+	toks := lex.BlockedLine(lineOf("hello / world"))
 	if len(toks) != 3 {
 		t.Fatalf("%d args returned, not 3", len(toks))
 	}
@@ -26,7 +31,7 @@ func TestForSingleSlashWithSpaces(t *testing.T) {
 func TestForSingleSlashWithoutSpaces(t *testing.T) {
 	reporter, _ := mockReporter(t)
 	lex := parser.NewLineLexicator(reporter, "test")
-	toks := lex.BlockedLine(1, 1, "hello/world")
+	toks := lex.BlockedLine(lineOf("hello/world"))
 	if len(toks) != 3 {
 		t.Fatalf("%d args returned, not 3", len(toks))
 	}
@@ -47,7 +52,7 @@ func TestForSingleSlashWithoutSpaces(t *testing.T) {
 func TestForEqualRightArrowWithoutSpaces(t *testing.T) {
 	reporter, _ := mockReporter(t)
 	lex := parser.NewLineLexicator(reporter, "test")
-	toks := lex.BlockedLine(1, 1, "hello=>world")
+	toks := lex.BlockedLine(lineOf("hello=>world"))
 	if len(toks) != 3 {
 		t.Fatalf("%d args returned, not 3", len(toks))
 	}
@@ -68,7 +73,7 @@ func TestForEqualRightArrowWithoutSpaces(t *testing.T) {
 func TestForMinusLeftArrowWithoutSpaces(t *testing.T) {
 	reporter, _ := mockReporter(t)
 	lex := parser.NewLineLexicator(reporter, "test")
-	toks := lex.BlockedLine(1, 1, "hello<-'world'")
+	toks := lex.BlockedLine(lineOf("hello<-'world'"))
 	if len(toks) != 3 {
 		t.Fatalf("%d args returned, not 3", len(toks))
 	}

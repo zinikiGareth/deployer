@@ -23,7 +23,7 @@ type Resolver interface {
 }
 
 type Locatable interface {
-	Loc() Location
+	Loc() *errors.Location
 }
 
 type ContainingContext interface {

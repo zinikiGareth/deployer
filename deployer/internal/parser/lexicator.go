@@ -11,7 +11,7 @@ import (
 )
 
 type Lexicator interface {
-	BlockedLine(n, ind int, txt string) []pluggable.Token
+	BlockedLine(line *errors.LineLoc) []pluggable.Token
 }
 
 type LineLexicator struct {
@@ -35,8 +35,9 @@ const (
 // Also : ; (prob punc)
 // Don't do anything with ``
 
-func (ll *LineLexicator) BlockedLine(lineNo, ind int, txt string) []pluggable.Token {
-	ll.reporter.At(lineNo, txt)
+func (ll *LineLexicator) BlockedLine(line *errors.LineLoc) []pluggable.Token {
+	txt := line.Text
+	ll.reporter.At(line)
 	var toks []pluggable.Token
 	from := 0
 	runes := []rune(txt)
@@ -76,7 +77,7 @@ loop:
 				}
 			case inIdentifier:
 				if unicode.IsSpace(r) || isSymbol(r) {
-					toks = ll.token(toks, lineNo, ind+from, tok)
+					toks = ll.token(toks, line, from, tok)
 					tok = []rune{}
 					mode = starting
 					goAgain = true
@@ -94,7 +95,7 @@ loop:
 				} else if isNumberChar(r) {
 					tok = append(tok, r)
 				} else {
-					toks = ll.numtok(toks, lineNo, ind+from, tok)
+					toks = ll.numtok(toks, line, from, tok)
 					tok = []rune{}
 					mode = starting
 					goAgain = true
@@ -104,7 +105,7 @@ loop:
 					if strings.HasPrefix(string(tok), "//") {
 						break loop
 					} else {
-						toks = ll.symbol(toks, lineNo, ind+from, tok)
+						toks = ll.symbol(toks, line, from, tok)
 						tok = []rune{}
 						mode = starting
 						goAgain = true
@@ -126,7 +127,7 @@ loop:
 					ll.reporter.Report(k, "space required after string before identifier")
 					return nil
 				} else {
-					toks = ll.strtok(toks, lineNo, ind+from, tok)
+					toks = ll.strtok(toks, line, from, tok)
 					tok = []rune{}
 					mode = starting
 				}
@@ -136,15 +137,15 @@ loop:
 	if len(tok) != 0 {
 		switch mode {
 		case inIdentifier:
-			toks = ll.token(toks, lineNo, ind+from, tok)
+			toks = ll.token(toks, line, from, tok)
 		case stringEnding:
-			toks = ll.strtok(toks, lineNo, ind+from, tok)
+			toks = ll.strtok(toks, line, from, tok)
 		case inSymbol:
 			if !strings.HasPrefix(string(tok), "//") {
-				toks = ll.strtok(toks, lineNo, ind+from, tok)
+				toks = ll.symbol(toks, line, from, tok)
 			}
 		case inNumber:
-			toks = ll.numtok(toks, lineNo, ind+from, tok)
+			toks = ll.numtok(toks, line, from, tok)
 		case inString:
 			ll.reporter.Report(from, "unterminated string")
 			return nil
@@ -196,22 +197,22 @@ func isSymbol(r rune) bool {
 	}
 }
 
-func (ll *LineLexicator) token(toks []pluggable.Token, line, start int, text []rune) []pluggable.Token {
-	tok := NewIdentifierToken(ll.file, line, start, string(text))
+func (ll *LineLexicator) token(toks []pluggable.Token, line *errors.LineLoc, start int, text []rune) []pluggable.Token {
+	tok := NewIdentifierToken(line, start, string(text))
 	return append(toks, tok)
 }
 
-func (ll *LineLexicator) symbol(toks []pluggable.Token, line, start int, text []rune) []pluggable.Token {
-	tok := NewOperatorToken(ll.file, line, start, string(text))
+func (ll *LineLexicator) symbol(toks []pluggable.Token, line *errors.LineLoc, start int, text []rune) []pluggable.Token {
+	tok := NewOperatorToken(line, start, string(text))
 	return append(toks, tok)
 }
 
-func (ll *LineLexicator) strtok(toks []pluggable.Token, line, start int, text []rune) []pluggable.Token {
-	tok := NewStringToken(ll.file, line, start, string(text))
+func (ll *LineLexicator) strtok(toks []pluggable.Token, line *errors.LineLoc, start int, text []rune) []pluggable.Token {
+	tok := NewStringToken(line, start, string(text))
 	return append(toks, tok)
 }
 
-func (ll *LineLexicator) numtok(toks []pluggable.Token, line, start int, text []rune) []pluggable.Token {
+func (ll *LineLexicator) numtok(toks []pluggable.Token, line *errors.LineLoc, start int, text []rune) []pluggable.Token {
 	tx := string(text)
 	var f64 float64
 	var err error
@@ -225,7 +226,7 @@ func (ll *LineLexicator) numtok(toks []pluggable.Token, line, start int, text []
 	if err != nil {
 		ll.reporter.Report(start, fmt.Sprintf("not a valid number: %s", string(text)))
 	}
-	tok := NewNumberToken(ll.file, line, start, f64)
+	tok := NewNumberToken(line, start, f64)
 	return append(toks, tok)
 }
 

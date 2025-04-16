@@ -9,18 +9,18 @@ import (
 )
 
 type EnsureAction struct {
-	loc      pluggable.Location
+	loc      *errors.Location
 	what     pluggable.Identifier
 	resolved pluggable.Noun
 	named    string
 	props    map[pluggable.Identifier]any
 }
 
-func (ea *EnsureAction) Loc() pluggable.Location {
+func (ea *EnsureAction) Loc() *errors.Location {
 	return ea.loc
 }
 
-func (ea *EnsureAction) Where() pluggable.Location {
+func (ea *EnsureAction) Where() *errors.Location {
 	return ea.loc
 }
 

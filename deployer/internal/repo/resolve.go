@@ -35,6 +35,6 @@ func (s *Searcher) Resolve(name pluggable.Identifier) pluggable.Noun {
 		return ret
 	}
 	log.Printf("failed to resolve %s\n", name)
-	s.sink.Reportf(name.Loc().Line, name.Loc().Offset, name.Loc().String(), "could not resolve symbol %s", name.Id())
+	s.sink.Reportf(name.Loc(), "could not resolve symbol %s", name.Id())
 	return nil
 }

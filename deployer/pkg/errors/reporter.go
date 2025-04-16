@@ -3,22 +3,20 @@ package errors
 import "fmt"
 
 type ErrorReporter struct {
-	sink     ErrorSink
-	lineNo   int
-	lineText string
+	sink ErrorSink
+	line *LineLoc
 }
 
-func (r *ErrorReporter) At(lineNo int, lineText string) {
-	r.lineNo = lineNo
-	r.lineText = lineText
+func (r *ErrorReporter) At(line *LineLoc) {
+	r.line = line
 }
 
-func (r *ErrorReporter) Report(indent int, msg string) {
-	r.sink.Report(r.lineNo, indent, r.lineText, msg)
+func (r *ErrorReporter) Report(offset int, msg string) {
+	r.sink.Report(r.line.Location(offset), msg)
 }
 
-func (r *ErrorReporter) Reportf(indent int, format string, args ...any) {
-	r.sink.Report(r.lineNo, indent, r.lineText, fmt.Sprintf(format, args...))
+func (r *ErrorReporter) Reportf(offset int, format string, args ...any) {
+	r.sink.Report(r.line.Location(offset), fmt.Sprintf(format, args...))
 }
 
 func (r *ErrorReporter) Sink() ErrorSink {

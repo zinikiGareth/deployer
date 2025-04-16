@@ -16,8 +16,8 @@ type Storage struct {
 func (s *Storage) Bind(name pluggable.SymbolName, value any) {
 }
 
-func (s *Storage) Errorf(loc pluggable.Location, msg string, args ...any) {
-	s.sink.Reportf(loc.Line, loc.Offset, "", msg, args...)
+func (s *Storage) Errorf(loc *errors.Location, msg string, args ...any) {
+	s.sink.Reportf(loc, msg, args...)
 }
 
 func (s *Storage) SetMode(mode int) {

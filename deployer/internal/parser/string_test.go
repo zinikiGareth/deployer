@@ -10,7 +10,7 @@ import (
 func TestAStringCanBeFoundBetweenDoubleQuotes(t *testing.T) {
 	reporter, _ := mockReporter(t)
 	lex := parser.NewLineLexicator(reporter, "test")
-	toks := lex.BlockedLine(1, 1, "\"hello, world\"")
+	toks := lex.BlockedLine(lineOf("\"hello, world\""))
 	if len(toks) != 1 {
 		t.Fatalf("not one arg returned")
 	}
@@ -26,7 +26,7 @@ func TestAStringCanBeFoundBetweenDoubleQuotes(t *testing.T) {
 func TestAStringCanIncludeANestedDQPairBetweenDoubleQuotes(t *testing.T) {
 	reporter, _ := mockReporter(t)
 	lex := parser.NewLineLexicator(reporter, "test")
-	toks := lex.BlockedLine(1, 1, "\"hello, \"\"world\"\"\"")
+	toks := lex.BlockedLine(lineOf("\"hello, \"\"world\"\"\""))
 	if len(toks) != 1 {
 		t.Fatalf("not one arg returned but %v", toks)
 	}
@@ -42,7 +42,7 @@ func TestAStringCanIncludeANestedDQPairBetweenDoubleQuotes(t *testing.T) {
 func TestAStringCanBeFoundBetweenSingleQuotes(t *testing.T) {
 	reporter, _ := mockReporter(t)
 	lex := parser.NewLineLexicator(reporter, "test")
-	toks := lex.BlockedLine(1, 1, "'hello, world'")
+	toks := lex.BlockedLine(lineOf("'hello, world'"))
 	if len(toks) != 1 {
 		t.Fatalf("not one arg returned")
 	}
@@ -58,7 +58,7 @@ func TestAStringCanBeFoundBetweenSingleQuotes(t *testing.T) {
 func TestAStringCanIncludeANestedSQPairBetweenSingleQuotes(t *testing.T) {
 	reporter, _ := mockReporter(t)
 	lex := parser.NewLineLexicator(reporter, "test")
-	toks := lex.BlockedLine(1, 1, "'hello, ''world'''")
+	toks := lex.BlockedLine(lineOf("'hello, ''world'''"))
 	if len(toks) != 1 {
 		t.Fatalf("not one arg returned but %v", toks)
 	}
@@ -76,7 +76,7 @@ func TestAStringMustBeTerminated(t *testing.T) {
 	tx := "\"hello, world"
 	sink.Expect(1, 1, tx, "unterminated string")
 	lex := parser.NewLineLexicator(reporter, "test")
-	toks := lex.BlockedLine(1, 1, tx)
+	toks := lex.BlockedLine(lineOf(tx))
 	if toks != nil {
 		t.Fatalf("expected nil")
 	}
@@ -87,7 +87,7 @@ func TestAStringMustNotEndWithNetedQuote(t *testing.T) {
 	tx := "\"hello, world\"\""
 	sink.Expect(1, 1, tx, "unterminated string")
 	lex := parser.NewLineLexicator(reporter, "test")
-	toks := lex.BlockedLine(1, 1, tx)
+	toks := lex.BlockedLine(lineOf(tx))
 	if toks != nil {
 		t.Fatalf("expected nil")
 	}
@@ -98,7 +98,7 @@ func TestThereMustBeASpaceBetweenIDAndAString(t *testing.T) {
 	tx := "system'hello'"
 	lex := parser.NewLineLexicator(reporter, "test")
 	sink.Expect(1, 6, tx, "space required after identifier before string")
-	toks := lex.BlockedLine(1, 1, tx)
+	toks := lex.BlockedLine(lineOf(tx))
 	if toks != nil {
 		t.Fatalf("expected nil")
 	}
@@ -109,7 +109,7 @@ func TestThereMustBeASpaceBetweenAStringAndAnID(t *testing.T) {
 	tx := "'hello'system"
 	lex := parser.NewLineLexicator(reporter, "test")
 	sink.Expect(1, 7, tx, "space required after string before identifier")
-	toks := lex.BlockedLine(1, 1, tx)
+	toks := lex.BlockedLine(lineOf(tx))
 	if toks != nil {
 		t.Fatalf("expected nil")
 	}
@@ -118,7 +118,7 @@ func TestThereMustBeASpaceBetweenAStringAndAnID(t *testing.T) {
 func TestTwoIdsAndASimpleStringCanBeSeparatedBySpaces(t *testing.T) {
 	reporter, _ := mockReporter(t)
 	lex := parser.NewLineLexicator(reporter, "test")
-	toks := lex.BlockedLine(1, 1, "ensure test.S3.Bucket \"org.ziniki.launch_bucket\"")
+	toks := lex.BlockedLine(lineOf("ensure test.S3.Bucket \"org.ziniki.launch_bucket\""))
 	if len(toks) != 3 {
 		t.Fatalf("not three args returned")
 	}

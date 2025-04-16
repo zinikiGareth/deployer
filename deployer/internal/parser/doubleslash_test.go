@@ -10,7 +10,7 @@ import (
 func TestALineBeginningDoubleSlashSpaceIsIgnored(t *testing.T) {
 	reporter, _ := mockReporter(t)
 	lex := parser.NewLineLexicator(reporter, "test")
-	toks := lex.BlockedLine(1, 1, "// hello, world")
+	toks := lex.BlockedLine(lineOf("// hello, world"))
 	if len(toks) != 0 {
 		t.Fatalf("%d args returned, not 0", len(toks))
 	}
@@ -19,7 +19,7 @@ func TestALineBeginningDoubleSlashSpaceIsIgnored(t *testing.T) {
 func TestALineWithDoubleSlashSpaceIsTerminated(t *testing.T) {
 	reporter, _ := mockReporter(t)
 	lex := parser.NewLineLexicator(reporter, "test")
-	toks := lex.BlockedLine(1, 1, "hello // , world")
+	toks := lex.BlockedLine(lineOf("hello // , world"))
 	if len(toks) != 1 {
 		t.Fatalf("%d args returned, not 1", len(toks))
 	}
@@ -31,7 +31,7 @@ func TestALineWithDoubleSlashSpaceIsTerminated(t *testing.T) {
 func TestALineBeginningTripleSlashIsIgnored(t *testing.T) {
 	reporter, _ := mockReporter(t)
 	lex := parser.NewLineLexicator(reporter, "test")
-	toks := lex.BlockedLine(1, 1, "/// hello, world")
+	toks := lex.BlockedLine(lineOf("/// hello, world"))
 	if len(toks) != 0 {
 		t.Fatalf("%d args returned, not 0", len(toks))
 	}

@@ -3,11 +3,12 @@ package parser
 import (
 	"fmt"
 
+	"ziniki.org/deployer/deployer/pkg/errors"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
 type BaseToken struct {
-	loc pluggable.Location
+	loc *errors.Location
 }
 
 type IdentifierToken struct {
@@ -30,7 +31,7 @@ type StringToken struct {
 	text string
 }
 
-func (tok *BaseToken) Loc() pluggable.Location {
+func (tok *BaseToken) Loc() *errors.Location {
 	return tok.loc
 }
 
@@ -66,16 +67,16 @@ func (tok *OperatorToken) String() string {
 	return fmt.Sprintf("%s %s", tok.BaseToken.String(), tok.op)
 }
 
-func NewIdentifierToken(file string, line, offset int, text string) pluggable.Identifier {
-	return &IdentifierToken{BaseToken: BaseToken{loc: pluggable.NewLocation(file, line, offset)}, id: text}
+func NewIdentifierToken(line *errors.LineLoc, offset int, text string) pluggable.Identifier {
+	return &IdentifierToken{BaseToken: BaseToken{loc: line.Location(offset)}, id: text}
 }
 
-func NewNumberToken(file string, line, offset int, value float64) pluggable.Number {
-	return &NumberToken{BaseToken: BaseToken{loc: pluggable.NewLocation(file, line, offset)}, value: value}
+func NewNumberToken(line *errors.LineLoc, offset int, value float64) pluggable.Number {
+	return &NumberToken{BaseToken: BaseToken{loc: line.Location(offset)}, value: value}
 }
 
-func NewOperatorToken(file string, line, offset int, text string) pluggable.Operator {
-	return &OperatorToken{BaseToken: BaseToken{loc: pluggable.NewLocation(file, line, offset)}, op: text}
+func NewOperatorToken(line *errors.LineLoc, offset int, text string) pluggable.Operator {
+	return &OperatorToken{BaseToken: BaseToken{loc: line.Location(offset)}, op: text}
 }
 
 func (tok *StringToken) Text() string {
@@ -86,6 +87,6 @@ func (tok *StringToken) String() string {
 	return fmt.Sprintf("%s %s", tok.BaseToken.String(), tok.text)
 }
 
-func NewStringToken(file string, line, offset int, text string) pluggable.String {
-	return &StringToken{BaseToken: BaseToken{loc: pluggable.NewLocation(file, line, offset)}, text: text}
+func NewStringToken(line *errors.LineLoc, offset int, text string) pluggable.String {
+	return &StringToken{BaseToken: BaseToken{loc: line.Location(offset)}, text: text}
 }

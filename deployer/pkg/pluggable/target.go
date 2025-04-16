@@ -1,5 +1,7 @@
 package pluggable
 
+import "ziniki.org/deployer/deployer/pkg/errors"
+
 const (
 	PREPARE_MODE int = iota
 	EXECUTE_MODE
@@ -12,7 +14,7 @@ type TargetThing interface {
 
 type RuntimeStorage interface {
 	Bind(name SymbolName, value any)
-	Errorf(loc Location, msg string, args ...any)
+	Errorf(loc *errors.Location, msg string, args ...any)
 	SetMode(mode int)
 	IsMode(mode int) bool
 	ObtainDriver(forType string) any

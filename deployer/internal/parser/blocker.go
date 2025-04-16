@@ -12,11 +12,13 @@ type Blocker struct {
 	indents  []string
 	lex      Lexicator
 	handlers []pluggable.Interpreter
+	file     *errors.FileLoc
 }
 
-// deffo need an error handler as well
+func (b *Blocker) BeginFile(file string) {
+	b.file = errors.InFile(file)
+}
 func (b *Blocker) HaveLine(lineNo int, txt string) {
-	b.errors.At(lineNo, txt)
 	ind, line := Split(txt)
 	if ind == "" {
 		return
@@ -30,7 +32,9 @@ func (b *Blocker) HaveLine(lineNo int, txt string) {
 	} else {
 		// TODO: clean up old handlers if any (but not indents)
 	}
-	toks := b.lex.BlockedLine(lineNo, len(ind), line)
+	ll := b.file.AtLine(lineNo, level, line)
+	b.errors.At(ll)
+	toks := b.lex.BlockedLine(ll)
 	hdlr := b.handlers[level].HaveTokens(b.errors, toks)
 	if hdlr == nil {
 		panic("handler cannot return nil; if no nested scope, return NoInnerScope")

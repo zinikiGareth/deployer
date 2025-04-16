@@ -1,13 +1,13 @@
 package errors
 
 type ErrorSink interface {
-	Report(lineNo int, indent int, lineText string, msg string)
-	Reportf(lineNo int, indent int, lineText string, format string, args ...any)
+	Report(loc *Location, msg string)
+	Reportf(loc *Location, format string, args ...any)
 	HasErrors() bool
 }
 
 type ErrorRepI interface {
-	At(lineNo int, lineText string)
-	Report(indent int, msg string)
-	Reportf(indent int, fmt string, args ...any)
+	At(line *LineLoc)
+	Report(offset int, msg string)
+	Reportf(offset int, fmt string, args ...any)
 }

@@ -12,7 +12,7 @@ type writerSink struct {
 	hasErrors bool
 }
 
-func (w *writerSink) Report(lineNo int, indent int, lineText string, msg string) {
+func (w *writerSink) Report(loc *Location, msg string) {
 	w.hasErrors = true
 	if w.writer == nil {
 		var err error
@@ -22,13 +22,13 @@ func (w *writerSink) Report(lineNo int, indent int, lineText string, msg string)
 			return
 		}
 	}
-	fmt.Fprintf(w.writer, "%3d.%-3d %s\n", lineNo, indent, msg)
-	fmt.Fprintf(w.writer, "  ==> %s\n", lineText)
+	fmt.Fprintf(w.writer, "%3d.%-3d %s\n", loc.Line.Line, loc.Offset, msg)
+	fmt.Fprintf(w.writer, "  ==> %s\n", loc.Line.Text)
 	w.writer.Sync()
 }
 
-func (w *writerSink) Reportf(lineNo int, indent int, lineText string, format string, args ...any) {
-	w.Report(lineNo, indent, lineText, fmt.Sprintf(format, args...))
+func (w *writerSink) Reportf(loc *Location, format string, args ...any) {
+	w.Report(loc, fmt.Sprintf(format, args...))
 }
 
 func (s *writerSink) HasErrors() bool {

@@ -10,7 +10,7 @@ import (
 func TestASingleIdIsJustThat(t *testing.T) {
 	reporter, _ := mockReporter(t)
 	lex := parser.NewLineLexicator(reporter, "test")
-	toks := lex.BlockedLine(1, 1, "hello")
+	toks := lex.BlockedLine(lineOf("hello"))
 	if len(toks) != 1 {
 		t.Fatalf("not exactly one arg returned")
 	}
@@ -22,7 +22,7 @@ func TestASingleIdIsJustThat(t *testing.T) {
 func TestAnIdCanHaveDots(t *testing.T) {
 	reporter, _ := mockReporter(t)
 	lex := parser.NewLineLexicator(reporter, "test")
-	toks := lex.BlockedLine(1, 1, "hello.world")
+	toks := lex.BlockedLine(lineOf("hello.world"))
 	if len(toks) != 1 {
 		t.Fatalf("not exactly one arg returned")
 	}
@@ -38,7 +38,7 @@ func TestAnIdCanHaveDots(t *testing.T) {
 func TestTwoIdsCanBeSeparatedByASpace(t *testing.T) {
 	reporter, _ := mockReporter(t)
 	lex := parser.NewLineLexicator(reporter, "test")
-	toks := lex.BlockedLine(1, 1, "hello world")
+	toks := lex.BlockedLine(lineOf("hello world"))
 	if len(toks) != 2 {
 		t.Fatalf("not two args returned")
 	}
@@ -57,6 +57,6 @@ func TestLeadingSpacesCauseAPanic(t *testing.T) {
 	}()
 	reporter, _ := mockReporter(t)
 	lex := parser.NewLineLexicator(reporter, "test")
-	lex.BlockedLine(1, 1, " hello")
+	lex.BlockedLine(lineOf(" hello"))
 	t.Fatalf("did not panic")
 }

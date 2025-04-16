@@ -65,8 +65,8 @@ func (t *tmp) applySink(sink errors.ErrorSink) {
 
 func (t *tmp) HaveTokens(_ errors.ErrorRepI, toks []pluggable.Token) pluggable.Interpreter {
 	tok := toks[0].(*LineToken)
-	lineNo := tok.Loc().Line
-	lenIndent := tok.Loc().Offset
+	lineNo := tok.Loc().Line.Line
+	lenIndent := tok.Loc().Line.Indent
 	text := tok.tx
 	for ln := range t.lines {
 		l := &t.lines[ln]
@@ -90,32 +90,32 @@ func (t *tmp) HaveTokens(_ errors.ErrorRepI, toks []pluggable.Token) pluggable.I
 }
 
 type LineToken struct {
-	loc pluggable.Location
+	loc *errors.Location
 	tx  string
 }
 
-func (t *LineToken) Loc() pluggable.Location {
+func (t *LineToken) Loc() *errors.Location {
 	return t.loc
 }
 
 type testLex struct {
 }
 
-func (l *testLex) BlockedLine(lineNo, indent int, tx string) []pluggable.Token {
-	loc := pluggable.NewLocation("test", lineNo, indent)
-	return []pluggable.Token{&LineToken{loc: loc, tx: tx}}
+func (l *testLex) BlockedLine(line *errors.LineLoc) []pluggable.Token {
+	loc := line.Location(0)
+	return []pluggable.Token{&LineToken{loc: loc, tx: line.Text}}
 }
 
 type testSink struct {
 	errorCount int
 }
 
-func (s *testSink) Report(lineNo int, indent int, lineText string, msg string) {
+func (s *testSink) Report(loc *errors.Location, msg string) {
 	s.errorCount++
 }
 
-func (s *testSink) Reportf(lineNo int, indent int, lineText string, format string, args ...any) {
-	s.Report(lineNo, indent, lineText, fmt.Sprintf(format, args...))
+func (s *testSink) Reportf(loc *errors.Location, format string, args ...any) {
+	s.Report(loc, fmt.Sprintf(format, args...))
 }
 
 func (s *testSink) HasErrors() bool {

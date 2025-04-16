@@ -11,6 +11,7 @@ func provideLines(fromFile string, to pluggable.ProvideLine) {
 	if err != nil {
 		panic("need an error handler")
 	}
+	to.BeginFile(fromFile)
 	for n, l := range lines {
 		// turn 0-(n-1) into 1-n by adding 1 to the index
 		to.HaveLine(n+1, l)

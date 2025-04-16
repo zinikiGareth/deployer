@@ -3,6 +3,7 @@ package pluggable
 import "ziniki.org/deployer/deployer/pkg/errors"
 
 type ProvideLine interface {
+	BeginFile(file string)
 	HaveLine(lineNo int, text string)
 }
 
@@ -47,4 +48,3 @@ type Noun interface {
 	ShortDescription() string
 	CreateWithName(named string) any
 }
-
