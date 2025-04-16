@@ -1,2 +1,2 @@
-  9.0   invalid indent
-  ==> 	target bar
+  5.0   invalid indent
+  ==> target foo

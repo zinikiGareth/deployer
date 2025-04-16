@@ -1,19 +1,19 @@
 target ensureABucketExists {
-	_where_: bucket.dply:3.8
+	_where_: bucket.dply:3.7
 	actions: [
 		EnsureCommand {
-			_where_: bucket.dply:4.2
+			_where_: bucket.dply:4.0
 			what: test.S3.Bucket
 			resolved: test.S3.Bucket[]
 			named: org.ziniki.launch_bucket
-				bucket.dply:5.3 retentionLength <- bucket.dply:5.22 24
+				bucket.dply:5.0 retentionLength <- bucket.dply:5.19 24
 		}
 	]
 }
 EnsureCommand {
-	_where_: bucket.dply:4.2
+	_where_: bucket.dply:4.0
 	what: test.S3.Bucket
 	resolved: test.S3.Bucket[]
 	named: org.ziniki.launch_bucket
-		bucket.dply:5.3 retentionLength <- bucket.dply:5.22 24
+		bucket.dply:5.0 retentionLength <- bucket.dply:5.19 24
 }
