@@ -74,7 +74,7 @@ func TestAStringCanIncludeANestedSQPairBetweenSingleQuotes(t *testing.T) {
 func TestAStringMustBeTerminated(t *testing.T) {
 	reporter, sink := mockReporter(t)
 	tx := "\"hello, world"
-	sink.Expect(1, 1, tx, "unterminated string")
+	sink.Expect(1, 1, 0, tx, "unterminated string")
 	lex := parser.NewLineLexicator(reporter, "test")
 	toks := lex.BlockedLine(lineOf(tx))
 	if toks != nil {
@@ -85,7 +85,7 @@ func TestAStringMustBeTerminated(t *testing.T) {
 func TestAStringMustNotEndWithNetedQuote(t *testing.T) {
 	reporter, sink := mockReporter(t)
 	tx := "\"hello, world\"\""
-	sink.Expect(1, 1, tx, "unterminated string")
+	sink.Expect(1, 1, 0, tx, "unterminated string")
 	lex := parser.NewLineLexicator(reporter, "test")
 	toks := lex.BlockedLine(lineOf(tx))
 	if toks != nil {
@@ -97,7 +97,7 @@ func TestThereMustBeASpaceBetweenIDAndAString(t *testing.T) {
 	reporter, sink := mockReporter(t)
 	tx := "system'hello'"
 	lex := parser.NewLineLexicator(reporter, "test")
-	sink.Expect(1, 6, tx, "space required after identifier before string")
+	sink.Expect(1, 1, 6, tx, "space required after identifier before string")
 	toks := lex.BlockedLine(lineOf(tx))
 	if toks != nil {
 		t.Fatalf("expected nil")
@@ -108,7 +108,7 @@ func TestThereMustBeASpaceBetweenAStringAndAnID(t *testing.T) {
 	reporter, sink := mockReporter(t)
 	tx := "'hello'system"
 	lex := parser.NewLineLexicator(reporter, "test")
-	sink.Expect(1, 7, tx, "space required after string before identifier")
+	sink.Expect(1, 1, 7, tx, "space required after string before identifier")
 	toks := lex.BlockedLine(lineOf(tx))
 	if toks != nil {
 		t.Fatalf("expected nil")

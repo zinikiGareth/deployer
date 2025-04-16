@@ -8,7 +8,7 @@ import (
 )
 
 type errorStruct struct {
-	line, ind int
+	line, ind, offset int
 	text, msg string
 }
 
@@ -17,8 +17,8 @@ type mockSink struct {
 	errors []errorStruct
 }
 
-func (s *mockSink) Expect(line, ind int, text, msg string) {
-	s.errors = append(s.errors, errorStruct{line: line, ind: ind, text: text, msg: msg})
+func (s *mockSink) Expect(line, ind, offset int, text, msg string) {
+	s.errors = append(s.errors, errorStruct{line: line, ind: ind, offset: offset, text: text, msg: msg})
 }
 
 func (s *mockSink) Report(line *errors.Location, msg string) {

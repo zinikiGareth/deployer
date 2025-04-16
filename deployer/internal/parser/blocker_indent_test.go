@@ -18,22 +18,22 @@ func TestCommentLinesAreDiscarded(t *testing.T) {
 
 func TestTheFirstIndentedLineIsAlwaysAccepted(t *testing.T) {
 	blockerTest([]line{
-		{lineNo: 10, lineIndent: 1, indent: "\t", text: "hello"},
+		{lineNo: 10, lineIndent: 0, indent: "\t", text: "hello"},
 	})
 }
 
 func TestConsecutiveLinesAtTheSameIndentAreAccepted(t *testing.T) {
 	blockerTest([]line{
-		{lineNo: 10, lineIndent: 1, indent: "\t", text: "hello"},
-		{lineNo: 15, lineIndent: 1, indent: "\t", text: "goodbye"},
+		{lineNo: 10, lineIndent: 0, indent: "\t", text: "hello"},
+		{lineNo: 15, lineIndent: 0, indent: "\t", text: "goodbye"},
 	})
 }
 
 func TestAnIdentedLineIsPassedToAnInnerScope(t *testing.T) {
 	blockerTest([]line{
-		{lineNo: 10, lineIndent: 1, indent: "\t", text: "hello",
+		{lineNo: 10, lineIndent: 0, indent: "\t", text: "hello",
 			inner: innerBlock([]line{
-				{lineNo: 15, lineIndent: 2, indent: "\t\t", text: "goodbye"},
+				{lineNo: 15, lineIndent: 1, indent: "\t\t", text: "goodbye"},
 			}),
 		},
 	})

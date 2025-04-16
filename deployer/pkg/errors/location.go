@@ -1,6 +1,9 @@
 package errors
 
-import "fmt"
+import (
+	"fmt"
+	"path/filepath"
+)
 
 type FileLoc struct {
 	File string
@@ -23,7 +26,7 @@ func (loc Location) InFile() string {
 }
 
 func (loc Location) String() string {
-	return fmt.Sprintf("%s:%d.%d", loc.Line.File.File, loc.Line.Line, loc.Offset)
+	return fmt.Sprintf("%s:%d.%d", filepath.Base(loc.Line.File.File), loc.Line.Line, loc.Offset)
 }
 
 func InFile(name string) *FileLoc {
