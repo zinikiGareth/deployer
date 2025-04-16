@@ -1,0 +1,29 @@
+#!/bin/bash
+
+DOCOPY=0
+if [ $1 = '--copy' ] ; then
+  DOCOPY=1
+  shift
+fi
+
+if [ $# -ne 1 ] ; then
+  echo "compareGolden [--copy] <case>" >&2
+  exit 1
+fi
+
+CASEDIR="golden/goldencases/$1"
+
+for i in errors repository ; do
+  golden="$CASEDIR/$i"
+  for j in `ls -1 $golden` ; do
+    diff "$golden/$j" "$golden-gen/$j" > /tmp/golddiff
+    if [ $? -ne 0 ] ; then
+     echo " ++++ $i/$j:"
+     cat /tmp/golddiff
+      if [ "$DOCOPY" -eq 1 ] ; then
+        cp $golden-gen/$j $golden/$j
+      fi
+    fi
+    rm /tmp/golddiff
+  done
+done
