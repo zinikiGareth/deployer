@@ -1,0 +1,198 @@
+Policies are complex beasts in AWS, and made all the more complex by the fact that they basically
+want you to write everything in JSON policy documents.  Yes, you can use some UI, but then you're
+tied into using a UI, with a JSON document as the output.  
+
+I call shenanigans.
+
+I want to use a programming language with features such as variables and operators and composable
+functions.  And thus I want the ability to assemble policies one item at a time.  And I want the
+ability to describe your policies in various ways.
+
+Some references:
+
+* CreatePolicy - https://docs.aws.amazon.com/IAM/latest/APIReference/API_CreatePolicy.html
+* Statement - https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements_statement.html
+
+I'm going to give my example from the inside out, but looking at it from the outside in, if you
+want to create a "standalone" policy (called a managed policy), you need to come up with a name for
+the policy and then call CreatePolicy with a policy definition.  Alternatively, you can attach a
+policy definition to another object (such as a bucket) in a particular slot.  Such a policy
+definition is a JSON document with a Version and a Statement.  And the statement consists of an
+OR of statement blocks, each of which allows or denies specific actions to specific resources.
+
+So what *I* want to do is to start with the individual Access Control Elements and then see how we
+can compose these and then associated them either with objects or create them as managed policies.
+
+The fundamental rules are "allow" and "deny", and these need to be applied to principals and resources.
+It's also possible to add additional information such as conditions.  But let's start small.
+
+We can allow reading an s3 bucket:
+
+	allow "s3:GetObject" "arn:aws:s3:::my_bucket"
+
+Now, it seems to me it would be good for the library to offer all the permissions by reflection
+(assuming they are in the Go library to begin with).  So we can rewrite this as:
+
+	allow aws.s3.GetObject "arn:aws:s3:::my_bucket"
+
+On the other hand, I don't think it's reasonable to push all the buckets into the namespace, so
+I won't.  At the same time, note that it's possible to use wildcards for either buckets or
+permissions, in which case you *have* to use a string.
+
+If at all possible, the compiler should check that any strings are meaningful and will not cause
+any problems during the dryrun phase.  I think it should be an error for a permission string not
+to exist - or not match anything - and likewise for a bucket string to not match anything.
+
+Either (or both) arguments can also be lists.  In this case, the effect of the statement is to
+apply all the permissions to all of the resources (this is an AWS rule, nothing specific here).
+
+	allow [aws.s3.GetObject, aws.s3.PutObject] ["arn:aws:s3:::my_bucket", "arn:aws:s3:::your_bucket"]
+
+(I don't think we have list syntax yet, but we will.)
+
+Also, it is obviously reasonable to use any appropriately typed (e.g. string) variables here:
+
+	allow perm bucket
+
+This is obviously particularly useful in a template where you might have a bucket name in a variable
+and you want to build up a policy to grant a bunch of permissions on that bucket.
+
+By themselves, none of these statements actually "do" anything.  These are all values.  I think
+this should probably be a compiler error ("value is not used or stored").  There are two options for
+this: one is to have this in a nested policy statement so that the value is used immediately; the
+other is to store it in a variable for use later.
+
+	allow aws.s3.GetObject "arn:aws:s3:::my_bucket" => perm_get_my_bucket
+
+Instead of (or in addition to) the argument syntax it is possible to use "nested syntax".  For
+instance, to allow GetObject on multiple buckets, it's possible to write:
+
+	allow aws.s3.GetObject => multiple_perms
+		resources
+			this_bucket
+			other_bucket
+
+In this case, all of the arguments can be explicit bucket names, bucket variables or lists.
+All of them are evaluated and concatenated to make a single list and then treated in the same
+way as before.
+
+Note that if one argument is provided it must be permission list.
+
+I am vacillating over whether it should be possible to list some permissions on the argument list
+and in the nested form.  This seems confusing but it also seems as if it might be convenient.
+
+AWS Policy Elements have other options as well, such as principals and conditions.  These can
+be specified using the appropriate blocks:
+
+	allow aws.s3.GetObject bucket_name => multiple_perms
+		principal "arn:aws:iam::account-number-without-hyphens:user/username"
+		condition aws.s3.StringNotLike
+			"s3:x-amz-copy-source"
+			"amz-s3-demo-source-bucket/public/*"
+
+I'm not going to claim to actually _understand_ either of these, but the point is that within
+the scope of an allow or deny element it is possible to have "principal" and "condition"
+elements.  It seems that a condition element in turn needs to have a nested block, but it's
+possible that it could just be arguments on the statement line.  In a sense of consistency,
+it is possible to provide the argument to principal in an inner block.  As far as I can tell,
+though, the principal has to be just a single "string" expression.
+
+Finally, it's possible to define only part of an allow or deny expression.  In this case
+it returns a function which needs "the other part".  Now, for consistency, it should accept
+just a principal, in which case it is missing "both bits"; and so by extension it's not
+unreasonable to just say "oh, it's just an apply with no arguments".
+
+The result of having a function is that you can apply it to more arguments and it will all be
+fine.  I haven't thought this through yet, but I would hope that it would be able to accept
+either command line arguments or nested arguments and not worry about it.  This implies
+some level of understanding of syntax when it comes to applying curried functions.  I'm not
+entirely sure how this would work.
+
+And I'm not sure about syntax.  The obvious thing is just lo launch in with a variable name,
+but there's a part of me that thinks having an explicit verb such as "apply" would be clearer.
+It also picks up on the idea that we are composing something at the syntax level rather than
+just calling a function.  So I think I would be inclined to write something like:
+
+	allow aws.s3.GetObject => fn
+
+	apply fn bucket_name
+
+And the same thing can work the other way:
+
+	allow => on_bucket
+		resources
+			bucket_name
+
+	apply on_bucket aws.s3.GetObject
+
+(This does not violate the earlier rule on first arg being a permission because it is
+indirected through a nested list.)
+
+This is obviously very useful when you are talking about templates because you can pass
+a function in that is already pre-applied to a resource or permission.
+
+Note that once a policy statement has at least one permission and one resource, it stops
+being a "composable" and becomes a policy statement and thus cannot be "apply"ed again.
+
+By itself, any such statement can be used as a "policy document", but it is possible to
+combine multiple such statements using the "OR" combination logic in a policy statement.
+The "policy" keyword is used for this:
+
+	policy allow1 allow2 => policy1
+
+It is possible to use multiple arguments on a line.
+
+	policy [allow1, allow2] => policy2
+
+And it's possible to use a list.  Any lists are expanded and concatenated to form a
+list of statement blocks.
+
+It's also possible to use a nested block:
+
+	policy => policy3
+		allow1
+		allow2
+
+And a nested block may include direct expressions:
+
+	policy => policy4
+		allow perm resources
+
+I don't think this is allowed on the argument line for the simple reason that these
+are "commands" and not functions.  In other words, the interpreter for the compiler
+for "policy" is specifically looking for the keywords "allow" and "deny".
+
+Now, anything that wants a policy in a field can have one. So, for instance, once
+you have created a bucket, you can attach a policy to it (I think, I'm not 100% sure
+I actually understand how AWS does this).
+
+	bucket "hello_world" => bucket
+
+	policy => hw_policy
+		allow aws.s3.GetObject bucket.Name
+		allow aws.s3.PutObject bucket.Name
+
+	attach bucket policy
+
+And the idea here would be that "attach" interrogates the type of its first argument
+and figues out the correct action to take.
+
+The longer this goes on (and the more I look at the Go API) the less and less I am
+convinvced that I can do so much using reflection.  But maybe there are a bunch of
+issues with policies specifically that make this seem difficult and that it all
+becomes easier when I branch out into the wider universe of things like API
+gateways.  And when you are looking at more "unusual" parameters they may make
+more sense.
+
+It is possible to create a "managed policy" from a policy object using ensure, of course:
+
+	ensure aws.policy "policy_name" hw_policy
+
+And then once you have a policy name, you can attach it "by name":
+
+	attach bucket "policy_name"
+
+In this case, it has to look up the policy "policy_name" and then once it has
+found it, it can attach it to the bucket.  Technically, I'm sure the attachment
+is based on _name_, but it HAS to check that the policy exists before it can do
+anything else.
