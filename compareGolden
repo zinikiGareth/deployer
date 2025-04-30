@@ -1,7 +1,7 @@
 #!/bin/bash
 
 DOCOPY=0
-if [ $1 = '--copy' ] ; then
+if [ "$1" = '--copy' ] ; then
   DOCOPY=1
   shift
 fi

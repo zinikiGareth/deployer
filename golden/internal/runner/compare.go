@@ -9,19 +9,12 @@ import (
 )
 
 type goldenComparator struct {
-	tracker   *errors.CaseTracker
-	errorsIn  string
-	errorsOut string
-	repoIn    string
-	repoOut   string
-	prepIn    string
-	prepOut   string
-	execIn    string
-	execOut   string
+	tracker *errors.CaseTracker
+	RunnerPaths
 }
 
-func newGoldenComparator(tracker *errors.CaseTracker, errorsIn, errorsOut, repoIn, repoOut, prepIn, prepOut, execIn, execOut string) *goldenComparator {
-	return &goldenComparator{tracker: tracker, errorsIn: errorsIn, errorsOut: errorsOut, repoIn: repoIn, repoOut: repoOut, prepIn: prepIn, prepOut: prepOut, execIn: execIn, execOut: execOut}
+func newGoldenComparator(tracker *errors.CaseTracker, paths RunnerPaths) *goldenComparator {
+	return &goldenComparator{tracker: tracker, RunnerPaths: paths}
 }
 
 func (gc *goldenComparator) compareAll() {
