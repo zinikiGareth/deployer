@@ -54,31 +54,31 @@ func (ea *EnsureAction) ShortDescription() string {
 	return fmt.Sprintf("Ensure[%s: %s]", ea.what.Id(), ea.named)
 }
 
-func (ea *EnsureAction) AddProperty(reporter errors.ErrorRepI, name pluggable.Identifier, value pluggable.Locatable) {
+func (ea *EnsureAction) AddProperty(tools *pluggable.Tools, name pluggable.Identifier, value pluggable.Locatable) {
 	if name.Id() == "name" {
 		if ea.named != nil {
-			reporter.Report(name.Loc().Offset, "duplicate definition of name")
+			tools.Reporter.Report(name.Loc().Offset, "duplicate definition of name")
 			return
 		}
 		str, ok := value.(pluggable.String)
 		if !ok {
-			reporter.Report(value.Loc().Offset, "name must be a string")
+			tools.Reporter.Report(value.Loc().Offset, "name must be a string")
 			return
 		}
 		ea.named = str
 	} else {
 		if ea.props[name] != nil {
-			reporter.Reportf(name.Loc().Offset, "duplicate definition of %s", name.Id())
+			tools.Reporter.Reportf(name.Loc().Offset, "duplicate definition of %s", name.Id())
 			return
 		}
 		ea.props[name] = value
 	}
 }
 
-func (ea *EnsureAction) Completed(reporter errors.ErrorRepI) {
+func (ea *EnsureAction) Completed(tools *pluggable.Tools) {
 	if ea.named == nil {
-		reporter.At(ea.loc.Line)
-		reporter.Report(ea.loc.Offset, "ensure requires a name to be defined")
+		tools.Reporter.At(ea.loc.Line)
+		tools.Reporter.Report(ea.loc.Offset, "ensure requires a name to be defined")
 	}
 }
 

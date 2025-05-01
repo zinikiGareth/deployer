@@ -1,6 +1,8 @@
 package pluggable
 
-import "ziniki.org/deployer/deployer/pkg/errors"
+import (
+	"ziniki.org/deployer/deployer/pkg/errors"
+)
 
 type ProvideLine interface {
 	BeginFile(file string)
@@ -9,8 +11,8 @@ type ProvideLine interface {
 }
 
 type Interpreter interface {
-	HaveTokens(reporter errors.ErrorRepI, tokens []Token) Interpreter
-	Completed(reporter errors.ErrorRepI)
+	HaveTokens(tools *Tools, tokens []Token) Interpreter
+	Completed(tools *Tools)
 }
 
 type Scoper interface {

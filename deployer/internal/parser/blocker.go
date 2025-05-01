@@ -8,7 +8,7 @@ import (
 )
 
 type Blocker struct {
-	errors   errors.ErrorRepI
+	tools    *pluggable.Tools
 	indents  []string
 	lex      Lexicator
 	handlers []pluggable.Interpreter
@@ -33,14 +33,14 @@ func (b *Blocker) HaveLine(lineNo int, txt string) {
 	} else {
 		// Close and remove and surplus handlers
 		for level < len(b.handlers)-1 {
-			b.handlers[len(b.handlers)-1].Completed(b.errors)
+			b.handlers[len(b.handlers)-1].Completed(b.tools)
 			b.handlers = b.handlers[0 : len(b.handlers)-1]
 		}
 	}
 	ll := b.file.AtLine(lineNo, level, line)
-	b.errors.At(ll)
+	b.tools.Reporter.At(ll)
 	toks := b.lex.BlockedLine(ll)
-	hdlr := b.handlers[level].HaveTokens(b.errors, toks)
+	hdlr := b.handlers[level].HaveTokens(b.tools, toks)
 	if hdlr == nil {
 		panic("handler cannot return nil; if no nested scope, return NoInnerScope")
 	}
@@ -49,7 +49,7 @@ func (b *Blocker) HaveLine(lineNo int, txt string) {
 
 func (b *Blocker) EndFile() {
 	for len(b.handlers) > 0 {
-		b.handlers[len(b.handlers)-1].Completed(b.errors)
+		b.handlers[len(b.handlers)-1].Completed(b.tools)
 		b.handlers = b.handlers[0 : len(b.handlers)-1]
 	}
 }
@@ -59,7 +59,7 @@ func (b *Blocker) matchIndent(ind string) int {
 		if ind == curr {
 			return idx
 		} else if len(curr) >= len(ind) {
-			b.errors.Report(0, "invalid indent")
+			b.tools.Reporter.Report(0, "invalid indent")
 			return -1
 		}
 	}
@@ -86,6 +86,6 @@ func mapSpace(ch rune) rune {
 	}
 }
 
-func NewBlocker(reporter errors.ErrorRepI, lex Lexicator, topLevel pluggable.Interpreter) *Blocker {
-	return &Blocker{errors: reporter, lex: lex, handlers: []pluggable.Interpreter{topLevel}}
+func NewBlocker(tools *pluggable.Tools, lex Lexicator, topLevel pluggable.Interpreter) *Blocker {
+	return &Blocker{tools: tools, lex: lex, handlers: []pluggable.Interpreter{topLevel}}
 }

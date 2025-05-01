@@ -1,25 +1,24 @@
 package interpreters
 
 import (
-	"ziniki.org/deployer/deployer/pkg/errors"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
 type PropertyParent interface {
-	AddProperty(reporter errors.ErrorRepI, name pluggable.Identifier, expr pluggable.Locatable) //TODO: should probably be "Expr"
-	Completed(reporter errors.ErrorRepI)
+	AddProperty(tools *pluggable.Tools, name pluggable.Identifier, expr pluggable.Locatable) //TODO: should probably be "Expr"
+	Completed(tools *pluggable.Tools)
 }
 
 type propertiesInnerScope struct {
 	parent PropertyParent
 }
 
-func (pis *propertiesInnerScope) HaveTokens(reporter errors.ErrorRepI, tokens []pluggable.Token) pluggable.Interpreter {
+func (pis *propertiesInnerScope) HaveTokens(tools *pluggable.Tools, tokens []pluggable.Token) pluggable.Interpreter {
 	// TODO: the left hand side must be an identifier
 	// then it must be "<-"
 	// the rest of the tokens must be an expression
 	if len(tokens) < 3 {
-		reporter.Report(0, "<prop> <- <expr>")
+		tools.Reporter.Report(0, "<prop> <- <expr>")
 		return DisallowInnerScope()
 	}
 
@@ -39,7 +38,7 @@ func (pis *propertiesInnerScope) HaveTokens(reporter errors.ErrorRepI, tokens []
 	if !ok {
 		return IgnoreInnerScope()
 	}
-	pis.parent.AddProperty(reporter, prop, expr)
+	pis.parent.AddProperty(tools, prop, expr)
 	return DisallowInnerScope()
 }
 
@@ -51,8 +50,8 @@ func parseExpr(tokens []pluggable.Token) (pluggable.Locatable, bool) { // TODO: 
 	panic("this needs to be implemented")
 }
 
-func (b *propertiesInnerScope) Completed(reporter errors.ErrorRepI) {
-	b.parent.Completed(reporter)
+func (b *propertiesInnerScope) Completed(tools *pluggable.Tools) {
+	b.parent.Completed(tools)
 }
 
 func PropertiesInnerScope(parent PropertyParent) pluggable.Interpreter {

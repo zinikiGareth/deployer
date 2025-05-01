@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"ziniki.org/deployer/coremod/basic"
-	"ziniki.org/deployer/deployer/pkg/errors"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
@@ -25,7 +24,7 @@ func (cc *commandScope) Add(entry pluggable.Definition) {
 	}
 }
 
-func (b *commandScope) HaveTokens(reporter errors.ErrorRepI, tokens []pluggable.Token) pluggable.Interpreter {
+func (b *commandScope) HaveTokens(tools *pluggable.Tools, tokens []pluggable.Token) pluggable.Interpreter {
 	// I am hacking this in first, and then I need to come back and do more on it
 
 	if len(tokens) < 1 {
@@ -52,10 +51,10 @@ func (b *commandScope) HaveTokens(reporter errors.ErrorRepI, tokens []pluggable.
 	}
 	b.storeAs = assignTo
 	// TODO: refactor context handler so that it can also store in the repo
-	return action.Handle(reporter, b.repo, b, tokens)
+	return action.Handle(tools.Reporter, b.repo, b, tokens)
 }
 
-func (b *commandScope) Completed(reporter errors.ErrorRepI) {
+func (b *commandScope) Completed(tools *pluggable.Tools) {
 }
 
 func TargetCommandInterpreter(repo pluggable.Repository, commands *[]action) pluggable.Interpreter {
