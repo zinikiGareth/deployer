@@ -9,6 +9,6 @@
 #^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
 >			name <- "org.ziniki.launch_bucket"
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
->			retentionLength <- 24
-#^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>			retentionLength <- 24 hours
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
 >

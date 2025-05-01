@@ -3,4 +3,4 @@ This test takes the bucket name from the properties list
 	target ensureABucketExists
 		ensure test.S3.Bucket
 			name <- "org.ziniki.launch_bucket"
-			retentionLength <- 24
+			retentionLength <- 24 hours
