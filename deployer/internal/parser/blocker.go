@@ -18,6 +18,7 @@ type Blocker struct {
 func (b *Blocker) BeginFile(file string) {
 	b.file = errors.InFile(file)
 }
+
 func (b *Blocker) HaveLine(lineNo int, txt string) {
 	ind, line := Split(txt)
 	if ind == "" {
@@ -30,7 +31,11 @@ func (b *Blocker) HaveLine(lineNo int, txt string) {
 	} else if level >= len(b.indents) {
 		b.indents = append(b.indents, ind)
 	} else {
-		// TODO: clean up old handlers if any (but not indents)
+		// Close and remove and surplus handlers
+		for level < len(b.handlers)-1 {
+			b.handlers[len(b.handlers)-1].Completed(b.errors)
+			b.handlers = b.handlers[0 : len(b.handlers)-1]
+		}
 	}
 	ll := b.file.AtLine(lineNo, level, line)
 	b.errors.At(ll)
@@ -40,6 +45,13 @@ func (b *Blocker) HaveLine(lineNo int, txt string) {
 		panic("handler cannot return nil; if no nested scope, return NoInnerScope")
 	}
 	b.handlers = append(b.handlers, hdlr)
+}
+
+func (b *Blocker) EndFile() {
+	for len(b.handlers) > 0 {
+		b.handlers[len(b.handlers)-1].Completed(b.errors)
+		b.handlers = b.handlers[0 : len(b.handlers)-1]
+	}
 }
 
 func (b *Blocker) matchIndent(ind string) int {

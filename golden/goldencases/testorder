@@ -1,7 +1,11 @@
 nothing
 empty
 empty-target
-ensure-bucket
 errorcases/blocking
-named-bucket
 errorcases/missing-target
+errorcases/ensure-needs-object
+ensure-bucket
+named-bucket
+bucket-named-in-props
+errorcases/ensure-needs-name
+errorcases/ensure-only-one-name

@@ -1,0 +1,10 @@
+>This test calls ensure but without any name as an arg or as a prop, which is an error
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
+>
+>	target shouldHaveAType
+#^ source.deployer-dply
+# ^^^^^^ source.deployer-dply keyword.target
+#       ^^^^^^^^^^^^^^^^^ source.deployer-dply
+>		ensure test.S3.Bucket
+#^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>

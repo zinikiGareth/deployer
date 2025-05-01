@@ -55,6 +55,9 @@ func (b *commandScope) HaveTokens(reporter errors.ErrorRepI, tokens []pluggable.
 	return action.Handle(reporter, b.repo, b, tokens)
 }
 
+func (b *commandScope) Completed(reporter errors.ErrorRepI) {
+}
+
 func TargetCommandInterpreter(repo pluggable.Repository, commands *[]action) pluggable.Interpreter {
 	return &commandScope{repo: repo, commands: commands}
 }

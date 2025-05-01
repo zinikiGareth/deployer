@@ -1,0 +1,10 @@
+target shouldHaveAType {
+	_where_: noname.dply:3.7
+	actions: [
+		EnsureCommand {
+			_where_: noname.dply:4.0
+			what: test.S3.Bucket
+			resolved: test.S3.Bucket[]
+		}
+	]
+}

@@ -6,7 +6,8 @@ import (
 )
 
 type PropertyParent interface {
-	AddProperty(name pluggable.Identifier, expr any) //TODO: should probably be "Expr"
+	AddProperty(reporter errors.ErrorRepI, name pluggable.Identifier, expr pluggable.Locatable) //TODO: should probably be "Expr"
+	Completed(reporter errors.ErrorRepI)
 }
 
 type propertiesInnerScope struct {
@@ -18,8 +19,12 @@ func (pis *propertiesInnerScope) HaveTokens(reporter errors.ErrorRepI, tokens []
 		reporter.Report(0, "invalid property yada yada")
 		return DisallowInnerScope()
 	}
-	pis.parent.AddProperty(tokens[0].(pluggable.Identifier), tokens[2])
+	pis.parent.AddProperty(reporter, tokens[0].(pluggable.Identifier), tokens[2])
 	return DisallowInnerScope()
+}
+
+func (b *propertiesInnerScope) Completed(reporter errors.ErrorRepI) {
+	b.parent.Completed(reporter)
 }
 
 func PropertiesInnerScope(parent PropertyParent) pluggable.Interpreter {

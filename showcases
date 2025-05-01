@@ -1,0 +1,18 @@
+#!/bin/bash
+
+clear
+cd golden/goldencases
+for i in `cat testorder` ; do
+  (
+    echo "Case $i":
+    cd $i/scripts
+      for j in `ls -1 *.dply 2>/dev/null` ; do
+	echo ""
+        echo "  $j"
+        echo "  ----"
+        sed 's/^/  @  /' $j
+        echo "  ----"
+        echo ""
+      done
+  )
+done

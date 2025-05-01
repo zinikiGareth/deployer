@@ -1,0 +1,4 @@
+This test calls ensure but without any args, which is an error
+
+	target shouldHaveAType
+		ensure

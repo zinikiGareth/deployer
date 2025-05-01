@@ -1,0 +1,2 @@
+  4.0   ensure: <class-identifier> [class-name]
+  ==> ensure

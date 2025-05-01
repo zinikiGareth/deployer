@@ -1,0 +1,2 @@
+  4.0   ensure requires a name to be defined
+  ==> ensure test.S3.Bucket

@@ -1,0 +1,14 @@
+>This test takes the bucket name from the properties list
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
+>
+>	target ensureABucketExists
+#^ source.deployer-dply
+# ^^^^^^ source.deployer-dply keyword.target
+#       ^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>		ensure test.S3.Bucket
+#^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>			name <- "org.ziniki.launch_bucket"
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>			retentionLength <- 24
+#^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>

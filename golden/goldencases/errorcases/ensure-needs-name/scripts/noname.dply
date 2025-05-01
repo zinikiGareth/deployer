@@ -1,0 +1,4 @@
+This test calls ensure but without any name as an arg or as a prop, which is an error
+
+	target shouldHaveAType
+		ensure test.S3.Bucket

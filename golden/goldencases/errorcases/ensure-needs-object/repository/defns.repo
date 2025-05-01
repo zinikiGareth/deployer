@@ -1,0 +1,5 @@
+target shouldHaveAType {
+	_where_: noclz.dply:3.7
+	actions: [
+	]
+}

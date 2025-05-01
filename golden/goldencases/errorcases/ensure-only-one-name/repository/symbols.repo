@@ -1,0 +1,3 @@
+bucket.dply:
+3.7 core.Target ensureABucketExists
+4.0 test.S3.Bucket launch_bucket

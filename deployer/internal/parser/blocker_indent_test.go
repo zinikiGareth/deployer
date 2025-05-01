@@ -89,6 +89,9 @@ func (t *tmp) HaveTokens(_ errors.ErrorRepI, toks []pluggable.Token) pluggable.I
 	panic(fmt.Sprintf("line %d was unexpected: %s", lineNo, text))
 }
 
+func (b *tmp) Completed(reporter errors.ErrorRepI) {
+}
+
 type LineToken struct {
 	loc *errors.Location
 	tx  string

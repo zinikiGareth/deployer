@@ -12,7 +12,7 @@ type EnsureAction struct {
 	loc      *errors.Location
 	what     pluggable.Identifier
 	resolved pluggable.Noun
-	named    string
+	named    pluggable.String
 	props    map[pluggable.Identifier]any
 }
 
@@ -37,7 +37,9 @@ func (ea *EnsureAction) DumpTo(w pluggable.IndentWriter) {
 	} else {
 		w.TextAttr("resolved", ea.resolved.ShortDescription())
 	}
-	w.TextAttr("named", ea.named)
+	if ea.named != nil {
+		w.TextAttr("named", ea.named.Text())
+	}
 	if len(ea.props) > 0 {
 		w.Indent()
 		for k, v := range ea.props {
@@ -52,8 +54,32 @@ func (ea *EnsureAction) ShortDescription() string {
 	return fmt.Sprintf("Ensure[%s: %s]", ea.what.Id(), ea.named)
 }
 
-func (ea *EnsureAction) AddProperty(name pluggable.Identifier, value any) {
-	ea.props[name] = value
+func (ea *EnsureAction) AddProperty(reporter errors.ErrorRepI, name pluggable.Identifier, value pluggable.Locatable) {
+	if name.Id() == "name" {
+		if ea.named != nil {
+			reporter.Report(name.Loc().Offset, "duplicate definition of name")
+			return
+		}
+		str, ok := value.(pluggable.String)
+		if !ok {
+			reporter.Report(value.Loc().Offset, "name must be a string")
+			return
+		}
+		ea.named = str
+	} else {
+		if ea.props[name] != nil {
+			reporter.Reportf(name.Loc().Offset, "duplicate definition of %s", name.Id())
+			return
+		}
+		ea.props[name] = value
+	}
+}
+
+func (ea *EnsureAction) Completed(reporter errors.ErrorRepI) {
+	if ea.named == nil {
+		reporter.At(ea.loc.Line)
+		reporter.Report(ea.loc.Offset, "ensure requires a name to be defined")
+	}
 }
 
 func (ea *EnsureAction) Resolve(r pluggable.Resolver) {
@@ -69,7 +95,7 @@ func (ea *EnsureAction) Prepare(runtime pluggable.RuntimeStorage) (pluggable.Exe
 	// Then we call the "ensure" method on that
 	// It is an error for the object created not to implement the Ensurable contract
 
-	obj := ea.resolved.CreateWithName(ea.named)
+	obj := ea.resolved.CreateWithName(ea.named.Text())
 	ens, ok := obj.(pluggable.Ensurable)
 	if !ok {
 		runtime.Errorf(ea.loc, "the type "+ea.what.Id()+" is not ensurable")
@@ -82,19 +108,27 @@ func (ea *EnsureAction) Prepare(runtime pluggable.RuntimeStorage) (pluggable.Exe
 type EnsureCommandHandler struct{}
 
 func (ensure *EnsureCommandHandler) Handle(reporter errors.ErrorRepI, repo pluggable.Repository, parent pluggable.ContainingContext, tokens []pluggable.Token) pluggable.Interpreter {
-	// TODO: allow 2 or 3
-	// TODO: errors not panics
-	if len(tokens) != 3 {
-		panic("tokens are wrong")
-	}
-	if tokens[1].(pluggable.Identifier).Id() != "test.S3.Bucket" {
-		panic("token[1] is wrong")
-	}
-	if tokens[2].(pluggable.String).Text() != "org.ziniki.launch_bucket" {
-		panic("token[2] is wrong")
+	if len(tokens) < 2 || len(tokens) > 3 {
+		reporter.Report(tokens[0].Loc().Offset, "ensure: <class-identifier> [class-name]")
+		return interpreters.IgnoreInnerScope()
 	}
 
-	ea := &EnsureAction{loc: tokens[0].Loc(), what: tokens[1].(pluggable.Identifier), named: tokens[2].(pluggable.String).Text(), props: make(map[pluggable.Identifier]any)}
+	clz, ok := tokens[1].(pluggable.Identifier)
+	if !ok {
+		reporter.Report(tokens[1].Loc().Offset, "ensure: <class-identifier> [class-name]")
+		return interpreters.IgnoreInnerScope()
+	}
+
+	var name pluggable.String
+	if len(tokens) == 3 {
+		name, ok = tokens[2].(pluggable.String)
+		if !ok {
+			reporter.Report(tokens[1].Loc().Offset, "ensure: <class-identifier> [class-name]")
+			return interpreters.IgnoreInnerScope()
+		}
+	}
+
+	ea := &EnsureAction{loc: tokens[0].Loc(), what: clz, named: name, props: make(map[pluggable.Identifier]any)}
 	parent.Add(ea)
 	return interpreters.PropertiesInnerScope(ea)
 }

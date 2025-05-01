@@ -13,13 +13,30 @@ fi
 
 CASEDIR="golden/goldencases/$1"
 
-for i in errors repository ; do
+if [ ! -d "$CASEDIR" ] ; then
+  echo "there is no case $1"
+  exit 1
+fi
+
+for i in errors repository prepare execute ; do
   golden="$CASEDIR/$i"
+  for k in `ls -1 $golden-gen` ; do 
+    if [ ! -f $golden/$k ] ; then
+      echo "there is no golden file for $k:"
+      echo "----"
+      cat $golden-gen/$k
+      echo "----"
+    fi
+  done
   for j in `ls -1 $golden` ; do
+    if [ ! -f "$golden-gen/$j" ] ; then
+      echo "there is no golden file $golden-gen/$j"
+      continue
+    fi
     diff "$golden/$j" "$golden-gen/$j" > /tmp/golddiff
     if [ $? -ne 0 ] ; then
-     echo " ++++ $i/$j:"
-     cat /tmp/golddiff
+      echo " ++++ $i/$j:"
+      cat /tmp/golddiff
       if [ "$DOCOPY" -eq 1 ] ; then
         cp $golden-gen/$j $golden/$j
       fi
@@ -27,3 +44,26 @@ for i in errors repository ; do
     rm /tmp/golddiff
   done
 done
+
+scopedir="$CASEDIR/scopes"
+scopetest="$CASEDIR/scope-test"
+if [ -d "$scopedir" ] ; then
+  for j in `ls -1 $scopedir` ; do
+    case $j in
+      *.snap) ;;
+      *) continue ;;
+    esac
+    if [ ! -f "${scopetest}/$j" ] ; then
+      echo "there is no golden file ${scopetest}/$j"
+      continue
+    fi
+    diff "${scopedir}/$j" "${scopetest}/$j" > /tmp/golddiff
+    if [ $? -ne 0 ] ; then
+      echo " ++++ scopes/$j:"
+      cat /tmp/golddiff
+      if [ "$DOCOPY" -eq 1 ] ; then
+        cp $golden-gen/$j $golden/$j
+      fi
+    fi
+  done
+fi

@@ -34,6 +34,9 @@ func (si *ScopeInterpreter) HaveTokens(reporter errors.ErrorRepI, tokens []plugg
 	return action.Handle(reporter, si.repo, &mayNotAddToParentOfTop{}, tokens) // Will need other things as well as time goes on ...
 }
 
+func (b *ScopeInterpreter) Completed(reporter errors.ErrorRepI) {
+}
+
 func NewInterpreter(repo pluggable.Repository, s pluggable.Scoper) pluggable.Interpreter {
 	return &ScopeInterpreter{repo: repo, scoper: s}
 }

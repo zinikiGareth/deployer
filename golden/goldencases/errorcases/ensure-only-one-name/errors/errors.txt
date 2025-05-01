@@ -1,0 +1,2 @@
+  5.0   duplicate definition of name
+  ==> name <- "fred"

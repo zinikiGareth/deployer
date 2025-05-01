@@ -16,4 +16,5 @@ func provideLines(fromFile string, to pluggable.ProvideLine) {
 		// turn 0-(n-1) into 1-n by adding 1 to the index
 		to.HaveLine(n+1, l)
 	}
+	to.EndFile()
 }

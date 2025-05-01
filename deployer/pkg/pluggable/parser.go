@@ -5,10 +5,12 @@ import "ziniki.org/deployer/deployer/pkg/errors"
 type ProvideLine interface {
 	BeginFile(file string)
 	HaveLine(lineNo int, text string)
+	EndFile()
 }
 
 type Interpreter interface {
 	HaveTokens(reporter errors.ErrorRepI, tokens []Token) Interpreter
+	Completed(reporter errors.ErrorRepI)
 }
 
 type Scoper interface {

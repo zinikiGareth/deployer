@@ -13,6 +13,9 @@ func (b *noInnerScope) HaveTokens(reporter errors.ErrorRepI, tokens []pluggable.
 	return b
 }
 
+func (b *noInnerScope) Completed(reporter errors.ErrorRepI) {
+}
+
 func DisallowInnerScope() pluggable.Interpreter {
 	return &noInnerScope{}
 }
