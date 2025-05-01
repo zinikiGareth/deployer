@@ -7,6 +7,8 @@ type Register interface {
 }
 
 type Recall interface {
+	FindAction(verb string) Action
+	FindFunc(verb string) Function
 	FindNoun(noun string) Noun
 	ObtainDriver(driver string) any
 }

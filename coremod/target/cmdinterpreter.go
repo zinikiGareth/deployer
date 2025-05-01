@@ -51,7 +51,7 @@ func (b *commandScope) HaveTokens(tools *pluggable.Tools, tokens []pluggable.Tok
 	}
 	b.storeAs = assignTo
 	// TODO: refactor context handler so that it can also store in the repo
-	return action.Handle(tools.Reporter, b.repo, b, tokens)
+	return action.Handle(tools, b, tokens)
 }
 
 func (b *commandScope) Completed(tools *pluggable.Tools) {

@@ -26,11 +26,11 @@ func (si *ScopeInterpreter) HaveTokens(tools *pluggable.Tools, tokens []pluggabl
 	if !ok {
 		tools.Reporter.Report(0, "first token must be an identifier")
 	}
-	action := si.scoper.FindVerb(verb)
+	action := si.scoper.FindAction(verb)
 	if action == nil {
 		tools.Reporter.Reportf(0, "there is no error handler for %s", verb)
 	}
-	return action.Handle(tools.Reporter, si.repo, &mayNotAddToParentOfTop{}, tokens) // Will need other things as well as time goes on ...
+	return action.Handle(tools, &mayNotAddToParentOfTop{}, tokens) // Will need other things as well as time goes on ...
 }
 
 func (b *ScopeInterpreter) Completed(tools *pluggable.Tools) {

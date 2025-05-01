@@ -8,6 +8,10 @@ type Registry struct {
 	drivers map[string]any
 }
 
+func (r *Registry) FindFunc(verb string) pluggable.Function {
+	panic("unimplemented")
+}
+
 func (r *Registry) RegisterVerb(verb string, action pluggable.Action) {
 	r.verbs[verb] = action
 }
@@ -24,7 +28,7 @@ func (r *Registry) ObtainDriver(s string) any {
 	return r.drivers[s]
 }
 
-func (r *Registry) FindVerb(verb string) pluggable.Action {
+func (r *Registry) FindAction(verb string) pluggable.Action {
 	return r.verbs[verb]
 }
 

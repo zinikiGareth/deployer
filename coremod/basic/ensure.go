@@ -107,15 +107,15 @@ func (ea *EnsureAction) Prepare(runtime pluggable.RuntimeStorage) (pluggable.Exe
 
 type EnsureCommandHandler struct{}
 
-func (ensure *EnsureCommandHandler) Handle(reporter errors.ErrorRepI, repo pluggable.Repository, parent pluggable.ContainingContext, tokens []pluggable.Token) pluggable.Interpreter {
+func (ensure *EnsureCommandHandler) Handle(tools *pluggable.Tools, parent pluggable.ContainingContext, tokens []pluggable.Token) pluggable.Interpreter {
 	if len(tokens) < 2 || len(tokens) > 3 {
-		reporter.Report(tokens[0].Loc().Offset, "ensure: <class-identifier> [class-name]")
+		tools.Reporter.Report(tokens[0].Loc().Offset, "ensure: <class-identifier> [class-name]")
 		return interpreters.IgnoreInnerScope()
 	}
 
 	clz, ok := tokens[1].(pluggable.Identifier)
 	if !ok {
-		reporter.Report(tokens[1].Loc().Offset, "ensure: <class-identifier> [class-name]")
+		tools.Reporter.Report(tokens[1].Loc().Offset, "ensure: <class-identifier> [class-name]")
 		return interpreters.IgnoreInnerScope()
 	}
 
@@ -123,7 +123,7 @@ func (ensure *EnsureCommandHandler) Handle(reporter errors.ErrorRepI, repo plugg
 	if len(tokens) == 3 {
 		name, ok = tokens[2].(pluggable.String)
 		if !ok {
-			reporter.Report(tokens[1].Loc().Offset, "ensure: <class-identifier> [class-name]")
+			tools.Reporter.Report(tokens[1].Loc().Offset, "ensure: <class-identifier> [class-name]")
 			return interpreters.IgnoreInnerScope()
 		}
 	}

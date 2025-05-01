@@ -1,9 +1,5 @@
 package pluggable
 
-import (
-	"ziniki.org/deployer/deployer/pkg/errors"
-)
-
 type ProvideLine interface {
 	BeginFile(file string)
 	HaveLine(lineNo int, text string)
@@ -16,7 +12,7 @@ type Interpreter interface {
 }
 
 type Scoper interface {
-	FindVerb(v Identifier) Action
+	FindAction(v Identifier) Action
 }
 
 type Token interface {
@@ -45,10 +41,22 @@ type Operator interface {
 }
 
 type Action interface {
-	Handle(reporter errors.ErrorRepI, repo Repository, parent ContainingContext, tokens []Token) Interpreter
+	Handle(tools *Tools, parent ContainingContext, tokens []Token) Interpreter
 }
 
 type Noun interface {
 	ShortDescription() string
 	CreateWithName(named string) any
+}
+
+type Function interface {
+	Eval(tools *Tools, tokens []Token) Expr
+}
+
+type Expr interface {
+	// what methods does this need????
+}
+
+type ExprParser interface {
+	Parse(tokens []Token) Expr
 }

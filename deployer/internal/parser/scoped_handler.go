@@ -1,20 +1,19 @@
 package parser
 
 import (
-	"ziniki.org/deployer/deployer/internal/registry"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
 type ScopedHandlers struct {
 	repo   pluggable.Repository
-	recall registry.Recall
+	recall pluggable.Recall
 }
 
-func (sh *ScopedHandlers) FindVerb(v pluggable.Identifier) pluggable.Action {
-	return sh.recall.FindVerb(v.Id())
+func (sh *ScopedHandlers) FindAction(v pluggable.Identifier) pluggable.Action {
+	return sh.recall.FindAction(v.Id())
 }
 
-func NewScopedHandlers(registry registry.Recall, repo pluggable.Repository) pluggable.Scoper {
+func NewScopedHandlers(registry pluggable.Recall, repo pluggable.Repository) pluggable.Scoper {
 	ret := &ScopedHandlers{repo: repo, recall: registry}
 	return ret
 }

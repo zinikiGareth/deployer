@@ -76,11 +76,11 @@ func (t *coreTarget) Execute(storage pluggable.RuntimeStorage) {
 type CoreTargetVerb struct {
 }
 
-func (t *CoreTargetVerb) Handle(reporter errors.ErrorRepI, repo pluggable.Repository, parent pluggable.ContainingContext, tokens []pluggable.Token) pluggable.Interpreter {
+func (t *CoreTargetVerb) Handle(tools *pluggable.Tools, parent pluggable.ContainingContext, tokens []pluggable.Token) pluggable.Interpreter {
 	t1 := tokens[1].(pluggable.Identifier)
 	name := pluggable.SymbolName(t1.Id())
 	actions := []action{}
 	target := &coreTarget{loc: t1.Loc(), name: name, actions: &actions}
-	repo.IntroduceSymbol(name, target)
-	return TargetCommandInterpreter(repo, &actions)
+	tools.Repository.IntroduceSymbol(name, target)
+	return TargetCommandInterpreter(tools.Repository, &actions)
 }
