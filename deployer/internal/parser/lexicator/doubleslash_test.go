@@ -1,15 +1,15 @@
-package parser_test
+package lexicator_test
 
 import (
 	"testing"
 
-	"ziniki.org/deployer/deployer/internal/parser"
+	"ziniki.org/deployer/deployer/internal/parser/lexicator"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
 func TestALineBeginningDoubleSlashSpaceIsIgnored(t *testing.T) {
 	reporter, _ := mockReporter(t)
-	lex := parser.NewLineLexicator(reporter, "test")
+	lex := lexicator.NewLineLexicator(reporter, "test")
 	toks := lex.BlockedLine(lineOf("// hello, world"))
 	if len(toks) != 0 {
 		t.Fatalf("%d args returned, not 0", len(toks))
@@ -18,7 +18,7 @@ func TestALineBeginningDoubleSlashSpaceIsIgnored(t *testing.T) {
 
 func TestALineWithDoubleSlashSpaceIsTerminated(t *testing.T) {
 	reporter, _ := mockReporter(t)
-	lex := parser.NewLineLexicator(reporter, "test")
+	lex := lexicator.NewLineLexicator(reporter, "test")
 	toks := lex.BlockedLine(lineOf("hello // , world"))
 	if len(toks) != 1 {
 		t.Fatalf("%d args returned, not 1", len(toks))
@@ -30,7 +30,7 @@ func TestALineWithDoubleSlashSpaceIsTerminated(t *testing.T) {
 
 func TestALineBeginningTripleSlashIsIgnored(t *testing.T) {
 	reporter, _ := mockReporter(t)
-	lex := parser.NewLineLexicator(reporter, "test")
+	lex := lexicator.NewLineLexicator(reporter, "test")
 	toks := lex.BlockedLine(lineOf("/// hello, world"))
 	if len(toks) != 0 {
 		t.Fatalf("%d args returned, not 0", len(toks))

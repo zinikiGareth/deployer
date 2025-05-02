@@ -1,4 +1,4 @@
-package parser
+package scopes
 
 import (
 	"ziniki.org/deployer/deployer/pkg/pluggable"

@@ -1,15 +1,15 @@
-package parser_test
+package lexicator_test
 
 import (
 	"testing"
 
-	"ziniki.org/deployer/deployer/internal/parser"
+	"ziniki.org/deployer/deployer/internal/parser/lexicator"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
 func TestAStringCanBeFoundBetweenDoubleQuotes(t *testing.T) {
 	reporter, _ := mockReporter(t)
-	lex := parser.NewLineLexicator(reporter, "test")
+	lex := lexicator.NewLineLexicator(reporter, "test")
 	toks := lex.BlockedLine(lineOf("\"hello, world\""))
 	if len(toks) != 1 {
 		t.Fatalf("not one arg returned")
@@ -25,7 +25,7 @@ func TestAStringCanBeFoundBetweenDoubleQuotes(t *testing.T) {
 
 func TestAStringCanIncludeANestedDQPairBetweenDoubleQuotes(t *testing.T) {
 	reporter, _ := mockReporter(t)
-	lex := parser.NewLineLexicator(reporter, "test")
+	lex := lexicator.NewLineLexicator(reporter, "test")
 	toks := lex.BlockedLine(lineOf("\"hello, \"\"world\"\"\""))
 	if len(toks) != 1 {
 		t.Fatalf("not one arg returned but %v", toks)
@@ -41,7 +41,7 @@ func TestAStringCanIncludeANestedDQPairBetweenDoubleQuotes(t *testing.T) {
 
 func TestAStringCanBeFoundBetweenSingleQuotes(t *testing.T) {
 	reporter, _ := mockReporter(t)
-	lex := parser.NewLineLexicator(reporter, "test")
+	lex := lexicator.NewLineLexicator(reporter, "test")
 	toks := lex.BlockedLine(lineOf("'hello, world'"))
 	if len(toks) != 1 {
 		t.Fatalf("not one arg returned")
@@ -57,7 +57,7 @@ func TestAStringCanBeFoundBetweenSingleQuotes(t *testing.T) {
 
 func TestAStringCanIncludeANestedSQPairBetweenSingleQuotes(t *testing.T) {
 	reporter, _ := mockReporter(t)
-	lex := parser.NewLineLexicator(reporter, "test")
+	lex := lexicator.NewLineLexicator(reporter, "test")
 	toks := lex.BlockedLine(lineOf("'hello, ''world'''"))
 	if len(toks) != 1 {
 		t.Fatalf("not one arg returned but %v", toks)
@@ -75,7 +75,7 @@ func TestAStringMustBeTerminated(t *testing.T) {
 	reporter, sink := mockReporter(t)
 	tx := "\"hello, world"
 	sink.Expect(1, 1, 0, tx, "unterminated string")
-	lex := parser.NewLineLexicator(reporter, "test")
+	lex := lexicator.NewLineLexicator(reporter, "test")
 	toks := lex.BlockedLine(lineOf(tx))
 	if toks != nil {
 		t.Fatalf("expected nil")
@@ -86,7 +86,7 @@ func TestAStringMustNotEndWithNetedQuote(t *testing.T) {
 	reporter, sink := mockReporter(t)
 	tx := "\"hello, world\"\""
 	sink.Expect(1, 1, 0, tx, "unterminated string")
-	lex := parser.NewLineLexicator(reporter, "test")
+	lex := lexicator.NewLineLexicator(reporter, "test")
 	toks := lex.BlockedLine(lineOf(tx))
 	if toks != nil {
 		t.Fatalf("expected nil")
@@ -96,7 +96,7 @@ func TestAStringMustNotEndWithNetedQuote(t *testing.T) {
 func TestThereMustBeASpaceBetweenIDAndAString(t *testing.T) {
 	reporter, sink := mockReporter(t)
 	tx := "system'hello'"
-	lex := parser.NewLineLexicator(reporter, "test")
+	lex := lexicator.NewLineLexicator(reporter, "test")
 	sink.Expect(1, 1, 6, tx, "space required after identifier before string")
 	toks := lex.BlockedLine(lineOf(tx))
 	if toks != nil {
@@ -107,7 +107,7 @@ func TestThereMustBeASpaceBetweenIDAndAString(t *testing.T) {
 func TestThereMustBeASpaceBetweenAStringAndAnID(t *testing.T) {
 	reporter, sink := mockReporter(t)
 	tx := "'hello'system"
-	lex := parser.NewLineLexicator(reporter, "test")
+	lex := lexicator.NewLineLexicator(reporter, "test")
 	sink.Expect(1, 1, 7, tx, "space required after string before identifier")
 	toks := lex.BlockedLine(lineOf(tx))
 	if toks != nil {
@@ -117,7 +117,7 @@ func TestThereMustBeASpaceBetweenAStringAndAnID(t *testing.T) {
 
 func TestTwoIdsAndASimpleStringCanBeSeparatedBySpaces(t *testing.T) {
 	reporter, _ := mockReporter(t)
-	lex := parser.NewLineLexicator(reporter, "test")
+	lex := lexicator.NewLineLexicator(reporter, "test")
 	toks := lex.BlockedLine(lineOf("ensure test.S3.Bucket \"org.ziniki.launch_bucket\""))
 	if len(toks) != 3 {
 		t.Fatalf("not three args returned")

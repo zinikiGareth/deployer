@@ -1,8 +1,9 @@
-package parser
+package blocker
 
 import (
 	"unicode"
 
+	"ziniki.org/deployer/deployer/internal/parser/lexicator"
 	"ziniki.org/deployer/deployer/pkg/errors"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
@@ -10,7 +11,7 @@ import (
 type Blocker struct {
 	tools    *pluggable.Tools
 	indents  []string
-	lex      Lexicator
+	lex      lexicator.Lexicator
 	handlers []pluggable.Interpreter
 	file     *errors.FileLoc
 }
@@ -86,6 +87,6 @@ func mapSpace(ch rune) rune {
 	}
 }
 
-func NewBlocker(tools *pluggable.Tools, lex Lexicator, topLevel pluggable.Interpreter) *Blocker {
+func NewBlocker(tools *pluggable.Tools, lex lexicator.Lexicator, topLevel pluggable.Interpreter) *Blocker {
 	return &Blocker{tools: tools, lex: lex, handlers: []pluggable.Interpreter{topLevel}}
 }

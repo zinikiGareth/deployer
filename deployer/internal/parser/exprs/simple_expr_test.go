@@ -1,10 +1,11 @@
-package parser_test
+package exprs_test
 
 import (
 	"fmt"
 	"testing"
 
-	"ziniki.org/deployer/deployer/internal/parser"
+	"ziniki.org/deployer/deployer/internal/parser/exprs"
+	"ziniki.org/deployer/deployer/internal/parser/lexicator"
 	"ziniki.org/deployer/deployer/pkg/errors"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
@@ -28,7 +29,7 @@ var lineloc *errors.LineLoc
 
 func init() {
 	fmt.Println("init")
-	oneString = parser.NewStringToken(lineloc, 0, "string_1")
+	oneString = lexicator.NewStringToken(lineloc, 0, "string_1")
 	makeData = returnDataValue{value: oneString}
 }
 
@@ -52,12 +53,12 @@ func makeParser() pluggable.ExprParser {
 	recall = myRecall{funcs: make(map[string]pluggable.Function)}
 	lineloc = &errors.LineLoc{}
 	tools := &pluggable.Tools{Recall: recall}
-	return parser.NewExprParser(tools)
+	return exprs.NewExprParser(tools)
 }
 
 func TestAStringIsAnExpr(t *testing.T) {
 	p := makeParser()
-	hello := parser.NewStringToken(lineloc, 0, "hello")
+	hello := lexicator.NewStringToken(lineloc, 0, "hello")
 	expr, ok := p.Parse([]pluggable.Token{hello})
 	if !ok {
 		t.Fatalf("Parse failed")
@@ -69,7 +70,7 @@ func TestAStringIsAnExpr(t *testing.T) {
 
 func TestANumberIsAnExpr(t *testing.T) {
 	p := makeParser()
-	nbr := parser.NewNumberToken(lineloc, 0, 46)
+	nbr := lexicator.NewNumberToken(lineloc, 0, 46)
 	expr, ok := p.Parse([]pluggable.Token{nbr})
 	if !ok {
 		t.Fatalf("Parse failed")
@@ -81,7 +82,7 @@ func TestANumberIsAnExpr(t *testing.T) {
 
 func TestAnUnboundIDIsAnExpr(t *testing.T) {
 	p := makeParser()
-	id := parser.NewIdentifierToken(lineloc, 0, "x")
+	id := lexicator.NewIdentifierToken(lineloc, 0, "x")
 	expr, ok := p.Parse([]pluggable.Token{id})
 	if !ok {
 		t.Fatalf("Parse failed")
@@ -94,7 +95,7 @@ func TestAnUnboundIDIsAnExpr(t *testing.T) {
 func TestAnIDBoundToAVerbProducesAnExpr(t *testing.T) {
 	p := makeParser()
 	recall.funcs["hello"] = makeData
-	id := parser.NewIdentifierToken(lineloc, 0, "hello")
+	id := lexicator.NewIdentifierToken(lineloc, 0, "hello")
 	expr, ok := p.Parse([]pluggable.Token{id})
 	if !ok {
 		t.Fatalf("Parse failed")

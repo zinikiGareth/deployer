@@ -1,10 +1,10 @@
-package parser_test
+package blocker_test
 
 import (
 	"fmt"
 	"testing"
 
-	"ziniki.org/deployer/deployer/internal/parser"
+	"ziniki.org/deployer/deployer/internal/parser/blocker"
 	"ziniki.org/deployer/deployer/pkg/errors"
 	"ziniki.org/deployer/deployer/pkg/interpreters"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
@@ -131,8 +131,8 @@ func blockerTest(lines []line) {
 	mock := innerBlock(lines)
 	mock.applySink(sink)
 	reporter := errors.NewErrorReporter(sink)
-	tools:= pluggable.NewTools(reporter, nil)
-	blocker := parser.NewBlocker(tools, mocklex, mock)
+	tools := pluggable.NewTools(reporter, nil)
+	blocker := blocker.NewBlocker(tools, mocklex, mock)
 	for _, b := range mock.lines {
 		blocker.HaveLine(b.lineNo, b.indent+b.text)
 	}

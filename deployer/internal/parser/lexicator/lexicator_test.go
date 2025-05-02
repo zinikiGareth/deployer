@@ -1,4 +1,4 @@
-package parser_test
+package lexicator_test
 
 import (
 	"fmt"
@@ -9,7 +9,7 @@ import (
 
 type errorStruct struct {
 	line, ind, offset int
-	text, msg string
+	text, msg         string
 }
 
 type mockSink struct {

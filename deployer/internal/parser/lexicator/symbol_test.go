@@ -1,9 +1,9 @@
-package parser_test
+package lexicator_test
 
 import (
 	"testing"
 
-	"ziniki.org/deployer/deployer/internal/parser"
+	"ziniki.org/deployer/deployer/internal/parser/lexicator"
 	"ziniki.org/deployer/deployer/pkg/errors"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
@@ -14,7 +14,7 @@ func lineOf(tx string) *errors.LineLoc {
 
 func TestForSingleSlashWithSpaces(t *testing.T) {
 	reporter, _ := mockReporter(t)
-	lex := parser.NewLineLexicator(reporter, "test")
+	lex := lexicator.NewLineLexicator(reporter, "test")
 	toks := lex.BlockedLine(lineOf("hello / world"))
 	if len(toks) != 3 {
 		t.Fatalf("%d args returned, not 3", len(toks))
@@ -30,7 +30,7 @@ func TestForSingleSlashWithSpaces(t *testing.T) {
 
 func TestForSingleSlashWithoutSpaces(t *testing.T) {
 	reporter, _ := mockReporter(t)
-	lex := parser.NewLineLexicator(reporter, "test")
+	lex := lexicator.NewLineLexicator(reporter, "test")
 	toks := lex.BlockedLine(lineOf("hello/world"))
 	if len(toks) != 3 {
 		t.Fatalf("%d args returned, not 3", len(toks))
@@ -51,7 +51,7 @@ func TestForSingleSlashWithoutSpaces(t *testing.T) {
 
 func TestForEqualRightArrowWithoutSpaces(t *testing.T) {
 	reporter, _ := mockReporter(t)
-	lex := parser.NewLineLexicator(reporter, "test")
+	lex := lexicator.NewLineLexicator(reporter, "test")
 	toks := lex.BlockedLine(lineOf("hello=>world"))
 	if len(toks) != 3 {
 		t.Fatalf("%d args returned, not 3", len(toks))
@@ -72,7 +72,7 @@ func TestForEqualRightArrowWithoutSpaces(t *testing.T) {
 
 func TestForMinusLeftArrowWithoutSpaces(t *testing.T) {
 	reporter, _ := mockReporter(t)
-	lex := parser.NewLineLexicator(reporter, "test")
+	lex := lexicator.NewLineLexicator(reporter, "test")
 	toks := lex.BlockedLine(lineOf("hello<-'world'"))
 	if len(toks) != 3 {
 		t.Fatalf("%d args returned, not 3", len(toks))

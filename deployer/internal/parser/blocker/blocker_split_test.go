@@ -1,13 +1,13 @@
-package parser_test
+package blocker_test
 
 import (
 	"testing"
 
-	"ziniki.org/deployer/deployer/internal/parser"
+	"ziniki.org/deployer/deployer/internal/parser/blocker"
 )
 
 func TestABlankLineReturnsEmptyIndent(t *testing.T) {
-	ind, line := parser.Split("")
+	ind, line := blocker.Split("")
 	if ind != "" {
 		t.Fatalf("indent not empty")
 	}
@@ -18,7 +18,7 @@ func TestABlankLineReturnsEmptyIndent(t *testing.T) {
 
 func TestACommentLineReturnsAnEmptyIndent(t *testing.T) {
 	tx := "This is a comment"
-	ind, line := parser.Split(tx)
+	ind, line := blocker.Split(tx)
 	if ind != "" {
 		t.Fatalf("indent not empty")
 	}
@@ -29,7 +29,7 @@ func TestACommentLineReturnsAnEmptyIndent(t *testing.T) {
 
 func TestALineStartingWithATabReturnsT(t *testing.T) {
 	tx := "\ttarget hello"
-	ind, line := parser.Split(tx)
+	ind, line := blocker.Split(tx)
 	if ind != "T" {
 		t.Fatalf("indent not T")
 	}
@@ -40,7 +40,7 @@ func TestALineStartingWithATabReturnsT(t *testing.T) {
 
 func TestALineStartingWithTwoSpacesReturnsSS(t *testing.T) {
 	tx := "  target hello"
-	ind, line := parser.Split(tx)
+	ind, line := blocker.Split(tx)
 	if ind != "SS" {
 		t.Fatalf("indent not SS")
 	}
@@ -51,7 +51,7 @@ func TestALineStartingWithTwoSpacesReturnsSS(t *testing.T) {
 
 func TestALineStartingWithATabAndTwoSpacesReturnsTSS(t *testing.T) {
 	tx := "\t  target hello"
-	ind, line := parser.Split(tx)
+	ind, line := blocker.Split(tx)
 	if ind != "TSS" {
 		t.Fatalf("indent not TSS")
 	}
@@ -62,7 +62,7 @@ func TestALineStartingWithATabAndTwoSpacesReturnsTSS(t *testing.T) {
 
 func TestALineWithUnicodeSpaceReturnsU(t *testing.T) {
 	tx := "\u00a0target hello"
-	ind, line := parser.Split(tx)
+	ind, line := blocker.Split(tx)
 	if ind != "U" {
 		t.Fatalf("indent not U")
 	}
