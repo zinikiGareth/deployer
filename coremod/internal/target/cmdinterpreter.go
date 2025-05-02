@@ -3,7 +3,7 @@ package target
 import (
 	"fmt"
 
-	"ziniki.org/deployer/coremod/basic"
+	"ziniki.org/deployer/coremod/internal/basic"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 

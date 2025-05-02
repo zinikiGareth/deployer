@@ -6,7 +6,9 @@ import (
 	"os"
 	"path/filepath"
 	"plugin"
+	"strings"
 
+	"ziniki.org/deployer/coremod/pkg/coremod"
 	"ziniki.org/deployer/deployer/pkg/creator"
 	"ziniki.org/deployer/deployer/pkg/deployer"
 	sink "ziniki.org/deployer/deployer/pkg/errors"
@@ -14,6 +16,7 @@ import (
 	"ziniki.org/deployer/golden/internal/errors"
 	"ziniki.org/deployer/golden/internal/lsnrs"
 	"ziniki.org/deployer/golden/pkg/testing"
+	"ziniki.org/deployer/testmod/pkg/testmod"
 )
 
 type TestRunner struct {
@@ -85,6 +88,11 @@ func (r *TestRunner) LoadModules(modules []string) error {
 }
 
 func (r *TestRunner) Module(mod string) error {
+	if strings.HasSuffix(mod, "coremod.so") {
+		return r.loadCoreMod()
+	} else if strings.HasSuffix(mod, "testmod.so") {
+		return r.loadTestMod()
+	}
 	p, err := plugin.Open(mod)
 	if err != nil {
 		return err
@@ -102,6 +110,22 @@ func (r *TestRunner) Module(mod string) error {
 		return nil
 	}
 	return init.(func(deployer.Deployer) error)(r.deployer)
+}
+
+func (r *TestRunner) loadCoreMod() error {
+	err := coremod.ProvideTestRunner(r)
+	if err != nil {
+		return err
+	}
+	return coremod.RegisterWithDeployer(r.deployer)
+}
+
+func (r *TestRunner) loadTestMod() error {
+	err := testmod.ProvideTestRunner(r)
+	if err != nil {
+		return err
+	}
+	return testmod.RegisterWithDeployer(r.deployer)
 }
 
 func NewTestRunner(tracker *errors.CaseTracker, root, test string) (*TestRunner, error) {

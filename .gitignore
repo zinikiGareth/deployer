@@ -3,3 +3,4 @@ lsp/cmd/deployer-lsp/deployer-lsp
 vsix/out/
 *.so
 *.vsix
+__debug_bin*
