@@ -18,11 +18,11 @@
 		},
 		{
 			"name": "VSCode",
-			"path": "vsix"
+			"path": "../deployer-vsix"
 		},
 		{
 			"name": "LSP",
-			"path": "lsp"
+			"path": "../deployer-lsp"
 		},
 		{
 			"name": "Samples",

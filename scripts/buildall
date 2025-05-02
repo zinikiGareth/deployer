@@ -1,0 +1,9 @@
+#!/bin/bash -ex
+
+ROOT=`dirname $0`
+"$ROOT"/buildapps
+"$ROOT"/buildmods
+"$ROOT"/buildlsp
+
+"$ROOT"/testunit
+"$ROOT"/testgolden

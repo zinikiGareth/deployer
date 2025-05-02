@@ -1,0 +1,4 @@
+#!/bin/bash -ex
+
+(cd ../deployer-lsp/cmd/deployer-lsp ; go build -gcflags=all="-N -l")
+(cd ../deployer-vsix ; npm i ; npm run compile ; node_modules/@vscode/vsce/vsce package)
