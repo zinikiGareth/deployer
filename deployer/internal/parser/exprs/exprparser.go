@@ -9,19 +9,48 @@ type exprParser struct {
 }
 
 func (p *exprParser) Parse(tokens []pluggable.Token) (pluggable.Expr, bool) {
-	t := tokens[0]
-	id, isId := t.(pluggable.Identifier)
-	if isId {
-		args := make([]pluggable.Expr, len(tokens)-1)
-		for k, tok := range tokens[1:] {
-			args[k] = tok
-		}
-		v := p.tools.Recall.FindFunc(id.Id())
-		if v != nil {
-			return v.Eval(p.tools, args), true
+	fn, before, after := p.split(tokens)
+	if fn != nil {
+		return fn.Eval(p.tools, makeArgs(before), makeArgs(after)), true
+	} else {
+		// if len(before) > 0 { error }
+		return before[0], true
+	}
+}
+
+func makeArgs(tokens []pluggable.Token) []pluggable.Expr {
+	args := make([]pluggable.Expr, len(tokens))
+	for k, tok := range tokens {
+		args[k] = tok
+	}
+	return args
+}
+
+func (p *exprParser) split(tokens []pluggable.Token) (pluggable.Function, []pluggable.Token, []pluggable.Token) {
+	for i, t := range tokens {
+		if f := p.matchFunc(t); f != nil {
+			return f, tokens[0:i], tokens[i+1:]
 		}
 	}
-	return tokens[0], true
+	return nil, tokens, nil
+}
+
+func (p *exprParser) matchFunc(tok pluggable.Token) pluggable.Function {
+	id, isId := tok.(pluggable.Identifier)
+	if isId {
+		v := p.tools.Recall.FindFunc(id.Id())
+		if v != nil {
+			return v
+		}
+	}
+	op, isOp := tok.(pluggable.Operator)
+	if isOp {
+		v := p.tools.Recall.FindFunc(op.Op())
+		if v != nil {
+			return v
+		}
+	}
+	return nil
 }
 
 func NewExprParser(tools *pluggable.Tools) pluggable.ExprParser {

@@ -3,17 +3,18 @@ package registry
 import "ziniki.org/deployer/deployer/pkg/pluggable"
 
 type Registry struct {
-	verbs   map[string]pluggable.Action
+	actions map[string]pluggable.Action
 	nouns   map[string]pluggable.Noun
+	funcs   map[string]pluggable.Function
 	drivers map[string]any
 }
 
-func (r *Registry) FindFunc(verb string) pluggable.Function {
-	panic("unimplemented")
+func (r *Registry) RegisterAction(verb string, action pluggable.Action) {
+	r.actions[verb] = action
 }
 
-func (r *Registry) RegisterVerb(verb string, action pluggable.Action) {
-	r.verbs[verb] = action
+func (r *Registry) RegisterFunc(verb string, fn pluggable.Function) {
+	r.funcs[verb] = fn
 }
 
 func (r *Registry) RegisterNoun(noun string, item pluggable.Noun) {
@@ -29,7 +30,11 @@ func (r *Registry) ObtainDriver(s string) any {
 }
 
 func (r *Registry) FindAction(verb string) pluggable.Action {
-	return r.verbs[verb]
+	return r.actions[verb]
+}
+
+func (r *Registry) FindFunc(verb string) pluggable.Function {
+	return r.funcs[verb]
 }
 
 func (r *Registry) FindNoun(noun string) pluggable.Noun {
@@ -37,5 +42,5 @@ func (r *Registry) FindNoun(noun string) pluggable.Noun {
 }
 
 func NewRegistry() *Registry {
-	return &Registry{verbs: make(map[string]pluggable.Action), nouns: make(map[string]pluggable.Noun), drivers: make(map[string]any)}
+	return &Registry{actions: make(map[string]pluggable.Action), nouns: make(map[string]pluggable.Noun), drivers: make(map[string]any)}
 }

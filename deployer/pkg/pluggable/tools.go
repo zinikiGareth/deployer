@@ -10,6 +10,6 @@ type Tools struct {
 	Parser     ExprParser
 }
 
-func NewTools(reporter errors.ErrorRepI, repo Repository) *Tools {
-	return &Tools{Reporter: reporter, Repository: repo}
+func NewTools(reporter errors.ErrorRepI, recall Recall, repo Repository) *Tools {
+	return &Tools{Reporter: reporter, Recall: recall, Repository: repo}
 }

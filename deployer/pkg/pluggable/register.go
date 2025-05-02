@@ -2,7 +2,8 @@ package pluggable
 
 type Register interface {
 	RegisterNoun(noun string, item Noun)
-	RegisterVerb(verb string, action Action)
+	RegisterAction(verb string, action Action)
+	RegisterFunc(verb string, function Function)
 	ProvideDriver(s string, env any)
 }
 

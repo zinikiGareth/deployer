@@ -50,7 +50,7 @@ type Noun interface {
 }
 
 type Function interface {
-	Eval(tools *Tools, tokens []Expr) Expr
+	Eval(tools *Tools, before []Expr, after []Expr) Expr
 }
 
 type Expr interface {

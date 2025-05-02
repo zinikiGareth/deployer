@@ -16,7 +16,7 @@ func Parse(registry pluggable.Recall, repo pluggable.Repository, errorSink error
 	globalScope := scopes.NewScopedHandlers(registry, repo)
 	globalInterpreter := interpreters.NewInterpreter(repo, globalScope)
 	lineLexicator := lexicator.NewLineLexicator(reporter, fileName)
-	tools := pluggable.NewTools(reporter, repo)
+	tools := pluggable.NewTools(reporter, registry, repo)
 	tools.Parser = exprs.NewExprParser(tools)
 	blocker := blocker.NewBlocker(tools, lineLexicator, globalInterpreter)
 	provideLines(file, blocker)

@@ -18,6 +18,6 @@ func RegisterWithDeployer(deployer deployer.Deployer) error {
 		eh.WriteMsg("Installing things from coremod\n")
 	}
 	register := deployer.ObtainRegister()
-	register.RegisterVerb("target", &target.CoreTargetVerb{})
+	register.RegisterAction("target", &target.CoreTargetVerb{})
 	return nil
 }

@@ -2,6 +2,7 @@ package exprs_test
 
 import (
 	"fmt"
+	"slices"
 
 	"ziniki.org/deployer/deployer/internal/parser/exprs"
 	"ziniki.org/deployer/deployer/internal/parser/lexicator"
@@ -17,15 +18,15 @@ type returnDataValue struct {
 	value pluggable.Expr
 }
 
-func (rdv returnDataValue) Eval(tools *pluggable.Tools, tokens []pluggable.Expr) pluggable.Expr {
+func (rdv returnDataValue) Eval(tools *pluggable.Tools, before []pluggable.Expr, after []pluggable.Expr) pluggable.Expr {
 	return rdv.value
 }
 
 type konstantFunc struct {
 }
 
-func (rdv konstantFunc) Eval(tools *pluggable.Tools, tokens []pluggable.Expr) pluggable.Expr {
-	return exprs.Apply{Func: rdv, Args: tokens}
+func (rdv konstantFunc) Eval(tools *pluggable.Tools, before []pluggable.Expr, after []pluggable.Expr) pluggable.Expr {
+	return exprs.Apply{Func: rdv, Args: slices.Concat(before, after)}
 }
 
 var recall myRecall

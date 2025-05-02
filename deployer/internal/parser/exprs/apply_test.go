@@ -31,3 +31,27 @@ func TestASimpleFunctionWithOneArg(t *testing.T) {
 		t.Fatalf("arg was not world")
 	}
 }
+
+func TestAPostfixFunctionWithOneArg(t *testing.T) {
+	p := makeParser()
+	recall.funcs["!"] = konstFunc
+	world := lexicator.NewStringToken(lineloc, 0, "world")
+	hello := lexicator.NewOperatorToken(lineloc, 6, "!")
+	expr, ok := p.Parse([]pluggable.Token{world, hello})
+	if !ok {
+		t.Fatalf("Parse failed")
+	}
+	a, ok := expr.(exprs.Apply)
+	if !ok {
+		t.Fatalf("returned expr was not an Apply")
+	}
+	if a.Func != konstFunc {
+		t.Fatalf("returned Apply Func was not konst")
+	}
+	if len(a.Args) != 1 {
+		t.Fatalf("Apply Func had %d args, not 1", len(a.Args))
+	}
+	if a.Args[0] != world {
+		t.Fatalf("arg was not world")
+	}
+}
