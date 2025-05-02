@@ -54,7 +54,7 @@ func (ea *EnsureAction) ShortDescription() string {
 	return fmt.Sprintf("Ensure[%s: %s]", ea.what.Id(), ea.named)
 }
 
-func (ea *EnsureAction) AddProperty(tools *pluggable.Tools, name pluggable.Identifier, value pluggable.Locatable) {
+func (ea *EnsureAction) AddProperty(tools *pluggable.Tools, name pluggable.Identifier, value pluggable.Expr) {
 	if name.Id() == "name" {
 		if ea.named != nil {
 			tools.Reporter.Report(name.Loc().Offset, "duplicate definition of name")

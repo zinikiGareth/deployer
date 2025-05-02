@@ -54,9 +54,9 @@ type Function interface {
 }
 
 type Expr interface {
-	// what methods does this need????
+	Locatable
 }
 
 type ExprParser interface {
-	Parse(tokens []Token) Expr
+	Parse(tokens []Token) (Expr, bool)
 }

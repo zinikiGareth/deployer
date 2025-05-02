@@ -58,7 +58,10 @@ func makeParser() pluggable.ExprParser {
 func TestAStringIsAnExpr(t *testing.T) {
 	p := makeParser()
 	hello := parser.NewStringToken(lineloc, 0, "hello")
-	expr := p.Parse([]pluggable.Token{hello})
+	expr, ok := p.Parse([]pluggable.Token{hello})
+	if !ok {
+		t.Fatalf("Parse failed")
+	}
 	if expr != hello {
 		t.Fatalf("returned expr was not hello")
 	}
@@ -67,7 +70,10 @@ func TestAStringIsAnExpr(t *testing.T) {
 func TestANumberIsAnExpr(t *testing.T) {
 	p := makeParser()
 	nbr := parser.NewNumberToken(lineloc, 0, 46)
-	expr := p.Parse([]pluggable.Token{nbr})
+	expr, ok := p.Parse([]pluggable.Token{nbr})
+	if !ok {
+		t.Fatalf("Parse failed")
+	}
 	if expr != nbr {
 		t.Fatalf("returned expr was not 46")
 	}
@@ -76,7 +82,10 @@ func TestANumberIsAnExpr(t *testing.T) {
 func TestAnUnboundIDIsAnExpr(t *testing.T) {
 	p := makeParser()
 	id := parser.NewIdentifierToken(lineloc, 0, "x")
-	expr := p.Parse([]pluggable.Token{id})
+	expr, ok := p.Parse([]pluggable.Token{id})
+	if !ok {
+		t.Fatalf("Parse failed")
+	}
 	if expr != id {
 		t.Fatalf("returned expr was not x")
 	}
@@ -86,7 +95,10 @@ func TestAnIDBoundToAVerbProducesAnExpr(t *testing.T) {
 	p := makeParser()
 	recall.funcs["hello"] = makeData
 	id := parser.NewIdentifierToken(lineloc, 0, "hello")
-	expr := p.Parse([]pluggable.Token{id})
+	expr, ok := p.Parse([]pluggable.Token{id})
+	if !ok {
+		t.Fatalf("Parse failed")
+	}
 	if expr == id {
 		t.Fatalf("returned expr was the verb")
 	}
