@@ -5,10 +5,11 @@ import (
 
 	"ziniki.org/deployer/deployer/internal/parser/lexicator"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
+	"ziniki.org/deployer/deployer/pkg/testhelpers"
 )
 
 func TestAStringCanBeFoundBetweenDoubleQuotes(t *testing.T) {
-	reporter, _ := mockReporter(t)
+	reporter, _ := testhelpers.MockReporter(t)
 	lex := lexicator.NewLineLexicator(reporter, "test")
 	toks := lex.BlockedLine(lineOf("\"hello, world\""))
 	if len(toks) != 1 {
@@ -24,7 +25,7 @@ func TestAStringCanBeFoundBetweenDoubleQuotes(t *testing.T) {
 }
 
 func TestAStringCanIncludeANestedDQPairBetweenDoubleQuotes(t *testing.T) {
-	reporter, _ := mockReporter(t)
+	reporter, _ := testhelpers.MockReporter(t)
 	lex := lexicator.NewLineLexicator(reporter, "test")
 	toks := lex.BlockedLine(lineOf("\"hello, \"\"world\"\"\""))
 	if len(toks) != 1 {
@@ -40,7 +41,7 @@ func TestAStringCanIncludeANestedDQPairBetweenDoubleQuotes(t *testing.T) {
 }
 
 func TestAStringCanBeFoundBetweenSingleQuotes(t *testing.T) {
-	reporter, _ := mockReporter(t)
+	reporter, _ := testhelpers.MockReporter(t)
 	lex := lexicator.NewLineLexicator(reporter, "test")
 	toks := lex.BlockedLine(lineOf("'hello, world'"))
 	if len(toks) != 1 {
@@ -56,7 +57,7 @@ func TestAStringCanBeFoundBetweenSingleQuotes(t *testing.T) {
 }
 
 func TestAStringCanIncludeANestedSQPairBetweenSingleQuotes(t *testing.T) {
-	reporter, _ := mockReporter(t)
+	reporter, _ := testhelpers.MockReporter(t)
 	lex := lexicator.NewLineLexicator(reporter, "test")
 	toks := lex.BlockedLine(lineOf("'hello, ''world'''"))
 	if len(toks) != 1 {
@@ -72,7 +73,7 @@ func TestAStringCanIncludeANestedSQPairBetweenSingleQuotes(t *testing.T) {
 }
 
 func TestAStringMustBeTerminated(t *testing.T) {
-	reporter, sink := mockReporter(t)
+	reporter, sink := testhelpers.MockReporter(t)
 	tx := "\"hello, world"
 	sink.Expect(1, 1, 0, tx, "unterminated string")
 	lex := lexicator.NewLineLexicator(reporter, "test")
@@ -83,7 +84,7 @@ func TestAStringMustBeTerminated(t *testing.T) {
 }
 
 func TestAStringMustNotEndWithNetedQuote(t *testing.T) {
-	reporter, sink := mockReporter(t)
+	reporter, sink := testhelpers.MockReporter(t)
 	tx := "\"hello, world\"\""
 	sink.Expect(1, 1, 0, tx, "unterminated string")
 	lex := lexicator.NewLineLexicator(reporter, "test")
@@ -94,7 +95,7 @@ func TestAStringMustNotEndWithNetedQuote(t *testing.T) {
 }
 
 func TestThereMustBeASpaceBetweenIDAndAString(t *testing.T) {
-	reporter, sink := mockReporter(t)
+	reporter, sink := testhelpers.MockReporter(t)
 	tx := "system'hello'"
 	lex := lexicator.NewLineLexicator(reporter, "test")
 	sink.Expect(1, 1, 6, tx, "space required after identifier before string")
@@ -105,7 +106,7 @@ func TestThereMustBeASpaceBetweenIDAndAString(t *testing.T) {
 }
 
 func TestThereMustBeASpaceBetweenAStringAndAnID(t *testing.T) {
-	reporter, sink := mockReporter(t)
+	reporter, sink := testhelpers.MockReporter(t)
 	tx := "'hello'system"
 	lex := lexicator.NewLineLexicator(reporter, "test")
 	sink.Expect(1, 1, 7, tx, "space required after string before identifier")
@@ -116,7 +117,7 @@ func TestThereMustBeASpaceBetweenAStringAndAnID(t *testing.T) {
 }
 
 func TestTwoIdsAndASimpleStringCanBeSeparatedBySpaces(t *testing.T) {
-	reporter, _ := mockReporter(t)
+	reporter, _ := testhelpers.MockReporter(t)
 	lex := lexicator.NewLineLexicator(reporter, "test")
 	toks := lex.BlockedLine(lineOf("ensure test.S3.Bucket \"org.ziniki.launch_bucket\""))
 	if len(toks) != 3 {

@@ -6,6 +6,7 @@ import (
 	"ziniki.org/deployer/deployer/internal/parser/lexicator"
 	"ziniki.org/deployer/deployer/pkg/errors"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
+	"ziniki.org/deployer/deployer/pkg/testhelpers"
 )
 
 func lineOf(tx string) *errors.LineLoc {
@@ -13,7 +14,7 @@ func lineOf(tx string) *errors.LineLoc {
 }
 
 func TestForSingleSlashWithSpaces(t *testing.T) {
-	reporter, _ := mockReporter(t)
+	reporter, _ := testhelpers.MockReporter(t)
 	lex := lexicator.NewLineLexicator(reporter, "test")
 	toks := lex.BlockedLine(lineOf("hello / world"))
 	if len(toks) != 3 {
@@ -29,7 +30,7 @@ func TestForSingleSlashWithSpaces(t *testing.T) {
 }
 
 func TestForSingleSlashWithoutSpaces(t *testing.T) {
-	reporter, _ := mockReporter(t)
+	reporter, _ := testhelpers.MockReporter(t)
 	lex := lexicator.NewLineLexicator(reporter, "test")
 	toks := lex.BlockedLine(lineOf("hello/world"))
 	if len(toks) != 3 {
@@ -50,7 +51,7 @@ func TestForSingleSlashWithoutSpaces(t *testing.T) {
 }
 
 func TestForEqualRightArrowWithoutSpaces(t *testing.T) {
-	reporter, _ := mockReporter(t)
+	reporter, _ := testhelpers.MockReporter(t)
 	lex := lexicator.NewLineLexicator(reporter, "test")
 	toks := lex.BlockedLine(lineOf("hello=>world"))
 	if len(toks) != 3 {
@@ -71,7 +72,7 @@ func TestForEqualRightArrowWithoutSpaces(t *testing.T) {
 }
 
 func TestForMinusLeftArrowWithoutSpaces(t *testing.T) {
-	reporter, _ := mockReporter(t)
+	reporter, _ := testhelpers.MockReporter(t)
 	lex := lexicator.NewLineLexicator(reporter, "test")
 	toks := lex.BlockedLine(lineOf("hello<-'world'"))
 	if len(toks) != 3 {

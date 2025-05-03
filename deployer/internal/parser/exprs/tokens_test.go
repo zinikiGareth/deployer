@@ -8,7 +8,7 @@ import (
 )
 
 func TestAStringIsAnExpr(t *testing.T) {
-	p := makeParser()
+	p, _ := makeParser(t)
 	hello := lexicator.NewStringToken(lineloc, 0, "hello")
 	expr, ok := p.Parse([]pluggable.Token{hello})
 	if !ok {
@@ -20,7 +20,7 @@ func TestAStringIsAnExpr(t *testing.T) {
 }
 
 func TestANumberIsAnExpr(t *testing.T) {
-	p := makeParser()
+	p, _ := makeParser(t)
 	nbr := lexicator.NewNumberToken(lineloc, 0, 46)
 	expr, ok := p.Parse([]pluggable.Token{nbr})
 	if !ok {
@@ -32,7 +32,7 @@ func TestANumberIsAnExpr(t *testing.T) {
 }
 
 func TestAnUnboundIDIsAnExpr(t *testing.T) {
-	p := makeParser()
+	p, _ := makeParser(t)
 	id := lexicator.NewIdentifierToken(lineloc, 0, "x")
 	expr, ok := p.Parse([]pluggable.Token{id})
 	if !ok {
@@ -44,7 +44,7 @@ func TestAnUnboundIDIsAnExpr(t *testing.T) {
 }
 
 func TestAnIDBoundToAVerbProducesAnExpr(t *testing.T) {
-	p := makeParser()
+	p, _ := makeParser(t)
 	recall.funcs["hello"] = idFunc
 	id := lexicator.NewIdentifierToken(lineloc, 0, "hello")
 	expr, ok := p.Parse([]pluggable.Token{id})

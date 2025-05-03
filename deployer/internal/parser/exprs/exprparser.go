@@ -9,11 +9,18 @@ type exprParser struct {
 }
 
 func (p *exprParser) Parse(tokens []pluggable.Token) (pluggable.Expr, bool) {
+	if len(tokens) == 0 {
+		p.tools.Reporter.Reportf(0, "no expression found")
+		return nil, false
+	}
 	fn, before, after := p.split(tokens)
 	if fn != nil {
 		return fn.Eval(p.tools, makeArgs(before), makeArgs(after)), true
 	} else {
-		// if len(before) > 0 { error }
+		if len(before) > 1 {
+			p.tools.Reporter.Reportf(before[0].Loc().Offset, "no function found")
+			return nil, false
+		}
 		return before[0], true
 	}
 }

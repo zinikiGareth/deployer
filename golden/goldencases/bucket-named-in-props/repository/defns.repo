@@ -6,7 +6,7 @@ target ensureABucketExists {
 			what: test.S3.Bucket
 			resolved: test.S3.Bucket[]
 			named: org.ziniki.launch_bucket
-				bucket.dply:6.0 retentionLength <- bucket.dply:6.19 24
+				bucket.dply:6.0 retentionLength <- bucket.dply:6.19 Time[24,HOURS]
 		}
 	]
 }

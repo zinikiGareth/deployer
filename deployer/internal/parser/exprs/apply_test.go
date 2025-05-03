@@ -9,7 +9,7 @@ import (
 )
 
 func TestASimpleFunctionWithOneArg(t *testing.T) {
-	p := makeParser()
+	p, _ := makeParser(t)
 	recall.funcs["hello"] = konstFunc
 	hello := lexicator.NewIdentifierToken(lineloc, 0, "hello")
 	world := lexicator.NewStringToken(lineloc, 6, "world")
@@ -33,7 +33,7 @@ func TestASimpleFunctionWithOneArg(t *testing.T) {
 }
 
 func TestAPostfixFunctionWithOneArg(t *testing.T) {
-	p := makeParser()
+	p, _ := makeParser(t)
 	recall.funcs["!"] = konstFunc
 	world := lexicator.NewStringToken(lineloc, 0, "world")
 	hello := lexicator.NewOperatorToken(lineloc, 6, "!")

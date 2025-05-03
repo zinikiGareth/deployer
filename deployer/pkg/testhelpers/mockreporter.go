@@ -1,4 +1,4 @@
-package lexicator_test
+package testhelpers
 
 import (
 	"fmt"
@@ -12,16 +12,16 @@ type errorStruct struct {
 	text, msg         string
 }
 
-type mockSink struct {
+type MockSink struct {
 	t      *testing.T
 	errors []errorStruct
 }
 
-func (s *mockSink) Expect(line, ind, offset int, text, msg string) {
+func (s *MockSink) Expect(line, ind, offset int, text, msg string) {
 	s.errors = append(s.errors, errorStruct{line: line, ind: ind, offset: offset, text: text, msg: msg})
 }
 
-func (s *mockSink) Report(line *errors.Location, msg string) {
+func (s *MockSink) Report(line *errors.Location, msg string) {
 	if len(s.errors) == 0 {
 		s.t.Fatalf("unexpected error: " + msg)
 	}
@@ -42,15 +42,15 @@ func (s *mockSink) Report(line *errors.Location, msg string) {
 	}
 }
 
-func (s *mockSink) Reportf(loc *errors.Location, format string, args ...any) {
+func (s *MockSink) Reportf(loc *errors.Location, format string, args ...any) {
 	s.Report(loc, fmt.Sprintf(format, args...))
 }
 
-func (s *mockSink) HasErrors() bool {
+func (s *MockSink) HasErrors() bool {
 	return len(s.errors) > 0
 }
 
-func mockReporter(t *testing.T) (errors.ErrorRepI, *mockSink) {
-	sink := &mockSink{t: t}
+func MockReporter(t *testing.T) (errors.ErrorRepI, *MockSink) {
+	sink := &MockSink{t: t}
 	return errors.NewErrorReporter(sink), sink
 }

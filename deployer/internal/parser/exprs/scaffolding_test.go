@@ -3,11 +3,13 @@ package exprs_test
 import (
 	"fmt"
 	"slices"
+	"testing"
 
 	"ziniki.org/deployer/deployer/internal/parser/exprs"
 	"ziniki.org/deployer/deployer/internal/parser/lexicator"
 	"ziniki.org/deployer/deployer/pkg/errors"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
+	"ziniki.org/deployer/deployer/pkg/testhelpers"
 )
 
 type myRecall struct {
@@ -37,6 +39,7 @@ var lineloc *errors.LineLoc
 
 func init() {
 	fmt.Println("init")
+	lineloc = &errors.LineLoc{Line: 1, Indent: 1}
 	oneString = lexicator.NewStringToken(lineloc, 0, "string_1")
 	idFunc = returnDataValue{value: oneString}
 	konstFunc = konstantFunc{}
@@ -58,9 +61,14 @@ func (m myRecall) ObtainDriver(driver string) any {
 	panic("unimplemented")
 }
 
-func makeParser() pluggable.ExprParser {
+type Helpers struct {
+	Sink *testhelpers.MockSink
+}
+
+func makeParser(t *testing.T) (pluggable.ExprParser, Helpers) {
+	reporter, sink := testhelpers.MockReporter(t)
 	recall = myRecall{funcs: make(map[string]pluggable.Function)}
-	lineloc = &errors.LineLoc{}
-	tools := &pluggable.Tools{Recall: recall}
-	return exprs.NewExprParser(tools)
+	tools := &pluggable.Tools{Reporter: reporter, Recall: recall}
+	reporter.At(lineloc)
+	return exprs.NewExprParser(tools), Helpers{Sink: sink}
 }

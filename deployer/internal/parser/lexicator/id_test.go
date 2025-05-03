@@ -5,10 +5,11 @@ import (
 
 	"ziniki.org/deployer/deployer/internal/parser/lexicator"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
+	"ziniki.org/deployer/deployer/pkg/testhelpers"
 )
 
 func TestASingleIdIsJustThat(t *testing.T) {
-	reporter, _ := mockReporter(t)
+	reporter, _ := testhelpers.MockReporter(t)
 	lex := lexicator.NewLineLexicator(reporter, "test")
 	toks := lex.BlockedLine(lineOf("hello"))
 	if len(toks) != 1 {
@@ -20,7 +21,7 @@ func TestASingleIdIsJustThat(t *testing.T) {
 }
 
 func TestAnIdCanHaveDots(t *testing.T) {
-	reporter, _ := mockReporter(t)
+	reporter, _ := testhelpers.MockReporter(t)
 	lex := lexicator.NewLineLexicator(reporter, "test")
 	toks := lex.BlockedLine(lineOf("hello.world"))
 	if len(toks) != 1 {
@@ -36,7 +37,7 @@ func TestAnIdCanHaveDots(t *testing.T) {
 // id<-x is probably fine, though, because we want x*3, and think about calc in css
 
 func TestTwoIdsCanBeSeparatedByASpace(t *testing.T) {
-	reporter, _ := mockReporter(t)
+	reporter, _ := testhelpers.MockReporter(t)
 	lex := lexicator.NewLineLexicator(reporter, "test")
 	toks := lex.BlockedLine(lineOf("hello world"))
 	if len(toks) != 2 {
@@ -55,7 +56,7 @@ func TestLeadingSpacesCauseAPanic(t *testing.T) {
 		if r := recover(); r != nil {
 		}
 	}()
-	reporter, _ := mockReporter(t)
+	reporter, _ := testhelpers.MockReporter(t)
 	lex := lexicator.NewLineLexicator(reporter, "test")
 	lex.BlockedLine(lineOf(" hello"))
 	t.Fatalf("did not panic")
