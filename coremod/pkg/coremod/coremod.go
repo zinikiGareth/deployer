@@ -2,6 +2,7 @@ package coremod
 
 import (
 	"ziniki.org/deployer/coremod/internal/target"
+	"ziniki.org/deployer/coremod/internal/time"
 	"ziniki.org/deployer/deployer/pkg/deployer"
 )
 
@@ -19,5 +20,6 @@ func RegisterWithDeployer(deployer deployer.Deployer) error {
 	}
 	register := deployer.ObtainRegister()
 	register.RegisterAction("target", &target.CoreTargetVerb{})
+	register.RegisterFunc("hours", &time.HoursFunc{})
 	return nil
 }

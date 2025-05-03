@@ -7,3 +7,7 @@ type Apply struct {
 	Func pluggable.Function
 	Args []pluggable.Expr
 }
+
+func (a Apply) String() string {
+	return "APPPLLY"
+}

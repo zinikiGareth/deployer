@@ -42,5 +42,5 @@ func (r *Registry) FindNoun(noun string) pluggable.Noun {
 }
 
 func NewRegistry() *Registry {
-	return &Registry{actions: make(map[string]pluggable.Action), nouns: make(map[string]pluggable.Noun), drivers: make(map[string]any)}
+	return &Registry{actions: make(map[string]pluggable.Action), funcs: make(map[string]pluggable.Function), nouns: make(map[string]pluggable.Noun), drivers: make(map[string]any)}
 }

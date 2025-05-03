@@ -1,5 +1,7 @@
 package pluggable
 
+import "fmt"
+
 type ProvideLine interface {
 	BeginFile(file string)
 	HaveLine(lineNo int, text string)
@@ -17,6 +19,7 @@ type Scoper interface {
 
 type Token interface {
 	Locatable
+	fmt.Stringer
 }
 
 type Identifier interface {
@@ -50,10 +53,11 @@ type Noun interface {
 }
 
 type Function interface {
-	Eval(tools *Tools, before []Expr, after []Expr) Expr
+	Eval(tools *Tools, me Token, before []Expr, after []Expr) Expr
 }
 
 type Expr interface {
+	fmt.Stringer
 	Locatable
 }
 

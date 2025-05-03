@@ -13,7 +13,7 @@ type EnsureAction struct {
 	what     pluggable.Identifier
 	resolved pluggable.Noun
 	named    pluggable.String
-	props    map[pluggable.Identifier]any
+	props    map[pluggable.Identifier]pluggable.Expr
 }
 
 func (ea *EnsureAction) Loc() *errors.Location {
@@ -43,7 +43,7 @@ func (ea *EnsureAction) DumpTo(w pluggable.IndentWriter) {
 	if len(ea.props) > 0 {
 		w.Indent()
 		for k, v := range ea.props {
-			w.IndPrintf("%s <- %v\n", k, v)
+			w.IndPrintf("%s <- %s\n", k, v.String())
 		}
 		w.UnIndent()
 	}
@@ -128,7 +128,7 @@ func (ensure *EnsureCommandHandler) Handle(tools *pluggable.Tools, parent plugga
 		}
 	}
 
-	ea := &EnsureAction{loc: tokens[0].Loc(), what: clz, named: name, props: make(map[pluggable.Identifier]any)}
+	ea := &EnsureAction{loc: tokens[0].Loc(), what: clz, named: name, props: make(map[pluggable.Identifier]pluggable.Expr)}
 	parent.Add(ea)
 	return interpreters.PropertiesInnerScope(ea)
 }

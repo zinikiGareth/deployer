@@ -13,9 +13,9 @@ func (p *exprParser) Parse(tokens []pluggable.Token) (pluggable.Expr, bool) {
 		p.tools.Reporter.Reportf(0, "no expression found")
 		return nil, false
 	}
-	fn, before, after := p.split(tokens)
+	tok, fn, before, after := p.split(tokens)
 	if fn != nil {
-		return fn.Eval(p.tools, makeArgs(before), makeArgs(after)), true
+		return fn.Eval(p.tools, tok, makeArgs(before), makeArgs(after)), true
 	} else {
 		if len(before) > 1 {
 			p.tools.Reporter.Reportf(before[0].Loc().Offset, "no function found")
@@ -33,13 +33,13 @@ func makeArgs(tokens []pluggable.Token) []pluggable.Expr {
 	return args
 }
 
-func (p *exprParser) split(tokens []pluggable.Token) (pluggable.Function, []pluggable.Token, []pluggable.Token) {
+func (p *exprParser) split(tokens []pluggable.Token) (pluggable.Token, pluggable.Function, []pluggable.Token, []pluggable.Token) {
 	for i, t := range tokens {
 		if f := p.matchFunc(t); f != nil {
-			return f, tokens[0:i], tokens[i+1:]
+			return t, f, tokens[0:i], tokens[i+1:]
 		}
 	}
-	return nil, tokens, nil
+	return nil, nil, tokens, nil
 }
 
 func (p *exprParser) matchFunc(tok pluggable.Token) pluggable.Function {

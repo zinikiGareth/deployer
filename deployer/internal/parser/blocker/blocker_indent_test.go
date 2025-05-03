@@ -101,6 +101,10 @@ func (t *LineToken) Loc() *errors.Location {
 	return t.loc
 }
 
+func (t LineToken) String() string {
+	return "LIIIINEEETOOOOKEN"
+}
+
 type testLex struct {
 }
 
