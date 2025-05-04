@@ -38,3 +38,4 @@ func (s *Searcher) Resolve(name pluggable.Identifier) pluggable.Noun {
 	s.sink.Reportf(name.Loc(), "could not resolve symbol %s", name.Id())
 	return nil
 }
+

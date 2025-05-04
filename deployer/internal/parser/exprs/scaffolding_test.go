@@ -2,6 +2,7 @@ package exprs_test
 
 import (
 	"fmt"
+	"reflect"
 	"slices"
 	"testing"
 
@@ -49,7 +50,7 @@ func (m myRecall) FindFunc(verb string) pluggable.Function {
 	return m.funcs[verb]
 }
 
-func (m myRecall) FindAction(noun string) pluggable.Action {
+func (m myRecall) Find(ty reflect.Type, noun string) any {
 	panic("unimplemented")
 }
 

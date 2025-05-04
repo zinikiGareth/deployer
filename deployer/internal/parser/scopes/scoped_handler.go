@@ -1,6 +1,8 @@
 package scopes
 
 import (
+	"reflect"
+
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
@@ -9,8 +11,8 @@ type ScopedHandlers struct {
 	recall pluggable.Recall
 }
 
-func (sh *ScopedHandlers) FindAction(v pluggable.Identifier) pluggable.Action {
-	return sh.recall.FindAction(v.Id())
+func (sh *ScopedHandlers) FindAction(v pluggable.Identifier) pluggable.TargetCommand {
+	return sh.recall.Find(reflect.TypeFor[pluggable.TargetCommand](), v.Id()).(pluggable.TargetCommand)
 }
 
 func NewScopedHandlers(registry pluggable.Recall, repo pluggable.Repository) pluggable.Scoper {

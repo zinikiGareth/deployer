@@ -5,7 +5,7 @@ target ensureABucketExists {
 		EnsureCommand {
 			_where_: bucket.dply:4.0
 			what: test.S3.Bucket
-			resolved: test.S3.Bucket[]
+			not-resolved: test.S3.Bucket
 			named: org.ziniki.launch_bucket
 		}
 		bind_var {
@@ -19,6 +19,6 @@ symbol launch_bucket is bound to:
 EnsureCommand {
 	_where_: bucket.dply:4.0
 	what: test.S3.Bucket
-	resolved: test.S3.Bucket[]
+	not-resolved: test.S3.Bucket
 	named: org.ziniki.launch_bucket
 }

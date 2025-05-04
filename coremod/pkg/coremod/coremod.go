@@ -1,9 +1,12 @@
 package coremod
 
 import (
+	"reflect"
+
 	"ziniki.org/deployer/coremod/internal/target"
 	"ziniki.org/deployer/coremod/internal/time"
 	"ziniki.org/deployer/deployer/pkg/deployer"
+	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
 var testRunner deployer.TestRunner
@@ -19,7 +22,7 @@ func RegisterWithDeployer(deployer deployer.Deployer) error {
 		eh.WriteMsg("Installing things from coremod\n")
 	}
 	register := deployer.ObtainRegister()
-	register.RegisterAction("target", &target.CoreTargetVerb{})
+	register.Register(reflect.TypeFor[pluggable.TargetCommand](), "target", &target.CoreTargetVerb{})
 	register.RegisterFunc("hours", &time.HoursFunc{})
 	return nil
 }

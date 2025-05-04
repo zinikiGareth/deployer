@@ -5,7 +5,7 @@ target shouldHaveAType {
 		EnsureCommand {
 			_where_: noname.dply:4.0
 			what: test.S3.Bucket
-			resolved: test.S3.Bucket[]
+			not-resolved: test.S3.Bucket
 		}
 	]
 }

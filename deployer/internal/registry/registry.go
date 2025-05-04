@@ -1,16 +1,29 @@
 package registry
 
-import "ziniki.org/deployer/deployer/pkg/pluggable"
+import (
+	"log"
+	"reflect"
+
+	"ziniki.org/deployer/deployer/pkg/pluggable"
+)
 
 type Registry struct {
-	actions map[string]pluggable.Action
+	impls   map[reflect.Type]map[string]any
 	nouns   map[string]pluggable.Noun
 	funcs   map[string]pluggable.Function
 	drivers map[string]any
 }
 
-func (r *Registry) RegisterAction(verb string, action pluggable.Action) {
-	r.actions[verb] = action
+func (r *Registry) Register(what reflect.Type, called string, impl any) {
+	if !reflect.TypeOf(impl).Implements(what) {
+		log.Fatalf("%v is not a %v", impl, what)
+	}
+	m := r.impls[what]
+	if m == nil {
+		m = make(map[string]any)
+		r.impls[what] = m
+	}
+	m[called] = impl
 }
 
 func (r *Registry) RegisterFunc(verb string, fn pluggable.Function) {
@@ -29,8 +42,16 @@ func (r *Registry) ObtainDriver(s string) any {
 	return r.drivers[s]
 }
 
-func (r *Registry) FindAction(verb string) pluggable.Action {
-	return r.actions[verb]
+func (r *Registry) Find(ty reflect.Type, called string) any {
+	m := r.impls[ty]
+	if m == nil {
+		log.Fatalf("no verbs have been bound of type %v", ty)
+	}
+	ret := m[called]
+	if ret == nil {
+		log.Fatalf("there is no verb %s of type %v", called, ty)
+	}
+	return ret
 }
 
 func (r *Registry) FindFunc(verb string) pluggable.Function {
@@ -42,5 +63,5 @@ func (r *Registry) FindNoun(noun string) pluggable.Noun {
 }
 
 func NewRegistry() *Registry {
-	return &Registry{actions: make(map[string]pluggable.Action), funcs: make(map[string]pluggable.Function), nouns: make(map[string]pluggable.Noun), drivers: make(map[string]any)}
+	return &Registry{impls: make(map[reflect.Type]map[string]any), funcs: make(map[string]pluggable.Function), nouns: make(map[string]pluggable.Noun), drivers: make(map[string]any)}
 }

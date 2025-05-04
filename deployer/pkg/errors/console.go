@@ -13,6 +13,7 @@ type writerSink struct {
 }
 
 func (w *writerSink) Report(loc *Location, msg string) {
+	w.hasErrors = true
 	if w.writer == nil {
 		var err error
 		w.writer, err = os.Create(w.path)

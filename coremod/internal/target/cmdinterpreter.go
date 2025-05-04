@@ -30,7 +30,7 @@ func (cs *commandScope) HaveTokens(tools *pluggable.Tools, tokens []pluggable.To
 	if !ok {
 		panic("command token must be an identifier")
 	}
-	var action pluggable.Action
+	var action pluggable.TargetCommand
 	if cmd.Id() == "ensure" {
 		action = &basic.EnsureCommandHandler{}
 	} else {

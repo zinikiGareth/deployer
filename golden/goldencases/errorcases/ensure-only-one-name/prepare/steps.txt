@@ -1,2 +1,0 @@
-ensuring bucket exists action EnsureBucket[us-east-1:org.ziniki.launch_bucket]
-bind "launch_bucket" to Ensure[test.S3.Bucket: org.ziniki.launch_bucket]
