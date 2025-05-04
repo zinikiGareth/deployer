@@ -1,3 +1,4 @@
+symbol shouldHaveAType is bound to:
 target shouldHaveAType {
 	_where_: noclz.dply:3.7
 	actions: [

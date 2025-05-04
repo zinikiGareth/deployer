@@ -1,2 +1,2 @@
-  4.0   ensure: <class-identifier> [class-name]
+  4.0   ensure: <class-identifier> [instance-name]
   ==> ensure

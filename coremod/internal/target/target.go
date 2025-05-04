@@ -14,9 +14,10 @@ type coreTarget struct {
 	loc  *errors.Location
 	name pluggable.SymbolName
 
-	// Odd as this looks, there is a very good reason for it which is that as the action are assembled (elsewhere)
-	// we need to make sure that the slice reference is updated here.  If you take the "*" away, you will find you end
-	// up with no actions
+	// Odd as this "*[]" looks, it is correct.
+	// This is because of the semantics of "append" which can "move" the slice.
+	// we need to make sure that when append is called elsewhere, the slice reference is updated here.
+	// If you take the "*" away, you will find you end up with no actions
 	actions *[]action
 }
 
@@ -76,7 +77,7 @@ func (t *coreTarget) Execute(storage pluggable.RuntimeStorage) {
 type CoreTargetVerb struct {
 }
 
-func (t *CoreTargetVerb) Handle(tools *pluggable.Tools, parent pluggable.ContainingContext, tokens []pluggable.Token) pluggable.Interpreter {
+func (t *CoreTargetVerb) Handle(tools *pluggable.Tools, _ pluggable.ContainingContext, tokens []pluggable.Token) pluggable.Interpreter {
 	t1 := tokens[1].(pluggable.Identifier)
 	name := pluggable.SymbolName(t1.Id())
 	actions := []action{}

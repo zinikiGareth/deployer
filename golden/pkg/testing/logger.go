@@ -5,11 +5,8 @@ import (
 	"os"
 
 	"ziniki.org/deployer/deployer/pkg/pluggable"
+	"ziniki.org/deployer/deployer/pkg/testhelpers"
 )
-
-type TestStepLogger interface {
-	Log(fmt string, args ...any)
-}
 
 type TestStepLoggerFile struct {
 	storage  pluggable.RuntimeStorage
@@ -27,7 +24,7 @@ func (logger *TestStepLoggerFile) Log(format string, args ...any) {
 	fmt.Fprintf(toFile, format, args...)
 }
 
-func NewTestStepLogger(storage pluggable.RuntimeStorage, prepFile string, execFile string) (TestStepLogger, error) {
+func NewTestStepLogger(storage pluggable.RuntimeStorage, prepFile string, execFile string) (testhelpers.TestStepLogger, error) {
 	prep, err := os.Create(prepFile)
 	if err != nil {
 		return nil, err

@@ -72,7 +72,7 @@ func (r *TestRunner) Setup(modules []string) error {
 	if err != nil {
 		return err
 	}
-	register.ProvideDriver("testing.TestStepLogger", tsl)
+	register.ProvideDriver("testhelpers.TestStepLogger", tsl)
 
 	return r.LoadModules(modules)
 }

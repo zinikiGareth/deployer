@@ -1,3 +1,4 @@
+symbol ensureABucketExists is bound to:
 target ensureABucketExists {
 	_where_: bucket.dply:3.7
 	actions: [
@@ -8,8 +9,14 @@ target ensureABucketExists {
 			named: org.ziniki.launch_bucket
 				bucket.dply:5.0 retentionLength <- bucket.dply:5.19 24
 		}
+		bind_var {
+			_where_: bucket.dply:4.52
+			var: launch_bucket
+			value: Ensure[test.S3.Bucket: org.ziniki.launch_bucket]
+		}
 	]
 }
+symbol launch_bucket is bound to:
 EnsureCommand {
 	_where_: bucket.dply:4.0
 	what: test.S3.Bucket

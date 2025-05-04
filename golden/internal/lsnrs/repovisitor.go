@@ -14,7 +14,7 @@ import (
 type RepositoryStorer interface {
 	pluggable.RepositoryTraverser
 	DumpNamesTo(outdir string)
-	DumpDefnsTo(outdie string)
+	DumpDefnsTo(outdir string)
 }
 
 type goldenRepoStorer struct {
@@ -48,6 +48,7 @@ func (s *goldenRepoStorer) DumpDefnsTo(outdir string) {
 	slices.Sort(keys)
 	for _, key := range keys {
 		d := s.defns[key]
+		iw.IndPrintf("symbol %s is bound to:\n", key)
 		d.DumpTo(iw)
 	}
 	writeTo.Close()

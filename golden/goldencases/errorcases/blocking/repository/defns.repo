@@ -1,3 +1,4 @@
+symbol foo is bound to:
 target foo {
 	_where_: indents.dply:5.7
 	actions: [

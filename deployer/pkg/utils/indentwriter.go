@@ -37,7 +37,7 @@ func (iw *indentingWriter) ListAttr(field string) {
 
 func (iw *indentingWriter) EndList() {
 	if iw.levels[len(iw.levels)-1] != "L" {
-		panic("EndAttrs but top of stack was not L")
+		panic("EndList but top of stack was not L")
 	}
 	iw.levels = iw.levels[0 : len(iw.levels)-1]
 	iw.showIndent()

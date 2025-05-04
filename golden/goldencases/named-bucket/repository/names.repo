@@ -1,2 +1,2 @@
 ensureABucketExists => Target[ensureABucketExists]
-launch_bucket => Ensure[test.S3.Bucket: bucket.dply:4.23 org.ziniki.launch_bucket]
+launch_bucket => Ensure[test.S3.Bucket: org.ziniki.launch_bucket]

@@ -4,9 +4,11 @@ import (
 	"fmt"
 
 	"ziniki.org/deployer/coremod/internal/basic"
+	"ziniki.org/deployer/coremod/internal/vars"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
+// TODO: it feels wrong that this is doing two things: handling tokens AND collecting the results
 type commandScope struct {
 	repo     pluggable.Repository
 	commands *[]action
@@ -21,6 +23,8 @@ func (cc *commandScope) Add(entry pluggable.Definition) {
 	*cc.commands = append(*cc.commands, a)
 	if cc.storeAs != nil {
 		cc.repo.IntroduceSymbol(pluggable.SymbolName(cc.storeAs.Id()), entry)
+		*cc.commands = append(*cc.commands, vars.BindVar(cc.storeAs, entry))
+		cc.storeAs = nil
 	}
 }
 
