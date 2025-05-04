@@ -1,6 +1,8 @@
 package target
 
 import (
+	"fmt"
+
 	"ziniki.org/deployer/deployer/pkg/errors"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
@@ -14,11 +16,15 @@ type coreTarget struct {
 	loc  *errors.Location
 	name pluggable.SymbolName
 
-	// Odd as this "*[]" looks, it is correct.
-	// This is because of the semantics of "append" which can "move" the slice.
-	// we need to make sure that when append is called elsewhere, the slice reference is updated here.
-	// If you take the "*" away, you will find you end up with no actions
-	actions *[]action
+	actions []action
+}
+
+func (cc *coreTarget) Add(entry pluggable.Definition) {
+	a, ok := entry.(action)
+	if !ok {
+		panic(fmt.Sprintf("entry %v is not an action", entry))
+	}
+	cc.actions = append(cc.actions, a)
 }
 
 func (t *coreTarget) Loc() *errors.Location {
@@ -41,7 +47,7 @@ func (t *coreTarget) DumpTo(w pluggable.IndentWriter) {
 	w.Intro("target %s", t.name)
 	w.AttrsWhere(t)
 	w.ListAttr("actions")
-	for _, a := range *t.actions {
+	for _, a := range t.actions {
 		a.DumpTo(w)
 	}
 	w.EndList()
@@ -49,13 +55,13 @@ func (t *coreTarget) DumpTo(w pluggable.IndentWriter) {
 }
 
 func (t *coreTarget) Resolve(r pluggable.Resolver) {
-	for _, a := range *t.actions {
+	for _, a := range t.actions {
 		a.Resolve(r)
 	}
 }
 
 func (t *coreTarget) Prepare(storage pluggable.RuntimeStorage) (pluggable.ExecuteAction, any) {
-	for _, a := range *t.actions {
+	for _, a := range t.actions {
 		act, val := a.Prepare(storage)
 		storage.BindAction(a, act)
 		if val != nil {
@@ -66,7 +72,7 @@ func (t *coreTarget) Prepare(storage pluggable.RuntimeStorage) (pluggable.Execut
 }
 
 func (t *coreTarget) Execute(storage pluggable.RuntimeStorage) {
-	for _, a := range *t.actions {
+	for _, a := range t.actions {
 		av := storage.RetrieveAction(a)
 		if av != nil {
 			av.Execute(storage)
@@ -77,11 +83,10 @@ func (t *coreTarget) Execute(storage pluggable.RuntimeStorage) {
 type CoreTargetVerb struct {
 }
 
-func (t *CoreTargetVerb) Handle(tools *pluggable.Tools, _ pluggable.ContainingContext, tokens []pluggable.Token) pluggable.Interpreter {
+func (t *CoreTargetVerb) Handle(tools *pluggable.Tools, _ pluggable.ContainingContext, tokens []pluggable.Token, assignTo pluggable.Identifier) pluggable.Interpreter {
 	t1 := tokens[1].(pluggable.Identifier)
 	name := pluggable.SymbolName(t1.Id())
-	actions := []action{}
-	target := &coreTarget{loc: t1.Loc(), name: name, actions: &actions}
+	target := &coreTarget{loc: t1.Loc(), name: name, actions: []action{}}
 	tools.Repository.IntroduceSymbol(name, target)
-	return TargetCommandInterpreter(tools.Repository, &actions)
+	return TargetCommandInterpreter(tools.Repository, target)
 }

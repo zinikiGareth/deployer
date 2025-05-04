@@ -1,34 +1,17 @@
 package target
 
 import (
-	"fmt"
-
 	"ziniki.org/deployer/coremod/internal/basic"
-	"ziniki.org/deployer/coremod/internal/vars"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
 // TODO: it feels wrong that this is doing two things: handling tokens AND collecting the results
 type commandScope struct {
-	repo     pluggable.Repository
-	commands *[]action
-	storeAs  pluggable.Identifier
+	repo      pluggable.Repository
+	container pluggable.ContainingContext
 }
 
-func (cc *commandScope) Add(entry pluggable.Definition) {
-	a, ok := entry.(action)
-	if !ok {
-		panic(fmt.Sprintf("entry %v is not an action", entry))
-	}
-	*cc.commands = append(*cc.commands, a)
-	if cc.storeAs != nil {
-		cc.repo.IntroduceSymbol(pluggable.SymbolName(cc.storeAs.Id()), entry)
-		*cc.commands = append(*cc.commands, vars.BindVar(cc.storeAs, entry))
-		cc.storeAs = nil
-	}
-}
-
-func (b *commandScope) HaveTokens(tools *pluggable.Tools, tokens []pluggable.Token) pluggable.Interpreter {
+func (cs *commandScope) HaveTokens(tools *pluggable.Tools, tokens []pluggable.Token) pluggable.Interpreter {
 	// I am hacking this in first, and then I need to come back and do more on it
 
 	if len(tokens) < 1 {
@@ -53,14 +36,14 @@ func (b *commandScope) HaveTokens(tools *pluggable.Tools, tokens []pluggable.Tok
 	} else {
 		panic("invalid target command")
 	}
-	b.storeAs = assignTo
-	// TODO: refactor context handler so that it can also store in the repo
-	return action.Handle(tools, b, tokens)
+
+	innerScope := action.Handle(tools, cs.container, tokens, assignTo)
+	return innerScope
 }
 
 func (b *commandScope) Completed(tools *pluggable.Tools) {
 }
 
-func TargetCommandInterpreter(repo pluggable.Repository, commands *[]action) pluggable.Interpreter {
-	return &commandScope{repo: repo, commands: commands}
+func TargetCommandInterpreter(repo pluggable.Repository, container pluggable.ContainingContext) pluggable.Interpreter {
+	return &commandScope{repo: repo, container: container}
 }

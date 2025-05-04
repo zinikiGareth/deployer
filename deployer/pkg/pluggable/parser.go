@@ -44,7 +44,7 @@ type Operator interface {
 }
 
 type Action interface {
-	Handle(tools *Tools, parent ContainingContext, tokens []Token) Interpreter
+	Handle(tools *Tools, parent ContainingContext, tokens []Token, assignTo Identifier) Interpreter
 }
 
 type Noun interface {
