@@ -14,7 +14,7 @@ import (
 )
 
 type myRecall struct {
-	funcs map[string]pluggable.Function
+	things map[string]any
 }
 
 type returnDataValue struct {
@@ -46,16 +46,8 @@ func init() {
 	konstFunc = konstantFunc{}
 }
 
-func (m myRecall) FindFunc(verb string) pluggable.Function {
-	return m.funcs[verb]
-}
-
 func (m myRecall) Find(ty reflect.Type, noun string) any {
-	panic("unimplemented")
-}
-
-func (m myRecall) FindNoun(noun string) pluggable.Noun {
-	panic("unimplemented")
+	return m.things[noun]
 }
 
 func (m myRecall) ObtainDriver(driver string) any {
@@ -68,7 +60,7 @@ type Helpers struct {
 
 func makeParser(t *testing.T) (pluggable.ExprParser, Helpers) {
 	reporter, sink := testhelpers.MockReporter(t)
-	recall = myRecall{funcs: make(map[string]pluggable.Function)}
+	recall = myRecall{things: make(map[string]any)}
 	tools := &pluggable.Tools{Reporter: reporter, Recall: recall}
 	reporter.At(lineloc)
 	return exprs.NewExprParser(tools), Helpers{Sink: sink}

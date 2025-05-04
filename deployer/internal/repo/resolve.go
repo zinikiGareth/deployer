@@ -2,6 +2,7 @@ package repo
 
 import (
 	"log"
+	"reflect"
 
 	"ziniki.org/deployer/deployer/pkg/errors"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
@@ -30,7 +31,7 @@ func (s *Searcher) Resolve(name pluggable.Identifier) pluggable.Noun {
 	if ret != nil && ok {
 		return ret
 	}
-	ret = s.recall.FindNoun(name.Id())
+	ret = s.recall.Find(reflect.TypeFor[pluggable.Noun](), name.Id()).(pluggable.Noun)
 	if ret != nil {
 		return ret
 	}
@@ -38,4 +39,3 @@ func (s *Searcher) Resolve(name pluggable.Identifier) pluggable.Noun {
 	s.sink.Reportf(name.Loc(), "could not resolve symbol %s", name.Id())
 	return nil
 }
-

@@ -1,6 +1,8 @@
 package exprs
 
 import (
+	"reflect"
+
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
@@ -45,15 +47,15 @@ func (p *exprParser) split(tokens []pluggable.Token) (pluggable.Token, pluggable
 func (p *exprParser) matchFunc(tok pluggable.Token) pluggable.Function {
 	id, isId := tok.(pluggable.Identifier)
 	if isId {
-		v := p.tools.Recall.FindFunc(id.Id())
-		if v != nil {
+		v, ok := p.tools.Recall.Find(reflect.TypeFor[pluggable.Function](), id.Id()).(pluggable.Function)
+		if ok && v != nil {
 			return v
 		}
 	}
 	op, isOp := tok.(pluggable.Operator)
 	if isOp {
-		v := p.tools.Recall.FindFunc(op.Op())
-		if v != nil {
+		v, ok := p.tools.Recall.Find(reflect.TypeFor[pluggable.Function](), op.Op()).(pluggable.Function)
+		if ok && v != nil {
 			return v
 		}
 	}

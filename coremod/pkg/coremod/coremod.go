@@ -23,6 +23,6 @@ func RegisterWithDeployer(deployer deployer.Deployer) error {
 	}
 	register := deployer.ObtainRegister()
 	register.Register(reflect.TypeFor[pluggable.TargetCommand](), "target", &target.CoreTargetVerb{})
-	register.RegisterFunc("hours", &time.HoursFunc{})
+	register.Register(reflect.TypeFor[pluggable.Function](), "hours", &time.HoursFunc{})
 	return nil
 }

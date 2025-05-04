@@ -3,14 +3,10 @@ package registry
 import (
 	"log"
 	"reflect"
-
-	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
 type Registry struct {
 	impls   map[reflect.Type]map[string]any
-	nouns   map[string]pluggable.Noun
-	funcs   map[string]pluggable.Function
 	drivers map[string]any
 }
 
@@ -26,22 +22,6 @@ func (r *Registry) Register(what reflect.Type, called string, impl any) {
 	m[called] = impl
 }
 
-func (r *Registry) RegisterFunc(verb string, fn pluggable.Function) {
-	r.funcs[verb] = fn
-}
-
-func (r *Registry) RegisterNoun(noun string, item pluggable.Noun) {
-	r.nouns[noun] = item
-}
-
-func (r *Registry) ProvideDriver(s string, env any) {
-	r.drivers[s] = env
-}
-
-func (r *Registry) ObtainDriver(s string) any {
-	return r.drivers[s]
-}
-
 func (r *Registry) Find(ty reflect.Type, called string) any {
 	m := r.impls[ty]
 	if m == nil {
@@ -54,14 +34,14 @@ func (r *Registry) Find(ty reflect.Type, called string) any {
 	return ret
 }
 
-func (r *Registry) FindFunc(verb string) pluggable.Function {
-	return r.funcs[verb]
+func (r *Registry) ProvideDriver(s string, env any) {
+	r.drivers[s] = env
 }
 
-func (r *Registry) FindNoun(noun string) pluggable.Noun {
-	return r.nouns[noun]
+func (r *Registry) ObtainDriver(s string) any {
+	return r.drivers[s]
 }
 
 func NewRegistry() *Registry {
-	return &Registry{impls: make(map[reflect.Type]map[string]any), funcs: make(map[string]pluggable.Function), nouns: make(map[string]pluggable.Noun), drivers: make(map[string]any)}
+	return &Registry{impls: make(map[reflect.Type]map[string]any), drivers: make(map[string]any)}
 }

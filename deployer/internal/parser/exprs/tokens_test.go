@@ -45,7 +45,7 @@ func TestAnUnboundIDIsAnExpr(t *testing.T) {
 
 func TestAnIDBoundToAVerbProducesAnExpr(t *testing.T) {
 	p, _ := makeParser(t)
-	recall.funcs["hello"] = idFunc
+	recall.things["hello"] = idFunc
 	id := lexicator.NewIdentifierToken(lineloc, 0, "hello")
 	expr, ok := p.Parse([]pluggable.Token{id})
 	if !ok {
