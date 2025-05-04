@@ -22,14 +22,17 @@ func (pis *propertiesInnerScope) HaveTokens(tokens []pluggable.Token) pluggable.
 
 	prop, ok := tokens[0].(pluggable.Identifier)
 	if !ok {
-		panic("nice error please")
+		pis.tools.Reporter.Reportf(tokens[0].Loc().Offset, "property must be an identifier")
+		return IgnoreInnerScope()
 	}
 
 	op, ok := tokens[1].(pluggable.Operator)
 	if !ok {
-		panic("nice error please")
+		pis.tools.Reporter.Reportf(tokens[0].Loc().Offset, "property <- expr")
+		return IgnoreInnerScope()
 	} else if !op.Is("<-") {
-		panic("not <-")
+		pis.tools.Reporter.Reportf(tokens[0].Loc().Offset, "property <- expr")
+		return IgnoreInnerScope()
 	}
 
 	expr, ok := pis.tools.Parser.Parse(tokens[2:])

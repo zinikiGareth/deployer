@@ -6,6 +6,7 @@ import (
 	"ziniki.org/deployer/deployer/internal/parser/interpreters"
 	"ziniki.org/deployer/deployer/internal/parser/lexicator"
 	"ziniki.org/deployer/deployer/internal/parser/scopes"
+	"ziniki.org/deployer/deployer/pkg/errors"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 	"ziniki.org/deployer/deployer/pkg/utils"
 )
@@ -16,13 +17,13 @@ func Parse(tools *pluggable.Tools, fileName, file string) {
 	lineLexicator := lexicator.NewLineLexicator(tools, fileName)
 	tools.Parser = exprs.NewExprParser(tools)
 	blocker := blocker.NewBlocker(tools, lineLexicator, globalInterpreter)
-	provideLines(file, blocker)
+	provideLines(tools.Reporter, file, blocker)
 }
 
-func provideLines(fromFile string, to pluggable.ProvideLine) {
+func provideLines(reporter errors.ErrorRepI, fromFile string, to pluggable.ProvideLine) {
 	lines, err := utils.FileAsLines(fromFile)
 	if err != nil {
-		panic("need an error handler")
+		reporter.Reportf(0, "could not open file %s: %v", fromFile, err)
 	}
 	to.BeginFile(fromFile)
 	for n, l := range lines {
