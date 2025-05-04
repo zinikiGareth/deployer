@@ -5,16 +5,17 @@ import (
 )
 
 type noInnerScope struct {
+	tools *pluggable.Tools
 }
 
-func (b *noInnerScope) HaveTokens(tools *pluggable.Tools, tokens []pluggable.Token) pluggable.Interpreter {
-	tools.Reporter.Report(0, "nested content is not allowed here")
+func (b *noInnerScope) HaveTokens(tokens []pluggable.Token) pluggable.Interpreter {
+	b.tools.Reporter.Report(0, "nested content is not allowed here")
 	return b
 }
 
-func (b *noInnerScope) Completed(tools *pluggable.Tools) {
+func (b *noInnerScope) Completed() {
 }
 
-func DisallowInnerScope() pluggable.Interpreter {
-	return &noInnerScope{}
+func DisallowInnerScope(tools *pluggable.Tools) pluggable.Interpreter {
+	return &noInnerScope{tools: tools}
 }

@@ -15,7 +15,8 @@ func lineOf(tx string) *errors.LineLoc {
 
 func TestForSingleSlashWithSpaces(t *testing.T) {
 	reporter, _ := testhelpers.MockReporter(t)
-	lex := lexicator.NewLineLexicator(reporter, "test")
+	tools := pluggable.NewTools(reporter, nil, nil, nil, nil)
+	lex := lexicator.NewLineLexicator(tools, "test")
 	toks := lex.BlockedLine(lineOf("hello / world"))
 	if len(toks) != 3 {
 		t.Fatalf("%d args returned, not 3", len(toks))
@@ -31,7 +32,8 @@ func TestForSingleSlashWithSpaces(t *testing.T) {
 
 func TestForSingleSlashWithoutSpaces(t *testing.T) {
 	reporter, _ := testhelpers.MockReporter(t)
-	lex := lexicator.NewLineLexicator(reporter, "test")
+	tools := pluggable.NewTools(reporter, nil, nil, nil, nil)
+	lex := lexicator.NewLineLexicator(tools, "test")
 	toks := lex.BlockedLine(lineOf("hello/world"))
 	if len(toks) != 3 {
 		t.Fatalf("%d args returned, not 3", len(toks))
@@ -52,7 +54,8 @@ func TestForSingleSlashWithoutSpaces(t *testing.T) {
 
 func TestForEqualRightArrowWithoutSpaces(t *testing.T) {
 	reporter, _ := testhelpers.MockReporter(t)
-	lex := lexicator.NewLineLexicator(reporter, "test")
+	tools := pluggable.NewTools(reporter, nil, nil, nil, nil)
+	lex := lexicator.NewLineLexicator(tools, "test")
 	toks := lex.BlockedLine(lineOf("hello=>world"))
 	if len(toks) != 3 {
 		t.Fatalf("%d args returned, not 3", len(toks))
@@ -73,7 +76,8 @@ func TestForEqualRightArrowWithoutSpaces(t *testing.T) {
 
 func TestForMinusLeftArrowWithoutSpaces(t *testing.T) {
 	reporter, _ := testhelpers.MockReporter(t)
-	lex := lexicator.NewLineLexicator(reporter, "test")
+	tools := pluggable.NewTools(reporter, nil, nil, nil, nil)
+	lex := lexicator.NewLineLexicator(tools, "test")
 	toks := lex.BlockedLine(lineOf("hello<-'world'"))
 	if len(toks) != 3 {
 		t.Fatalf("%d args returned, not 3", len(toks))

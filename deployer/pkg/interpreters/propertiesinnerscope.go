@@ -5,18 +5,19 @@ import (
 )
 
 type PropertyParent interface {
-	AddProperty(tools *pluggable.Tools, name pluggable.Identifier, expr pluggable.Expr)
-	Completed(tools *pluggable.Tools)
+	AddProperty(name pluggable.Identifier, expr pluggable.Expr)
+	Completed()
 }
 
 type propertiesInnerScope struct {
+	tools  *pluggable.Tools
 	parent PropertyParent
 }
 
-func (pis *propertiesInnerScope) HaveTokens(tools *pluggable.Tools, tokens []pluggable.Token) pluggable.Interpreter {
+func (pis *propertiesInnerScope) HaveTokens(tokens []pluggable.Token) pluggable.Interpreter {
 	if len(tokens) < 3 {
-		tools.Reporter.Report(0, "<prop> <- <expr>")
-		return DisallowInnerScope()
+		pis.tools.Reporter.Report(0, "<prop> <- <expr>")
+		return DisallowInnerScope(pis.tools)
 	}
 
 	prop, ok := tokens[0].(pluggable.Identifier)
@@ -31,18 +32,18 @@ func (pis *propertiesInnerScope) HaveTokens(tools *pluggable.Tools, tokens []plu
 		panic("not <-")
 	}
 
-	expr, ok := tools.Parser.Parse(tokens[2:])
+	expr, ok := pis.tools.Parser.Parse(tokens[2:])
 	if !ok {
 		return IgnoreInnerScope()
 	}
-	pis.parent.AddProperty(tools, prop, expr)
-	return DisallowInnerScope()
+	pis.parent.AddProperty(prop, expr)
+	return DisallowInnerScope(pis.tools)
 }
 
-func (b *propertiesInnerScope) Completed(tools *pluggable.Tools) {
-	b.parent.Completed(tools)
+func (pis *propertiesInnerScope) Completed() {
+	pis.parent.Completed()
 }
 
-func PropertiesInnerScope(parent PropertyParent) pluggable.Interpreter {
-	return &propertiesInnerScope{parent: parent}
+func PropertiesInnerScope(tools *pluggable.Tools, parent PropertyParent) pluggable.Interpreter {
+	return &propertiesInnerScope{tools: tools, parent: parent}
 }

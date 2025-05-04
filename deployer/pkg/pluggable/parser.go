@@ -9,8 +9,8 @@ type ProvideLine interface {
 }
 
 type Interpreter interface {
-	HaveTokens(tools *Tools, tokens []Token) Interpreter
-	Completed(tools *Tools)
+	HaveTokens(tokens []Token) Interpreter
+	Completed()
 }
 
 type Scoper interface {
@@ -44,7 +44,7 @@ type Operator interface {
 }
 
 type TargetCommand interface {
-	Handle(tools *Tools, parent ContainingContext, tokens []Token, assignTo Identifier) Interpreter
+	Handle(parent ContainingContext, tokens []Token, assignTo Identifier) Interpreter
 }
 
 type Noun interface {
@@ -53,7 +53,7 @@ type Noun interface {
 }
 
 type Function interface {
-	Eval(tools *Tools, me Token, before []Expr, after []Expr) Expr
+	Eval(me Token, before []Expr, after []Expr) Expr
 }
 
 type Expr interface {

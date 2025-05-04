@@ -15,8 +15,8 @@ type Lexicator interface {
 }
 
 type LineLexicator struct {
-	reporter errors.ErrorRepI
-	file     string
+	tools *pluggable.Tools
+	file  string
 }
 
 type lexmode int
@@ -37,7 +37,7 @@ const (
 
 func (ll *LineLexicator) BlockedLine(line *errors.LineLoc) []pluggable.Token {
 	txt := line.Text
-	ll.reporter.At(line)
+	ll.tools.Reporter.At(line)
 	var toks []pluggable.Token
 	from := 0
 	runes := []rune(txt)
@@ -73,7 +73,7 @@ loop:
 					mode = inIdentifier
 					tok = append(tok, r)
 				} else { // TODO: punc
-					ll.reporter.Report(k, fmt.Sprintf("invalid char '%c'", r))
+					ll.tools.Reporter.Report(k, fmt.Sprintf("invalid char '%c'", r))
 				}
 			case inIdentifier:
 				if unicode.IsSpace(r) || isSymbol(r) {
@@ -82,7 +82,7 @@ loop:
 					mode = starting
 					goAgain = true
 				} else if r == '"' || r == '\'' {
-					ll.reporter.Report(k, "space required after identifier before string")
+					ll.tools.Reporter.Report(k, "space required after identifier before string")
 					return nil
 				} else if isIdentifierChar(r) {
 					tok = append(tok, r)
@@ -90,7 +90,7 @@ loop:
 				}
 			case inNumber:
 				if r == '"' || r == '\'' {
-					ll.reporter.Report(k, "space required after identifier before string")
+					ll.tools.Reporter.Report(k, "space required after identifier before string")
 					return nil
 				} else if isNumberChar(r) {
 					tok = append(tok, r)
@@ -124,7 +124,7 @@ loop:
 					tok = append(tok, quoteRune)
 					mode = inString
 				} else if !unicode.IsSpace(r) {
-					ll.reporter.Report(k, "space required after string before identifier")
+					ll.tools.Reporter.Report(k, "space required after string before identifier")
 					return nil
 				} else {
 					toks = ll.strtok(toks, line, from, tok)
@@ -147,7 +147,7 @@ loop:
 		case inNumber:
 			toks = ll.numtok(toks, line, from, tok)
 		case inString:
-			ll.reporter.Report(from, "unterminated string")
+			ll.tools.Reporter.Report(from, "unterminated string")
 			return nil
 		default:
 			panic("should not have leftover tok:" + string(tok))
@@ -224,12 +224,12 @@ func (ll *LineLexicator) numtok(toks []pluggable.Token, line *errors.LineLoc, st
 		f64, err = strconv.ParseFloat(tx, 64)
 	}
 	if err != nil {
-		ll.reporter.Report(start, fmt.Sprintf("not a valid number: %s", string(text)))
+		ll.tools.Reporter.Report(start, fmt.Sprintf("not a valid number: %s", string(text)))
 	}
 	tok := NewNumberToken(line, start, f64)
 	return append(toks, tok)
 }
 
-func NewLineLexicator(reporter errors.ErrorRepI, file string) Lexicator {
-	return &LineLexicator{reporter: reporter, file: file}
+func NewLineLexicator(tools *pluggable.Tools, file string) Lexicator {
+	return &LineLexicator{tools: tools, file: file}
 }

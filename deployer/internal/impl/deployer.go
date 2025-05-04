@@ -16,21 +16,14 @@ import (
 )
 
 type DeployerImpl struct {
-	registry     *registry.Registry
-	storage      pluggable.RuntimeStorage
-	repo         pluggable.Repository
-	sink         errors.ErrorSink
+	tools        *pluggable.Tools
 	userErrorsTo io.StringWriter
 	srcdir       string
 	input        []string
 }
 
-func (d *DeployerImpl) ObtainRegister() pluggable.Register {
-	return d.registry
-}
-
-func (d *DeployerImpl) ObtainStorage() pluggable.RuntimeStorage {
-	return d.storage
+func (d *DeployerImpl) ObtainTools() *pluggable.Tools {
+	return d.tools
 }
 
 func (d *DeployerImpl) ReadScriptsFrom(indir string) error {
@@ -47,14 +40,14 @@ func (d *DeployerImpl) Deploy(targetNames ...string) error {
 	for _, f := range d.input {
 		fmt.Printf("  %s\n", f)
 		from := filepath.Join(d.srcdir, f)
-		d.repo.ReadingFile(f)
-		parser.Parse(d.registry, d.repo, d.sink, f, from)
+		d.tools.Repository.ReadingFile(f)
+		parser.Parse(d.tools, f, from)
 	}
-	if d.sink.HasErrors() {
+	if d.tools.Reporter.HasErrors() {
 		return fmt.Errorf("errors during parsing")
 	}
-	d.repo.ResolveAll(d.sink, d.registry)
-	if d.sink.HasErrors() {
+	d.tools.Repository.ResolveAll(d.tools)
+	if d.tools.Reporter.HasErrors() {
 		return fmt.Errorf("errors during resolving")
 	}
 	targets, err := d.findTargets(targetNames...)
@@ -62,14 +55,14 @@ func (d *DeployerImpl) Deploy(targetNames ...string) error {
 		return err
 	}
 
-	d.storage.SetMode(pluggable.PREPARE_MODE)
+	d.tools.Storage.SetMode(pluggable.PREPARE_MODE)
 	for _, t := range targets {
-		t.Prepare(d.storage)
+		t.Prepare(d.tools.Storage)
 	}
 
-	d.storage.SetMode(pluggable.EXECUTE_MODE)
+	d.tools.Storage.SetMode(pluggable.EXECUTE_MODE)
 	for _, t := range targets {
-		t.Execute(d.storage)
+		t.Execute(d.tools.Storage)
 	}
 
 	return nil
@@ -77,18 +70,18 @@ func (d *DeployerImpl) Deploy(targetNames ...string) error {
 
 // Mainly support for the test harness, but do with them as you will (not used in $cmd$)
 func (d *DeployerImpl) AddSymbolListener(lsnr pluggable.SymbolListener) {
-	d.repo.AddSymbolListener(lsnr)
+	d.tools.Repository.AddSymbolListener(lsnr)
 }
 
 func (d *DeployerImpl) Traverse(lsnr pluggable.RepositoryTraverser) {
-	d.repo.Traverse(lsnr)
+	d.tools.Repository.Traverse(lsnr)
 }
 
 func (d *DeployerImpl) findTargets(names ...string) ([]pluggable.TargetThing, error) {
 	var targets []pluggable.TargetThing
 	var ue error
 	for _, n := range names {
-		t := d.repo.FindTarget(pluggable.SymbolName(n))
+		t := d.tools.Repository.FindTarget(pluggable.SymbolName(n))
 		if t == nil {
 			msg := fmt.Sprintf("there is no target %s\n", n)
 			d.userErrorsTo.WriteString(msg)
@@ -106,6 +99,9 @@ func (d *DeployerImpl) findTargets(names ...string) ([]pluggable.TargetThing, er
 
 func NewDeployer(sink errors.ErrorSink, userErrorsTo io.StringWriter) deployer.Deployer {
 	reg := registry.NewRegistry()
+	reporter := errors.NewErrorReporter(sink)
 	storage := runtime.NewRuntimeStorage(reg, sink)
-	return &DeployerImpl{registry: reg, repo: repo.NewRepository(), sink: sink, userErrorsTo: userErrorsTo, storage: storage}
+	repo := repo.NewRepository()
+	tools := pluggable.NewTools(reporter, reg, reg, repo, storage)
+	return &DeployerImpl{tools: tools, userErrorsTo: userErrorsTo}
 }

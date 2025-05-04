@@ -8,9 +8,9 @@ import (
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
-func (repo *SimpleRepository) ResolveAll(sink errors.ErrorSink, register pluggable.Recall) {
+func (repo *SimpleRepository) ResolveAll(tools *pluggable.Tools) {
 	for _, what := range repo.symbols {
-		searcher := &Searcher{repo: repo, recall: register, sink: sink}
+		searcher := &Searcher{repo: repo, recall: tools.Recall, reporter: tools.Reporter}
 		what.Resolve(searcher)
 	}
 }
@@ -20,9 +20,9 @@ func (d *SimpleRepository) GetDefinition(name pluggable.SymbolName) pluggable.De
 }
 
 type Searcher struct {
-	repo   *SimpleRepository
-	recall pluggable.Recall
-	sink   errors.ErrorSink
+	repo     *SimpleRepository
+	recall   pluggable.Recall
+	reporter errors.ErrorRepI
 }
 
 func (s *Searcher) Resolve(name pluggable.Identifier) pluggable.Noun {
@@ -36,6 +36,7 @@ func (s *Searcher) Resolve(name pluggable.Identifier) pluggable.Noun {
 		return ret
 	}
 	log.Printf("failed to resolve %s\n", name)
-	s.sink.Reportf(name.Loc(), "could not resolve symbol %s", name.Id())
+	s.reporter.At(name.Loc().Line)
+	s.reporter.Reportf(name.Loc().Offset, "could not resolve symbol %s", name.Id())
 	return nil
 }

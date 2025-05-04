@@ -50,6 +50,7 @@ type line struct {
 }
 
 type tmp struct {
+	tools *pluggable.Tools
 	sink  errors.ErrorSink
 	lines []line
 }
@@ -63,7 +64,7 @@ func (t *tmp) applySink(sink errors.ErrorSink) {
 	}
 }
 
-func (t *tmp) HaveTokens(_ *pluggable.Tools, toks []pluggable.Token) pluggable.Interpreter {
+func (t *tmp) HaveTokens(toks []pluggable.Token) pluggable.Interpreter {
 	tok := toks[0].(*LineToken)
 	lineNo := tok.Loc().Line.Line
 	lenIndent := tok.Loc().Line.Indent
@@ -82,14 +83,14 @@ func (t *tmp) HaveTokens(_ *pluggable.Tools, toks []pluggable.Token) pluggable.I
 			if l.inner != nil {
 				return l.inner
 			} else {
-				return interpreters.DisallowInnerScope()
+				return interpreters.DisallowInnerScope(t.tools)
 			}
 		}
 	}
 	panic(fmt.Sprintf("line %d was unexpected: %s", lineNo, text))
 }
 
-func (b *tmp) Completed(tools *pluggable.Tools) {
+func (t *tmp) Completed() {
 }
 
 type LineToken struct {
@@ -135,7 +136,7 @@ func blockerTest(lines []line) {
 	mock := innerBlock(lines)
 	mock.applySink(sink)
 	reporter := errors.NewErrorReporter(sink)
-	tools := pluggable.NewTools(reporter, nil, nil)
+	tools := pluggable.NewTools(reporter, nil, nil, nil, nil)
 	blocker := blocker.NewBlocker(tools, mocklex, mock)
 	for _, b := range mock.lines {
 		blocker.HaveLine(b.lineNo, b.indent+b.text)

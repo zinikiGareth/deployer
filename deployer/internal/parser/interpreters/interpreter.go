@@ -12,11 +12,11 @@ func (cc *mayNotAddToParentOfTop) Add(entry pluggable.Definition) {
 }
 
 type ScopeInterpreter struct {
-	repo   pluggable.Repository
+	tools  *pluggable.Tools
 	scoper pluggable.Scoper
 }
 
-func (si *ScopeInterpreter) HaveTokens(tools *pluggable.Tools, tokens []pluggable.Token) pluggable.Interpreter {
+func (si *ScopeInterpreter) HaveTokens(tokens []pluggable.Token) pluggable.Interpreter {
 	// There are probably a "number" of cases here, but the two I am aware of are:
 	// <verb> <arg>...
 	// <var> "<-" <verb> <arg> ...  ||  <var> "<-" <expr>
@@ -24,18 +24,18 @@ func (si *ScopeInterpreter) HaveTokens(tools *pluggable.Tools, tokens []pluggabl
 
 	verb, ok := tokens[0].(pluggable.Identifier)
 	if !ok {
-		tools.Reporter.Report(0, "first token must be an identifier")
+		si.tools.Reporter.Report(0, "first token must be an identifier")
 	}
 	action := si.scoper.FindAction(verb)
 	if action == nil {
-		tools.Reporter.Reportf(0, "there is no error handler for %s", verb)
+		si.tools.Reporter.Reportf(0, "there is no error handler for %s", verb)
 	}
-	return action.Handle(tools, &mayNotAddToParentOfTop{}, tokens, nil) // Will need other things as well as time goes on ...
+	return action.Handle(&mayNotAddToParentOfTop{}, tokens, nil) // Will need other things as well as time goes on ...
 }
 
-func (b *ScopeInterpreter) Completed(tools *pluggable.Tools) {
+func (b *ScopeInterpreter) Completed() {
 }
 
-func NewInterpreter(repo pluggable.Repository, s pluggable.Scoper) pluggable.Interpreter {
-	return &ScopeInterpreter{repo: repo, scoper: s}
+func NewInterpreter(tools *pluggable.Tools, s pluggable.Scoper) pluggable.Interpreter {
+	return &ScopeInterpreter{tools: tools, scoper: s}
 }

@@ -17,7 +17,7 @@ func (p *exprParser) Parse(tokens []pluggable.Token) (pluggable.Expr, bool) {
 	}
 	tok, fn, before, after := p.split(tokens)
 	if fn != nil {
-		return fn.Eval(p.tools, tok, makeArgs(before), makeArgs(after)), true
+		return fn.Eval(tok, makeArgs(before), makeArgs(after)), true
 	} else {
 		if len(before) > 1 {
 			p.tools.Reporter.Reportf(before[0].Loc().Offset, "no function found")

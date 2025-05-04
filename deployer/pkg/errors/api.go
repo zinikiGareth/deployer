@@ -10,4 +10,5 @@ type ErrorRepI interface {
 	At(line *LineLoc)
 	Report(offset int, msg string)
 	Reportf(offset int, fmt string, args ...any)
+	HasErrors() bool
 }

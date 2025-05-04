@@ -12,8 +12,7 @@ type Deployer interface {
 	Deploy(targets ...string) error
 
 	Traverse(lsnr pluggable.RepositoryTraverser)
-	ObtainRegister() pluggable.Register // for the benefit of plugins
-	ObtainStorage() pluggable.RuntimeStorage
+	ObtainTools() *pluggable.Tools // for the benefit of plugins
 }
 
 type TestRunner interface {

@@ -8,17 +8,20 @@ import (
 	"ziniki.org/deployer/testmod/internal/testS3"
 )
 
-// var testRunner deployer.TestRunner
+var testRunner deployer.TestRunner
 
 func ProvideTestRunner(runner deployer.TestRunner) error {
-	// testRunner = runner
+	testRunner = runner
 	return nil
 }
 
 func RegisterWithDeployer(deployer deployer.Deployer) error {
-	register := deployer.ObtainRegister()
-	register.ProvideDriver("testS3.TestAwsEnv", &testS3.TestAwsEnv{})
-	register.Register(reflect.TypeFor[pluggable.Noun](), "test.S3.Bucket", &testS3.BucketNoun{})
-	// register.RegisterNoun("test.S3.Bucket", &testS3.BucketNoun{})
+	if testRunner != nil {
+		eh := testRunner.ErrorHandlerFor("log")
+		eh.WriteMsg("Installing things from testmod\n")
+	}
+	tools := deployer.ObtainTools()
+	tools.Register.ProvideDriver("testS3.TestAwsEnv", &testS3.TestAwsEnv{})
+	tools.Register.Register(reflect.TypeFor[pluggable.Noun](), "test.S3.Bucket", &testS3.BucketNoun{})
 	return nil
 }

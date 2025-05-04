@@ -21,8 +21,9 @@ func RegisterWithDeployer(deployer deployer.Deployer) error {
 		eh := testRunner.ErrorHandlerFor("log")
 		eh.WriteMsg("Installing things from coremod\n")
 	}
-	register := deployer.ObtainRegister()
-	register.Register(reflect.TypeFor[pluggable.TargetCommand](), "target", &target.CoreTargetVerb{})
-	register.Register(reflect.TypeFor[pluggable.Function](), "hours", &time.HoursFunc{})
+
+	tools := deployer.ObtainTools()
+	tools.Register.Register(reflect.TypeFor[pluggable.TargetCommand](), "target", target.MakeCoreTargetVerb(tools))
+	tools.Register.Register(reflect.TypeFor[pluggable.Function](), "hours", time.MakeHoursFunc(tools))
 	return nil
 }

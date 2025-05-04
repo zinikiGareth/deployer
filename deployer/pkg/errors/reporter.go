@@ -23,6 +23,10 @@ func (r *ErrorReporter) Sink() ErrorSink {
 	return r.sink
 }
 
+func (r *ErrorReporter) HasErrors() bool {
+	return r.sink.HasErrors()
+}
+
 func NewErrorReporter(sink ErrorSink) *ErrorReporter {
 	return &ErrorReporter{sink: sink}
 }

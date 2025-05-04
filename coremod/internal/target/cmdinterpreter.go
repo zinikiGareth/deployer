@@ -5,13 +5,13 @@ import (
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
-// TODO: it feels wrong that this is doing two things: handling tokens AND collecting the results
 type commandScope struct {
-	repo      pluggable.Repository
+	tools     *pluggable.Tools
 	container pluggable.ContainingContext
 }
 
-func (cs *commandScope) HaveTokens(tools *pluggable.Tools, tokens []pluggable.Token) pluggable.Interpreter {
+func (cs *commandScope) HaveTokens(tokens []pluggable.Token) pluggable.Interpreter {
+	cs.splitOnArrow(tokens)
 	// I am hacking this in first, and then I need to come back and do more on it
 
 	if len(tokens) < 1 {
@@ -32,18 +32,22 @@ func (cs *commandScope) HaveTokens(tools *pluggable.Tools, tokens []pluggable.To
 	}
 	var action pluggable.TargetCommand
 	if cmd.Id() == "ensure" {
-		action = &basic.EnsureCommandHandler{}
+		action = basic.NewEnsureCommandHandler(cs.tools)
 	} else {
 		panic("invalid target command")
 	}
 
-	innerScope := action.Handle(tools, cs.container, tokens, assignTo)
+	innerScope := action.Handle(cs.container, tokens, assignTo)
 	return innerScope
 }
 
-func (b *commandScope) Completed(tools *pluggable.Tools) {
+func (b *commandScope) Completed() {
 }
 
-func TargetCommandInterpreter(repo pluggable.Repository, container pluggable.ContainingContext) pluggable.Interpreter {
-	return &commandScope{repo: repo, container: container}
+func TargetCommandInterpreter(tools *pluggable.Tools, container pluggable.ContainingContext) pluggable.Interpreter {
+	return &commandScope{tools: tools, container: container}
+}
+
+func (b *commandScope) splitOnArrow(tokens []pluggable.Token) {
+
 }

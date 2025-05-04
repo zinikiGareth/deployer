@@ -9,14 +9,14 @@ import (
 )
 
 type TestStepLoggerFile struct {
-	storage  pluggable.RuntimeStorage
+	tools    *pluggable.Tools
 	prepFile *os.File
 	execFile *os.File
 }
 
 func (logger *TestStepLoggerFile) Log(format string, args ...any) {
 	var toFile *os.File
-	if logger.storage.IsMode(pluggable.PREPARE_MODE) {
+	if logger.tools.Storage.IsMode(pluggable.PREPARE_MODE) {
 		toFile = logger.prepFile
 	} else {
 		toFile = logger.execFile
@@ -24,7 +24,7 @@ func (logger *TestStepLoggerFile) Log(format string, args ...any) {
 	fmt.Fprintf(toFile, format, args...)
 }
 
-func NewTestStepLogger(storage pluggable.RuntimeStorage, prepFile string, execFile string) (testhelpers.TestStepLogger, error) {
+func NewTestStepLogger(tools *pluggable.Tools, prepFile string, execFile string) (testhelpers.TestStepLogger, error) {
 	prep, err := os.Create(prepFile)
 	if err != nil {
 		return nil, err
@@ -33,5 +33,5 @@ func NewTestStepLogger(storage pluggable.RuntimeStorage, prepFile string, execFi
 	if err != nil {
 		return nil, err
 	}
-	return &TestStepLoggerFile{storage: storage, prepFile: prep, execFile: exec}, nil
+	return &TestStepLoggerFile{tools: tools, prepFile: prep, execFile: exec}, nil
 }

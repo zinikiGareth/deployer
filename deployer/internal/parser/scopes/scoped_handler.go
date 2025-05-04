@@ -7,15 +7,14 @@ import (
 )
 
 type ScopedHandlers struct {
-	repo   pluggable.Repository
-	recall pluggable.Recall
+	tools *pluggable.Tools
 }
 
 func (sh *ScopedHandlers) FindAction(v pluggable.Identifier) pluggable.TargetCommand {
-	return sh.recall.Find(reflect.TypeFor[pluggable.TargetCommand](), v.Id()).(pluggable.TargetCommand)
+	return sh.tools.Recall.Find(reflect.TypeFor[pluggable.TargetCommand](), v.Id()).(pluggable.TargetCommand)
 }
 
-func NewScopedHandlers(registry pluggable.Recall, repo pluggable.Repository) pluggable.Scoper {
-	ret := &ScopedHandlers{repo: repo, recall: registry}
+func NewScopedHandlers(tools *pluggable.Tools) pluggable.Scoper {
+	ret := &ScopedHandlers{tools: tools}
 	return ret
 }

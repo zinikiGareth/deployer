@@ -14,7 +14,7 @@ type Repository interface {
 	AddSymbolListener(lsnr SymbolListener)
 	Traverse(lsnr RepositoryTraverser)
 
-	ResolveAll(sink errors.ErrorSink, registry Recall)
+	ResolveAll(tools *Tools)
 	FindTarget(name SymbolName) TargetThing
 }
 

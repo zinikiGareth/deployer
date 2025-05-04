@@ -6,17 +6,14 @@ import (
 	"ziniki.org/deployer/deployer/internal/parser/interpreters"
 	"ziniki.org/deployer/deployer/internal/parser/lexicator"
 	"ziniki.org/deployer/deployer/internal/parser/scopes"
-	"ziniki.org/deployer/deployer/pkg/errors"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 	"ziniki.org/deployer/deployer/pkg/utils"
 )
 
-func Parse(registry pluggable.Recall, repo pluggable.Repository, errorSink errors.ErrorSink, fileName, file string) {
-	reporter := errors.NewErrorReporter(errorSink)
-	globalScope := scopes.NewScopedHandlers(registry, repo)
-	globalInterpreter := interpreters.NewInterpreter(repo, globalScope)
-	lineLexicator := lexicator.NewLineLexicator(reporter, fileName)
-	tools := pluggable.NewTools(reporter, registry, repo)
+func Parse(tools *pluggable.Tools, fileName, file string) {
+	globalScope := scopes.NewScopedHandlers(tools)
+	globalInterpreter := interpreters.NewInterpreter(tools, globalScope)
+	lineLexicator := lexicator.NewLineLexicator(tools, fileName)
 	tools.Parser = exprs.NewExprParser(tools)
 	blocker := blocker.NewBlocker(tools, lineLexicator, globalInterpreter)
 	provideLines(file, blocker)

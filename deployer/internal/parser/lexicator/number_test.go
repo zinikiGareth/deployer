@@ -10,7 +10,8 @@ import (
 
 func Test0IsANumber(t *testing.T) {
 	reporter, _ := testhelpers.MockReporter(t)
-	lex := lexicator.NewLineLexicator(reporter, "test")
+	tools := pluggable.NewTools(reporter, nil, nil, nil, nil)
+	lex := lexicator.NewLineLexicator(tools, "test")
 	toks := lex.BlockedLine(lineOf("0"))
 	if len(toks) != 1 {
 		t.Fatalf("%d args returned, not 1", len(toks))
@@ -22,7 +23,8 @@ func Test0IsANumber(t *testing.T) {
 
 func TestPiIsANumber(t *testing.T) {
 	reporter, _ := testhelpers.MockReporter(t)
-	lex := lexicator.NewLineLexicator(reporter, "test")
+	tools := pluggable.NewTools(reporter, nil, nil, nil, nil)
+	lex := lexicator.NewLineLexicator(tools, "test")
 	toks := lex.BlockedLine(lineOf("3.14"))
 	if len(toks) != 1 {
 		t.Fatalf("%d args returned, not 1", len(toks))
@@ -34,7 +36,8 @@ func TestPiIsANumber(t *testing.T) {
 
 func TestASimpleHexNumber(t *testing.T) {
 	reporter, _ := testhelpers.MockReporter(t)
-	lex := lexicator.NewLineLexicator(reporter, "test")
+	tools := pluggable.NewTools(reporter, nil, nil, nil, nil)
+	lex := lexicator.NewLineLexicator(tools, "test")
 	toks := lex.BlockedLine(lineOf("0xff"))
 	if len(toks) != 1 {
 		t.Fatalf("%d args returned, not 1", len(toks))
@@ -46,7 +49,8 @@ func TestASimpleHexNumber(t *testing.T) {
 
 func TestExponentNumber(t *testing.T) {
 	reporter, _ := testhelpers.MockReporter(t)
-	lex := lexicator.NewLineLexicator(reporter, "test")
+	tools := pluggable.NewTools(reporter, nil, nil, nil, nil)
+	lex := lexicator.NewLineLexicator(tools, "test")
 	toks := lex.BlockedLine(lineOf("2.7e-3"))
 	if len(toks) != 1 {
 		t.Fatalf("%d args returned, not 1", len(toks))
@@ -58,7 +62,8 @@ func TestExponentNumber(t *testing.T) {
 
 func TestWeCanParse24hours(t *testing.T) {
 	reporter, _ := testhelpers.MockReporter(t)
-	lex := lexicator.NewLineLexicator(reporter, "test")
+	tools := pluggable.NewTools(reporter, nil, nil, nil, nil)
+	lex := lexicator.NewLineLexicator(tools, "test")
 	toks := lex.BlockedLine(lineOf("24 hours"))
 	if len(toks) != 2 {
 		t.Fatalf("%d args returned, not 2", len(toks))

@@ -66,13 +66,11 @@ func (r *TestRunner) Setup(modules []string) error {
 	}
 	r.deployer.AddSymbolListener(r.symbolLsnr)
 
-	storage := r.deployer.ObtainStorage()
-	register := r.deployer.ObtainRegister()
-	tsl, err := testing.NewTestStepLogger(storage, filepath.Join(r.prepOut, "steps.txt"), filepath.Join(r.execOut, "steps.txt"))
+	tsl, err := testing.NewTestStepLogger(r.deployer.ObtainTools(), filepath.Join(r.prepOut, "steps.txt"), filepath.Join(r.execOut, "steps.txt"))
 	if err != nil {
 		return err
 	}
-	register.ProvideDriver("testhelpers.TestStepLogger", tsl)
+	r.deployer.ObtainTools().Register.ProvideDriver("testhelpers.TestStepLogger", tsl)
 
 	return r.LoadModules(modules)
 }

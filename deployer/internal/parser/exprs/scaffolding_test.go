@@ -21,14 +21,14 @@ type returnDataValue struct {
 	value pluggable.Expr
 }
 
-func (rdv returnDataValue) Eval(tools *pluggable.Tools, me pluggable.Token, before []pluggable.Expr, after []pluggable.Expr) pluggable.Expr {
+func (rdv returnDataValue) Eval(me pluggable.Token, before []pluggable.Expr, after []pluggable.Expr) pluggable.Expr {
 	return rdv.value
 }
 
 type konstantFunc struct {
 }
 
-func (rdv konstantFunc) Eval(tools *pluggable.Tools, me pluggable.Token, before []pluggable.Expr, after []pluggable.Expr) pluggable.Expr {
+func (rdv konstantFunc) Eval(me pluggable.Token, before []pluggable.Expr, after []pluggable.Expr) pluggable.Expr {
 	return exprs.Apply{Func: rdv, Args: slices.Concat(before, after)}
 }
 
