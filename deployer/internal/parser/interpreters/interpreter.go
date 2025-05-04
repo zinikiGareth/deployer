@@ -4,13 +4,6 @@ import (
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
-type mayNotAddToParentOfTop struct {
-}
-
-func (cc *mayNotAddToParentOfTop) Add(entry pluggable.Definition) {
-	panic("cannot add to parent of top level; store in repo instead")
-}
-
 type ScopeInterpreter struct {
 	tools  *pluggable.Tools
 	scoper pluggable.Scoper
@@ -26,11 +19,11 @@ func (si *ScopeInterpreter) HaveTokens(tokens []pluggable.Token) pluggable.Inter
 	if !ok {
 		si.tools.Reporter.Report(0, "first token must be an identifier")
 	}
-	action := si.scoper.FindAction(verb)
+	action := si.scoper.FindTopCommand(verb)
 	if action == nil {
 		si.tools.Reporter.Reportf(0, "there is no error handler for %s", verb)
 	}
-	return action.Handle(&mayNotAddToParentOfTop{}, tokens, nil) // Will need other things as well as time goes on ...
+	return action.Handle(tokens, nil) // Will need other things as well as time goes on ...
 }
 
 func (b *ScopeInterpreter) Completed() {

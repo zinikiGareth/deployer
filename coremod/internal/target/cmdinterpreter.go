@@ -1,7 +1,9 @@
 package target
 
 import (
-	"ziniki.org/deployer/coremod/internal/basic"
+	"reflect"
+
+	"ziniki.org/deployer/deployer/pkg/interpreters"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
@@ -11,33 +13,29 @@ type commandScope struct {
 }
 
 func (cs *commandScope) HaveTokens(tokens []pluggable.Token) pluggable.Interpreter {
-	cs.splitOnArrow(tokens)
-	// I am hacking this in first, and then I need to come back and do more on it
+	ok, toks, assignTo := cs.splitOnArrow(tokens)
+	if !ok { //
+		return interpreters.IgnoreInnerScope()
+	}
+	if len(toks) < 1 {
+		cs.tools.Reporter.Reportf(0, "must have a command")
+		return interpreters.IgnoreInnerScope()
+	}
 
-	if len(tokens) < 1 {
-		panic("need a command")
-	}
-	if tokens[0].(pluggable.Identifier).Id() != "ensure" {
-		panic("token[0] is wrong")
-	}
-
-	var assignTo pluggable.Identifier
-	if len(tokens) > 3 && tokens[len(tokens)-2].(pluggable.Operator).Is("=>") {
-		assignTo = tokens[len(tokens)-1].(pluggable.Identifier)
-		tokens = tokens[0 : len(tokens)-2]
-	}
-	cmd, ok := tokens[0].(pluggable.Identifier)
+	tok0 := toks[0]
+	cmd, ok := tok0.(pluggable.Identifier)
 	if !ok {
-		panic("command token must be an identifier")
-	}
-	var action pluggable.TargetCommand
-	if cmd.Id() == "ensure" {
-		action = basic.NewEnsureCommandHandler(cs.tools)
-	} else {
-		panic("invalid target command")
+		cs.tools.Reporter.Reportf(tok0.Loc().Offset, "not a command: %s", tok0.String())
+		return interpreters.IgnoreInnerScope()
 	}
 
-	innerScope := action.Handle(cs.container, tokens, assignTo)
+	action, ok := cs.tools.Recall.Find(reflect.TypeFor[pluggable.TargetCommand](), cmd.Id()).(pluggable.TargetCommand)
+	if !ok {
+		cs.tools.Reporter.Reportf(tok0.Loc().Offset, "not a command: %s", cmd.Id())
+		return interpreters.IgnoreInnerScope()
+	}
+
+	innerScope := action.Handle(cs.container, toks, assignTo)
 	return innerScope
 }
 
@@ -48,6 +46,21 @@ func TargetCommandInterpreter(tools *pluggable.Tools, container pluggable.Contai
 	return &commandScope{tools: tools, container: container}
 }
 
-func (b *commandScope) splitOnArrow(tokens []pluggable.Token) {
-
+func (b *commandScope) splitOnArrow(tokens []pluggable.Token) (bool, []pluggable.Token, pluggable.Identifier) {
+	for i, t := range tokens {
+		arrow, ok := t.(pluggable.Operator)
+		if ok && arrow.Is("=>") {
+			if i+2 != len(tokens) {
+				b.tools.Reporter.Reportf(arrow.Loc().Offset, "invalid use of =>")
+				return false, nil, nil
+			}
+			id, ok := tokens[i+1].(pluggable.Identifier)
+			if !ok {
+				b.tools.Reporter.Reportf(tokens[i+1].Loc().Offset, "can only assign to a variable")
+				return false, nil, nil
+			}
+			return true, tokens[0:i], id
+		}
+	}
+	return true, tokens, nil
 }

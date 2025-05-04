@@ -14,7 +14,7 @@ type Interpreter interface {
 }
 
 type Scoper interface {
-	FindAction(v Identifier) TargetCommand
+	FindTopCommand(v Identifier) TopCommand
 }
 
 type Token interface {
@@ -41,6 +41,10 @@ type Operator interface {
 	Token
 	Is(op string) bool
 	Op() string
+}
+
+type TopCommand interface {
+	Handle(tokens []Token, assignTo Identifier) Interpreter
 }
 
 type TargetCommand interface {

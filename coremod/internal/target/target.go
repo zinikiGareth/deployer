@@ -84,7 +84,7 @@ type CoreTargetVerb struct {
 	tools *pluggable.Tools
 }
 
-func (t *CoreTargetVerb) Handle(_ pluggable.ContainingContext, tokens []pluggable.Token, assignTo pluggable.Identifier) pluggable.Interpreter {
+func (t *CoreTargetVerb) Handle(tokens []pluggable.Token, assignTo pluggable.Identifier) pluggable.Interpreter {
 	t1 := tokens[1].(pluggable.Identifier)
 	name := pluggable.SymbolName(t1.Id())
 	target := &coreTarget{loc: t1.Loc(), name: name, actions: []action{}}

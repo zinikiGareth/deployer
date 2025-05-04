@@ -3,6 +3,7 @@ package coremod
 import (
 	"reflect"
 
+	"ziniki.org/deployer/coremod/internal/basic"
 	"ziniki.org/deployer/coremod/internal/target"
 	"ziniki.org/deployer/coremod/internal/time"
 	"ziniki.org/deployer/deployer/pkg/deployer"
@@ -23,7 +24,9 @@ func RegisterWithDeployer(deployer deployer.Deployer) error {
 	}
 
 	tools := deployer.ObtainTools()
-	tools.Register.Register(reflect.TypeFor[pluggable.TargetCommand](), "target", target.MakeCoreTargetVerb(tools))
+	tools.Register.Register(reflect.TypeFor[pluggable.TopCommand](), "target", target.MakeCoreTargetVerb(tools))
+	tools.Register.Register(reflect.TypeFor[pluggable.TargetCommand](), "ensure", basic.NewEnsureCommandHandler(tools))
 	tools.Register.Register(reflect.TypeFor[pluggable.Function](), "hours", time.MakeHoursFunc(tools))
+
 	return nil
 }
