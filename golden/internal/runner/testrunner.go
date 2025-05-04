@@ -3,7 +3,6 @@ package runner
 import (
 	"fmt"
 	"log"
-	"os"
 	"path/filepath"
 	"plugin"
 	"strings"
@@ -134,10 +133,7 @@ func NewTestRunner(tracker *errors.CaseTracker, root, test string) (*TestRunner,
 		panic(fmt.Sprintf("error creating error dir %s: %v", paths.errorsOut, err))
 	}
 	ueTxt := filepath.Join(paths.errorsOut, "usererrors.txt")
-	userErrorsTo, err := os.Create(ueTxt)
-	if err != nil {
-		panic(fmt.Sprintf("error creating error file %s: %v", ueTxt, err))
-	}
+	userErrorsTo := utils.NewLazyFileCreator(ueTxt)
 	sink := sink.NewFileSink(paths.errorFile)
 	deployerInst := creator.NewDeployer(sink, userErrorsTo)
 
