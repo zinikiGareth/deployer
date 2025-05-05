@@ -28,7 +28,41 @@ func (p *exprParser) Parse(tokens []pluggable.Token) (pluggable.Expr, bool) {
 }
 
 func (p *exprParser) ParseMultiple(tokens []pluggable.Token) ([]pluggable.Expr, bool) {
-	return nil, true
+	if len(tokens) == 0 {
+		return nil, true
+	}
+	blocks, ok := p.reduceParens(tokens)
+	if !ok {
+		return nil, false
+	}
+	var ret []pluggable.Expr
+	for _, b := range blocks {
+		expr, ok := p.Parse(b)
+		if !ok {
+			return nil, false
+		}
+		ret = append(ret, expr)
+	}
+	return ret, true
+}
+
+func (p *exprParser) reduceParens(tokens []pluggable.Token) ([][]pluggable.Token, bool) {
+	i := 0
+	var ret [][]pluggable.Token
+	for i < len(tokens) {
+		t := tokens[i]
+		if IsPunc(t) {
+			if IsPuncChar(t, '(') {
+				panic("unimplemented")
+			} else {
+				panic("unhandled punctuation char: " + t.String())
+			}
+		} else {
+			ret = append(ret, []pluggable.Token{t})
+			i++
+		}
+	}
+	return ret, true
 }
 
 func makeArgs(tokens []pluggable.Token) []pluggable.Expr {
@@ -64,6 +98,19 @@ func (p *exprParser) matchFunc(tok pluggable.Token) pluggable.Function {
 		}
 	}
 	return nil
+}
+
+func IsPunc(tok pluggable.Token) bool {
+	_, ok := tok.(pluggable.Punc)
+	return ok
+}
+
+func IsPuncChar(tok pluggable.Token, pc rune) bool {
+	punc, ok := tok.(pluggable.Punc)
+	if !ok {
+		return false
+	}
+	return punc.Is(pc)
 }
 
 func NewExprParser(tools *pluggable.Tools) pluggable.ExprParser {

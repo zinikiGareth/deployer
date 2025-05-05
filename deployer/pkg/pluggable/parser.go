@@ -43,6 +43,12 @@ type Operator interface {
 	Op() string
 }
 
+type Punc interface {
+	Token
+	Is(punc rune) bool
+	Which() rune
+}
+
 type TopCommand interface {
 	Handle(tokens []Token, assignTo Identifier) Interpreter
 }
