@@ -1,0 +1,9 @@
+symbol showAConstantString is bound to:
+target showAConstantString {
+	_where_: showstring.dply:4.7
+	actions: [
+		ShowCommand {
+			_where_: showstring.dply:5.0
+		}
+	]
+}

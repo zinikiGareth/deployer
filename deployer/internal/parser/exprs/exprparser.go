@@ -27,6 +27,10 @@ func (p *exprParser) Parse(tokens []pluggable.Token) (pluggable.Expr, bool) {
 	}
 }
 
+func (p *exprParser) ParseMultiple(tokens []pluggable.Token) ([]pluggable.Expr, bool) {
+	return nil, true
+}
+
 func makeArgs(tokens []pluggable.Token) []pluggable.Expr {
 	args := make([]pluggable.Expr, len(tokens))
 	for k, tok := range tokens {

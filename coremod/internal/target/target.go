@@ -35,10 +35,6 @@ func (t *coreTarget) Where() *errors.Location {
 	return t.loc
 }
 
-func (t *coreTarget) What() pluggable.SymbolType {
-	return pluggable.SymbolType("core.Target")
-}
-
 func (t *coreTarget) ShortDescription() string {
 	return "Target[" + string(t.name) + "]"
 }

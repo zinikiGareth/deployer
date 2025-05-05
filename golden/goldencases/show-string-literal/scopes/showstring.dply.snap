@@ -1,0 +1,11 @@
+>In my own head, "show" is only used for testing.
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
+>However, I think it will end up being useful for all sorts of things such as returning secrets, IP addresses, etc.
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
+>
+>	target showAConstantString
+#^ source.deployer-dply
+# ^^^^^^ source.deployer-dply keyword.target
+#       ^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>		show "hello, world"
+#^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply

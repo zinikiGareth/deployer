@@ -7,7 +7,7 @@ type Definition interface {
 	Where() *errors.Location
 
 	// What identifies the name of the definition
-	What() SymbolType
+	// What() SymbolType
 
 	// ShortDescription enables clients to describe what they are pointing to in a unique way
 	ShortDescription() string

@@ -67,4 +67,5 @@ type Expr interface {
 
 type ExprParser interface {
 	Parse(tokens []Token) (Expr, bool)
+	ParseMultiple(tokens []Token) ([]Expr, bool)
 }
