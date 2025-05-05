@@ -26,6 +26,11 @@ type OperatorToken struct {
 	op string
 }
 
+type PuncToken struct {
+	BaseToken
+	punc rune
+}
+
 type StringToken struct {
 	BaseToken
 	text string
@@ -67,6 +72,18 @@ func (tok *OperatorToken) String() string {
 	return fmt.Sprintf("%s %s", tok.BaseToken.String(), tok.op)
 }
 
+func (tok *PuncToken) Is(p rune) bool {
+	return tok.punc == p
+}
+
+func (tok *PuncToken) Which() rune {
+	return tok.punc
+}
+
+func (tok *PuncToken) String() string {
+	return fmt.Sprintf("%s %v", tok.BaseToken.String(), tok.punc)
+}
+
 func NewIdentifierToken(line *errors.LineLoc, offset int, text string) pluggable.Identifier {
 	return &IdentifierToken{BaseToken: BaseToken{loc: line.Location(offset)}, id: text}
 }
@@ -77,6 +94,10 @@ func NewNumberToken(line *errors.LineLoc, offset int, value float64) pluggable.N
 
 func NewOperatorToken(line *errors.LineLoc, offset int, text string) pluggable.Operator {
 	return &OperatorToken{BaseToken: BaseToken{loc: line.Location(offset)}, op: text}
+}
+
+func NewPuncToken(line *errors.LineLoc, offset int, text rune) pluggable.Punc {
+	return &PuncToken{BaseToken: BaseToken{loc: line.Location(offset)}, punc: text}
 }
 
 func (tok *StringToken) Text() string {

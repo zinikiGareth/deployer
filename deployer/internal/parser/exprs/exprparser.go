@@ -2,9 +2,31 @@ package exprs
 
 import (
 	"reflect"
+	"strings"
 
+	"ziniki.org/deployer/deployer/pkg/errors"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
+
+type ParenReduction interface {
+	ReduceParens(tokens []pluggable.Token) ([]pluggable.Token, bool)
+}
+
+type Bracketed struct {
+	Tokens []pluggable.Token
+}
+
+func (b Bracketed) Loc() *errors.Location {
+	return b.Tokens[0].Loc()
+}
+
+func (b Bracketed) String() string {
+	strs := make([]string, len(b.Tokens))
+	for i := 0; i < len(b.Tokens); i++ {
+		strs[i] = b.Tokens[i].String()
+	}
+	return strings.Join(strs, " ")
+}
 
 type exprParser struct {
 	tools *pluggable.Tools
@@ -31,13 +53,20 @@ func (p *exprParser) ParseMultiple(tokens []pluggable.Token) ([]pluggable.Expr, 
 	if len(tokens) == 0 {
 		return nil, true
 	}
-	blocks, ok := p.reduceParens(tokens)
+	blocks, ok := p.ReduceParens(tokens)
 	if !ok {
 		return nil, false
 	}
 	var ret []pluggable.Expr
 	for _, b := range blocks {
-		expr, ok := p.Parse(b)
+		var bs []pluggable.Token
+		brack, ok := b.(Bracketed)
+		if ok {
+			bs = brack.Tokens
+		} else {
+			bs = []pluggable.Token{b}
+		}
+		expr, ok := p.Parse(bs)
 		if !ok {
 			return nil, false
 		}
@@ -46,23 +75,56 @@ func (p *exprParser) ParseMultiple(tokens []pluggable.Token) ([]pluggable.Expr, 
 	return ret, true
 }
 
-func (p *exprParser) reduceParens(tokens []pluggable.Token) ([][]pluggable.Token, bool) {
+func (p *exprParser) ReduceParens(tokens []pluggable.Token) ([]pluggable.Token, bool) {
 	i := 0
-	var ret [][]pluggable.Token
+	var ret []pluggable.Token
 	for i < len(tokens) {
 		t := tokens[i]
 		if IsPunc(t) {
 			if IsPuncChar(t, '(') {
-				panic("unimplemented")
+				inner, j := p.ScanFor(tokens, i, ')')
+				if j == -1 {
+					return nil, false
+				}
+				ret = append(ret, Bracketed{Tokens: inner})
+				i = j
 			} else {
 				panic("unhandled punctuation char: " + t.String())
 			}
 		} else {
-			ret = append(ret, []pluggable.Token{t})
+			ret = append(ret, t)
 			i++
 		}
 	}
 	return ret, true
+}
+
+func (p *exprParser) ScanFor(tokens []pluggable.Token, i int, end rune) ([]pluggable.Token, int) {
+	var ret []pluggable.Token
+	ret = append(ret, tokens[i])
+	i++
+	for i < len(tokens) && !IsPuncChar(tokens[i], end) {
+		t := tokens[i]
+		if IsPunc(t) {
+			if IsPuncChar(t, '(') {
+				inner, i := p.ScanFor(tokens, i, ')')
+				if i == -1 {
+					return nil, -1
+				}
+				ret = append(ret, Bracketed{Tokens: inner})
+			} else {
+				panic("unhandled punctuation char: " + t.String())
+			}
+		} else {
+			ret = append(ret, t)
+			i++
+		}
+	}
+	if i == len(tokens) {
+		return nil, -1
+	}
+	ret = append(ret, tokens[i])
+	return ret, i + 1
 }
 
 func makeArgs(tokens []pluggable.Token) []pluggable.Expr {
