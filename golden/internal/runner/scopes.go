@@ -46,24 +46,38 @@ func (r *TestRunner) TestScopes(eh errors.TestErrorHandler) {
 		if err != nil {
 			eh.Writef("failed running vscode-tmgrammar-snap: %v\n", err)
 			eh.Fail()
+
+			// generate this snap so we can see the difference...
+			r.generateSnap(testIn, eh)
 			return
 		}
 	} else {
-		cmd := exec.Command("vscode-tmgrammar-snap", "--config", "../../deployer-vsix/package.json", "--updateSnapshot", testIn+"/*.dply")
-		// cmd.Dir = r.root
-		cmd.Stdout = eh
-		cmd.Stderr = eh
-		err := cmd.Run()
-		if err != nil {
-			eh.Writef("failed running vscode-tmgrammar-snap: %v\n", err)
-			eh.Fail()
-			return
+		ok := r.generateSnap(testIn, eh)
+		if ok {
+			r.copySnaps(testIn, eh)
 		}
-		_, err = utils.CopyFilesFrom(testIn, r.scopes, ".snap")
-		if err != nil {
-			eh.Writef("error copying resultant snap files from %s to %s: %v\n", testIn, r.scopes, err)
-			eh.Fail()
-			return
-		}
+	}
+}
+
+func (r *TestRunner) generateSnap(testIn string, eh errors.TestErrorHandler) bool {
+	cmd := exec.Command("vscode-tmgrammar-snap", "--config", "../../deployer-vsix/package.json", "--updateSnapshot", testIn+"/*.dply")
+	// cmd.Dir = r.root
+	cmd.Stdout = eh
+	cmd.Stderr = eh
+	err := cmd.Run()
+	if err != nil {
+		eh.Writef("failed running vscode-tmgrammar-snap: %v\n", err)
+		eh.Fail()
+		return false
+	}
+	return true
+}
+
+func (r *TestRunner) copySnaps(testIn string, eh errors.TestErrorHandler) {
+	_, err := utils.CopyFilesFrom(testIn, r.scopes, ".snap")
+	if err != nil {
+		eh.Writef("error copying resultant snap files from %s to %s: %v\n", testIn, r.scopes, err)
+		eh.Fail()
+		return
 	}
 }
