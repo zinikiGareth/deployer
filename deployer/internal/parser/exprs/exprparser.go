@@ -86,7 +86,12 @@ func (p *exprParser) ReduceParens(tokens []pluggable.Token) ([]pluggable.Token, 
 }
 
 func (p *exprParser) ScanFor(tokens []pluggable.Token, i int, end rune) ([]pluggable.Token, int) {
-	return p.ScanLoop(tokens, []pluggable.Token{tokens[i]}, i+1, end)
+	ret, j := p.ScanLoop(tokens, []pluggable.Token{tokens[i]}, i+1, end)
+	if len(ret) < 1 || !IsPuncChar(ret[len(ret)-1], end) {
+		p.tools.Reporter.Reportf(tokens[i].Loc().Offset, "did not find matching %c", end)
+		return nil, -1
+	}
+	return ret, j
 }
 
 func (p *exprParser) ScanLoop(tokens []pluggable.Token, ret []pluggable.Token, i int, end rune) ([]pluggable.Token, int) {
@@ -106,7 +111,8 @@ func (p *exprParser) ScanLoop(tokens []pluggable.Token, ret []pluggable.Token, i
 				ret = append(ret, Bracketed{Tokens: inner})
 				i = j
 			} else {
-				panic("unhandled punctuation char: " + t.String())
+				p.tools.Reporter.Reportf(tokens[i].Loc().Offset, "unexpected close paren: %c", t.(pluggable.Punc).Which())
+				return nil, -1
 			}
 		} else {
 			ret = append(ret, t)

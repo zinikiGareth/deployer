@@ -22,6 +22,7 @@ func TestZeroTokensMakeZeroExprs(t *testing.T) {
 func TestTwoNounsComeBackSeparately(t *testing.T) {
 	p, _ := makeParser(t)
 	lineloc.Text = "hello world"
+	defer cleanup()
 	hello := lexicator.NewIdentifierToken(lineloc, 0, "hello")
 	world := lexicator.NewStringToken(lineloc, 6, "world")
 	exprs, ok := p.ParseMultiple([]pluggable.Token{hello, world})
@@ -39,3 +40,6 @@ func TestTwoNounsComeBackSeparately(t *testing.T) {
 	}
 }
 
+func cleanup() {
+	lineloc.Text = ""
+}

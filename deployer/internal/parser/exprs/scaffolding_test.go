@@ -1,7 +1,6 @@
 package exprs_test
 
 import (
-	"fmt"
 	"reflect"
 	"slices"
 	"testing"
@@ -37,13 +36,15 @@ var idFunc pluggable.Function
 var konstFunc pluggable.Function
 var oneString pluggable.String
 var lineloc *errors.LineLoc
+var orb, crb pluggable.Punc
 
 func init() {
-	fmt.Println("init")
-	lineloc = &errors.LineLoc{Line: 1, Indent: 1}
+	lineloc = &errors.LineLoc{Line: 1, Indent: 1, Text: "", File: &errors.FileLoc{File: "test"}}
 	oneString = lexicator.NewStringToken(lineloc, 0, "string_1")
 	idFunc = returnDataValue{value: oneString}
 	konstFunc = konstantFunc{}
+	orb = lexicator.NewPuncToken(lineloc, 0, '(')
+	crb = lexicator.NewPuncToken(lineloc, 12, ')')
 }
 
 func (m myRecall) Find(ty reflect.Type, noun string) any {

@@ -8,13 +8,9 @@ import (
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
-var orb = lexicator.NewPuncToken(lineloc, 0, '(')
-var crb = lexicator.NewPuncToken(lineloc, 12, ')')
-
 func TestATokenCanBeWrappedInParens(t *testing.T) {
 	p, _ := makeParser(t)
 	pr := p.(exprs.ParenReduction)
-	lineloc.Text = ""
 	world := lexicator.NewStringToken(lineloc, 6, "world")
 	blocks, ok := pr.ReduceParens([]pluggable.Token{orb, world, crb})
 	if !ok {
@@ -29,5 +25,27 @@ func TestATokenCanBeWrappedInParens(t *testing.T) {
 	}
 	if len(br.Tokens) != 3 {
 		t.Fatalf("block[0] has %d tokens, not 3", len(br.Tokens))
+	}
+}
+
+func TestAnORBMustBeClosed(t *testing.T) {
+	p, h := makeParser(t)
+	h.Sink.Expect(1, 1, 26, "", "did not find matching )")
+	pr := p.(exprs.ParenReduction)
+	world := lexicator.NewStringToken(lineloc, 6, "world")
+	_, ok := pr.ReduceParens([]pluggable.Token{orb, world})
+	if ok {
+		t.Fatalf("Parsing should have failed")
+	}
+}
+
+func TestACRBMustHaveBeenOpened(t *testing.T) {
+	p, h := makeParser(t)
+	h.Sink.Expect(1, 1, 26, "", "unexpected close paren: )")
+	pr := p.(exprs.ParenReduction)
+	world := lexicator.NewStringToken(lineloc, 6, "world")
+	_, ok := pr.ReduceParens([]pluggable.Token{world, crb})
+	if ok {
+		t.Fatalf("Parsing should have failed")
 	}
 }

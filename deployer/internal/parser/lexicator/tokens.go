@@ -81,7 +81,7 @@ func (tok *PuncToken) Which() rune {
 }
 
 func (tok *PuncToken) String() string {
-	return fmt.Sprintf("%s %v", tok.BaseToken.String(), tok.punc)
+	return fmt.Sprintf("%s %c", tok.BaseToken.String(), tok.punc)
 }
 
 func NewIdentifierToken(line *errors.LineLoc, offset int, text string) pluggable.Identifier {
