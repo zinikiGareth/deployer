@@ -72,6 +72,8 @@ loop:
 					from = k
 					mode = inIdentifier
 					tok = append(tok, r)
+				} else if isPuncChar(r) {
+					toks = ll.punctok(toks, line, k, r)
 				} else { // TODO: punc
 					ll.tools.Reporter.Report(k, fmt.Sprintf("invalid char '%c'", r))
 				}
@@ -123,8 +125,11 @@ loop:
 				if r == quoteRune { // it was "" in the middle of the string, add one of them
 					tok = append(tok, quoteRune)
 					mode = inString
-				} else if !unicode.IsSpace(r) {
+				} else if isIdentifierChar(r) {
 					ll.tools.Reporter.Report(k, "space required after string before identifier")
+					return nil
+				} else if isNumberChar(r) {
+					ll.tools.Reporter.Report(k, "space required after string before number")
 					return nil
 				} else {
 					toks = ll.strtok(toks, line, from, tok)
@@ -197,6 +202,16 @@ func isSymbol(r rune) bool {
 	}
 }
 
+func isPuncChar(r rune) bool {
+	if r == '(' || r == ')' || r == '[' || r == ']' || r == '{' || r == '}' {
+		return true
+	} else if r == ',' || r == ';' || r == ':' {
+		return true
+	} else {
+		return false
+	}
+}
+
 func (ll *LineLexicator) token(toks []pluggable.Token, line *errors.LineLoc, start int, text []rune) []pluggable.Token {
 	tok := NewIdentifierToken(line, start, string(text))
 	return append(toks, tok)
@@ -209,6 +224,11 @@ func (ll *LineLexicator) symbol(toks []pluggable.Token, line *errors.LineLoc, st
 
 func (ll *LineLexicator) strtok(toks []pluggable.Token, line *errors.LineLoc, start int, text []rune) []pluggable.Token {
 	tok := NewStringToken(line, start, string(text))
+	return append(toks, tok)
+}
+
+func (ll *LineLexicator) punctok(toks []pluggable.Token, line *errors.LineLoc, start int, p rune) []pluggable.Token {
+	tok := NewPuncToken(line, start, p)
 	return append(toks, tok)
 }
 

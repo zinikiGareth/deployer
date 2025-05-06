@@ -5,10 +5,11 @@ errorcases/blocking
 errorcases/missing-target
 errorcases/target-multiple-symbols
 errorcases/ensure-needs-object
+errorcases/ensure-needs-name
+errorcases/ensure-only-one-name
 ensure-bucket
 named-bucket
 bucket-named-in-props
-errorcases/ensure-needs-name
-errorcases/ensure-only-one-name
 show-string-literal
 read-env-var
+copy-files

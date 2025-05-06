@@ -1,0 +1,24 @@
+symbol bucket is bound to:
+EnsureCommand {
+	_where_: copy.dply:6.0
+	what: test.S3.Bucket
+	resolved: test.S3.Bucket[]
+	named: org.ziniki.launch_bucket
+}
+symbol copyFilesToBucket is bound to:
+target copyFilesToBucket {
+	_where_: copy.dply:5.7
+	actions: [
+		EnsureCommand {
+			_where_: copy.dply:6.0
+			what: test.S3.Bucket
+			resolved: test.S3.Bucket[]
+			named: org.ziniki.launch_bucket
+		}
+		bind_var {
+			_where_: copy.dply:6.52
+			var: bucket
+			value: Ensure[test.S3.Bucket: org.ziniki.launch_bucket]
+		}
+	]
+}

@@ -1,0 +1,2 @@
+bucket => Ensure[test.S3.Bucket: org.ziniki.launch_bucket]
+copyFilesToBucket => Target[copyFilesToBucket]

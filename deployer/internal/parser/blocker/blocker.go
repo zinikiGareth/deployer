@@ -41,6 +41,9 @@ func (b *Blocker) HaveLine(lineNo int, txt string) {
 	ll := b.file.AtLine(lineNo, level, line)
 	b.tools.Reporter.At(ll)
 	toks := b.lex.BlockedLine(ll)
+	if toks == nil {
+		return
+	}
 	hdlr := b.handlers[level].HaveTokens(toks)
 	if hdlr == nil {
 		panic("handler cannot return nil; if no nested scope, return NoInnerScope")
