@@ -1,0 +1,7 @@
+This is just a simple test of environment variables.  The accompanying envs file is read and the env vars listed there are set.
+
+They should also be cleared after the test.
+
+	target read-and-show-env-var
+		env "SETME" => var
+		show var

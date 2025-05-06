@@ -1,0 +1,15 @@
+>This is just a simple test of environment variables.  The accompanying envs file is read and the env vars listed there are set.
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
+>
+>They should also be cleared after the test.
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
+>
+>	target read-and-show-env-var
+#^ source.deployer-dply
+# ^^^^^^ source.deployer-dply keyword.target
+#       ^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>		env "SETME" => var
+#^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>		show var
+#^^^^^^^^^^^ source.deployer-dply
+>

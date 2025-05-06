@@ -1,0 +1,6 @@
+# Not for this test, but for general usage, it seems sensible
+# to allow blank lines and comments
+
+# Anything beginning with a # is ignored
+
+SETME=hello world

@@ -10,3 +10,4 @@ bucket-named-in-props
 errorcases/ensure-needs-name
 errorcases/ensure-only-one-name
 show-string-literal
+read-env-var

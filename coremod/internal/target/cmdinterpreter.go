@@ -25,13 +25,13 @@ func (cs *commandScope) HaveTokens(tokens []pluggable.Token) pluggable.Interpret
 	tok0 := toks[0]
 	cmd, ok := tok0.(pluggable.Identifier)
 	if !ok {
-		cs.tools.Reporter.Reportf(tok0.Loc().Offset, "not a command: %s", tok0.String())
+		cs.tools.Reporter.Reportf(tok0.Loc().Offset, "invalid command: %s", tok0.String())
 		return interpreters.IgnoreInnerScope()
 	}
 
 	action, ok := cs.tools.Recall.Find(reflect.TypeFor[pluggable.TargetCommand](), cmd.Id()).(pluggable.TargetCommand)
 	if !ok {
-		cs.tools.Reporter.Reportf(tok0.Loc().Offset, "not a command: %s", cmd.Id())
+		cs.tools.Reporter.Reportf(tok0.Loc().Offset, "unknown command: %s", cmd.Id())
 		return interpreters.IgnoreInnerScope()
 	}
 

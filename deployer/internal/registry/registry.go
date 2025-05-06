@@ -25,13 +25,9 @@ func (r *Registry) Register(what reflect.Type, called string, impl any) {
 func (r *Registry) Find(ty reflect.Type, called string) any {
 	m := r.impls[ty]
 	if m == nil {
-		log.Fatalf("no verbs have been bound of type %v", ty)
+		return nil
 	}
-	ret := m[called]
-	if ret == nil {
-		log.Fatalf("there is no verb %s of type %v", called, ty)
-	}
-	return ret
+	return m[called]
 }
 
 func (r *Registry) ProvideDriver(s string, env any) {

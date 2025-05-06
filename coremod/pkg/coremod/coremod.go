@@ -28,6 +28,7 @@ func RegisterWithDeployer(deployer deployer.Deployer) error {
 	tools.Register.Register(reflect.TypeFor[pluggable.TopCommand](), "target", target.MakeCoreTargetVerb(tools))
 
 	tools.Register.Register(reflect.TypeFor[pluggable.TargetCommand](), "ensure", basic.NewEnsureCommandHandler(tools))
+	tools.Register.Register(reflect.TypeFor[pluggable.TargetCommand](), "env", basic.NewEnvCommandHandler(tools))
 	tools.Register.Register(reflect.TypeFor[pluggable.TargetCommand](), "show", basic.NewShowCommandHandler(tools))
 
 	tools.Register.Register(reflect.TypeFor[pluggable.Function](), "hours", time.MakeHoursFunc(tools))

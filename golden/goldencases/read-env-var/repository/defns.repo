@@ -1,0 +1,15 @@
+symbol read is bound to:
+target read {
+	_where_: readenv.dply:5.7
+	actions: [
+		EnvCommand {
+			_where_: readenv.dply:6.0
+			readenv.dply:6.5 SETME
+			readenv.dply:6.15 var
+		}
+		ShowCommand {
+			_where_: readenv.dply:7.0
+			readenv.dply:7.5 var
+		}
+	]
+}
