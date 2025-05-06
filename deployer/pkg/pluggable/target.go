@@ -21,6 +21,7 @@ type RuntimeStorage interface {
 	ObtainDriver(forType string) any
 	BindAction(a Executable, av ExecuteAction)
 	RetrieveAction(a Executable) ExecuteAction
+	Eval(e Expr) any
 }
 
 type InitMe interface {

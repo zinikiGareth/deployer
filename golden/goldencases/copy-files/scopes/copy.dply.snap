@@ -11,10 +11,12 @@
 #       ^^^^^^^^^^^^^^^^^^^ source.deployer-dply
 >		ensure test.S3.Bucket "org.ziniki.launch_bucket" => bucket
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
->		files.dir (env "GOLDEN_ROOT") "filesrc" => root_dir
-#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
->		files.copy root_dir bucket
-#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>		env "GOLDEN_ROOT" => root
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>		files.dir root "filesrc" => src_dir
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>		files.copy src_dir bucket
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
 >
 >Now, it is not unreasonable to say that testmod has one or more "assert" methods in it
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block

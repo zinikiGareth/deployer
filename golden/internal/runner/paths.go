@@ -1,6 +1,9 @@
 package runner
 
-import "path/filepath"
+import (
+	"os"
+	"path/filepath"
+)
 
 type RunnerPaths struct {
 	root    string
@@ -23,6 +26,11 @@ type RunnerPaths struct {
 
 func ConfigurePaths(root, test string) RunnerPaths {
 	base := filepath.Join(root, test)
+	gr, err := filepath.Abs(base)
+	if err != nil {
+		panic(err)
+	}
+	os.Setenv("GOLDEN_ROOT", gr)
 	errin := filepath.Join(base, "errors")
 	errdir := filepath.Join(base, "errors-gen")
 	errfile := filepath.Join(errdir, "errors.txt")

@@ -1,6 +1,8 @@
 package runtime
 
 import (
+	"log"
+
 	"ziniki.org/deployer/deployer/pkg/errors"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
@@ -59,6 +61,21 @@ func (s *Storage) BindAction(a pluggable.Executable, av pluggable.ExecuteAction)
 
 func (s *Storage) RetrieveAction(a pluggable.Executable) pluggable.ExecuteAction {
 	return s.actions[a]
+}
+
+func (s *Storage) Eval(e pluggable.Expr) any {
+	str, ok := e.(pluggable.String)
+	if ok {
+		return str.Text()
+	} else {
+		id, ok := e.(pluggable.Identifier)
+		if ok {
+			return s.Get(pluggable.SymbolName(id.Id()))
+		} else {
+			log.Fatalf("cannot evaluate %v", e)
+			return nil
+		}
+	}
 }
 
 func NewRuntimeStorage(registry pluggable.Recall, sink errors.ErrorSink) pluggable.RuntimeStorage {

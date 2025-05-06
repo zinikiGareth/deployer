@@ -135,6 +135,7 @@ loop:
 					toks = ll.strtok(toks, line, from, tok)
 					tok = []rune{}
 					mode = starting
+					goAgain = true
 				}
 			}
 		}

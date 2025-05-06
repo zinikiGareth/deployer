@@ -1,0 +1,1 @@
+we want to ensure a bucket called org.ziniki.launch_bucket in region us-east-1

@@ -4,8 +4,9 @@ The tester somehow needs to know what to expect.
 
 	target copyFilesToBucket
 		ensure test.S3.Bucket "org.ziniki.launch_bucket" => bucket
-		files.dir (env "GOLDEN_ROOT") "filesrc" => root_dir
-		files.copy root_dir bucket
+		env "GOLDEN_ROOT" => root
+		files.dir root "filesrc" => src_dir
+		files.copy src_dir bucket
 
 Now, it is not unreasonable to say that testmod has one or more "assert" methods in it
 So we could assert the contents of bucket ...

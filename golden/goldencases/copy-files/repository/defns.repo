@@ -20,5 +20,20 @@ target copyFilesToBucket {
 			var: bucket
 			value: Ensure[test.S3.Bucket: org.ziniki.launch_bucket]
 		}
+		EnvCommand {
+			_where_: copy.dply:7.0
+			copy.dply:7.5 GOLDEN_ROOT
+			copy.dply:7.21 root
+		}
+		DirCommand {
+			_where_: copy.dply:8.0
+			copy.dply:8.10 root
+			copy.dply:8.16 filesrc
+		}
+		CopyCommand {
+			_where_: copy.dply:9.0
+			copy.dply:9.11 src_dir
+			copy.dply:9.19 bucket
+		}
 	]
 }
