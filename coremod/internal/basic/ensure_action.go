@@ -90,7 +90,7 @@ func (ea *EnsureAction) Resolve(r pluggable.Resolver) {
 // We need to store the thing we create first time for second time
 // We need to have some way of associating this with the var
 // Using a map from "action" (or other) to runtime value seems a reasonable way to go
-func (ea *EnsureAction) Prepare(runtime pluggable.RuntimeStorage) (pluggable.ExecuteAction, any) {
+func (ea *EnsureAction) Prepare(runtime pluggable.RuntimeStorage) pluggable.ExecuteAction {
 	// So the logic for ensure is that we create an object "locally" that represents the thing we want to ensure
 	// Then we call the "ensure" method on that
 	// It is an error for the object created not to implement the Ensurable contract
@@ -99,8 +99,8 @@ func (ea *EnsureAction) Prepare(runtime pluggable.RuntimeStorage) (pluggable.Exe
 	ens, ok := obj.(pluggable.Ensurable)
 	if !ok {
 		runtime.Errorf(ea.loc, "the type "+ea.what.Id()+" is not ensurable")
-		return nil, nil
+		return nil
 	}
 	exe := ens.Ensure(runtime)
-	return exe, obj
+	return exe
 }

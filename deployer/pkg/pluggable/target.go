@@ -29,7 +29,7 @@ type InitMe interface {
 }
 
 type Executable interface {
-	Prepare(runtime RuntimeStorage) (ExecuteAction, any)
+	Prepare(runtime RuntimeStorage) ExecuteAction
 }
 
 type ExecuteAction interface {

@@ -26,14 +26,14 @@ func (v *varBinding) DumpTo(to pluggable.IndentWriter) {
 }
 
 // Prepare implements target.action.
-func (v *varBinding) Prepare(runtime pluggable.RuntimeStorage) (pluggable.ExecuteAction, any) {
+func (v *varBinding) Prepare(runtime pluggable.RuntimeStorage) pluggable.ExecuteAction {
 	tmp := runtime.ObtainDriver("testhelpers.TestStepLogger")
 	testLogger, ok := tmp.(testhelpers.TestStepLogger)
 	if ok {
 		testLogger.Log("bind \"%s\" to %s\n", v.Bind.Id(), v.BindTo.ShortDescription())
 	}
 
-	return nil, nil
+	return nil
 }
 
 // Resolve implements target.action.

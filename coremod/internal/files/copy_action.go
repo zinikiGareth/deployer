@@ -2,6 +2,9 @@ package files
 
 import (
 	"fmt"
+	"log"
+	"os"
+	"path/filepath"
 
 	"ziniki.org/deployer/deployer/pkg/errors"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
@@ -42,10 +45,30 @@ func (ca *copyAction) Resolve(r pluggable.Resolver) {
 	// ea.resolved = r.Resolve(ea.what)
 }
 
-func (ca *copyAction) Prepare(runtime pluggable.RuntimeStorage) (pluggable.ExecuteAction, any) {
+func (ca *copyAction) Prepare(runtime pluggable.RuntimeStorage) pluggable.ExecuteAction {
 	// Not quite sure what to do here ...
 	// Need to prepare
 	// Should check things like permissions
 	// Deffo need to return an ExecuteAction
-	return nil, nil
+	copyFrom := runtime.Eval(ca.exprs[0])
+	copyFS, ok := copyFrom.(*Path)
+	if !ok {
+		panic("not a path")
+	}
+	path := copyFS.File
+	if !filepath.IsAbs(path) {
+		panic("not an absolute path")
+	}
+	dir, err := os.Stat(path)
+	if err != nil {
+		log.Fatalf("stat file failed: %v", err)
+	}
+	if !dir.IsDir() {
+		log.Fatalf("%s not a directory", path)
+	}
+	return ca
+}
+
+func (ca *copyAction) Execute(runtime pluggable.RuntimeStorage) {
+	fmt.Printf("Need to copy files")
 }

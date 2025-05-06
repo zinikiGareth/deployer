@@ -2,7 +2,6 @@ package basic
 
 import (
 	"fmt"
-	"log"
 
 	"ziniki.org/deployer/deployer/pkg/errors"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
@@ -43,7 +42,7 @@ func (sa *ShowAction) Resolve(r pluggable.Resolver) {
 	// ea.resolved = r.Resolve(ea.what)
 }
 
-func (sa *ShowAction) Prepare(runtime pluggable.RuntimeStorage) (pluggable.ExecuteAction, any) {
+func (sa *ShowAction) Prepare(runtime pluggable.RuntimeStorage) pluggable.ExecuteAction {
 	// This probably needs a lot more work and a lot more infrastructure
 	// I don't think I even know *how* I expect it to work at the moment ...
 
@@ -60,24 +59,19 @@ func (sa *ShowAction) Prepare(runtime pluggable.RuntimeStorage) (pluggable.Execu
 			logger.Log(" ")
 		}
 		// TODO: I think ALL this should really be something like e.Eval(runtime).ToString()
-		str, ok := e.(pluggable.String)
+		val := runtime.Eval(e)
+		str, ok := val.(string)
 		if ok {
-			logger.Log("%s", str.Text())
+			logger.Log("%s", str)
 		} else {
-			id, ok := e.(pluggable.Identifier)
+			stringer, ok := val.(fmt.Stringer)
 			if ok {
-				val := runtime.Get(pluggable.SymbolName(id.Id()))
-				stringer, ok := val.(fmt.Stringer)
-				if ok {
-					logger.Log("%s", stringer.String())
-				} else {
-					logger.Log("%v", val)
-				}
+				logger.Log("%s", stringer.String())
 			} else {
-				log.Fatalf("cannot show %v", e)
+				logger.Log("%v", val)
 			}
 		}
 	}
 	logger.Log("\n")
-	return nil, nil
+	return nil
 }

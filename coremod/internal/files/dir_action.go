@@ -44,7 +44,7 @@ func (da *dirAction) Resolve(r pluggable.Resolver) {
 	// ea.resolved = r.Resolve(ea.what)
 }
 
-func (da *dirAction) Prepare(runtime pluggable.RuntimeStorage) (pluggable.ExecuteAction, any) {
+func (da *dirAction) Prepare(runtime pluggable.RuntimeStorage) pluggable.ExecuteAction {
 	var val *Path
 	for _, e := range da.exprs {
 		v := runtime.Eval(e)
@@ -61,7 +61,7 @@ func (da *dirAction) Prepare(runtime pluggable.RuntimeStorage) (pluggable.Execut
 						log.Fatalf("cannot use non-abs path here: %v\n", v)
 					}
 				} else {
-					log.Fatalf("cannot handle %v\n", v)
+					log.Fatalf("cannot handle base path %v\n", v)
 				}
 			}
 		} else {
@@ -73,10 +73,10 @@ func (da *dirAction) Prepare(runtime pluggable.RuntimeStorage) (pluggable.Execut
 					log.Fatalf("cannot use abs path here: %v\n", v)
 				}
 			} else {
-				log.Fatalf("cannot handle %v\n", v)
+				log.Fatalf("cannot handle nested path %v\n", v)
 			}
 		}
 	}
 	runtime.Bind(pluggable.SymbolName(da.assignTo.Id()), val)
-	return nil, nil
+	return nil
 }
