@@ -4,6 +4,7 @@ target showAConstantString {
 	actions: [
 		ShowCommand {
 			_where_: showstring.dply:5.0
+			showstring.dply:5.6 hello, world
 		}
 	]
 }

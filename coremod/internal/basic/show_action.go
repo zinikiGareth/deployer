@@ -2,9 +2,11 @@ package basic
 
 import (
 	"fmt"
+	"log"
 
 	"ziniki.org/deployer/deployer/pkg/errors"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
+	"ziniki.org/deployer/deployer/pkg/testhelpers"
 )
 
 type ShowAction struct {
@@ -42,5 +44,29 @@ func (sa *ShowAction) Resolve(r pluggable.Resolver) {
 }
 
 func (sa *ShowAction) Prepare(runtime pluggable.RuntimeStorage) (pluggable.ExecuteAction, any) {
+	// This probably needs a lot more work and a lot more infrastructure
+	// I don't think I even know *how* I expect it to work at the moment ...
+
+	// For starters, I instinctively feel I should be writing to stdout, but golden tester doesn't capture that
+	// So I deffo need a proxy writer.  But is this the right abstraction?
+	tmp := runtime.ObtainDriver("testhelpers.TestStepLogger")
+	logger, ok := tmp.(testhelpers.TestStepLogger)
+	if !ok {
+		panic("could not get logger")
+	}
+
+	for i, e := range sa.exprs {
+		if i > 0 {
+			logger.Log(" ")
+		}
+		// TODO: I think ALL this should really be something like e.Eval(runtime).ToString()
+		str, ok := e.(pluggable.String)
+		if ok {
+			logger.Log("%s", str.Text())
+		} else {
+			log.Fatalf("cannot show %v", e)
+		}
+	}
+	logger.Log("\n")
 	return nil, nil
 }
