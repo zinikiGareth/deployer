@@ -75,19 +75,3 @@ func (t *coreTarget) Execute(storage pluggable.RuntimeStorage) {
 		}
 	}
 }
-
-type CoreTargetVerb struct {
-	tools *pluggable.Tools
-}
-
-func (t *CoreTargetVerb) Handle(tokens []pluggable.Token, assignTo pluggable.Identifier) pluggable.Interpreter {
-	t1 := tokens[1].(pluggable.Identifier)
-	name := pluggable.SymbolName(t1.Id())
-	target := &coreTarget{loc: t1.Loc(), name: name, actions: []action{}}
-	t.tools.Repository.IntroduceSymbol(name, target)
-	return TargetCommandInterpreter(t.tools, target)
-}
-
-func MakeCoreTargetVerb(tools *pluggable.Tools) *CoreTargetVerb {
-	return &CoreTargetVerb{tools: tools}
-}

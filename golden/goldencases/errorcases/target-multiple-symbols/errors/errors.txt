@@ -1,0 +1,2 @@
+  3.0   target: <name>
+  ==> target install-on-aws
