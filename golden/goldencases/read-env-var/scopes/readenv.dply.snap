@@ -4,10 +4,10 @@
 >They should also be cleared after the test.
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
 >
->	target read-and-show-env-var
+>	target readAndShowEnvVar
 #^ source.deployer-dply
 # ^^^^^^ source.deployer-dply keyword.target
-#       ^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+#       ^^^^^^^^^^^^^^^^^^^ source.deployer-dply
 >		env "SETME" => var
 #^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
 >		show var

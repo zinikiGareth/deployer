@@ -11,9 +11,15 @@ type Storage struct {
 	mode     int
 	drivers  map[string]any
 	actions  map[pluggable.Executable]pluggable.ExecuteAction
+	runtime  map[string]any
 }
 
 func (s *Storage) Bind(name pluggable.SymbolName, value any) {
+	s.runtime[string(name)] = value
+}
+
+func (s *Storage) Get(name pluggable.SymbolName) any {
+	return s.runtime[string(name)]
 }
 
 func (s *Storage) Errorf(loc *errors.Location, msg string, args ...any) {
@@ -56,5 +62,5 @@ func (s *Storage) RetrieveAction(a pluggable.Executable) pluggable.ExecuteAction
 }
 
 func NewRuntimeStorage(registry pluggable.Recall, sink errors.ErrorSink) pluggable.RuntimeStorage {
-	return &Storage{sink: sink, actions: make(map[pluggable.Executable]pluggable.ExecuteAction), registry: registry, drivers: make(map[string]any)}
+	return &Storage{sink: sink, actions: make(map[pluggable.Executable]pluggable.ExecuteAction), registry: registry, drivers: make(map[string]any), runtime: make(map[string]any)}
 }

@@ -3,6 +3,7 @@ package basic
 import (
 	"fmt"
 	"log"
+	"os"
 
 	"ziniki.org/deployer/deployer/pkg/errors"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
@@ -46,7 +47,8 @@ func (ea *EnvAction) Prepare(runtime pluggable.RuntimeStorage) (pluggable.Execut
 	// TODO: I think ALL this should really be something like e.Eval(runtime).ToString()
 	str, ok := ea.expr.(pluggable.String)
 	if ok {
-		log.Printf("go and find env var %s", str)
+		val := os.Getenv(str.Text())
+		runtime.Bind(pluggable.SymbolName(ea.assignTo.Id()), val)
 	} else {
 		log.Fatalf("cannot show %v", ea.expr)
 	}

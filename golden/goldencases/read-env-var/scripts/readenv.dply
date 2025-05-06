@@ -2,6 +2,6 @@ This is just a simple test of environment variables.  The accompanying envs file
 
 They should also be cleared after the test.
 
-	target read-and-show-env-var
+	target readAndShowEnvVar
 		env "SETME" => var
 		show var

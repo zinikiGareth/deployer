@@ -64,7 +64,18 @@ func (sa *ShowAction) Prepare(runtime pluggable.RuntimeStorage) (pluggable.Execu
 		if ok {
 			logger.Log("%s", str.Text())
 		} else {
-			log.Fatalf("cannot show %v", e)
+			id, ok := e.(pluggable.Identifier)
+			if ok {
+				val := runtime.Get(pluggable.SymbolName(id.Id()))
+				stringer, ok := val.(fmt.Stringer)
+				if ok {
+					logger.Log("%s", stringer.String())
+				} else {
+					logger.Log("%v", val)
+				}
+			} else {
+				log.Fatalf("cannot show %v", e)
+			}
 		}
 	}
 	logger.Log("\n")

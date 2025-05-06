@@ -1,5 +1,5 @@
-symbol read is bound to:
-target read {
+symbol readAndShowEnvVar is bound to:
+target readAndShowEnvVar {
 	_where_: readenv.dply:5.7
 	actions: [
 		EnvCommand {
