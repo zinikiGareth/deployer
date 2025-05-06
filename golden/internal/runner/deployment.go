@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 	"syscall"
 
 	"ziniki.org/deployer/deployer/pkg/deployer"
@@ -18,6 +19,14 @@ func (r *TestRunner) TestDeployment(eh errors.TestErrorHandler) {
 		fmt.Printf("Error reading scripts from %s: %v\n", r.scripts, err)
 		return
 	}
+	envFile := filepath.Join(r.scripts, "envs")
+	envs, err := r.ReadEnvs(envFile)
+	if err != nil {
+		fmt.Printf("Error reading target list from %s: %v\n", envFile, err)
+		return
+	}
+	r.SetEnvs(envs)
+	defer r.UnsetEnvs(envs)
 	targetFile := filepath.Join(r.scripts, "targets")
 	targets, err := r.ReadTargets(targetFile)
 	if err != nil {
@@ -52,10 +61,7 @@ func (r *TestRunner) ReadTargets(file string) ([]string, error) {
 		return nil, err
 	}
 
-	// TODO: I feel we will want to do some cleaning up here
-	// Specifically:
-	//   * remove "blank" and "comment (#)" lines
-	//   * allow multiple targets on one line and break them up
+	lines = PruneLines(lines)
 	return lines, nil
 }
 
@@ -66,4 +72,19 @@ func (r *TestRunner) WrapUp() {
 
 func (r *TestRunner) ErrorHandlerFor(purpose string) deployer.ErrorHandler {
 	return r.tracker.ErrorHandlerFor(purpose)
+}
+
+func PruneLines(lines []string) []string {
+	var ret []string
+	for _, l := range lines {
+		l = strings.TrimSpace(l)
+		if l == "" {
+			continue
+		}
+		if strings.HasPrefix(l, "#") {
+			continue
+		}
+		ret = append(ret, l)
+	}
+	return ret
 }
