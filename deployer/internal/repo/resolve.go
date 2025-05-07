@@ -11,11 +11,11 @@ import (
 func (repo *SimpleRepository) ResolveAll(tools *pluggable.Tools) {
 	for _, what := range repo.tops {
 		searcher := &Searcher{repo: repo, recall: tools.Recall, reporter: tools.Reporter}
-		what.Resolve(searcher, nil)
+		what.Resolve(searcher)
 	}
 }
 
-func (d *SimpleRepository) GetDefinition(name pluggable.SymbolName) pluggable.Action {
+func (d *SimpleRepository) GetDefinition(name pluggable.SymbolName) pluggable.Locatable {
 	return d.symbols[name]
 }
 

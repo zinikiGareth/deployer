@@ -21,10 +21,6 @@ func (da *dirAction) Loc() *errors.Location {
 	return da.loc
 }
 
-func (da *dirAction) Where() *errors.Location {
-	return da.loc
-}
-
 func (da *dirAction) DumpTo(w pluggable.IndentWriter) {
 	w.Intro("DirAction")
 	w.AttrsWhere(da)

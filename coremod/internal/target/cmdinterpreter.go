@@ -85,30 +85,26 @@ type DoAssign struct {
 	action   pluggable.Action
 }
 
+func (d *DoAssign) Loc() *errors.Location {
+	return d.assignTo.Loc()
+}
+
 func (d *DoAssign) DumpTo(w pluggable.IndentWriter) {
 	w.Intro("AssignTo")
 	w.AttrsWhere(d.assignTo)
 	w.TextAttr("assignTo", d.assignTo.Id())
 	d.action.DumpTo(w)
 	w.EndAttrs()
-
 }
 
-// Resolve implements pluggable.Definition.
 func (d *DoAssign) Resolve(r pluggable.Resolver, b pluggable.Binder) {
 	ab := b // TODO: this should do the binding, duH!
 	d.action.Resolve(r, ab)
 	// TODO: MINTING
 }
 
-// ShortDescription implements pluggable.Definition.
 func (d *DoAssign) ShortDescription() string {
 	return "DoAssign[" + d.assignTo.Id() + "<-" + d.action.ShortDescription() + "]"
-}
-
-// Where implements pluggable.Definition.
-func (d *DoAssign) Where() *errors.Location {
-	return d.assignTo.Loc()
 }
 
 func (d *DoAssign) Prepare() {

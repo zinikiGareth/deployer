@@ -18,10 +18,6 @@ func (sa *ShowAction) Loc() *errors.Location {
 	return sa.loc
 }
 
-func (sa *ShowAction) Where() *errors.Location {
-	return sa.loc
-}
-
 func (sa *ShowAction) DumpTo(w pluggable.IndentWriter) {
 	w.Intro("ShowAction")
 	w.AttrsWhere(sa)

@@ -18,10 +18,6 @@ func (ca *assertBucketAction) Loc() *errors.Location {
 	return ca.loc
 }
 
-func (ca *assertBucketAction) Where() *errors.Location {
-	return ca.loc
-}
-
 func (ca *assertBucketAction) DumpTo(w pluggable.IndentWriter) {
 	w.Intro("AssertBucketAction")
 	w.AttrsWhere(ca)
@@ -48,7 +44,7 @@ func (ca *assertBucketAction) Prepare() {
 
 func (ca *assertBucketAction) Execute() {
 	bucketVar := ca.tools.Storage.Eval(ca.bucket)
-	bucket, ok := bucketVar.(*ensureBucket)
+	bucket, ok := bucketVar.(*bucketCreator)
 	if !ok {
 		panic("not the bucket i was looking for")
 	}

@@ -20,10 +20,6 @@ func (ea *EnvAction) Loc() *errors.Location {
 	return ea.loc
 }
 
-func (ea *EnvAction) Where() *errors.Location {
-	return ea.loc
-}
-
 func (ea *EnvAction) DumpTo(w pluggable.IndentWriter) {
 	w.Intro("EnvAction")
 	w.AttrsWhere(ea)

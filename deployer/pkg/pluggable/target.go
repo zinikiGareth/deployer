@@ -19,10 +19,3 @@ type RuntimeStorage interface {
 type InitMe interface {
 	InitMe(storage RuntimeStorage) any
 }
-
-// TODO: I feel this should "logically" be in coremod, because that's where the ensure logic is, but I'm not sure I know
-// how to work that module magic yet.  So move it later.
-type Ensurable interface {
-	// TODO: do we want to just remove all of this?
-	Ensure()
-}

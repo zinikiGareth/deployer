@@ -3,6 +3,7 @@ package basic
 import (
 	"fmt"
 
+	"ziniki.org/deployer/coremod/pkg/ensurable"
 	"ziniki.org/deployer/deployer/pkg/errors"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
@@ -17,13 +18,10 @@ type EnsureAction struct {
 	resolved pluggable.Blank
 	named    pluggable.String
 	props    map[pluggable.Identifier]pluggable.Expr
+	ens      ensurable.Ensurable
 }
 
 func (ea *EnsureAction) Loc() *errors.Location {
-	return ea.loc
-}
-
-func (ea *EnsureAction) Where() *errors.Location {
 	return ea.loc
 }
 
@@ -87,16 +85,18 @@ func (ea *EnsureAction) Completed() {
 
 func (ea *EnsureAction) Resolve(r pluggable.Resolver, b pluggable.Binder) {
 	ea.resolved = r.Resolve(ea.what)
-}
-
-func (ea *EnsureAction) Prepare() {
 	obj := ea.resolved.Mint(ea.tools, ea.named.Text())
-	ens, ok := obj.(pluggable.Ensurable)
+	ens, ok := obj.(ensurable.Ensurable)
 	if !ok {
 		ea.tools.Storage.Errorf(ea.loc, "the type "+ea.what.Id()+" is not ensurable")
 		return
 	}
-	ens.Ensure()
+	ea.ens = ens
+	b.MayBind(ens)
+}
+
+func (ea *EnsureAction) Prepare() {
+	ea.ens.Prepare()
 }
 
 func (ea *EnsureAction) Execute() {

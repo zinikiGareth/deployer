@@ -20,10 +20,6 @@ func (t *coreTarget) Loc() *errors.Location {
 	return t.loc
 }
 
-func (t *coreTarget) Where() *errors.Location {
-	return t.loc
-}
-
 func (t *coreTarget) ShortDescription() string {
 	return "Target[" + string(t.name) + "]"
 }
@@ -39,7 +35,8 @@ func (t *coreTarget) DumpTo(w pluggable.IndentWriter) {
 	w.EndAttrs()
 }
 
-func (t *coreTarget) Resolve(r pluggable.Resolver, b pluggable.Binder) {
+func (t *coreTarget) Resolve(r pluggable.Resolver) {
+	var b pluggable.Binder
 	for _, a := range t.actions {
 		a.Resolve(r, b)
 	}

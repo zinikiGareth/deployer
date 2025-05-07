@@ -22,10 +22,6 @@ func (ca *copyAction) Loc() *errors.Location {
 	return ca.loc
 }
 
-func (ca *copyAction) Where() *errors.Location {
-	return ca.loc
-}
-
 func (ca *copyAction) DumpTo(w pluggable.IndentWriter) {
 	w.Intro("CopyAction")
 	w.AttrsWhere(ca)
