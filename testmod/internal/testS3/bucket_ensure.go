@@ -12,10 +12,11 @@ type ensureBucket struct {
 	env    *TestAwsEnv
 	bucket *bucketCreator
 	cloud  *BucketCloud
+	tools  *pluggable.Tools
 }
 
-func (eb *ensureBucket) Execute(runtime pluggable.RuntimeStorage) {
-	tmp := runtime.ObtainDriver("testhelpers.TestStepLogger")
+func (eb *ensureBucket) Execute() {
+	tmp := eb.tools.Recall.ObtainDriver("testhelpers.TestStepLogger")
 	testLogger, ok := tmp.(testhelpers.TestStepLogger)
 	if !ok {
 		panic("could not cast logger to TestStepLogger")

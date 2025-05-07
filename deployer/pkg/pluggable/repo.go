@@ -5,13 +5,13 @@ import (
 )
 
 type RepositoryTraverser interface {
-	Visit(who SymbolName, what Definition)
+	Visit(who SymbolName, what Action)
 }
 
 type Repository interface {
 	ReadingFile(file string)
-	IntroduceSymbol(who SymbolName, is Definition)
-	TopLevel(is Definition)
+	IntroduceSymbol(who SymbolName, is Action)
+	TopLevel(is Action)
 	AddSymbolListener(lsnr SymbolListener)
 	Traverse(lsnr RepositoryTraverser)
 
@@ -19,8 +19,13 @@ type Repository interface {
 	FindTarget(name SymbolName) TargetThing
 }
 
+type TargetThing interface {
+	Prepare()
+	Execute()
+}
+
 type Resolver interface {
-	Resolve(name Identifier) Noun
+	Resolve(name Identifier) Blank
 }
 
 type Locatable interface {
@@ -28,5 +33,5 @@ type Locatable interface {
 }
 
 type ContainingContext interface {
-	Add(entry Definition)
+	Add(entry Action)
 }

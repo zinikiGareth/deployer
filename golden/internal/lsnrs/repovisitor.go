@@ -18,7 +18,7 @@ type RepositoryStorer interface {
 }
 
 type goldenRepoStorer struct {
-	defns map[pluggable.SymbolName]pluggable.Definition
+	defns map[pluggable.SymbolName]pluggable.Action
 }
 
 func (s *goldenRepoStorer) DumpNamesTo(outdir string) {
@@ -54,10 +54,10 @@ func (s *goldenRepoStorer) DumpDefnsTo(outdir string) {
 	writeTo.Close()
 }
 
-func (s *goldenRepoStorer) Visit(who pluggable.SymbolName, what pluggable.Definition) {
+func (s *goldenRepoStorer) Visit(who pluggable.SymbolName, what pluggable.Action) {
 	s.defns[who] = what
 }
 
 func NewGoldenRepoStorer() RepositoryStorer {
-	return &goldenRepoStorer{defns: make(map[pluggable.SymbolName]pluggable.Definition)}
+	return &goldenRepoStorer{defns: make(map[pluggable.SymbolName]pluggable.Action)}
 }

@@ -25,6 +25,6 @@ func RegisterWithDeployer(deployer deployer.Deployer) error {
 
 	tools.Register.Register(reflect.TypeFor[pluggable.TargetCommand](), "test.assertBucketHas", testS3.NewAssertBucketHandler(tools))
 
-	tools.Register.Register(reflect.TypeFor[pluggable.Noun](), "test.S3.Bucket", &testS3.BucketNoun{})
+	tools.Register.Register(reflect.TypeFor[pluggable.Blank](), "test.S3.Bucket", &testS3.BucketBlank{})
 	return nil
 }

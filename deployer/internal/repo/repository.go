@@ -6,8 +6,8 @@ import (
 
 type SimpleRepository struct {
 	symbolLsnrs []pluggable.SymbolListener
-	symbols     map[pluggable.SymbolName]pluggable.Definition
-	tops        []pluggable.Definition
+	symbols     map[pluggable.SymbolName]pluggable.Action
+	tops        []pluggable.Action
 }
 
 func (d *SimpleRepository) ReadingFile(file string) {
@@ -16,14 +16,14 @@ func (d *SimpleRepository) ReadingFile(file string) {
 	}
 }
 
-func (d *SimpleRepository) IntroduceSymbol(who pluggable.SymbolName, is pluggable.Definition) {
+func (d *SimpleRepository) IntroduceSymbol(who pluggable.SymbolName, is pluggable.Action) {
 	d.symbols[who] = is
 	for _, lsnr := range d.symbolLsnrs {
 		lsnr.Symbol(who, is)
 	}
 }
 
-func (d *SimpleRepository) TopLevel(defn pluggable.Definition) {
+func (d *SimpleRepository) TopLevel(defn pluggable.Action) {
 	d.tops = append(d.tops, defn)
 }
 
@@ -50,5 +50,5 @@ func (d *SimpleRepository) FindTarget(name pluggable.SymbolName) pluggable.Targe
 }
 
 func NewRepository() pluggable.Repository {
-	return &SimpleRepository{symbols: make(map[pluggable.SymbolName]pluggable.Definition)}
+	return &SimpleRepository{symbols: make(map[pluggable.SymbolName]pluggable.Action)}
 }

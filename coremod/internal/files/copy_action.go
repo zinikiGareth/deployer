@@ -46,12 +46,11 @@ func (ca *copyAction) Resolve(r pluggable.Resolver) {
 	// ea.resolved = r.Resolve(ea.what)
 }
 
-func (ca *copyAction) Prepare(runtime pluggable.RuntimeStorage) pluggable.ExecuteAction {
+func (ca *copyAction) Prepare() {
 	// Not quite sure what to do here ...
 	// Need to prepare
 	// Should check things like permissions
-	// Deffo need to return an ExecuteAction
-	copyFrom := runtime.Eval(ca.exprs[0])
+	copyFrom := ca.tools.Storage.Eval(ca.exprs[0])
 	copyFS, ok := copyFrom.(*files.Path)
 	if !ok {
 		panic("not a path")
@@ -67,16 +66,16 @@ func (ca *copyAction) Prepare(runtime pluggable.RuntimeStorage) pluggable.Execut
 	if !dir.IsDir() {
 		log.Fatalf("%s not a directory", path)
 	}
-	return ca
+	return
 }
 
-func (ca *copyAction) Execute(runtime pluggable.RuntimeStorage) {
-	srcVar := runtime.Eval(ca.exprs[0])
+func (ca *copyAction) Execute() {
+	srcVar := ca.tools.Storage.Eval(ca.exprs[0])
 	src, ok := srcVar.(*files.Path)
 	if !ok {
 		panic("not the bucket i was looking for")
 	}
-	destVar := runtime.Eval(ca.exprs[1])
+	destVar := ca.tools.Storage.Eval(ca.exprs[1])
 	dest, ok := destVar.(files.ThingyHolder)
 	if !ok {
 		panic("not the bucket i was looking for")

@@ -3,11 +3,15 @@ package registry
 import (
 	"log"
 	"reflect"
+
+	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
 type Registry struct {
-	impls   map[reflect.Type]map[string]any
-	drivers map[string]any
+	impls       map[reflect.Type]map[string]any
+	drivers     map[string]any
+	initDrivers map[string]any
+	tools       *pluggable.Tools
 }
 
 func (r *Registry) Register(what reflect.Type, called string, impl any) {
@@ -34,10 +38,29 @@ func (r *Registry) ProvideDriver(s string, env any) {
 	r.drivers[s] = env
 }
 
-func (r *Registry) ObtainDriver(s string) any {
-	return r.drivers[s]
+func (r *Registry) ObtainDriver(forType string) any {
+	ret := r.initDrivers[forType]
+	if ret != nil {
+		return ret
+	}
+	c := r.drivers[forType]
+	if c == nil {
+		panic("there is no driver for " + forType)
+	}
+	im, ok := c.(pluggable.InitMe)
+	if ok {
+		ret = im.InitMe(r.tools.Storage)
+	} else {
+		ret = c
+	}
+	r.initDrivers[forType] = ret
+	return ret
+}
+
+func (reg *Registry) BindTools(tools *pluggable.Tools) {
+	reg.tools = tools
 }
 
 func NewRegistry() *Registry {
-	return &Registry{impls: make(map[reflect.Type]map[string]any), drivers: make(map[string]any)}
+	return &Registry{impls: make(map[reflect.Type]map[string]any), drivers: make(map[string]any), initDrivers: make(map[string]any)}
 }

@@ -43,12 +43,11 @@ func (ca *assertBucketAction) Resolve(r pluggable.Resolver) {
 	// ea.resolved = r.Resolve(ea.what)
 }
 
-func (ca *assertBucketAction) Prepare(runtime pluggable.RuntimeStorage) pluggable.ExecuteAction {
-	return ca
+func (ca *assertBucketAction) Prepare() {
 }
 
-func (ca *assertBucketAction) Execute(runtime pluggable.RuntimeStorage) {
-	bucketVar := runtime.Eval(ca.bucket)
+func (ca *assertBucketAction) Execute() {
+	bucketVar := ca.tools.Storage.Eval(ca.bucket)
 	bucket, ok := bucketVar.(*ensureBucket)
 	if !ok {
 		panic("not the bucket i was looking for")

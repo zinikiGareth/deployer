@@ -2,7 +2,7 @@ package pluggable
 
 import "ziniki.org/deployer/deployer/pkg/errors"
 
-type Definition interface {
+type Action interface {
 	// Where identifies when the definition came into being
 	Where() *errors.Location
 
@@ -17,4 +17,7 @@ type Definition interface {
 
 	// Resolve asks the definition to examine all of its structure and ask for resolution of any unresolved names
 	Resolve(r Resolver)
+
+	Prepare()
+	Execute()
 }

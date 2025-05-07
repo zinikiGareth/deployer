@@ -15,7 +15,7 @@ func (repo *SimpleRepository) ResolveAll(tools *pluggable.Tools) {
 	}
 }
 
-func (d *SimpleRepository) GetDefinition(name pluggable.SymbolName) pluggable.Definition {
+func (d *SimpleRepository) GetDefinition(name pluggable.SymbolName) pluggable.Action {
 	return d.symbols[name]
 }
 
@@ -25,13 +25,13 @@ type Searcher struct {
 	reporter errors.ErrorRepI
 }
 
-func (s *Searcher) Resolve(name pluggable.Identifier) pluggable.Noun {
+func (s *Searcher) Resolve(name pluggable.Identifier) pluggable.Blank {
 	defn := s.repo.GetDefinition(pluggable.SymbolName(name.Id()))
-	ret, ok := defn.(pluggable.Noun)
+	ret, ok := defn.(pluggable.Blank)
 	if ret != nil && ok {
 		return ret
 	}
-	ret = s.recall.Find(reflect.TypeFor[pluggable.Noun](), name.Id()).(pluggable.Noun)
+	ret = s.recall.Find(reflect.TypeFor[pluggable.Blank](), name.Id()).(pluggable.Blank)
 	if ret != nil {
 		return ret
 	}

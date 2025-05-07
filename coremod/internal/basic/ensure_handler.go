@@ -5,6 +5,8 @@ import (
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
+// For each action verb, there is exactly one handler.  It is created up front and it does the job of parsing lines and creating individual actions.
+
 type EnsureCommandHandler struct {
 	tools *pluggable.Tools
 }

@@ -76,33 +76,33 @@ type WithAssignTo struct {
 	container pluggable.ContainingContext
 }
 
-func (wat *WithAssignTo) Add(d pluggable.Definition) {
-	wat.container.Add(&DoAssign{assignTo: wat.assignTo, defn: d})
+func (wat *WithAssignTo) Add(d pluggable.Action) {
+	wat.container.Add(&DoAssign{assignTo: wat.assignTo, action: d})
 }
 
 type DoAssign struct {
 	assignTo pluggable.Identifier
-	defn     pluggable.Definition
+	action   pluggable.Action
 }
 
 func (d *DoAssign) DumpTo(w pluggable.IndentWriter) {
 	w.Intro("AssignTo")
 	w.AttrsWhere(d.assignTo)
 	w.TextAttr("assignTo", d.assignTo.Id())
-	d.defn.DumpTo(w)
+	d.action.DumpTo(w)
 	w.EndAttrs()
 
 }
 
 // Resolve implements pluggable.Definition.
 func (d *DoAssign) Resolve(r pluggable.Resolver) {
-	d.defn.Resolve(r)
+	d.action.Resolve(r)
 	// TODO: MINTING
 }
 
 // ShortDescription implements pluggable.Definition.
 func (d *DoAssign) ShortDescription() string {
-	return "DoAssign[" + d.assignTo.Id() + "<-" + d.defn.ShortDescription() + "]"
+	return "DoAssign[" + d.assignTo.Id() + "<-" + d.action.ShortDescription() + "]"
 }
 
 // Where implements pluggable.Definition.
@@ -110,10 +110,10 @@ func (d *DoAssign) Where() *errors.Location {
 	return d.assignTo.Loc()
 }
 
-func (d *DoAssign) Prepare(runtime pluggable.RuntimeStorage) pluggable.ExecuteAction {
-	ex, ok := d.defn.(pluggable.Executable)
-	if !ok {
-		return nil
-	}
-	return ex.Prepare(runtime)
+func (d *DoAssign) Prepare() {
+	d.action.Prepare()
+}
+
+func (d *DoAssign) Execute() {
+	d.action.Execute()
 }

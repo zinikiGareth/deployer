@@ -7,13 +7,15 @@ import (
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
+// The action is created by the handler.  It is added to a target.  It then takes on the rest of the work:
+// resolution, preparation, execution
+
 type EnsureAction struct {
 	tools    *pluggable.Tools
 	loc      *errors.Location
 	what     pluggable.Identifier
-	resolved pluggable.Noun
+	resolved pluggable.Blank
 	named    pluggable.String
-	assignTo pluggable.Identifier
 	props    map[pluggable.Identifier]pluggable.Expr
 }
 
@@ -87,21 +89,16 @@ func (ea *EnsureAction) Resolve(r pluggable.Resolver) {
 	ea.resolved = r.Resolve(ea.what)
 }
 
-// TODO: we need to consider multiple phases here
-// We need to store the thing we create first time for second time
-// We need to have some way of associating this with the var
-// Using a map from "action" (or other) to runtime value seems a reasonable way to go
-func (ea *EnsureAction) Prepare(runtime pluggable.RuntimeStorage) pluggable.ExecuteAction {
-	// So the logic for ensure is that we create an object "locally" that represents the thing we want to ensure
-	// Then we call the "ensure" method on that
-	// It is an error for the object created not to implement the Ensurable contract
-
-	obj := ea.resolved.CreateWithName(ea.named.Text(), ea.assignTo)
+func (ea *EnsureAction) Prepare() {
+	obj := ea.resolved.Mint(ea.tools, ea.named.Text())
 	ens, ok := obj.(pluggable.Ensurable)
 	if !ok {
-		runtime.Errorf(ea.loc, "the type "+ea.what.Id()+" is not ensurable")
-		return nil
+		ea.tools.Storage.Errorf(ea.loc, "the type "+ea.what.Id()+" is not ensurable")
+		return
 	}
-	exe := ens.Ensure(runtime)
-	return exe
+	ens.Ensure()
+}
+
+func (ea *EnsureAction) Execute() {
+
 }

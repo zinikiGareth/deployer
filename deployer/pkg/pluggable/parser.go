@@ -58,9 +58,9 @@ type TargetCommand interface {
 }
 
 // Replace this with a notion of minting, blanks, dies ... I think this would be a blank
-type Noun interface {
+type Blank interface {
 	ShortDescription() string
-	CreateWithName(named string, assignTo Identifier) any
+	Mint(tools *Tools, named string) any
 }
 
 type Function interface {

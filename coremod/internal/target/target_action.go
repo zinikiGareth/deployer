@@ -1,30 +1,19 @@
 package target
 
 import (
-	"fmt"
-
 	"ziniki.org/deployer/deployer/pkg/errors"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
-
-type action interface {
-	pluggable.Definition
-	pluggable.Executable
-}
 
 type coreTarget struct {
 	loc  *errors.Location
 	name pluggable.SymbolName
 
-	actions []action
+	actions []pluggable.Action
 }
 
-func (cc *coreTarget) Add(entry pluggable.Definition) {
-	a, ok := entry.(action)
-	if !ok {
-		panic(fmt.Sprintf("entry %v is not an action", entry))
-	}
-	cc.actions = append(cc.actions, a)
+func (cc *coreTarget) Add(entry pluggable.Action) {
+	cc.actions = append(cc.actions, entry)
 }
 
 func (t *coreTarget) Loc() *errors.Location {
@@ -56,19 +45,14 @@ func (t *coreTarget) Resolve(r pluggable.Resolver) {
 	}
 }
 
-func (t *coreTarget) Prepare(storage pluggable.RuntimeStorage) pluggable.ExecuteAction {
+func (t *coreTarget) Prepare() {
 	for _, a := range t.actions {
-		act := a.Prepare(storage)
-		storage.BindAction(a, act)
+		a.Prepare()
 	}
-	return nil
 }
 
-func (t *coreTarget) Execute(storage pluggable.RuntimeStorage) {
+func (t *coreTarget) Execute() {
 	for _, a := range t.actions {
-		av := storage.RetrieveAction(a)
-		if av != nil {
-			av.Execute(storage)
-		}
+		a.Execute()
 	}
 }

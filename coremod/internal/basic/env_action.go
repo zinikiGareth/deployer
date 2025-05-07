@@ -43,15 +43,19 @@ func (sa *EnvAction) Resolve(r pluggable.Resolver) {
 	// ea.resolved = r.Resolve(ea.what)
 }
 
-func (ea *EnvAction) Prepare(runtime pluggable.RuntimeStorage) pluggable.ExecuteAction {
+func (ea *EnvAction) Prepare() {
 	// TODO: I think ALL this should really be something like e.Eval(runtime).ToString()
 	str, ok := ea.expr.(pluggable.String)
 	if ok {
 		val := os.Getenv(str.Text())
-		runtime.Bind(pluggable.SymbolName(ea.assignTo.Id()), val)
-		return nil
+		ea.tools.Storage.Bind(pluggable.SymbolName(ea.assignTo.Id()), val)
+		return
 	} else {
 		log.Fatalf("cannot show %v", ea.expr)
-		return nil
+		return
 	}
+}
+
+func (ea *EnvAction) Execute() {
+
 }

@@ -16,7 +16,7 @@ func (t *CoreTargetHandler) Handle(tokens []pluggable.Token) pluggable.Interpret
 	}
 	t1 := tokens[1].(pluggable.Identifier)
 	name := pluggable.SymbolName(t1.Id())
-	target := &coreTarget{loc: t1.Loc(), name: name, actions: []action{}}
+	target := &coreTarget{loc: t1.Loc(), name: name, actions: []pluggable.Action{}}
 	t.tools.Repository.TopLevel(target)
 	t.tools.Repository.IntroduceSymbol(name, target)
 	return TargetCommandInterpreter(t.tools, target)

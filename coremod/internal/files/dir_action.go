@@ -45,10 +45,10 @@ func (da *dirAction) Resolve(r pluggable.Resolver) {
 	// ea.resolved = r.Resolve(ea.what)
 }
 
-func (da *dirAction) Prepare(runtime pluggable.RuntimeStorage) pluggable.ExecuteAction {
+func (da *dirAction) Prepare() {
 	var val *files.Path
 	for _, e := range da.exprs {
-		v := runtime.Eval(e)
+		v := da.tools.Storage.Eval(e)
 		if val == nil {
 			p, ok := v.(files.Path)
 			if ok {
@@ -78,6 +78,10 @@ func (da *dirAction) Prepare(runtime pluggable.RuntimeStorage) pluggable.Execute
 			}
 		}
 	}
-	runtime.Bind(pluggable.SymbolName(da.assignTo.Id()), val)
-	return nil
+	da.tools.Storage.Bind(pluggable.SymbolName(da.assignTo.Id()), val)
+	return
+}
+
+func (ea *dirAction) Execute() {
+
 }

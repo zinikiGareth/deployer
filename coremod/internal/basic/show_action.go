@@ -42,13 +42,13 @@ func (sa *ShowAction) Resolve(r pluggable.Resolver) {
 	// ea.resolved = r.Resolve(ea.what)
 }
 
-func (sa *ShowAction) Prepare(runtime pluggable.RuntimeStorage) pluggable.ExecuteAction {
+func (sa *ShowAction) Prepare() {
 	// This probably needs a lot more work and a lot more infrastructure
 	// I don't think I even know *how* I expect it to work at the moment ...
 
 	// For starters, I instinctively feel I should be writing to stdout, but golden tester doesn't capture that
 	// So I deffo need a proxy writer.  But is this the right abstraction?
-	tmp := runtime.ObtainDriver("testhelpers.TestStepLogger")
+	tmp := sa.tools.Recall.ObtainDriver("testhelpers.TestStepLogger")
 	logger, ok := tmp.(testhelpers.TestStepLogger)
 	if !ok {
 		panic("could not get logger")
@@ -59,7 +59,7 @@ func (sa *ShowAction) Prepare(runtime pluggable.RuntimeStorage) pluggable.Execut
 			logger.Log(" ")
 		}
 		// TODO: I think ALL this should really be something like e.Eval(runtime).ToString()
-		val := runtime.Eval(e)
+		val := sa.tools.Storage.Eval(e)
 		str, ok := val.(string)
 		if ok {
 			logger.Log("%s", str)
@@ -73,5 +73,8 @@ func (sa *ShowAction) Prepare(runtime pluggable.RuntimeStorage) pluggable.Execut
 		}
 	}
 	logger.Log("\n")
-	return nil
+}
+
+func (ea *ShowAction) Execute() {
+
 }

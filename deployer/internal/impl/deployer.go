@@ -57,12 +57,12 @@ func (d *DeployerImpl) Deploy(targetNames ...string) error {
 
 	d.tools.Storage.SetMode(pluggable.PREPARE_MODE)
 	for _, t := range targets {
-		t.Prepare(d.tools.Storage)
+		t.Prepare()
 	}
 
 	d.tools.Storage.SetMode(pluggable.EXECUTE_MODE)
 	for _, t := range targets {
-		t.Execute(d.tools.Storage)
+		t.Execute()
 	}
 
 	return nil
@@ -103,5 +103,6 @@ func NewDeployer(sink errors.ErrorSink, userErrorsTo io.StringWriter) deployer.D
 	storage := runtime.NewRuntimeStorage(reg, sink)
 	repo := repo.NewRepository()
 	tools := pluggable.NewTools(reporter, reg, reg, repo, storage)
+	reg.BindTools(tools)
 	return &DeployerImpl{tools: tools, userErrorsTo: userErrorsTo}
 }
