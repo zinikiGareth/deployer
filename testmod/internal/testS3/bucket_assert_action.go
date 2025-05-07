@@ -58,8 +58,6 @@ func (ca *assertBucketAction) Execute(runtime pluggable.RuntimeStorage) {
 	// And then we need to be able to retrieve it from "the cloud provider"
 	// And test that it has the files we want it to have ...
 
-	fmt.Printf("found bucket %v\n", bucket)
-	fmt.Printf("Need to test files are where they should be\n")
 	for _, f := range ca.files {
 		if !bucket.cloud.HasFile(f) {
 			panic("do not have the file")

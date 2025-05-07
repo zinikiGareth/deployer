@@ -81,8 +81,6 @@ func (ca *copyAction) Execute(runtime pluggable.RuntimeStorage) {
 	if !ok {
 		panic("not the bucket i was looking for")
 	}
-	fmt.Printf("Need to copy files from %T to %T\n", src, dest)
-
 	files, err := os.ReadDir(src.File)
 	if err != nil {
 		panic(err)
