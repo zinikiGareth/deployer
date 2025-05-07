@@ -3,6 +3,7 @@ package target
 import (
 	"reflect"
 
+	"ziniki.org/deployer/deployer/pkg/errors"
 	"ziniki.org/deployer/deployer/pkg/interpreters"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
@@ -35,7 +36,12 @@ func (cs *commandScope) HaveTokens(tokens []pluggable.Token) pluggable.Interpret
 		return interpreters.IgnoreInnerScope()
 	}
 
-	innerScope := action.Handle(cs.container, toks, assignTo)
+	cc := cs.container
+	if assignTo != nil {
+		cc = &WithAssignTo{container: cc, assignTo: assignTo}
+	}
+
+	innerScope := action.Handle(cc, toks)
 	return innerScope
 }
 
@@ -63,4 +69,51 @@ func (b *commandScope) splitOnArrow(tokens []pluggable.Token) (bool, []pluggable
 		}
 	}
 	return true, tokens, nil
+}
+
+type WithAssignTo struct {
+	assignTo  pluggable.Identifier
+	container pluggable.ContainingContext
+}
+
+func (wat *WithAssignTo) Add(d pluggable.Definition) {
+	wat.container.Add(&DoAssign{assignTo: wat.assignTo, defn: d})
+}
+
+type DoAssign struct {
+	assignTo pluggable.Identifier
+	defn     pluggable.Definition
+}
+
+func (d *DoAssign) DumpTo(w pluggable.IndentWriter) {
+	w.Intro("AssignTo")
+	w.AttrsWhere(d.assignTo)
+	w.TextAttr("assignTo", d.assignTo.Id())
+	d.defn.DumpTo(w)
+	w.EndAttrs()
+
+}
+
+// Resolve implements pluggable.Definition.
+func (d *DoAssign) Resolve(r pluggable.Resolver) {
+	d.defn.Resolve(r)
+	// TODO: MINTING
+}
+
+// ShortDescription implements pluggable.Definition.
+func (d *DoAssign) ShortDescription() string {
+	return "DoAssign[" + d.assignTo.Id() + "<-" + d.defn.ShortDescription() + "]"
+}
+
+// Where implements pluggable.Definition.
+func (d *DoAssign) Where() *errors.Location {
+	return d.assignTo.Loc()
+}
+
+func (d *DoAssign) Prepare(runtime pluggable.RuntimeStorage) pluggable.ExecuteAction {
+	ex, ok := d.defn.(pluggable.Executable)
+	if !ok {
+		return nil
+	}
+	return ex.Prepare(runtime)
 }

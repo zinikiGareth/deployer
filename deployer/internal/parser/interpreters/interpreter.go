@@ -23,7 +23,7 @@ func (si *ScopeInterpreter) HaveTokens(tokens []pluggable.Token) pluggable.Inter
 	if action == nil {
 		si.tools.Reporter.Reportf(0, "there is no error handler for %s", verb)
 	}
-	return action.Handle(tokens, nil) // Will need other things as well as time goes on ...
+	return action.Handle(tokens) // Will need other things as well as time goes on ...
 }
 
 func (b *ScopeInterpreter) Completed() {

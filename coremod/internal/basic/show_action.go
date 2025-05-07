@@ -23,7 +23,7 @@ func (sa *ShowAction) Where() *errors.Location {
 }
 
 func (sa *ShowAction) DumpTo(w pluggable.IndentWriter) {
-	w.Intro("ShowCommand")
+	w.Intro("ShowAction")
 	w.AttrsWhere(sa)
 	for _, v := range sa.exprs {
 		w.IndPrintf("%s\n", v.String())

@@ -9,7 +9,7 @@ type envCommandHandler struct {
 	tools *pluggable.Tools
 }
 
-func (ech *envCommandHandler) Handle(parent pluggable.ContainingContext, tokens []pluggable.Token, assignTo pluggable.Identifier) pluggable.Interpreter {
+func (ech *envCommandHandler) Handle(parent pluggable.ContainingContext, tokens []pluggable.Token) pluggable.Interpreter {
 	if len(tokens) < 2 {
 		ech.tools.Reporter.Report(tokens[0].Loc().Offset, "env: expr")
 		return interpreters.IgnoreInnerScope()
@@ -20,7 +20,7 @@ func (ech *envCommandHandler) Handle(parent pluggable.ContainingContext, tokens 
 		return interpreters.IgnoreInnerScope()
 	}
 
-	ea := &EnvAction{tools: ech.tools, loc: tokens[0].Loc(), expr: expr, assignTo: assignTo}
+	ea := &EnvAction{tools: ech.tools, loc: tokens[0].Loc(), expr: expr}
 	parent.Add(ea)
 
 	return interpreters.DisallowInnerScope(ech.tools)

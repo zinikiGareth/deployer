@@ -27,7 +27,7 @@ func (ca *copyAction) Where() *errors.Location {
 }
 
 func (ca *copyAction) DumpTo(w pluggable.IndentWriter) {
-	w.Intro("CopyCommand")
+	w.Intro("CopyAction")
 	w.AttrsWhere(ca)
 	for _, v := range ca.exprs {
 		w.IndPrintf("%s\n", v.String())

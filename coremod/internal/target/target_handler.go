@@ -9,7 +9,7 @@ type CoreTargetHandler struct {
 	tools *pluggable.Tools
 }
 
-func (t *CoreTargetHandler) Handle(tokens []pluggable.Token, assignTo pluggable.Identifier) pluggable.Interpreter {
+func (t *CoreTargetHandler) Handle(tokens []pluggable.Token) pluggable.Interpreter {
 	if len(tokens) != 2 {
 		t.tools.Reporter.Reportf(0, "target: <name>")
 		return interpreters.IgnoreInnerScope()
@@ -17,6 +17,7 @@ func (t *CoreTargetHandler) Handle(tokens []pluggable.Token, assignTo pluggable.
 	t1 := tokens[1].(pluggable.Identifier)
 	name := pluggable.SymbolName(t1.Id())
 	target := &coreTarget{loc: t1.Loc(), name: name, actions: []action{}}
+	t.tools.Repository.TopLevel(target)
 	t.tools.Repository.IntroduceSymbol(name, target)
 	return TargetCommandInterpreter(t.tools, target)
 }

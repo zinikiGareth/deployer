@@ -11,6 +11,7 @@ type RepositoryTraverser interface {
 type Repository interface {
 	ReadingFile(file string)
 	IntroduceSymbol(who SymbolName, is Definition)
+	TopLevel(is Definition)
 	AddSymbolListener(lsnr SymbolListener)
 	Traverse(lsnr RepositoryTraverser)
 

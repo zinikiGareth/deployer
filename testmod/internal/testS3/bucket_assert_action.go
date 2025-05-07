@@ -23,7 +23,7 @@ func (ca *assertBucketAction) Where() *errors.Location {
 }
 
 func (ca *assertBucketAction) DumpTo(w pluggable.IndentWriter) {
-	w.Intro("AssertBucketCommand")
+	w.Intro("AssertBucketAction")
 	w.AttrsWhere(ca)
 	w.IndPrintf("bucket: %s\n", ca.bucket.String())
 	for _, f := range ca.files {

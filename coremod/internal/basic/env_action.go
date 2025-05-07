@@ -25,7 +25,7 @@ func (ea *EnvAction) Where() *errors.Location {
 }
 
 func (ea *EnvAction) DumpTo(w pluggable.IndentWriter) {
-	w.Intro("EnvCommand")
+	w.Intro("EnvAction")
 	w.AttrsWhere(ea)
 	w.IndPrintf("%s\n", ea.expr.String())
 	w.IndPrintf("%s\n", ea.assignTo.String())

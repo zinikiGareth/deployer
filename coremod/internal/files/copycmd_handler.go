@@ -9,7 +9,7 @@ type copyCommandHandler struct {
 	tools *pluggable.Tools
 }
 
-func (cch *copyCommandHandler) Handle(parent pluggable.ContainingContext, tokens []pluggable.Token, assignTo pluggable.Identifier) pluggable.Interpreter {
+func (cch *copyCommandHandler) Handle(parent pluggable.ContainingContext, tokens []pluggable.Token) pluggable.Interpreter {
 	if len(tokens) < 2 {
 		cch.tools.Reporter.Report(tokens[0].Loc().Offset, "files.dir: <from> <to>")
 		return interpreters.IgnoreInnerScope()
@@ -25,7 +25,7 @@ func (cch *copyCommandHandler) Handle(parent pluggable.ContainingContext, tokens
 		return interpreters.IgnoreInnerScope()
 	}
 
-	ca := &copyAction{tools: cch.tools, loc: tokens[0].Loc(), exprs: exprs, assignTo: assignTo}
+	ca := &copyAction{tools: cch.tools, loc: tokens[0].Loc(), exprs: exprs}
 	parent.Add(ca)
 
 	return interpreters.DisallowInnerScope(cch.tools) // for now, but we want to support it really

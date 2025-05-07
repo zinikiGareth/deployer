@@ -7,6 +7,7 @@ import (
 type SimpleRepository struct {
 	symbolLsnrs []pluggable.SymbolListener
 	symbols     map[pluggable.SymbolName]pluggable.Definition
+	tops        []pluggable.Definition
 }
 
 func (d *SimpleRepository) ReadingFile(file string) {
@@ -20,6 +21,10 @@ func (d *SimpleRepository) IntroduceSymbol(who pluggable.SymbolName, is pluggabl
 	for _, lsnr := range d.symbolLsnrs {
 		lsnr.Symbol(who, is)
 	}
+}
+
+func (d *SimpleRepository) TopLevel(defn pluggable.Definition) {
+	d.tops = append(d.tops, defn)
 }
 
 func (d *SimpleRepository) AddSymbolListener(lsnr pluggable.SymbolListener) {

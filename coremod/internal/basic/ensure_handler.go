@@ -9,7 +9,7 @@ type EnsureCommandHandler struct {
 	tools *pluggable.Tools
 }
 
-func (ech *EnsureCommandHandler) Handle(parent pluggable.ContainingContext, tokens []pluggable.Token, assignTo pluggable.Identifier) pluggable.Interpreter {
+func (ech *EnsureCommandHandler) Handle(parent pluggable.ContainingContext, tokens []pluggable.Token) pluggable.Interpreter {
 	if len(tokens) < 2 || len(tokens) > 3 {
 		ech.tools.Reporter.Report(tokens[0].Loc().Offset, "ensure: <class-identifier> [instance-name]")
 		return interpreters.IgnoreInnerScope()
@@ -30,7 +30,7 @@ func (ech *EnsureCommandHandler) Handle(parent pluggable.ContainingContext, toke
 		}
 	}
 
-	ea := &EnsureAction{tools: ech.tools, loc: tokens[0].Loc(), what: clz, named: name, props: make(map[pluggable.Identifier]pluggable.Expr), assignTo: assignTo}
+	ea := &EnsureAction{tools: ech.tools, loc: tokens[0].Loc(), what: clz, named: name, props: make(map[pluggable.Identifier]pluggable.Expr)}
 	parent.Add(ea)
 
 	return interpreters.PropertiesInnerScope(ech.tools, ea)

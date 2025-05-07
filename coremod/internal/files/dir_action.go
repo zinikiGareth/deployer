@@ -26,7 +26,7 @@ func (da *dirAction) Where() *errors.Location {
 }
 
 func (da *dirAction) DumpTo(w pluggable.IndentWriter) {
-	w.Intro("DirCommand")
+	w.Intro("DirAction")
 	w.AttrsWhere(da)
 	for _, v := range da.exprs {
 		w.IndPrintf("%s\n", v.String())

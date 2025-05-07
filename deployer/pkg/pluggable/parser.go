@@ -50,13 +50,14 @@ type Punc interface {
 }
 
 type TopCommand interface {
-	Handle(tokens []Token, assignTo Identifier) Interpreter
+	Handle(tokens []Token) Interpreter
 }
 
 type TargetCommand interface {
-	Handle(parent ContainingContext, tokens []Token, assignTo Identifier) Interpreter
+	Handle(parent ContainingContext, tokens []Token) Interpreter
 }
 
+// Replace this with a notion of minting, blanks, dies ... I think this would be a blank
 type Noun interface {
 	ShortDescription() string
 	CreateWithName(named string, assignTo Identifier) any

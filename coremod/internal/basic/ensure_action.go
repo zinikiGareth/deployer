@@ -30,7 +30,7 @@ func (ea *EnsureAction) What() pluggable.SymbolType {
 }
 
 func (ea *EnsureAction) DumpTo(w pluggable.IndentWriter) {
-	w.Intro("EnsureCommand")
+	w.Intro("EnsureAction")
 	w.AttrsWhere(ea)
 	w.TextAttr("what", ea.what.Id())
 	if ea.resolved == nil {
