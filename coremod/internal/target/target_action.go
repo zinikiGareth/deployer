@@ -39,9 +39,9 @@ func (t *coreTarget) DumpTo(w pluggable.IndentWriter) {
 	w.EndAttrs()
 }
 
-func (t *coreTarget) Resolve(r pluggable.Resolver) {
+func (t *coreTarget) Resolve(r pluggable.Resolver, b pluggable.Binder) {
 	for _, a := range t.actions {
-		a.Resolve(r)
+		a.Resolve(r, b)
 	}
 }
 

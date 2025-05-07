@@ -24,6 +24,11 @@ type TargetThing interface {
 	Execute()
 }
 
+type Binder interface {
+	MayBind(v any)
+	MustBind(v any)
+}
+
 type Resolver interface {
 	Resolve(name Identifier) Blank
 }

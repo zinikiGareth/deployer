@@ -38,7 +38,7 @@ func (sa *ShowAction) ShortDescription() string {
 func (sa *ShowAction) Completed() {
 }
 
-func (sa *ShowAction) Resolve(r pluggable.Resolver) {
+func (sa *ShowAction) Resolve(r pluggable.Resolver, b pluggable.Binder) {
 	// ea.resolved = r.Resolve(ea.what)
 }
 

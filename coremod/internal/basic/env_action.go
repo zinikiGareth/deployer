@@ -39,7 +39,7 @@ func (ea *EnvAction) ShortDescription() string {
 func (ea *EnvAction) Completed() {
 }
 
-func (sa *EnvAction) Resolve(r pluggable.Resolver) {
+func (sa *EnvAction) Resolve(r pluggable.Resolver, b pluggable.Binder) {
 	// ea.resolved = r.Resolve(ea.what)
 }
 

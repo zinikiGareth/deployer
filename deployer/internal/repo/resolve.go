@@ -11,7 +11,7 @@ import (
 func (repo *SimpleRepository) ResolveAll(tools *pluggable.Tools) {
 	for _, what := range repo.tops {
 		searcher := &Searcher{repo: repo, recall: tools.Recall, reporter: tools.Reporter}
-		what.Resolve(searcher)
+		what.Resolve(searcher, nil)
 	}
 }
 

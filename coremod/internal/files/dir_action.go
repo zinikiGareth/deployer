@@ -41,7 +41,7 @@ func (da *dirAction) ShortDescription() string {
 func (da *dirAction) Completed() {
 }
 
-func (da *dirAction) Resolve(r pluggable.Resolver) {
+func (da *dirAction) Resolve(r pluggable.Resolver, b pluggable.Binder) {
 	// ea.resolved = r.Resolve(ea.what)
 }
 

@@ -85,7 +85,7 @@ func (ea *EnsureAction) Completed() {
 	}
 }
 
-func (ea *EnsureAction) Resolve(r pluggable.Resolver) {
+func (ea *EnsureAction) Resolve(r pluggable.Resolver, b pluggable.Binder) {
 	ea.resolved = r.Resolve(ea.what)
 }
 

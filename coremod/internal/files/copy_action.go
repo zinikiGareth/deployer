@@ -42,7 +42,7 @@ func (ca *copyAction) ShortDescription() string {
 func (ca *copyAction) Completed() {
 }
 
-func (ca *copyAction) Resolve(r pluggable.Resolver) {
+func (ca *copyAction) Resolve(r pluggable.Resolver, b pluggable.Binder) {
 	// ea.resolved = r.Resolve(ea.what)
 }
 

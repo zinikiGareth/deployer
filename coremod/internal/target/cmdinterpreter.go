@@ -95,8 +95,9 @@ func (d *DoAssign) DumpTo(w pluggable.IndentWriter) {
 }
 
 // Resolve implements pluggable.Definition.
-func (d *DoAssign) Resolve(r pluggable.Resolver) {
-	d.action.Resolve(r)
+func (d *DoAssign) Resolve(r pluggable.Resolver, b pluggable.Binder) {
+	ab := b // TODO: this should do the binding, duH!
+	d.action.Resolve(r, ab)
 	// TODO: MINTING
 }
 

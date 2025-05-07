@@ -39,7 +39,7 @@ func (ca *assertBucketAction) ShortDescription() string {
 func (ca *assertBucketAction) Completed() {
 }
 
-func (ca *assertBucketAction) Resolve(r pluggable.Resolver) {
+func (ca *assertBucketAction) Resolve(r pluggable.Resolver, b pluggable.Binder) {
 	// ea.resolved = r.Resolve(ea.what)
 }
 
