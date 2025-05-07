@@ -5,6 +5,7 @@ import (
 	"log"
 	"path/filepath"
 
+	"ziniki.org/deployer/coremod/pkg/files"
 	"ziniki.org/deployer/deployer/pkg/errors"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
@@ -45,18 +46,18 @@ func (da *dirAction) Resolve(r pluggable.Resolver) {
 }
 
 func (da *dirAction) Prepare(runtime pluggable.RuntimeStorage) pluggable.ExecuteAction {
-	var val *Path
+	var val *files.Path
 	for _, e := range da.exprs {
 		v := runtime.Eval(e)
 		if val == nil {
-			p, ok := v.(Path)
+			p, ok := v.(files.Path)
 			if ok {
 				val = &p
 			} else {
 				s, ok := v.(string)
 				if ok {
 					if filepath.IsAbs(s) {
-						val = &Path{File: s}
+						val = &files.Path{File: s}
 					} else {
 						log.Fatalf("cannot use non-abs path here: %v\n", v)
 					}
@@ -68,7 +69,7 @@ func (da *dirAction) Prepare(runtime pluggable.RuntimeStorage) pluggable.Execute
 			s, ok := v.(string)
 			if ok {
 				if !filepath.IsAbs(s) {
-					val = &Path{File: filepath.Join(val.File, s)}
+					val = &files.Path{File: filepath.Join(val.File, s)}
 				} else {
 					log.Fatalf("cannot use abs path here: %v\n", v)
 				}

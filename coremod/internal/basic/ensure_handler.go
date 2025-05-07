@@ -1,7 +1,6 @@
 package basic
 
 import (
-	"ziniki.org/deployer/coremod/internal/vars"
 	"ziniki.org/deployer/deployer/pkg/interpreters"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
@@ -31,13 +30,9 @@ func (ech *EnsureCommandHandler) Handle(parent pluggable.ContainingContext, toke
 		}
 	}
 
-	ea := &EnsureAction{tools: ech.tools, loc: tokens[0].Loc(), what: clz, named: name, props: make(map[pluggable.Identifier]pluggable.Expr)}
+	ea := &EnsureAction{tools: ech.tools, loc: tokens[0].Loc(), what: clz, named: name, props: make(map[pluggable.Identifier]pluggable.Expr), assignTo: assignTo}
 	parent.Add(ea)
 
-	if assignTo != nil {
-		ech.tools.Repository.IntroduceSymbol(pluggable.SymbolName(assignTo.Id()), ea)
-		parent.Add(vars.BindVar(assignTo, ea))
-	}
 	return interpreters.PropertiesInnerScope(ech.tools, ea)
 }
 

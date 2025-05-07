@@ -59,7 +59,7 @@ type TargetCommand interface {
 
 type Noun interface {
 	ShortDescription() string
-	CreateWithName(named string) any
+	CreateWithName(named string, assignTo Identifier) any
 }
 
 type Function interface {

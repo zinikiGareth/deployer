@@ -1,6 +1,5 @@
 This is a test that we can deal with files and copy files from one place to another
 We want to be able to specify a local source for the files and copy them to a "bucket".
-The tester somehow needs to know what to expect.
 
 	target copyFilesToBucket
 		ensure test.S3.Bucket "org.ziniki.launch_bucket" => bucket
@@ -8,9 +7,7 @@ The tester somehow needs to know what to expect.
 		files.dir root "filesrc" => src_dir
 		files.copy src_dir bucket
 
-Now, it is not unreasonable to say that testmod has one or more "assert" methods in it
-So we could assert the contents of bucket ...
+Now test that the named bucket has the files it should have
 
-assertBucketHas
-"foo"
-"bar"
+		test.assertBucketHas bucket
+			"hello.txt"

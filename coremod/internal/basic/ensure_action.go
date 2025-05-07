@@ -13,6 +13,7 @@ type EnsureAction struct {
 	what     pluggable.Identifier
 	resolved pluggable.Noun
 	named    pluggable.String
+	assignTo pluggable.Identifier
 	props    map[pluggable.Identifier]pluggable.Expr
 }
 
@@ -95,7 +96,7 @@ func (ea *EnsureAction) Prepare(runtime pluggable.RuntimeStorage) pluggable.Exec
 	// Then we call the "ensure" method on that
 	// It is an error for the object created not to implement the Ensurable contract
 
-	obj := ea.resolved.CreateWithName(ea.named.Text())
+	obj := ea.resolved.CreateWithName(ea.named.Text(), ea.assignTo)
 	ens, ok := obj.(pluggable.Ensurable)
 	if !ok {
 		runtime.Errorf(ea.loc, "the type "+ea.what.Id()+" is not ensurable")

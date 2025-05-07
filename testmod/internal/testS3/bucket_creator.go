@@ -6,7 +6,8 @@ import (
 )
 
 type bucketCreator struct {
-	name string
+	name     string
+	assignTo pluggable.Identifier
 }
 
 // This is called during the "Prepare" phase
@@ -23,8 +24,11 @@ func (b *bucketCreator) Ensure(runtime pluggable.RuntimeStorage) pluggable.Execu
 		panic("could not cast logger to TestStepLogger")
 	}
 
-	eb := ensureBucket{env: testAwsEnv, bucket: b}
+	eb := &ensureBucket{env: testAwsEnv, bucket: b}
 	testLogger.Log("ensuring bucket exists action %s\n", eb.String())
+	if b.assignTo != nil {
+		runtime.Bind(pluggable.SymbolName(b.assignTo.Id()), eb)
+	}
 
-	return &eb
+	return eb
 }

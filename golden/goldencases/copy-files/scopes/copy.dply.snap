@@ -2,8 +2,6 @@
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
 >We want to be able to specify a local source for the files and copy them to a "bucket".
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
->The tester somehow needs to know what to expect.
-#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
 >
 >	target copyFilesToBucket
 #^ source.deployer-dply
@@ -18,14 +16,11 @@
 >		files.copy src_dir bucket
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
 >
->Now, it is not unreasonable to say that testmod has one or more "assert" methods in it
-#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
->So we could assert the contents of bucket ...
-#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
+>Now test that the named bucket has the files it should have
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
 >
->assertBucketHas
-#^^^^^^^^^^^^^^^ source.deployer-dply comment.block
->"foo"
-#^^^^^ source.deployer-dply comment.block
->"bar"
-#^^^^^ source.deployer-dply comment.block
+>		test.assertBucketHas bucket
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>			"hello.txt"
+#^^^^^^^^^^^^^^^ source.deployer-dply
+>

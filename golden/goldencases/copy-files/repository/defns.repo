@@ -1,39 +1,44 @@
 symbol bucket is bound to:
 EnsureCommand {
-	_where_: copy.dply:6.0
+	_where_: copy.dply:5.0
 	what: test.S3.Bucket
 	resolved: test.S3.Bucket[]
 	named: org.ziniki.launch_bucket
 }
 symbol copyFilesToBucket is bound to:
 target copyFilesToBucket {
-	_where_: copy.dply:5.7
+	_where_: copy.dply:4.7
 	actions: [
 		EnsureCommand {
-			_where_: copy.dply:6.0
+			_where_: copy.dply:5.0
 			what: test.S3.Bucket
 			resolved: test.S3.Bucket[]
 			named: org.ziniki.launch_bucket
 		}
 		bind_var {
-			_where_: copy.dply:6.52
+			_where_: copy.dply:5.52
 			var: bucket
 			value: Ensure[test.S3.Bucket: org.ziniki.launch_bucket]
 		}
 		EnvCommand {
-			_where_: copy.dply:7.0
-			copy.dply:7.5 GOLDEN_ROOT
-			copy.dply:7.21 root
+			_where_: copy.dply:6.0
+			copy.dply:6.5 GOLDEN_ROOT
+			copy.dply:6.21 root
 		}
 		DirCommand {
-			_where_: copy.dply:8.0
-			copy.dply:8.10 root
-			copy.dply:8.16 filesrc
+			_where_: copy.dply:7.0
+			copy.dply:7.10 root
+			copy.dply:7.16 filesrc
 		}
 		CopyCommand {
-			_where_: copy.dply:9.0
-			copy.dply:9.11 src_dir
-			copy.dply:9.19 bucket
+			_where_: copy.dply:8.0
+			copy.dply:8.11 src_dir
+			copy.dply:8.19 bucket
+		}
+		AssertBucketCommand {
+			_where_: copy.dply:12.0
+			bucket: copy.dply:12.21 bucket
+			  assert file: hello.txt
 		}
 	]
 }

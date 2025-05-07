@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"ziniki.org/deployer/coremod/pkg/files"
 	"ziniki.org/deployer/deployer/pkg/errors"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
@@ -51,7 +52,7 @@ func (ca *copyAction) Prepare(runtime pluggable.RuntimeStorage) pluggable.Execut
 	// Should check things like permissions
 	// Deffo need to return an ExecuteAction
 	copyFrom := runtime.Eval(ca.exprs[0])
-	copyFS, ok := copyFrom.(*Path)
+	copyFS, ok := copyFrom.(*files.Path)
 	if !ok {
 		panic("not a path")
 	}
@@ -70,5 +71,25 @@ func (ca *copyAction) Prepare(runtime pluggable.RuntimeStorage) pluggable.Execut
 }
 
 func (ca *copyAction) Execute(runtime pluggable.RuntimeStorage) {
-	fmt.Printf("Need to copy files")
+	srcVar := runtime.Eval(ca.exprs[0])
+	src, ok := srcVar.(*files.Path)
+	if !ok {
+		panic("not the bucket i was looking for")
+	}
+	destVar := runtime.Eval(ca.exprs[1])
+	dest, ok := destVar.(files.ThingyHolder)
+	if !ok {
+		panic("not the bucket i was looking for")
+	}
+	fmt.Printf("Need to copy files from %T to %T\n", src, dest)
+
+	files, err := os.ReadDir(src.File)
+	if err != nil {
+		panic(err)
+	}
+
+	d := dest.ObtainDest()
+	for _, f := range files {
+		d.Pour(f.Name())
+	}
 }

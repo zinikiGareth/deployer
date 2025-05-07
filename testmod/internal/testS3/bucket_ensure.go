@@ -3,6 +3,7 @@ package testS3
 import (
 	"fmt"
 
+	"ziniki.org/deployer/coremod/pkg/files"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 	"ziniki.org/deployer/deployer/pkg/testhelpers"
 )
@@ -10,6 +11,7 @@ import (
 type ensureBucket struct {
 	env    *TestAwsEnv
 	bucket *bucketCreator
+	cloud  *BucketCloud
 }
 
 func (eb *ensureBucket) Execute(runtime pluggable.RuntimeStorage) {
@@ -19,7 +21,20 @@ func (eb *ensureBucket) Execute(runtime pluggable.RuntimeStorage) {
 		panic("could not cast logger to TestStepLogger")
 	}
 
-	testLogger.Log("we want to ensure a bucket called %s in region %s\n", eb.bucket.name, eb.env.Region)
+	b := eb.env.FindBucket(eb.bucket.name)
+	if b != nil {
+		testLogger.Log("the bucket %s in region %s already exists\n", eb.bucket.name, eb.env.Region)
+	} else {
+		testLogger.Log("we need to create a bucket called %s in region %s\n", eb.bucket.name, eb.env.Region)
+		// TODO: we should also handle all the properties we have stored somewhere ...
+		b = eb.env.CreateBucket(eb.bucket.name)
+	}
+
+	eb.cloud = b
+}
+
+func (eb *ensureBucket) ObtainDest() files.FileDest {
+	return eb.cloud
 }
 
 func (eb *ensureBucket) String() string {

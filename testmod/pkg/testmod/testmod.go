@@ -22,6 +22,9 @@ func RegisterWithDeployer(deployer deployer.Deployer) error {
 	}
 	tools := deployer.ObtainTools()
 	tools.Register.ProvideDriver("testS3.TestAwsEnv", &testS3.TestAwsEnv{})
+
+	tools.Register.Register(reflect.TypeFor[pluggable.TargetCommand](), "test.assertBucketHas", testS3.NewAssertBucketHandler(tools))
+
 	tools.Register.Register(reflect.TypeFor[pluggable.Noun](), "test.S3.Bucket", &testS3.BucketNoun{})
 	return nil
 }
