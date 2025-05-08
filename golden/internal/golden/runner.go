@@ -2,6 +2,7 @@ package golden
 
 import (
 	"fmt"
+	"strings"
 
 	"ziniki.org/deployer/golden/internal/errors"
 	"ziniki.org/deployer/golden/internal/runner"
@@ -10,11 +11,16 @@ import (
 type GoldenRunner struct {
 	tracker  *errors.CaseTracker
 	modules  []string
+	patterns []string
 	testdirs []string
 }
 
 func (r *GoldenRunner) UseModule(path string) {
 	r.modules = append(r.modules, path)
+}
+
+func (r *GoldenRunner) MatchPattern(patt string) {
+	r.patterns = append(r.modules, patt)
 }
 
 func (r *GoldenRunner) RunTestsUnder(root string) {
@@ -34,8 +40,22 @@ func (r *GoldenRunner) Report() int {
 func (r *GoldenRunner) runOne(root string) {
 	merged := gatherTestsInOrder(root)
 	for _, s := range merged {
-		r.runCase(root, s)
+		if r.matchesPatterns(s) {
+			r.runCase(root, s)
+		}
 	}
+}
+
+func (r *GoldenRunner) matchesPatterns(cs string) bool {
+	if len(r.patterns) == 0 {
+		return true
+	}
+	for _, s := range r.patterns {
+		if strings.Contains(cs, s) {
+			return true
+		}
+	}
+	return false
 }
 
 func (r *GoldenRunner) runCase(root, dir string) {

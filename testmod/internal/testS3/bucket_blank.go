@@ -1,11 +1,14 @@
 package testS3
 
-import "ziniki.org/deployer/deployer/pkg/pluggable"
+import (
+	"ziniki.org/deployer/deployer/pkg/errors"
+	"ziniki.org/deployer/deployer/pkg/pluggable"
+)
 
 type BucketBlank struct{}
 
-func (b *BucketBlank) Mint(tools *pluggable.Tools, named string) any {
-	return &bucketCreator{tools: tools, name: named}
+func (b *BucketBlank) Mint(tools *pluggable.Tools, loc *errors.Location, named string) any {
+	return &bucketCreator{tools: tools, loc: loc, name: named}
 }
 
 func (b *BucketBlank) ShortDescription() string {

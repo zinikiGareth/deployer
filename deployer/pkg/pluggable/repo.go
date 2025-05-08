@@ -26,8 +26,8 @@ type TargetThing interface {
 }
 
 type Binder interface {
-	MayBind(v any)
-	MustBind(v any)
+	MayBind(v Describable)
+	MustBind(v Describable)
 }
 
 type Resolver interface {

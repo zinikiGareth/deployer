@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"ziniki.org/deployer/coremod/pkg/files"
+	"ziniki.org/deployer/deployer/pkg/errors"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 	"ziniki.org/deployer/deployer/pkg/testhelpers"
 )
@@ -11,10 +12,26 @@ import (
 type bucketCreator struct {
 	tools *pluggable.Tools
 
+	loc  *errors.Location
 	name string
 
 	env   *TestAwsEnv
 	cloud *BucketCloud
+}
+
+func (b *bucketCreator) Loc() *errors.Location {
+	return b.loc
+}
+
+func (b *bucketCreator) ShortDescription() string {
+	return "test.S3.Bucket[" + b.name + "]"
+}
+
+func (b *bucketCreator) DumpTo(iw pluggable.IndentWriter) {
+	iw.Intro("test.S3.Bucket[")
+	iw.AttrsWhere(b)
+	iw.TextAttr("named", b.name)
+	iw.EndAttrs()
 }
 
 // This is called during the "Prepare" phase

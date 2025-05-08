@@ -36,7 +36,7 @@ for i in errors repository prepare execute ; do
     diff "$golden/$j" "$golden-gen/$j" > /tmp/golddiff
     if [ $? -ne 0 ] ; then
       echo " ++++ $i/$j:"
-      sdiff -w 200 "$golden/$j" "$golden-gen/$j"
+      sdiff -W -w 200 "$golden/$j" "$golden-gen/$j"
       if [ "$DOCOPY" -eq 1 ] ; then
         cp $golden-gen/$j $golden/$j
       fi
@@ -60,7 +60,7 @@ if [ -d "$scopedir" ] ; then
     diff "${scopedir}/$j" "${scopetest}/$j" > /tmp/golddiff
     if [ $? -ne 0 ] ; then
       echo " ++++ scopes/$j:"
-      sdiff -w200 "${scopedir}/$j" "${scopetest}/$j"
+      sdiff -W -w200 "${scopedir}/$j" "${scopetest}/$j"
       if [ "$DOCOPY" -eq 1 ] ; then
         cp ${scopetest}/$j ${scopedir}/$j
       fi

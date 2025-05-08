@@ -38,7 +38,7 @@ func (cs *commandScope) HaveTokens(tokens []pluggable.Token) pluggable.Interpret
 
 	cc := cs.container
 	if assignTo != nil {
-		cc = &WithAssignTo{container: cc, assignTo: assignTo}
+		cc = &WithAssignTo{tools: cs.tools, container: cc, assignTo: assignTo}
 	}
 
 	innerScope := action.Handle(cc, toks)
@@ -72,15 +72,17 @@ func (b *commandScope) splitOnArrow(tokens []pluggable.Token) (bool, []pluggable
 }
 
 type WithAssignTo struct {
+	tools     *pluggable.Tools
 	assignTo  pluggable.Identifier
 	container pluggable.ContainingContext
 }
 
 func (wat *WithAssignTo) Add(d pluggable.Action) {
-	wat.container.Add(&DoAssign{assignTo: wat.assignTo, action: d})
+	wat.container.Add(&DoAssign{tools: wat.tools, assignTo: wat.assignTo, action: d})
 }
 
 type DoAssign struct {
+	tools    *pluggable.Tools
 	assignTo pluggable.Identifier
 	action   pluggable.Action
 }
@@ -98,8 +100,7 @@ func (d *DoAssign) DumpTo(w pluggable.IndentWriter) {
 }
 
 func (d *DoAssign) Resolve(r pluggable.Resolver, b pluggable.Binder) {
-	ab := b // TODO: this should do the binding, duH!
-	d.action.Resolve(r, ab)
+	d.action.Resolve(r, d)
 	// TODO: MINTING
 }
 
@@ -113,4 +114,15 @@ func (d *DoAssign) Prepare() {
 
 func (d *DoAssign) Execute() {
 	d.action.Execute()
+}
+
+func (d *DoAssign) MayBind(val pluggable.Describable) {
+	d.tools.Repository.IntroduceSymbol(pluggable.SymbolName(d.assignTo.Id()), val)
+}
+
+func (d *DoAssign) MustBind(val pluggable.Describable) {
+	if d.assignTo == nil {
+		panic("assignTo is not specified") // should be an error
+	}
+	d.MayBind(val)
 }

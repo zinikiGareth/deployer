@@ -2,6 +2,7 @@ package golden
 
 import (
 	"fmt"
+	"strings"
 
 	"ziniki.org/deployer/golden/internal/errors"
 )
@@ -24,7 +25,17 @@ func NewGoldenRunner(args []string) (*GoldenRunner, error) {
 				return nil, err
 			}
 			ret.UseModule(mod)
+		case "--pattern":
+			i++
+			patt, err := nextArg(args, i, "there is no argument pattern")
+			if err != nil {
+				return nil, err
+			}
+			ret.MatchPattern(patt)
 		default:
+			if strings.HasPrefix(args[i], "-") {
+				return nil, fmt.Errorf("invalid option: %s", args[i])
+			}
 			ret.RunTestsUnder(args[i])
 		}
 		i++

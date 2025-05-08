@@ -1,6 +1,10 @@
 package pluggable
 
-import "fmt"
+import (
+	"fmt"
+
+	"ziniki.org/deployer/deployer/pkg/errors"
+)
 
 type ProvideLine interface {
 	BeginFile(file string)
@@ -60,7 +64,7 @@ type TargetCommand interface {
 // Replace this with a notion of minting, blanks, dies ... I think this would be a blank
 type Blank interface {
 	ShortDescription() string
-	Mint(tools *Tools, named string) any
+	Mint(tools *Tools, loc *errors.Location, named string) any
 }
 
 type Function interface {

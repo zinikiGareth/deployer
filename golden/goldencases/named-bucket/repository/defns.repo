@@ -2,12 +2,21 @@ symbol ensureABucketExists is bound to:
 target ensureABucketExists {
 	_where_: bucket.dply:3.7
 	actions: [
-		EnsureCommand {
-			_where_: bucket.dply:4.0
-			what: test.S3.Bucket
-			resolved: test.S3.Bucket[]
-			named: org.ziniki.launch_bucket
-				bucket.dply:5.0 retentionLength <- bucket.dply:5.19 24
+		AssignTo {
+			_where_: bucket.dply:4.52
+			assignTo: launch_bucket
+			EnsureAction {
+				_where_: bucket.dply:4.0
+				what: test.S3.Bucket
+				resolved: test.S3.Bucket[]
+				named: org.ziniki.launch_bucket
+					bucket.dply:5.0 retentionLength <- bucket.dply:5.19 24
+			}
 		}
 	]
+}
+symbol launch_bucket is bound to:
+test.S3.Bucket[ {
+	_where_: bucket.dply:4.0
+	named: org.ziniki.launch_bucket
 }

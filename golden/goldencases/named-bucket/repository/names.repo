@@ -1,1 +1,2 @@
 ensureABucketExists => Target[ensureABucketExists]
+launch_bucket => test.S3.Bucket[org.ziniki.launch_bucket]
