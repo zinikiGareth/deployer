@@ -35,7 +35,7 @@ func (b *bucketCreator) DumpTo(iw pluggable.IndentWriter) {
 }
 
 // This is called during the "Prepare" phase
-func (b *bucketCreator) Prepare() {
+func (b *bucketCreator) Prepare(pres pluggable.ValuePresenter) {
 	tmp := b.tools.Recall.ObtainDriver("testS3.TestAwsEnv")
 	testAwsEnv, ok := tmp.(*TestAwsEnv)
 	if !ok {
@@ -50,9 +50,7 @@ func (b *bucketCreator) Prepare() {
 
 	b.env = testAwsEnv
 	testLogger.Log("ensuring bucket exists action %s\n", b.String())
-	// if b.assignTo != nil {
-	// 	b.tools.Storage.Bind(pluggable.SymbolName(b.assignTo.Id()), eb)
-	// }
+	pres.Present(b)
 }
 
 func (eb *bucketCreator) Execute() {

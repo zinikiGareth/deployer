@@ -96,7 +96,7 @@ func (ea *EnsureAction) Resolve(r pluggable.Resolver, b pluggable.Binder) {
 }
 
 func (ea *EnsureAction) Prepare(pres pluggable.ValuePresenter) {
-	ea.ens.Prepare()
+	ea.ens.Prepare(pres)
 }
 
 func (ea *EnsureAction) Execute() {

@@ -62,5 +62,6 @@ func (d *coreTarget) MustBind(val pluggable.Describable) {
 }
 
 func (d *coreTarget) Present(value any) {
-	panic("not implemented")
+	// If I have understood the flow correctly, if you arrive here without having reported an error in MustBind,
+	// then binding is optional and no assignTo has been specified.  So doing nothing is fine.
 }
