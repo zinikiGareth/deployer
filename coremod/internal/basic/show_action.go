@@ -41,6 +41,9 @@ func (sa *ShowAction) Resolve(r pluggable.Resolver, b pluggable.Binder) {
 }
 
 func (sa *ShowAction) Prepare(pres pluggable.ValuePresenter) {
+}
+
+func (sa *ShowAction) Execute() {
 	// This probably needs a lot more work and a lot more infrastructure
 	// I don't think I even know *how* I expect it to work at the moment ...
 
@@ -49,6 +52,7 @@ func (sa *ShowAction) Prepare(pres pluggable.ValuePresenter) {
 	tmp := sa.tools.Recall.ObtainDriver("testhelpers.TestStepLogger")
 	logger, ok := tmp.(testhelpers.TestStepLogger)
 	if !ok {
+		// TODO: make it point to something with Log => fmt.Printf()
 		panic("could not get logger")
 	}
 
@@ -56,23 +60,8 @@ func (sa *ShowAction) Prepare(pres pluggable.ValuePresenter) {
 		if i > 0 {
 			logger.Log(" ")
 		}
-		// TODO: I think ALL this should really be something like e.Eval(runtime).ToString()
-		val := sa.tools.Storage.Eval(e)
-		str, ok := val.(string)
-		if ok {
-			logger.Log("%s", str)
-		} else {
-			stringer, ok := val.(fmt.Stringer)
-			if ok {
-				logger.Log("%s", stringer.String())
-			} else {
-				logger.Log("%v", val)
-			}
-		}
+		str := sa.tools.Storage.EvalAsString(e)
+		logger.Log("%s", str)
 	}
 	logger.Log("\n")
-}
-
-func (ea *ShowAction) Execute() {
-
 }

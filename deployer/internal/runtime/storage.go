@@ -1,6 +1,7 @@
 package runtime
 
 import (
+	"fmt"
 	"log"
 
 	"ziniki.org/deployer/deployer/pkg/errors"
@@ -46,6 +47,21 @@ func (s *Storage) Eval(e pluggable.Expr) any {
 		} else {
 			log.Fatalf("cannot evaluate %v", e)
 			return nil
+		}
+	}
+}
+
+func (s *Storage) EvalAsString(e pluggable.Expr) string {
+	val := s.Eval(e)
+	str, ok := val.(string)
+	if ok {
+		return str
+	} else {
+		stringer, ok := val.(fmt.Stringer)
+		if ok {
+			return stringer.String()
+		} else {
+			return fmt.Sprintf("%v", val)
 		}
 	}
 }

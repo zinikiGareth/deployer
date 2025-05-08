@@ -14,6 +14,7 @@ type RuntimeStorage interface {
 	SetMode(mode int)
 	IsMode(mode int) bool
 	Eval(e Expr) any
+	EvalAsString(e Expr) string
 }
 
 type InitMe interface {
