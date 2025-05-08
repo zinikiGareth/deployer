@@ -16,6 +16,10 @@ type TimeOf struct {
 	Unit   string
 }
 
+func (t TimeOf) Eval(s pluggable.RuntimeStorage) any {
+	return t
+}
+
 func (t TimeOf) String() string {
 	return fmt.Sprintf("%s Time[%d,%s]", t.Locatable.Loc(), t.Number, t.Unit)
 }

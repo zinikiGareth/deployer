@@ -8,6 +8,10 @@ type Apply struct {
 	Args []pluggable.Expr
 }
 
+func (a Apply) Eval(s pluggable.RuntimeStorage) any {
+	panic("not implemented")
+}
+
 func (a Apply) String() string {
 	return "APPPLLY"
 }

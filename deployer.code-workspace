@@ -46,8 +46,8 @@
 					"--module",
 					"${workspaceFolder:TestMod}/plugin/testmod.so",
 					"${workspaceFolder:GoldenTester}/goldencases"
-				}
-			},
+				]
+			}
 		],
 		"compounds": []
 	},
@@ -59,17 +59,17 @@
 				"command": "go",
             			"label": "testall",
             			"args": ["test", "-v", "./..."],
-            			"group": "test",
+            			"group": "test"
         		},
         		{
 				"type": "shell",
 				"options": {
-					"cwd": "${workspaceFolder:Deployer}/..",
+					"cwd": "${workspaceFolder:Deployer}/.."
 				},
 				"command": "${workspaceFolder:Deployer}/../buildtest",
             			"label": "buildtest",
             			"args": [],
-            			"group": "test",
+            			"group": "test"
         		}
     		]
 	}

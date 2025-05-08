@@ -3,6 +3,7 @@ package exprs_test
 import (
 	"testing"
 
+	"ziniki.org/deployer/deployer/internal/parser/exprs"
 	"ziniki.org/deployer/deployer/internal/parser/lexicator"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
@@ -25,17 +26,17 @@ func TestTwoNounsComeBackSeparately(t *testing.T) {
 	defer cleanup()
 	hello := lexicator.NewIdentifierToken(lineloc, 0, "hello")
 	world := lexicator.NewStringToken(lineloc, 6, "world")
-	exprs, ok := p.ParseMultiple([]pluggable.Token{hello, world})
+	es, ok := p.ParseMultiple([]pluggable.Token{hello, world})
 	if !ok {
 		t.Fatalf("Parsing failed")
 	}
-	if len(exprs) != 2 {
-		t.Fatalf("%d exprs returned, not zero", len(exprs))
+	if len(es) != 2 {
+		t.Fatalf("%d exprs returned, not zero", len(es))
 	}
-	if exprs[0] != hello {
+	if !exprs.IsVar(es[0], hello) {
 		t.Fatalf("first expr was not hello")
 	}
-	if exprs[1] != world {
+	if es[1] != world {
 		t.Fatalf("second expr was not world")
 	}
 }

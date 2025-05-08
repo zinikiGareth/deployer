@@ -3,6 +3,7 @@ package exprs_test
 import (
 	"testing"
 
+	"ziniki.org/deployer/deployer/internal/parser/exprs"
 	"ziniki.org/deployer/deployer/internal/parser/lexicator"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
@@ -38,20 +39,21 @@ func TestAnUnboundIDIsAnExpr(t *testing.T) {
 	if !ok {
 		t.Fatalf("Parse failed")
 	}
-	if expr != id {
+	if !exprs.IsVar(expr, id) {
 		t.Fatalf("returned expr was not x")
 	}
 }
 
 func TestAnIDBoundToAVerbProducesAnExpr(t *testing.T) {
 	p, _ := makeParser(t)
+	
 	recall.things["hello"] = idFunc
 	id := lexicator.NewIdentifierToken(lineloc, 0, "hello")
 	expr, ok := p.Parse([]pluggable.Token{id})
 	if !ok {
 		t.Fatalf("Parse failed")
 	}
-	if expr == id {
+	if exprs.IsVar(expr, id) {
 		t.Fatalf("returned expr was the verb")
 	}
 	if expr != oneString {

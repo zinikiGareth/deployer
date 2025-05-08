@@ -1,6 +1,7 @@
 package exprs
 
 import (
+	"fmt"
 	"reflect"
 	"strings"
 
@@ -45,7 +46,18 @@ func (p *exprParser) Parse(tokens []pluggable.Token) (pluggable.Expr, bool) {
 			p.tools.Reporter.Reportf(before[0].Loc().Offset, "no function found")
 			return nil, false
 		}
-		return before[0], true
+		return AsExpr(before[0]), true
+	}
+}
+
+func AsExpr(x pluggable.Token) pluggable.Expr {
+	switch x.(type) {
+	case pluggable.Expr:
+		return x.(pluggable.Expr)
+	case pluggable.Identifier:
+		return VarOf(x.(pluggable.Identifier))
+	default:
+		panic(fmt.Sprintf("cannot handle type %T", x))
 	}
 }
 
@@ -125,7 +137,7 @@ func (p *exprParser) ScanLoop(tokens []pluggable.Token, ret []pluggable.Token, i
 func makeArgs(tokens []pluggable.Token) []pluggable.Expr {
 	args := make([]pluggable.Expr, len(tokens))
 	for k, tok := range tokens {
-		args[k] = tok
+		args[k] = AsExpr(tok)
 	}
 	return args
 }

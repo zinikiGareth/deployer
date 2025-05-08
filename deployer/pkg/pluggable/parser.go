@@ -33,11 +33,13 @@ type Identifier interface {
 
 type Number interface {
 	Token
+	Expr
 	Value() float64
 }
 
 type String interface {
 	Token
+	Expr
 	Text() string
 }
 
@@ -74,6 +76,7 @@ type Function interface {
 type Expr interface {
 	fmt.Stringer
 	Locatable
+	Eval(s RuntimeStorage) any
 }
 
 type ExprParser interface {
