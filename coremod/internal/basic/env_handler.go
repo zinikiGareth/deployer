@@ -20,7 +20,7 @@ func (ech *envCommandHandler) Handle(parent pluggable.ContainingContext, tokens 
 		return interpreters.IgnoreInnerScope()
 	}
 
-	ea := &EnvAction{tools: ech.tools, loc: tokens[0].Loc(), expr: expr}
+	ea := &EnvAction{tools: ech.tools, loc: tokens[0].Loc(), varname: expr}
 	parent.Add(ea)
 
 	return interpreters.DisallowInnerScope(ech.tools)

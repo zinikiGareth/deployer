@@ -15,7 +15,6 @@ type copyAction struct {
 	tools    *pluggable.Tools
 	loc      *errors.Location
 	exprs    []pluggable.Expr
-	assignTo pluggable.Identifier
 }
 
 func (ca *copyAction) Loc() *errors.Location {
@@ -42,7 +41,7 @@ func (ca *copyAction) Resolve(r pluggable.Resolver, b pluggable.Binder) {
 	// ea.resolved = r.Resolve(ea.what)
 }
 
-func (ca *copyAction) Prepare() {
+func (ca *copyAction) Prepare(pres pluggable.ValuePresenter) {
 	// Not quite sure what to do here ...
 	// Need to prepare
 	// Should check things like permissions
@@ -62,7 +61,6 @@ func (ca *copyAction) Prepare() {
 	if !dir.IsDir() {
 		log.Fatalf("%s not a directory", path)
 	}
-	return
 }
 
 func (ca *copyAction) Execute() {

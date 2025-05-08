@@ -2,9 +2,11 @@ symbol showAConstantString is bound to:
 target showAConstantString {
 	_where_: showstring.dply:4.7
 	actions: [
-		ShowCommand {
+		ShowAction {
 			_where_: showstring.dply:5.0
-			showstring.dply:5.6 hello, world
+			exprs: [
+				showstring.dply:5.6 hello, world
+			]
 		}
 	]
 }

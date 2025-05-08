@@ -21,9 +21,11 @@ func (sa *ShowAction) Loc() *errors.Location {
 func (sa *ShowAction) DumpTo(w pluggable.IndentWriter) {
 	w.Intro("ShowAction")
 	w.AttrsWhere(sa)
+	w.ListAttr("exprs")
 	for _, v := range sa.exprs {
 		w.IndPrintf("%s\n", v.String())
 	}
+	w.EndList()
 	w.EndAttrs()
 }
 
@@ -38,7 +40,7 @@ func (sa *ShowAction) Resolve(r pluggable.Resolver, b pluggable.Binder) {
 	// ea.resolved = r.Resolve(ea.what)
 }
 
-func (sa *ShowAction) Prepare() {
+func (sa *ShowAction) Prepare(pres pluggable.ValuePresenter) {
 	// This probably needs a lot more work and a lot more infrastructure
 	// I don't think I even know *how* I expect it to work at the moment ...
 

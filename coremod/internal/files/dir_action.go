@@ -14,7 +14,6 @@ type dirAction struct {
 	tools    *pluggable.Tools
 	loc      *errors.Location
 	exprs    []pluggable.Expr
-	assignTo pluggable.Identifier
 }
 
 func (da *dirAction) Loc() *errors.Location {
@@ -41,7 +40,7 @@ func (da *dirAction) Resolve(r pluggable.Resolver, b pluggable.Binder) {
 	// ea.resolved = r.Resolve(ea.what)
 }
 
-func (da *dirAction) Prepare() {
+func (da *dirAction) Prepare(pres pluggable.ValuePresenter) {
 	var val *files.Path
 	for _, e := range da.exprs {
 		v := da.tools.Storage.Eval(e)
@@ -74,8 +73,7 @@ func (da *dirAction) Prepare() {
 			}
 		}
 	}
-	da.tools.Storage.Bind(pluggable.SymbolName(da.assignTo.Id()), val)
-	return
+	pres.Present(val)
 }
 
 func (ea *dirAction) Execute() {

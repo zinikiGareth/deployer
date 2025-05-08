@@ -39,7 +39,7 @@ func (ca *assertBucketAction) Resolve(r pluggable.Resolver, b pluggable.Binder) 
 	// ea.resolved = r.Resolve(ea.what)
 }
 
-func (ca *assertBucketAction) Prepare() {
+func (ca *assertBucketAction) Prepare(pres pluggable.ValuePresenter) {
 }
 
 func (ca *assertBucketAction) Execute() {

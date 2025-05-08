@@ -101,15 +101,14 @@ func (d *DoAssign) DumpTo(w pluggable.IndentWriter) {
 
 func (d *DoAssign) Resolve(r pluggable.Resolver, b pluggable.Binder) {
 	d.action.Resolve(r, d)
-	// TODO: MINTING
 }
 
 func (d *DoAssign) ShortDescription() string {
 	return "DoAssign[" + d.assignTo.Id() + "<-" + d.action.ShortDescription() + "]"
 }
 
-func (d *DoAssign) Prepare() {
-	d.action.Prepare()
+func (d *DoAssign) Prepare(pres pluggable.ValuePresenter) {
+	d.action.Prepare(d)
 }
 
 func (d *DoAssign) Execute() {
@@ -117,7 +116,9 @@ func (d *DoAssign) Execute() {
 }
 
 func (d *DoAssign) MayBind(val pluggable.Describable) {
-	d.tools.Repository.IntroduceSymbol(pluggable.SymbolName(d.assignTo.Id()), val)
+	if d.assignTo != nil {
+		d.tools.Repository.IntroduceSymbol(pluggable.SymbolName(d.assignTo.Id()), val)
+	}
 }
 
 func (d *DoAssign) MustBind(val pluggable.Describable) {
@@ -125,4 +126,8 @@ func (d *DoAssign) MustBind(val pluggable.Describable) {
 		panic("assignTo is not specified") // should be an error
 	}
 	d.MayBind(val)
+}
+
+func (d *DoAssign) Present(value any) {
+	d.tools.Storage.Bind(pluggable.SymbolName(d.assignTo.Id()), value)
 }

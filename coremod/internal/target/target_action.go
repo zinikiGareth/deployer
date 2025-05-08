@@ -36,15 +36,14 @@ func (t *coreTarget) DumpTo(w pluggable.IndentWriter) {
 }
 
 func (t *coreTarget) Resolve(r pluggable.Resolver) {
-	var b pluggable.Binder
 	for _, a := range t.actions {
-		a.Resolve(r, b)
+		a.Resolve(r, t)
 	}
 }
 
 func (t *coreTarget) Prepare() {
 	for _, a := range t.actions {
-		a.Prepare()
+		a.Prepare(t)
 	}
 }
 
@@ -52,4 +51,16 @@ func (t *coreTarget) Execute() {
 	for _, a := range t.actions {
 		a.Execute()
 	}
+}
+
+func (d *coreTarget) MayBind(val pluggable.Describable) {
+	// There is nothing to bind ...
+}
+
+func (d *coreTarget) MustBind(val pluggable.Describable) {
+	panic("assignTo is not specified") // should be an error
+}
+
+func (d *coreTarget) Present(value any) {
+	panic("not implemented")
 }

@@ -45,8 +45,6 @@
 					"${workspaceFolder:CoreMod}/plugin/coremod.so",
 					"--module",
 					"${workspaceFolder:TestMod}/plugin/testmod.so",
-					"--pattern",
-					"named-bucket",
 					"${workspaceFolder:GoldenTester}/goldencases"
 				}
 			},

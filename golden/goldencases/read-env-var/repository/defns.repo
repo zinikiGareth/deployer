@@ -2,14 +2,19 @@ symbol readAndShowEnvVar is bound to:
 target readAndShowEnvVar {
 	_where_: readenv.dply:5.7
 	actions: [
-		EnvCommand {
-			_where_: readenv.dply:6.0
-			readenv.dply:6.5 SETME
-			readenv.dply:6.15 var
+		AssignTo {
+			_where_: readenv.dply:6.15
+			assignTo: var
+			EnvAction {
+				_where_: readenv.dply:6.0
+				varname: readenv.dply:6.5 SETME
+			}
 		}
-		ShowCommand {
+		ShowAction {
 			_where_: readenv.dply:7.0
-			readenv.dply:7.5 var
+			exprs: [
+				readenv.dply:7.5 var
+			]
 		}
 	]
 }

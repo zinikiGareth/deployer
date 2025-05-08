@@ -2,7 +2,7 @@ symbol ensureABucketExists is bound to:
 target ensureABucketExists {
 	_where_: bucket.dply:3.7
 	actions: [
-		EnsureCommand {
+		EnsureAction {
 			_where_: bucket.dply:4.0
 			what: test.S3.Bucket
 			resolved: test.S3.Bucket[]

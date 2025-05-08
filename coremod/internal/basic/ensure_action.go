@@ -95,7 +95,7 @@ func (ea *EnsureAction) Resolve(r pluggable.Resolver, b pluggable.Binder) {
 	b.MayBind(ens)
 }
 
-func (ea *EnsureAction) Prepare() {
+func (ea *EnsureAction) Prepare(pres pluggable.ValuePresenter) {
 	ea.ens.Prepare()
 }
 
