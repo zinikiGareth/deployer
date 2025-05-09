@@ -3,7 +3,9 @@ package impl
 import (
 	"fmt"
 	"io"
+	"log"
 	"path/filepath"
+	"plugin"
 
 	"ziniki.org/deployer/deployer/internal/parser"
 	"ziniki.org/deployer/deployer/internal/registry"
@@ -36,9 +38,21 @@ func (d *DeployerImpl) ReadScriptsFrom(indir string) error {
 	return nil
 }
 
+func (d *DeployerImpl) UseModule(mod string) error {
+	p, err := plugin.Open(mod)
+	if err != nil {
+		return err
+	}
+	init, err := p.Lookup("RegisterWithDeployer")
+	if err != nil {
+		log.Printf("ignoring module " + mod + " as it does not have RegisterWithDeployer")
+		return nil
+	}
+	return init.(func(deployer.Deployer) error)(d)
+}
+
 func (d *DeployerImpl) Deploy(targetNames ...string) error {
 	for _, f := range d.input {
-		fmt.Printf("  %s\n", f)
 		from := filepath.Join(d.srcdir, f)
 		d.tools.Repository.ReadingFile(f)
 		parser.Parse(d.tools, f, from)
@@ -57,11 +71,13 @@ func (d *DeployerImpl) Deploy(targetNames ...string) error {
 
 	d.tools.Storage.SetMode(pluggable.PREPARE_MODE)
 	for _, t := range targets {
+		fmt.Printf("preparing %s:\n", t)
 		t.Prepare()
 	}
 
 	d.tools.Storage.SetMode(pluggable.EXECUTE_MODE)
 	for _, t := range targets {
+		fmt.Printf("executing %s:\n", t)
 		t.Execute()
 	}
 

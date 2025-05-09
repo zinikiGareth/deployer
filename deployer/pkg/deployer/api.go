@@ -8,6 +8,7 @@ import (
 
 type Deployer interface {
 	AddSymbolListener(lsnr pluggable.SymbolListener)
+	UseModule(mod string) error
 	ReadScriptsFrom(indir string) error
 	Deploy(targets ...string) error
 
