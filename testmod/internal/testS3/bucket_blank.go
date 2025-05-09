@@ -11,6 +11,14 @@ func (b *BucketBlank) Mint(tools *pluggable.Tools, loc *errors.Location, named s
 	return &bucketCreator{tools: tools, loc: loc, name: named}
 }
 
+func (b *BucketBlank) Loc() *errors.Location {
+	panic("not implemented")
+}
+
 func (b *BucketBlank) ShortDescription() string {
 	return "test.S3.Bucket[]"
+}
+
+func (b *BucketBlank) DumpTo(iw pluggable.IndentWriter) {
+	panic("not implemented")
 }

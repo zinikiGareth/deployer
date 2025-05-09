@@ -1,3 +1,5 @@
 copy.dply:
 4.7 copyFilesToBucket
 5.0 bucket
+6.5 root
+7.0 src_dir

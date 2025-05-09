@@ -84,7 +84,12 @@ func (ea *EnsureAction) Completed() {
 }
 
 func (ea *EnsureAction) Resolve(r pluggable.Resolver, b pluggable.Binder) {
-	ea.resolved = r.Resolve(ea.what)
+	res, ok := r.Resolve(ea.what).(pluggable.Blank)
+	if !ok {
+		ea.tools.Storage.Errorf(ea.loc, "could not find "+ea.what.Id())
+		return
+	}
+	ea.resolved = res
 	obj := ea.resolved.Mint(ea.tools, ea.Loc(), ea.named.Text())
 	ens, ok := obj.(ensurable.Ensurable)
 	if !ok {

@@ -17,6 +17,9 @@ func (d *SimpleRepository) ReadingFile(file string) {
 }
 
 func (d *SimpleRepository) IntroduceSymbol(who pluggable.SymbolName, is pluggable.Describable) {
+	if d.symbols[who] != nil {
+		panic("duplicate definition of " + who)
+	}
 	d.symbols[who] = is
 	for _, lsnr := range d.symbolLsnrs {
 		lsnr.Symbol(who, is)

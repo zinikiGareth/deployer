@@ -23,7 +23,7 @@ func (sa *ShowAction) DumpTo(w pluggable.IndentWriter) {
 	w.AttrsWhere(sa)
 	w.ListAttr("exprs")
 	for _, v := range sa.exprs {
-		w.IndPrintf("%s\n", v.String())
+		w.IndPrintf("%s\n", v.ShortDescription())
 	}
 	w.EndList()
 	w.EndAttrs()
@@ -37,7 +37,9 @@ func (sa *ShowAction) Completed() {
 }
 
 func (sa *ShowAction) Resolve(r pluggable.Resolver, b pluggable.Binder) {
-	// ea.resolved = r.Resolve(ea.what)
+	for _, e := range sa.exprs {
+		e.Resolve(r)
+	}
 }
 
 func (sa *ShowAction) Prepare(pres pluggable.ValuePresenter) {

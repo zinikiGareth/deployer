@@ -4,6 +4,7 @@ import (
 	"log"
 	"reflect"
 
+	"ziniki.org/deployer/deployer/internal/parser/exprs"
 	"ziniki.org/deployer/deployer/pkg/errors"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
@@ -15,7 +16,7 @@ func (repo *SimpleRepository) ResolveAll(tools *pluggable.Tools) {
 	}
 }
 
-func (d *SimpleRepository) GetDefinition(name pluggable.SymbolName) pluggable.Locatable {
+func (d *SimpleRepository) GetDefinition(name pluggable.SymbolName) pluggable.Describable {
 	return d.symbols[name]
 }
 
@@ -25,13 +26,17 @@ type Searcher struct {
 	reporter errors.ErrorRepI
 }
 
-func (s *Searcher) Resolve(name pluggable.Identifier) pluggable.Blank {
+func (s *Searcher) MakeNew(name pluggable.Identifier) pluggable.Var {
+	return exprs.SolidVar(name)
+}
+
+func (s *Searcher) Resolve(name pluggable.Identifier) pluggable.Describable {
 	defn := s.repo.GetDefinition(pluggable.SymbolName(name.Id()))
-	ret, ok := defn.(pluggable.Blank)
+	ret, ok := defn.(pluggable.Describable)
 	if ret != nil && ok {
 		return ret
 	}
-	ret = s.recall.Find(reflect.TypeFor[pluggable.Blank](), name.Id()).(pluggable.Blank)
+	ret, ok = s.recall.Find(reflect.TypeFor[pluggable.Blank](), name.Id()).(pluggable.Describable)
 	if ret != nil {
 		return ret
 	}

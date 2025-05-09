@@ -84,6 +84,7 @@ func (wat *WithAssignTo) Add(d pluggable.Action) {
 type DoAssign struct {
 	tools    *pluggable.Tools
 	assignTo pluggable.Identifier
+	resolved pluggable.Describable
 	action   pluggable.Action
 }
 
@@ -100,6 +101,7 @@ func (d *DoAssign) DumpTo(w pluggable.IndentWriter) {
 }
 
 func (d *DoAssign) Resolve(r pluggable.Resolver, b pluggable.Binder) {
+	// d.resolved = r.MakeNew(d.assignTo)
 	d.action.Resolve(r, d)
 }
 
@@ -117,6 +119,7 @@ func (d *DoAssign) Execute() {
 
 func (d *DoAssign) MayBind(val pluggable.Describable) {
 	if d.assignTo != nil {
+		d.resolved = val
 		d.tools.Repository.IntroduceSymbol(pluggable.SymbolName(d.assignTo.Id()), val)
 	}
 }
@@ -129,5 +132,8 @@ func (d *DoAssign) MustBind(val pluggable.Describable) {
 }
 
 func (d *DoAssign) Present(value any) {
-	d.tools.Storage.Bind(pluggable.SymbolName(d.assignTo.Id()), value)
+	if d.resolved == nil { // can't do anything if we didn't resolve it
+		return
+	}
+	d.tools.Storage.Bind(d.resolved, value)
 }

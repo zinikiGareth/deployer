@@ -16,8 +16,19 @@ type TimeOf struct {
 	Unit   string
 }
 
-func (t TimeOf) Eval(s pluggable.RuntimeStorage) any {
+func (t *TimeOf) Resolve(r pluggable.Resolver) {
+}
+
+func (t *TimeOf) Eval(s pluggable.RuntimeStorage) any {
 	return t
+}
+
+func (t *TimeOf) ShortDescription() string {
+	panic("not implemented")
+}
+
+func (t *TimeOf) DumpTo(iw pluggable.IndentWriter) {
+	panic("not implemented")
 }
 
 func (t TimeOf) String() string {
@@ -39,7 +50,7 @@ func (h *HoursFunc) Eval(me pluggable.Token, before []pluggable.Expr, after []pl
 	if !ok {
 		panic("not implemented: not-const hours")
 	}
-	return TimeOf{Locatable: konst, Number: int(konst.Value()), Unit: HOURS}
+	return &TimeOf{Locatable: konst, Number: int(konst.Value()), Unit: HOURS}
 }
 
 func MakeHoursFunc(tools *pluggable.Tools) *HoursFunc {

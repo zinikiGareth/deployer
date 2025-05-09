@@ -55,7 +55,7 @@ func AsExpr(x pluggable.Token) pluggable.Expr {
 	case pluggable.Expr:
 		return x.(pluggable.Expr)
 	case pluggable.Identifier:
-		return VarOf(x.(pluggable.Identifier))
+		return VarRefer(x.(pluggable.Identifier))
 	default:
 		panic(fmt.Sprintf("cannot handle type %T", x))
 	}

@@ -13,15 +13,21 @@ type Storage struct {
 	sink     errors.ErrorSink
 	mode     int
 	drivers  map[string]any
-	runtime  map[string]any
+	runtime  map[pluggable.Describable]any
 }
 
-func (s *Storage) Bind(name pluggable.SymbolName, value any) {
-	s.runtime[string(name)] = value
+func (s *Storage) Bind(v pluggable.Describable, value any) {
+	log.Printf("binding %p %v to %v", v, v, value)
+	// a, ok := v.(*exprs.ActualVar)
+	// if !ok {
+	// 	panic("uh ...")
+	// }
+	s.runtime[v] = value
 }
 
-func (s *Storage) Get(name pluggable.SymbolName) any {
-	return s.runtime[string(name)]
+func (s *Storage) Get(v pluggable.Var) any {
+	log.Printf("looking up %p %v", v.Binding(), v)
+	return s.runtime[v.Binding()]
 }
 
 func (s *Storage) Errorf(loc *errors.Location, msg string, args ...any) {
@@ -37,18 +43,21 @@ func (s *Storage) IsMode(mode int) bool {
 }
 
 func (s *Storage) Eval(e pluggable.Expr) any {
-	str, ok := e.(pluggable.String)
-	if ok {
-		return str.Text()
-	} else {
-		id, ok := e.(pluggable.Identifier)
+	return e.Eval(s)
+	/*
+		str, ok := e.(pluggable.String)
 		if ok {
-			return s.Get(pluggable.SymbolName(id.Id()))
+			return str.Text()
 		} else {
-			log.Fatalf("cannot evaluate %v", e)
-			return nil
+			id, ok := e.(pluggable.Identifier)
+			if ok {
+				return s.Get(pluggable.SymbolName(id.Id()))
+			} else {
+				log.Fatalf("cannot evaluate %v", e)
+				return nil
+			}
 		}
-	}
+	*/
 }
 
 func (s *Storage) EvalAsString(e pluggable.Expr) string {
@@ -56,16 +65,18 @@ func (s *Storage) EvalAsString(e pluggable.Expr) string {
 	str, ok := val.(string)
 	if ok {
 		return str
-	} else {
-		stringer, ok := val.(fmt.Stringer)
-		if ok {
-			return stringer.String()
-		} else {
-			return fmt.Sprintf("%v", val)
-		}
 	}
+	stok, ok := val.(pluggable.String)
+	if ok {
+		return stok.Text()
+	}
+	stringer, ok := val.(fmt.Stringer)
+	if ok {
+		return stringer.String()
+	}
+	return fmt.Sprintf("%v", val)
 }
 
 func NewRuntimeStorage(registry pluggable.Recall, sink errors.ErrorSink) pluggable.RuntimeStorage {
-	return &Storage{sink: sink, registry: registry, drivers: make(map[string]any), runtime: make(map[string]any)}
+	return &Storage{sink: sink, registry: registry, drivers: make(map[string]any), runtime: make(map[pluggable.Describable]any)}
 }

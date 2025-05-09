@@ -12,9 +12,9 @@ import (
 )
 
 type copyAction struct {
-	tools    *pluggable.Tools
-	loc      *errors.Location
-	exprs    []pluggable.Expr
+	tools *pluggable.Tools
+	loc   *errors.Location
+	exprs []pluggable.Expr
 }
 
 func (ca *copyAction) Loc() *errors.Location {
@@ -25,7 +25,7 @@ func (ca *copyAction) DumpTo(w pluggable.IndentWriter) {
 	w.Intro("CopyAction")
 	w.AttrsWhere(ca)
 	for _, v := range ca.exprs {
-		w.IndPrintf("%s\n", v.String())
+		w.IndPrintf("%s\n", v.ShortDescription())
 	}
 	w.EndAttrs()
 }
@@ -38,7 +38,9 @@ func (ca *copyAction) Completed() {
 }
 
 func (ca *copyAction) Resolve(r pluggable.Resolver, b pluggable.Binder) {
-	// ea.resolved = r.Resolve(ea.what)
+	for _, e := range ca.exprs {
+		e.Resolve(r)
+	}
 }
 
 func (ca *copyAction) Prepare(pres pluggable.ValuePresenter) {

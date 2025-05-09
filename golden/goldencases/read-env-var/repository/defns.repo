@@ -13,8 +13,13 @@ target readAndShowEnvVar {
 		ShowAction {
 			_where_: readenv.dply:7.0
 			exprs: [
-				readenv.dply:7.5 var
+				readenv.dply:7.5 Var[var]
 			]
 		}
 	]
+}
+symbol var is bound to:
+EnvVar {
+	_where_: readenv.dply:6.5
+	var: readenv.dply:6.5 SETME
 }

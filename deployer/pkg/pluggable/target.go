@@ -8,8 +8,8 @@ const (
 )
 
 type RuntimeStorage interface {
-	Bind(name SymbolName, value any)
-	Get(name SymbolName) any
+	Bind(name Describable, value any)
+	Get(name Var) any
 	Errorf(loc *errors.Location, msg string, args ...any)
 	SetMode(mode int)
 	IsMode(mode int) bool

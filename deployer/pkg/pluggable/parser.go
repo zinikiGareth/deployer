@@ -75,7 +75,8 @@ type Function interface {
 
 type Expr interface {
 	fmt.Stringer
-	Locatable
+	Describable
+	Resolve(r Resolver)
 	Eval(s RuntimeStorage) any
 }
 

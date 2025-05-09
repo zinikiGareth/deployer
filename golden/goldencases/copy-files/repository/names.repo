@@ -1,2 +1,4 @@
 bucket => test.S3.Bucket[org.ziniki.launch_bucket]
 copyFilesToBucket => Target[copyFilesToBucket]
+root => EnvVar[copy.dply:6.5 GOLDEN_ROOT]
+src_dir => PathHolder[<nil>]

@@ -28,7 +28,7 @@ type konstantFunc struct {
 }
 
 func (rdv konstantFunc) Eval(me pluggable.Token, before []pluggable.Expr, after []pluggable.Expr) pluggable.Expr {
-	return exprs.Apply{Func: rdv, Args: slices.Concat(before, after)}
+	return &exprs.Apply{Func: rdv, Args: slices.Concat(before, after)}
 }
 
 var recall myRecall

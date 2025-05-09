@@ -56,8 +56,19 @@ func (tok *NumberToken) Value() float64 {
 	return tok.value
 }
 
+func (tok *NumberToken) Resolve(r pluggable.Resolver) {
+}
+
 func (tok *NumberToken) Eval(s pluggable.RuntimeStorage) any {
 	return tok
+}
+
+func (t *NumberToken) ShortDescription() string {
+	panic("not implemented")
+}
+
+func (t *NumberToken) DumpTo(iw pluggable.IndentWriter) {
+	panic("not implemented")
 }
 
 func (tok *NumberToken) String() string {
@@ -92,12 +103,23 @@ func (tok *StringToken) Text() string {
 	return tok.text
 }
 
+func (tok *StringToken) ShortDescription() string {
+	return fmt.Sprintf("%s %s", tok.BaseToken.String(), tok.text)
+}
+
+func (t *StringToken) DumpTo(iw pluggable.IndentWriter) {
+	panic("not implemented")
+}
+
 func (tok *StringToken) String() string {
 	return fmt.Sprintf("%s %s", tok.BaseToken.String(), tok.text)
 }
 
+func (tok *StringToken) Resolve(r pluggable.Resolver) {
+}
+
 func (tok *StringToken) Eval(s pluggable.RuntimeStorage) any {
-	return tok
+	return tok.Text()
 }
 
 func NewIdentifierToken(line *errors.LineLoc, offset int, text string) pluggable.Identifier {

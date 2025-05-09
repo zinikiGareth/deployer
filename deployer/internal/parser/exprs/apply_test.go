@@ -17,7 +17,7 @@ func TestASimpleFunctionWithOneArg(t *testing.T) {
 	if !ok {
 		t.Fatalf("Parse failed")
 	}
-	a, ok := expr.(exprs.Apply)
+	a, ok := expr.(*exprs.Apply)
 	if !ok {
 		t.Fatalf("returned expr was not an Apply")
 	}
@@ -41,7 +41,7 @@ func TestAPostfixFunctionWithOneArg(t *testing.T) {
 	if !ok {
 		t.Fatalf("Parse failed")
 	}
-	a, ok := expr.(exprs.Apply)
+	a, ok := expr.(*exprs.Apply)
 	if !ok {
 		t.Fatalf("returned expr was not an Apply")
 	}

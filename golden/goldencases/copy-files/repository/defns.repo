@@ -30,19 +30,28 @@ target copyFilesToBucket {
 			assignTo: src_dir
 			DirAction {
 				_where_: copy.dply:7.0
-				copy.dply:7.10 root
+				copy.dply:7.10 Var[root]
 				copy.dply:7.16 filesrc
 			}
 		}
 		CopyAction {
 			_where_: copy.dply:8.0
-			copy.dply:8.11 src_dir
-			copy.dply:8.19 bucket
+			copy.dply:8.11 Var[src_dir]
+			copy.dply:8.19 Var[bucket]
 		}
 		AssertBucketAction {
 			_where_: copy.dply:12.0
-			bucket: copy.dply:12.21 bucket
+			bucket: copy.dply:12.21 Var[bucket]
 			  assert file: hello.txt
 		}
 	]
+}
+symbol root is bound to:
+EnvVar {
+	_where_: copy.dply:6.5
+	var: copy.dply:6.5 GOLDEN_ROOT
+}
+symbol src_dir is bound to:
+PathHolder {
+	_where_: copy.dply:7.0
 }

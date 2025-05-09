@@ -22,7 +22,7 @@ func TestAVerbAndANoun(t *testing.T) {
 		t.Fatalf("%d args returned, not 2", len(exs))
 	}
 	fmt.Printf("%v\n", exs[0])
-	a, ok := exs[0].(exprs.Apply)
+	a, ok := exs[0].(*exprs.Apply)
 	if !ok {
 		t.Fatalf("returned expr was not an Apply")
 	}

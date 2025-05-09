@@ -1,1 +1,2 @@
 readAndShowEnvVar => Target[readAndShowEnvVar]
+var => EnvVar[readenv.dply:6.5 SETME]

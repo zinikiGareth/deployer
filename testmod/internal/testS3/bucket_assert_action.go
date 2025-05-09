@@ -21,7 +21,7 @@ func (ca *assertBucketAction) Loc() *errors.Location {
 func (ca *assertBucketAction) DumpTo(w pluggable.IndentWriter) {
 	w.Intro("AssertBucketAction")
 	w.AttrsWhere(ca)
-	w.IndPrintf("bucket: %s\n", ca.bucket.String())
+	w.IndPrintf("bucket: %s\n", ca.bucket.ShortDescription())
 	for _, f := range ca.files {
 		w.IndPrintf("  assert file: %s\n", f)
 	}
@@ -36,7 +36,7 @@ func (ca *assertBucketAction) Completed() {
 }
 
 func (ca *assertBucketAction) Resolve(r pluggable.Resolver, b pluggable.Binder) {
-	// ea.resolved = r.Resolve(ea.what)
+	ca.bucket.Resolve(r)
 }
 
 func (ca *assertBucketAction) Prepare(pres pluggable.ValuePresenter) {
