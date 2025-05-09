@@ -1,0 +1,3 @@
+
+	target bucket_1
+		ensure aws.S3.Bucket "news.consolidator.info" => consolidator_bucket

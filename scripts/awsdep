@@ -1,0 +1,3 @@
+#!/bin/bash
+
+deployer/cmd/deployer/deployer -m coremod/plugin/coremod.so "$@"
