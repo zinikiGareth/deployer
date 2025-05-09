@@ -17,12 +17,20 @@
 			"path": "testmod"
 		},
 		{
+			"name": "AWS",
+			"path": "../deployer-module-aws"
+		},
+		{
 			"name": "VSCode",
 			"path": "../deployer-vsix"
 		},
 		{
 			"name": "LSP",
 			"path": "../deployer-lsp"
+		},
+		{
+			"name": "Trials",
+			"path": "trials"
 		},
 		{
 			"name": "Samples",

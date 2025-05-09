@@ -2,3 +2,4 @@
 
 (cd coremod/plugin ; go build --buildmode=plugin -gcflags=all="-N -l" -o coremod.so)
 (cd testmod/plugin ; go build --buildmode=plugin -gcflags=all="-N -l" -o testmod.so)
+(cd ../deployer-module-aws/plugin ; go build --buildmode=plugin -gcflags=all="-N -l" -o deployer_module_aws.so)
