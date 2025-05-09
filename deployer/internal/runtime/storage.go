@@ -2,7 +2,6 @@ package runtime
 
 import (
 	"fmt"
-	"log"
 
 	"ziniki.org/deployer/deployer/pkg/errors"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
@@ -17,16 +16,10 @@ type Storage struct {
 }
 
 func (s *Storage) Bind(v pluggable.Describable, value any) {
-	log.Printf("binding %p %v to %v", v, v, value)
-	// a, ok := v.(*exprs.ActualVar)
-	// if !ok {
-	// 	panic("uh ...")
-	// }
 	s.runtime[v] = value
 }
 
 func (s *Storage) Get(v pluggable.Var) any {
-	log.Printf("looking up %p %v", v.Binding(), v)
 	return s.runtime[v.Binding()]
 }
 

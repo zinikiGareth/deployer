@@ -32,7 +32,6 @@ type Binder interface {
 
 type Resolver interface {
 	Resolve(name Identifier) Describable
-	MakeNew(name Identifier) Var
 }
 
 type Locatable interface {

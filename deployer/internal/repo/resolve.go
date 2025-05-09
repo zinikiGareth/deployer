@@ -4,7 +4,6 @@ import (
 	"log"
 	"reflect"
 
-	"ziniki.org/deployer/deployer/internal/parser/exprs"
 	"ziniki.org/deployer/deployer/pkg/errors"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
@@ -24,10 +23,6 @@ type Searcher struct {
 	repo     *SimpleRepository
 	recall   pluggable.Recall
 	reporter errors.ErrorRepI
-}
-
-func (s *Searcher) MakeNew(name pluggable.Identifier) pluggable.Var {
-	return exprs.SolidVar(name)
 }
 
 func (s *Searcher) Resolve(name pluggable.Identifier) pluggable.Describable {
