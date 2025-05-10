@@ -5,18 +5,18 @@ import (
 	"path/filepath"
 
 	"ziniki.org/deployer/coremod/pkg/files"
-	"ziniki.org/deployer/deployer/pkg/errors"
+	"ziniki.org/deployer/deployer/pkg/errorsink"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
 type dirAction struct {
 	tools *pluggable.Tools
-	loc   *errors.Location
+	loc   *errorsink.Location
 	exprs []pluggable.Expr
 	res   *PathHolder
 }
 
-func (da *dirAction) Loc() *errors.Location {
+func (da *dirAction) Loc() *errorsink.Location {
 	return da.loc
 }
 
@@ -86,11 +86,11 @@ func (ea *dirAction) Execute() {
 }
 
 type PathHolder struct {
-	loc  *errors.Location
+	loc  *errorsink.Location
 	path *files.Path
 }
 
-func (p *PathHolder) Loc() *errors.Location {
+func (p *PathHolder) Loc() *errorsink.Location {
 	return p.loc
 }
 

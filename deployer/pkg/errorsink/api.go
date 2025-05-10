@@ -1,4 +1,4 @@
-package errors
+package errorsink
 
 type ErrorSink interface {
 	Report(loc *Location, msg string)

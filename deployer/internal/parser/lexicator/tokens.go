@@ -3,12 +3,12 @@ package lexicator
 import (
 	"fmt"
 
-	"ziniki.org/deployer/deployer/pkg/errors"
+	"ziniki.org/deployer/deployer/pkg/errorsink"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
 type BaseToken struct {
-	loc *errors.Location
+	loc *errorsink.Location
 }
 
 type IdentifierToken struct {
@@ -36,7 +36,7 @@ type StringToken struct {
 	text string
 }
 
-func (tok *BaseToken) Loc() *errors.Location {
+func (tok *BaseToken) Loc() *errorsink.Location {
 	return tok.loc
 }
 
@@ -122,22 +122,22 @@ func (tok *StringToken) Eval(s pluggable.RuntimeStorage) any {
 	return tok.Text()
 }
 
-func NewIdentifierToken(line *errors.LineLoc, offset int, text string) pluggable.Identifier {
+func NewIdentifierToken(line *errorsink.LineLoc, offset int, text string) pluggable.Identifier {
 	return &IdentifierToken{BaseToken: BaseToken{loc: line.Location(offset)}, id: text}
 }
 
-func NewNumberToken(line *errors.LineLoc, offset int, value float64) pluggable.Number {
+func NewNumberToken(line *errorsink.LineLoc, offset int, value float64) pluggable.Number {
 	return &NumberToken{BaseToken: BaseToken{loc: line.Location(offset)}, value: value}
 }
 
-func NewOperatorToken(line *errors.LineLoc, offset int, text string) pluggable.Operator {
+func NewOperatorToken(line *errorsink.LineLoc, offset int, text string) pluggable.Operator {
 	return &OperatorToken{BaseToken: BaseToken{loc: line.Location(offset)}, op: text}
 }
 
-func NewPuncToken(line *errors.LineLoc, offset int, text rune) pluggable.Punc {
+func NewPuncToken(line *errorsink.LineLoc, offset int, text rune) pluggable.Punc {
 	return &PuncToken{BaseToken: BaseToken{loc: line.Location(offset)}, punc: text}
 }
 
-func NewStringToken(line *errors.LineLoc, offset int, text string) pluggable.String {
+func NewStringToken(line *errorsink.LineLoc, offset int, text string) pluggable.String {
 	return &StringToken{BaseToken: BaseToken{loc: line.Location(offset)}, text: text}
 }

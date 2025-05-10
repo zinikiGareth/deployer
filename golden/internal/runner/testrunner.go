@@ -10,7 +10,7 @@ import (
 	"ziniki.org/deployer/coremod/pkg/coremod"
 	"ziniki.org/deployer/deployer/pkg/creator"
 	"ziniki.org/deployer/deployer/pkg/deployer"
-	sink "ziniki.org/deployer/deployer/pkg/errors"
+	sink "ziniki.org/deployer/deployer/pkg/errorsink"
 	"ziniki.org/deployer/deployer/pkg/utils"
 	"ziniki.org/deployer/golden/internal/errors"
 	"ziniki.org/deployer/golden/internal/lsnrs"

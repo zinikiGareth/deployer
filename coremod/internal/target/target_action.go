@@ -1,12 +1,12 @@
 package target
 
 import (
-	"ziniki.org/deployer/deployer/pkg/errors"
+	"ziniki.org/deployer/deployer/pkg/errorsink"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
 type coreTarget struct {
-	loc  *errors.Location
+	loc  *errorsink.Location
 	name pluggable.SymbolName
 
 	actions []pluggable.Action
@@ -20,7 +20,7 @@ func (cc *coreTarget) Add(entry pluggable.Action) {
 	cc.actions = append(cc.actions, entry)
 }
 
-func (t *coreTarget) Loc() *errors.Location {
+func (t *coreTarget) Loc() *errorsink.Location {
 	return t.loc
 }
 

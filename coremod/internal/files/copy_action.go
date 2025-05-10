@@ -7,17 +7,17 @@ import (
 	"path/filepath"
 
 	"ziniki.org/deployer/coremod/pkg/files"
-	"ziniki.org/deployer/deployer/pkg/errors"
+	"ziniki.org/deployer/deployer/pkg/errorsink"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
 type copyAction struct {
 	tools *pluggable.Tools
-	loc   *errors.Location
+	loc   *errorsink.Location
 	exprs []pluggable.Expr
 }
 
-func (ca *copyAction) Loc() *errors.Location {
+func (ca *copyAction) Loc() *errorsink.Location {
 	return ca.loc
 }
 

@@ -4,13 +4,13 @@ import (
 	"testing"
 
 	"ziniki.org/deployer/deployer/internal/parser/lexicator"
-	"ziniki.org/deployer/deployer/pkg/errors"
+	"ziniki.org/deployer/deployer/pkg/errorsink"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 	"ziniki.org/deployer/deployer/pkg/testhelpers"
 )
 
-func lineOf(tx string) *errors.LineLoc {
-	return errors.InFile("test-file").AtLine(1, 1, tx)
+func lineOf(tx string) *errorsink.LineLoc {
+	return errorsink.InFile("test-file").AtLine(1, 1, tx)
 }
 
 func TestForSingleSlashWithSpaces(t *testing.T) {

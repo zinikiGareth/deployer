@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"ziniki.org/deployer/deployer/pkg/errors"
+	"ziniki.org/deployer/deployer/pkg/errorsink"
 )
 
 func Usage() {
@@ -13,7 +13,7 @@ func Usage() {
 }
 
 func RunDeployer(args []string) int {
-	sink := errors.NewConsoleSink()
+	sink := errorsink.NewConsoleSink()
 	deployer := NewDeployer(sink, os.Stdout)
 	var targets []string
 

@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"strings"
 
-	"ziniki.org/deployer/deployer/pkg/errors"
+	"ziniki.org/deployer/deployer/pkg/errorsink"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
@@ -17,7 +17,7 @@ type Bracketed struct {
 	Tokens []pluggable.Token
 }
 
-func (b Bracketed) Loc() *errors.Location {
+func (b Bracketed) Loc() *errorsink.Location {
 	return b.Tokens[0].Loc()
 }
 

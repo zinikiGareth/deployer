@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"ziniki.org/deployer/deployer/internal/parser/blocker"
-	"ziniki.org/deployer/deployer/pkg/errors"
+	"ziniki.org/deployer/deployer/pkg/errorsink"
 	"ziniki.org/deployer/deployer/pkg/interpreters"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
@@ -51,11 +51,11 @@ type line struct {
 
 type tmp struct {
 	tools *pluggable.Tools
-	sink  errors.ErrorSink
+	sink  errorsink.ErrorSink
 	lines []line
 }
 
-func (t *tmp) applySink(sink errors.ErrorSink) {
+func (t *tmp) applySink(sink errorsink.ErrorSink) {
 	t.sink = sink
 	for _, l := range t.lines {
 		if l.inner != nil {
@@ -94,11 +94,11 @@ func (t *tmp) Completed() {
 }
 
 type LineToken struct {
-	loc *errors.Location
+	loc *errorsink.Location
 	tx  string
 }
 
-func (t *LineToken) Loc() *errors.Location {
+func (t *LineToken) Loc() *errorsink.Location {
 	return t.loc
 }
 
@@ -109,7 +109,7 @@ func (t LineToken) String() string {
 type testLex struct {
 }
 
-func (l *testLex) BlockedLine(line *errors.LineLoc) []pluggable.Token {
+func (l *testLex) BlockedLine(line *errorsink.LineLoc) []pluggable.Token {
 	loc := line.Location(0)
 	return []pluggable.Token{&LineToken{loc: loc, tx: line.Text}}
 }
@@ -118,11 +118,11 @@ type testSink struct {
 	errorCount int
 }
 
-func (s *testSink) Report(loc *errors.Location, msg string) {
+func (s *testSink) Report(loc *errorsink.Location, msg string) {
 	s.errorCount++
 }
 
-func (s *testSink) Reportf(loc *errors.Location, format string, args ...any) {
+func (s *testSink) Reportf(loc *errorsink.Location, format string, args ...any) {
 	s.Report(loc, fmt.Sprintf(format, args...))
 }
 
@@ -135,7 +135,7 @@ func blockerTest(lines []line) {
 	sink := &testSink{}
 	mock := innerBlock(lines)
 	mock.applySink(sink)
-	reporter := errors.NewErrorReporter(sink)
+	reporter := errorsink.NewErrorReporter(sink)
 	tools := pluggable.NewTools(reporter, nil, nil, nil, nil)
 	blocker := blocker.NewBlocker(tools, mocklex, mock)
 	for _, b := range mock.lines {

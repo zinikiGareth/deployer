@@ -3,7 +3,7 @@ package target
 import (
 	"reflect"
 
-	"ziniki.org/deployer/deployer/pkg/errors"
+	"ziniki.org/deployer/deployer/pkg/errorsink"
 	"ziniki.org/deployer/deployer/pkg/interpreters"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
@@ -88,7 +88,7 @@ type DoAssign struct {
 	action   pluggable.Action
 }
 
-func (d *DoAssign) Loc() *errors.Location {
+func (d *DoAssign) Loc() *errorsink.Location {
 	return d.assignTo.Loc()
 }
 

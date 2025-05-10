@@ -1,7 +1,7 @@
 package exprs
 
 import (
-	"ziniki.org/deployer/deployer/pkg/errors"
+	"ziniki.org/deployer/deployer/pkg/errorsink"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
@@ -19,7 +19,7 @@ func (v *VarReference) Eval(s pluggable.RuntimeStorage) any {
 	return s.Get(v)
 }
 
-func (v *VarReference) Loc() *errors.Location {
+func (v *VarReference) Loc() *errorsink.Location {
 	return v.id.Loc()
 }
 

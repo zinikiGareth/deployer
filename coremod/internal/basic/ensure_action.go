@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"ziniki.org/deployer/coremod/pkg/ensurable"
-	"ziniki.org/deployer/deployer/pkg/errors"
+	"ziniki.org/deployer/deployer/pkg/errorsink"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
@@ -13,7 +13,7 @@ import (
 
 type EnsureAction struct {
 	tools    *pluggable.Tools
-	loc      *errors.Location
+	loc      *errorsink.Location
 	what     pluggable.Identifier
 	resolved pluggable.Blank
 	named    pluggable.String
@@ -21,7 +21,7 @@ type EnsureAction struct {
 	ens      ensurable.Ensurable
 }
 
-func (ea *EnsureAction) Loc() *errors.Location {
+func (ea *EnsureAction) Loc() *errorsink.Location {
 	return ea.loc
 }
 

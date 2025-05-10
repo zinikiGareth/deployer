@@ -4,7 +4,7 @@ import (
 	"unicode"
 
 	"ziniki.org/deployer/deployer/internal/parser/lexicator"
-	"ziniki.org/deployer/deployer/pkg/errors"
+	"ziniki.org/deployer/deployer/pkg/errorsink"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
@@ -13,11 +13,11 @@ type Blocker struct {
 	indents  []string
 	lex      lexicator.Lexicator
 	handlers []pluggable.Interpreter
-	file     *errors.FileLoc
+	file     *errorsink.FileLoc
 }
 
 func (b *Blocker) BeginFile(file string) {
-	b.file = errors.InFile(file)
+	b.file = errorsink.InFile(file)
 }
 
 func (b *Blocker) HaveLine(lineNo int, txt string) {

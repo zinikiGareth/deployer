@@ -3,7 +3,7 @@ package pluggable
 import (
 	"fmt"
 
-	"ziniki.org/deployer/deployer/pkg/errors"
+	"ziniki.org/deployer/deployer/pkg/errorsink"
 )
 
 type RepositoryTraverser interface {
@@ -38,7 +38,7 @@ type Resolver interface {
 }
 
 type Locatable interface {
-	Loc() *errors.Location
+	Loc() *errorsink.Location
 }
 
 type Describable interface {

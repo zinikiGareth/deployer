@@ -6,7 +6,7 @@ import (
 	"ziniki.org/deployer/deployer/internal/parser/interpreters"
 	"ziniki.org/deployer/deployer/internal/parser/lexicator"
 	"ziniki.org/deployer/deployer/internal/parser/scopes"
-	"ziniki.org/deployer/deployer/pkg/errors"
+	"ziniki.org/deployer/deployer/pkg/errorsink"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 	"ziniki.org/deployer/deployer/pkg/utils"
 )
@@ -20,7 +20,7 @@ func Parse(tools *pluggable.Tools, fileName, file string) {
 	provideLines(tools.Reporter, file, blocker)
 }
 
-func provideLines(reporter errors.ErrorRepI, fromFile string, to pluggable.ProvideLine) {
+func provideLines(reporter errorsink.ErrorRepI, fromFile string, to pluggable.ProvideLine) {
 	lines, err := utils.FileAsLines(fromFile)
 	if err != nil {
 		reporter.Reportf(0, "could not open file %s: %v", fromFile, err)

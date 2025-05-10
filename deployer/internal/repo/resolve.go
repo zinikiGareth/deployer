@@ -4,7 +4,7 @@ import (
 	"log"
 	"reflect"
 
-	"ziniki.org/deployer/deployer/pkg/errors"
+	"ziniki.org/deployer/deployer/pkg/errorsink"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
@@ -22,7 +22,7 @@ func (d *SimpleRepository) GetDefinition(name pluggable.SymbolName) pluggable.De
 type Searcher struct {
 	repo     *SimpleRepository
 	recall   pluggable.Recall
-	reporter errors.ErrorRepI
+	reporter errorsink.ErrorRepI
 }
 
 func (s *Searcher) Resolve(name pluggable.Identifier) pluggable.Describable {

@@ -3,18 +3,18 @@ package testS3
 import (
 	"fmt"
 
-	"ziniki.org/deployer/deployer/pkg/errors"
+	"ziniki.org/deployer/deployer/pkg/errorsink"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
 type assertBucketAction struct {
 	tools  *pluggable.Tools
-	loc    *errors.Location
+	loc    *errorsink.Location
 	bucket pluggable.Expr
 	files  []string
 }
 
-func (ca *assertBucketAction) Loc() *errors.Location {
+func (ca *assertBucketAction) Loc() *errorsink.Location {
 	return ca.loc
 }
 

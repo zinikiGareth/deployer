@@ -7,7 +7,7 @@ import (
 
 	"ziniki.org/deployer/deployer/internal/parser/exprs"
 	"ziniki.org/deployer/deployer/internal/parser/lexicator"
-	"ziniki.org/deployer/deployer/pkg/errors"
+	"ziniki.org/deployer/deployer/pkg/errorsink"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 	"ziniki.org/deployer/deployer/pkg/testhelpers"
 )
@@ -35,11 +35,11 @@ var recall myRecall
 var idFunc pluggable.Function
 var konstFunc pluggable.Function
 var oneString pluggable.String
-var lineloc *errors.LineLoc
+var lineloc *errorsink.LineLoc
 var orb, crb pluggable.Punc
 
 func init() {
-	lineloc = &errors.LineLoc{Line: 1, Indent: 1, Text: "", File: &errors.FileLoc{File: "test"}}
+	lineloc = &errorsink.LineLoc{Line: 1, Indent: 1, Text: "", File: &errorsink.FileLoc{File: "test"}}
 	oneString = lexicator.NewStringToken(lineloc, 0, "string_1")
 	idFunc = returnDataValue{value: oneString}
 	konstFunc = konstantFunc{}

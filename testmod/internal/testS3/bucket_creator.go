@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"ziniki.org/deployer/coremod/pkg/files"
-	"ziniki.org/deployer/deployer/pkg/errors"
+	"ziniki.org/deployer/deployer/pkg/errorsink"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 	"ziniki.org/deployer/deployer/pkg/testhelpers"
 )
@@ -12,14 +12,14 @@ import (
 type bucketCreator struct {
 	tools *pluggable.Tools
 
-	loc  *errors.Location
+	loc  *errorsink.Location
 	name string
 
 	env   *TestAwsEnv
 	cloud *BucketCloud
 }
 
-func (b *bucketCreator) Loc() *errors.Location {
+func (b *bucketCreator) Loc() *errorsink.Location {
 	return b.loc
 }
 

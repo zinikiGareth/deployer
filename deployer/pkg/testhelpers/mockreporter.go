@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"ziniki.org/deployer/deployer/pkg/errors"
+	"ziniki.org/deployer/deployer/pkg/errorsink"
 )
 
 type errorStruct struct {
@@ -21,7 +21,7 @@ func (s *MockSink) Expect(line, ind, offset int, text, msg string) {
 	s.errors = append(s.errors, errorStruct{line: line, ind: ind, offset: offset, text: text, msg: msg})
 }
 
-func (s *MockSink) Report(line *errors.Location, msg string) {
+func (s *MockSink) Report(line *errorsink.Location, msg string) {
 	if len(s.errors) == 0 {
 		s.t.Fatalf("unexpected error: " + msg)
 	}
@@ -42,7 +42,7 @@ func (s *MockSink) Report(line *errors.Location, msg string) {
 	}
 }
 
-func (s *MockSink) Reportf(loc *errors.Location, format string, args ...any) {
+func (s *MockSink) Reportf(loc *errorsink.Location, format string, args ...any) {
 	s.Report(loc, fmt.Sprintf(format, args...))
 }
 
@@ -50,7 +50,7 @@ func (s *MockSink) HasErrors() bool {
 	return len(s.errors) > 0
 }
 
-func MockReporter(t *testing.T) (errors.ErrorRepI, *MockSink) {
+func MockReporter(t *testing.T) (errorsink.ErrorRepI, *MockSink) {
 	sink := &MockSink{t: t}
-	return errors.NewErrorReporter(sink), sink
+	return errorsink.NewErrorReporter(sink), sink
 }

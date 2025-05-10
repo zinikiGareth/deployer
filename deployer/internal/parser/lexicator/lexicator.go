@@ -6,12 +6,12 @@ import (
 	"strings"
 	"unicode"
 
-	"ziniki.org/deployer/deployer/pkg/errors"
+	"ziniki.org/deployer/deployer/pkg/errorsink"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
 type Lexicator interface {
-	BlockedLine(line *errors.LineLoc) []pluggable.Token
+	BlockedLine(line *errorsink.LineLoc) []pluggable.Token
 }
 
 type LineLexicator struct {
@@ -35,7 +35,7 @@ const (
 // Also : ; (prob punc)
 // Don't do anything with ``
 
-func (ll *LineLexicator) BlockedLine(line *errors.LineLoc) []pluggable.Token {
+func (ll *LineLexicator) BlockedLine(line *errorsink.LineLoc) []pluggable.Token {
 	txt := line.Text
 	ll.tools.Reporter.At(line)
 	var toks []pluggable.Token
@@ -213,27 +213,27 @@ func isPuncChar(r rune) bool {
 	}
 }
 
-func (ll *LineLexicator) token(toks []pluggable.Token, line *errors.LineLoc, start int, text []rune) []pluggable.Token {
+func (ll *LineLexicator) token(toks []pluggable.Token, line *errorsink.LineLoc, start int, text []rune) []pluggable.Token {
 	tok := NewIdentifierToken(line, start, string(text))
 	return append(toks, tok)
 }
 
-func (ll *LineLexicator) symbol(toks []pluggable.Token, line *errors.LineLoc, start int, text []rune) []pluggable.Token {
+func (ll *LineLexicator) symbol(toks []pluggable.Token, line *errorsink.LineLoc, start int, text []rune) []pluggable.Token {
 	tok := NewOperatorToken(line, start, string(text))
 	return append(toks, tok)
 }
 
-func (ll *LineLexicator) strtok(toks []pluggable.Token, line *errors.LineLoc, start int, text []rune) []pluggable.Token {
+func (ll *LineLexicator) strtok(toks []pluggable.Token, line *errorsink.LineLoc, start int, text []rune) []pluggable.Token {
 	tok := NewStringToken(line, start, string(text))
 	return append(toks, tok)
 }
 
-func (ll *LineLexicator) punctok(toks []pluggable.Token, line *errors.LineLoc, start int, p rune) []pluggable.Token {
+func (ll *LineLexicator) punctok(toks []pluggable.Token, line *errorsink.LineLoc, start int, p rune) []pluggable.Token {
 	tok := NewPuncToken(line, start, p)
 	return append(toks, tok)
 }
 
-func (ll *LineLexicator) numtok(toks []pluggable.Token, line *errors.LineLoc, start int, text []rune) []pluggable.Token {
+func (ll *LineLexicator) numtok(toks []pluggable.Token, line *errorsink.LineLoc, start int, text []rune) []pluggable.Token {
 	tx := string(text)
 	var f64 float64
 	var err error

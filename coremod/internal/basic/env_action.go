@@ -4,17 +4,17 @@ import (
 	"fmt"
 	"os"
 
-	"ziniki.org/deployer/deployer/pkg/errors"
+	"ziniki.org/deployer/deployer/pkg/errorsink"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
 type EnvAction struct {
 	tools   *pluggable.Tools
-	loc     *errors.Location
+	loc     *errorsink.Location
 	varname pluggable.Expr
 }
 
-func (ea *EnvAction) Loc() *errors.Location {
+func (ea *EnvAction) Loc() *errorsink.Location {
 	return ea.loc
 }
 
@@ -60,7 +60,7 @@ func (e *EnvVar) DumpTo(to pluggable.IndentWriter) {
 	to.EndAttrs()
 }
 
-func (e *EnvVar) Loc() *errors.Location {
+func (e *EnvVar) Loc() *errorsink.Location {
 	return e.varname.Loc()
 }
 

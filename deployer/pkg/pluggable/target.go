@@ -1,6 +1,6 @@
 package pluggable
 
-import "ziniki.org/deployer/deployer/pkg/errors"
+import "ziniki.org/deployer/deployer/pkg/errorsink"
 
 const (
 	PREPARE_MODE int = iota
@@ -10,7 +10,7 @@ const (
 type RuntimeStorage interface {
 	Bind(name Describable, value any)
 	Get(name Var) any
-	Errorf(loc *errors.Location, msg string, args ...any)
+	Errorf(loc *errorsink.Location, msg string, args ...any)
 	SetMode(mode int)
 	IsMode(mode int) bool
 	Eval(e Expr) any

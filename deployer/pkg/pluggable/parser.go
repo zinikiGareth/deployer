@@ -3,7 +3,7 @@ package pluggable
 import (
 	"fmt"
 
-	"ziniki.org/deployer/deployer/pkg/errors"
+	"ziniki.org/deployer/deployer/pkg/errorsink"
 )
 
 type ProvideLine interface {
@@ -66,7 +66,7 @@ type TargetCommand interface {
 // Replace this with a notion of minting, blanks, dies ... I think this would be a blank
 type Blank interface {
 	ShortDescription() string
-	Mint(tools *Tools, loc *errors.Location, named string) any
+	Mint(tools *Tools, loc *errorsink.Location, named string) any
 }
 
 type Function interface {

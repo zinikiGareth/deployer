@@ -12,7 +12,7 @@ import (
 	"ziniki.org/deployer/deployer/internal/repo"
 	"ziniki.org/deployer/deployer/internal/runtime"
 	"ziniki.org/deployer/deployer/pkg/deployer"
-	"ziniki.org/deployer/deployer/pkg/errors"
+	"ziniki.org/deployer/deployer/pkg/errorsink"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 	"ziniki.org/deployer/deployer/pkg/utils"
 )
@@ -113,9 +113,9 @@ func (d *DeployerImpl) findTargets(names ...string) ([]pluggable.TargetThing, er
 	return targets, nil
 }
 
-func NewDeployer(sink errors.ErrorSink, userErrorsTo io.StringWriter) deployer.Deployer {
+func NewDeployer(sink errorsink.ErrorSink, userErrorsTo io.StringWriter) deployer.Deployer {
 	reg := registry.NewRegistry()
-	reporter := errors.NewErrorReporter(sink)
+	reporter := errorsink.NewErrorReporter(sink)
 	storage := runtime.NewRuntimeStorage(reg, sink)
 	repo := repo.NewRepository()
 	tools := pluggable.NewTools(reporter, reg, reg, repo, storage)

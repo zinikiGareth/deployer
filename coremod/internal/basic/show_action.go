@@ -3,18 +3,18 @@ package basic
 import (
 	"fmt"
 
-	"ziniki.org/deployer/deployer/pkg/errors"
+	"ziniki.org/deployer/deployer/pkg/errorsink"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 	"ziniki.org/deployer/deployer/pkg/testhelpers"
 )
 
 type ShowAction struct {
 	tools *pluggable.Tools
-	loc   *errors.Location
+	loc   *errorsink.Location
 	exprs []pluggable.Expr
 }
 
-func (sa *ShowAction) Loc() *errors.Location {
+func (sa *ShowAction) Loc() *errorsink.Location {
 	return sa.loc
 }
 
