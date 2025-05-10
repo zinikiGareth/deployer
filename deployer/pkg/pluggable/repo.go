@@ -1,6 +1,8 @@
 package pluggable
 
 import (
+	"fmt"
+
 	"ziniki.org/deployer/deployer/pkg/errors"
 )
 
@@ -20,6 +22,7 @@ type Repository interface {
 }
 
 type TargetThing interface {
+	fmt.Stringer
 	Resolve(r Resolver)
 	Prepare()
 	Execute()

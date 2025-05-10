@@ -71,7 +71,7 @@ func (d *DeployerImpl) Deploy(targetNames ...string) error {
 
 	d.tools.Storage.SetMode(pluggable.PREPARE_MODE)
 	for _, t := range targets {
-		fmt.Printf("preparing %s:\n", t)
+		fmt.Printf("preparing %s:\n", t.String())
 		t.Prepare()
 	}
 

@@ -12,6 +12,10 @@ type coreTarget struct {
 	actions []pluggable.Action
 }
 
+func (cc *coreTarget) String() string {
+	return string(cc.name)
+}
+
 func (cc *coreTarget) Add(entry pluggable.Action) {
 	cc.actions = append(cc.actions, entry)
 }
