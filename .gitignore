@@ -1,6 +1,4 @@
 golden/cmd/golden/golden
-lsp/cmd/deployer-lsp/deployer-lsp
-vsix/out/
+deployer/cmd/deployer/deployer
 *.so
-*.vsix
 __debug_bin*
