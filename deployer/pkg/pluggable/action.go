@@ -8,6 +8,7 @@ type Action interface {
 
 	Prepare(pres ValuePresenter)
 	Execute()
+	TearDown()
 }
 
 type ValuePresenter interface {

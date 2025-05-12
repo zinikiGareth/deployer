@@ -117,6 +117,10 @@ func (d *DoAssign) Execute() {
 	d.action.Execute()
 }
 
+func (d *DoAssign) TearDown() {
+	d.action.TearDown()
+}
+
 func (d *DoAssign) MayBind(val pluggable.Describable) {
 	if d.assignTo != nil {
 		d.resolved = val

@@ -49,6 +49,10 @@ func (ea *EnvAction) Execute() {
 
 }
 
+func (ea *EnvAction) TearDown() {
+
+}
+
 type EnvVar struct {
 	varname pluggable.Expr
 }

@@ -6,4 +6,5 @@ type Ensurable interface {
 	pluggable.Describable
 	Prepare(pres pluggable.ValuePresenter)
 	Execute()
+	TearDown()
 }

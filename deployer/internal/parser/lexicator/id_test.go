@@ -10,7 +10,7 @@ import (
 
 func TestASingleIdIsJustThat(t *testing.T) {
 	reporter, _ := testhelpers.MockReporter(t)
-	tools := pluggable.NewTools(reporter, nil, nil, nil, nil)
+	tools := pluggable.NewTools(reporter, nil, nil, nil, nil, nil)
 	lex := lexicator.NewLineLexicator(tools, "test")
 	toks := lex.BlockedLine(lineOf("hello"))
 	if len(toks) != 1 {
@@ -23,7 +23,7 @@ func TestASingleIdIsJustThat(t *testing.T) {
 
 func TestAnIdCanHaveDots(t *testing.T) {
 	reporter, _ := testhelpers.MockReporter(t)
-	tools := pluggable.NewTools(reporter, nil, nil, nil, nil)
+	tools := pluggable.NewTools(reporter, nil, nil, nil, nil, nil)
 	lex := lexicator.NewLineLexicator(tools, "test")
 	toks := lex.BlockedLine(lineOf("hello.world"))
 	if len(toks) != 1 {
@@ -40,7 +40,7 @@ func TestAnIdCanHaveDots(t *testing.T) {
 
 func TestTwoIdsCanBeSeparatedByASpace(t *testing.T) {
 	reporter, _ := testhelpers.MockReporter(t)
-	tools := pluggable.NewTools(reporter, nil, nil, nil, nil)
+	tools := pluggable.NewTools(reporter, nil, nil, nil, nil, nil)
 	lex := lexicator.NewLineLexicator(tools, "test")
 	toks := lex.BlockedLine(lineOf("hello world"))
 	if len(toks) != 2 {
@@ -60,7 +60,7 @@ func TestLeadingSpacesCauseAPanic(t *testing.T) {
 		}
 	}()
 	reporter, _ := testhelpers.MockReporter(t)
-	tools := pluggable.NewTools(reporter, nil, nil, nil, nil)
+	tools := pluggable.NewTools(reporter, nil, nil, nil, nil, nil)
 	lex := lexicator.NewLineLexicator(tools, "test")
 	lex.BlockedLine(lineOf(" hello"))
 	t.Fatalf("did not panic")

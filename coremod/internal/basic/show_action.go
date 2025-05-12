@@ -67,3 +67,8 @@ func (sa *ShowAction) Execute() {
 	}
 	logger.Log("\n")
 }
+
+func (sa *ShowAction) TearDown() {
+	// This seems one option among several
+	sa.Execute()
+}

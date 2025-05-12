@@ -86,3 +86,8 @@ func (ca *copyAction) Execute() {
 		d.Pour(f.Name())
 	}
 }
+
+func (ca *copyAction) TearDown() {
+	// should we delete or leave alone?
+	// need user to tell us
+}

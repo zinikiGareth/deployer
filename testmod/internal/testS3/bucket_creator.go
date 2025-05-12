@@ -2,6 +2,7 @@ package testS3
 
 import (
 	"fmt"
+	"log"
 
 	"ziniki.org/deployer/coremod/pkg/files"
 	"ziniki.org/deployer/deployer/pkg/errorsink"
@@ -70,6 +71,10 @@ func (eb *bucketCreator) Execute() {
 	}
 
 	eb.cloud = b
+}
+
+func (eb *bucketCreator) TearDown() {
+	log.Printf("you have asked to tear down bucket %s\n", eb.name)
 }
 
 func (eb *bucketCreator) ObtainDest() files.FileDest {

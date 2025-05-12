@@ -107,3 +107,7 @@ func (ea *EnsureAction) Prepare(pres pluggable.ValuePresenter) {
 func (ea *EnsureAction) Execute() {
 	ea.ens.Execute()
 }
+
+func (ea *EnsureAction) TearDown() {
+	ea.ens.TearDown()
+}

@@ -26,6 +26,7 @@ type TargetThing interface {
 	Resolve(r Resolver)
 	Prepare()
 	Execute()
+	TearDown()
 }
 
 type Binder interface {

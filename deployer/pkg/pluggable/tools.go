@@ -10,8 +10,13 @@ type Tools struct {
 	Repository Repository
 	Storage    RuntimeStorage
 	Parser     ExprParser
+	Options    *Options
 }
 
-func NewTools(reporter errorsink.ErrorRepI, register Register, recall Recall, repo Repository, storage RuntimeStorage) *Tools {
-	return &Tools{Reporter: reporter, Register: register, Recall: recall, Repository: repo, Storage: storage}
+type Options struct {
+	TearDown bool
+}
+
+func NewTools(reporter errorsink.ErrorRepI, register Register, recall Recall, repo Repository, storage RuntimeStorage, options *Options) *Tools {
+	return &Tools{Reporter: reporter, Register: register, Recall: recall, Repository: repo, Storage: storage, Options: options}
 }

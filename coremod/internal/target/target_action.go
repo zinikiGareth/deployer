@@ -57,6 +57,12 @@ func (t *coreTarget) Execute() {
 	}
 }
 
+func (t *coreTarget) TearDown() {
+	for _, a := range t.actions {
+		a.TearDown()
+	}
+}
+
 func (d *coreTarget) MayBind(val pluggable.Describable) {
 	// There is nothing to bind ...
 }

@@ -75,10 +75,18 @@ func (d *DeployerImpl) Deploy(targetNames ...string) error {
 		t.Prepare()
 	}
 
-	d.tools.Storage.SetMode(pluggable.EXECUTE_MODE)
-	for _, t := range targets {
-		fmt.Printf("executing %s:\n", t)
-		t.Execute()
+	if d.tools.Options.TearDown {
+		d.tools.Storage.SetMode(pluggable.EXECUTE_MODE)
+		for _, t := range targets {
+			fmt.Printf("tearing down %s:\n", t)
+			t.TearDown()
+		}
+	} else {
+		d.tools.Storage.SetMode(pluggable.EXECUTE_MODE)
+		for _, t := range targets {
+			fmt.Printf("executing %s:\n", t)
+			t.Execute()
+		}
 	}
 
 	return nil
@@ -118,7 +126,8 @@ func NewDeployer(sink errorsink.ErrorSink, userErrorsTo io.StringWriter) deploye
 	reporter := errorsink.NewErrorReporter(sink)
 	storage := runtime.NewRuntimeStorage(reg, sink)
 	repo := repo.NewRepository()
-	tools := pluggable.NewTools(reporter, reg, reg, repo, storage)
+	opts := pluggable.Options{}
+	tools := pluggable.NewTools(reporter, reg, reg, repo, storage, &opts)
 	reg.BindTools(tools)
 	return &DeployerImpl{tools: tools, userErrorsTo: userErrorsTo}
 }

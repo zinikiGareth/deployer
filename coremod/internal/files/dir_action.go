@@ -85,6 +85,10 @@ func (ea *dirAction) Execute() {
 
 }
 
+func (ea *dirAction) TearDown() {
+
+}
+
 type PathHolder struct {
 	loc  *errorsink.Location
 	path *files.Path

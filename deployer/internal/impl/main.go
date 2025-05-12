@@ -14,8 +14,9 @@ func Usage() {
 
 func RunDeployer(args []string) int {
 	sink := errorsink.NewConsoleSink()
-	deployer := NewDeployer(sink, os.Stdout)
+	d := NewDeployer(sink, os.Stdout)
 	var targets []string
+	options := d.ObtainTools().Options
 
 	i := 0
 	for i < len(args) {
@@ -28,11 +29,13 @@ func RunDeployer(args []string) int {
 			if err != nil {
 				return 1
 			}
-			err = deployer.UseModule(mod)
+			err = d.UseModule(mod)
 			if err != nil {
 				fmt.Printf("Could not open module %s: %v\n", mod, err)
 				return 1
 			}
+		case "--teardown":
+			options.TearDown = true
 		// case "--pattern":
 		// 	i++
 		// 	patt, err := nextArg(args, i, "there is no argument pattern")
@@ -42,6 +45,7 @@ func RunDeployer(args []string) int {
 		// 	deployer.MatchPattern(patt)
 		default:
 			if strings.HasPrefix(args[i], "-") {
+				fmt.Printf("unknown option: %s\n", args[i])
 				return 1
 			}
 			targets = append(targets, args[i])
@@ -49,12 +53,12 @@ func RunDeployer(args []string) int {
 		i++
 	}
 
-	err := deployer.ReadScriptsFrom("trials")
+	err := d.ReadScriptsFrom("trials")
 	if err != nil {
 		return 1
 	}
 	for _, s := range targets {
-		err = deployer.Deploy(s)
+		err = d.Deploy(s)
 		if err != nil {
 			return 1
 		}

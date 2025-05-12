@@ -59,3 +59,9 @@ func (ca *assertBucketAction) Execute() {
 		}
 	}
 }
+
+func (ca *assertBucketAction) TearDown() {
+	// Does this just want to do nothing?
+	// Or assert that the bucket has gone away?
+	
+}
