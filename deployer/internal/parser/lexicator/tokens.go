@@ -31,6 +31,11 @@ type PuncToken struct {
 	punc rune
 }
 
+type AdverbToken struct {
+	BaseToken
+	name string
+}
+
 type StringToken struct {
 	BaseToken
 	text string
@@ -99,6 +104,14 @@ func (tok *PuncToken) String() string {
 	return fmt.Sprintf("%s %c", tok.BaseToken.String(), tok.punc)
 }
 
+func (tok *AdverbToken) Name() string {
+	return tok.name
+}
+
+func (tok *AdverbToken) String() string {
+	return fmt.Sprintf("%s %s", tok.BaseToken.String(), tok.name)
+}
+
 func (tok *StringToken) Text() string {
 	return tok.text
 }
@@ -136,6 +149,10 @@ func NewOperatorToken(line *errorsink.LineLoc, offset int, text string) pluggabl
 
 func NewPuncToken(line *errorsink.LineLoc, offset int, text rune) pluggable.Punc {
 	return &PuncToken{BaseToken: BaseToken{loc: line.Location(offset)}, punc: text}
+}
+
+func NewAdverbToken(line *errorsink.LineLoc, offset int, text string) pluggable.Adverb {
+	return &AdverbToken{BaseToken: BaseToken{loc: line.Location(offset)}, name: text}
 }
 
 func NewStringToken(line *errorsink.LineLoc, offset int, text string) pluggable.String {

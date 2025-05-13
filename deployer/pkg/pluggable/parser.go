@@ -49,6 +49,11 @@ type Operator interface {
 	Op() string
 }
 
+type Adverb interface {
+	Token
+	Name() string
+}
+
 type Punc interface {
 	Token
 	Is(punc rune) bool
@@ -66,7 +71,7 @@ type TargetCommand interface {
 // Replace this with a notion of minting, blanks, dies ... I think this would be a blank
 type Blank interface {
 	ShortDescription() string
-	Mint(tools *Tools, loc *errorsink.Location, named string) any
+	Mint(tools *Tools, loc *errorsink.Location, named string, teardown *TearDown) any
 }
 
 type Function interface {

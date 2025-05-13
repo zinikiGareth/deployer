@@ -1,0 +1,12 @@
+symbol shouldHaveAType is bound to:
+target shouldHaveAType {
+	_where_: notd.dply:3.7
+	actions: [
+		EnsureAction {
+			_where_: notd.dply:4.0
+			what: test.S3.Bucket
+			not-resolved: test.S3.Bucket
+			named: fred
+		}
+	]
+}

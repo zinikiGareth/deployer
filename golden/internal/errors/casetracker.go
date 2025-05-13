@@ -9,10 +9,11 @@ import (
 )
 
 type CaseTracker struct {
-	caseName    string
-	errorDir    string
-	failures    map[string][]string
-	errhandlers map[string]TestErrorHandler
+	caseName        string
+	errorDir        string
+	failuresInOrder []string
+	failures        map[string][]string
+	errhandlers     map[string]TestErrorHandler
 }
 
 func (tracker *CaseTracker) NewCase(caseName, dir string) {
@@ -36,6 +37,9 @@ func (tracker *CaseTracker) NewErrorHandler(purpose string) *FileErrorHandler {
 }
 
 func (tracker *CaseTracker) Fail(area string) {
+	if !slices.Contains(tracker.failuresInOrder, tracker.caseName) {
+		tracker.failuresInOrder = append(tracker.failuresInOrder, tracker.caseName)
+	}
 	areas := tracker.failures[tracker.caseName]
 	if !slices.Contains(areas, area) {
 		fmt.Printf("  FAIL %s\n", area)
@@ -53,8 +57,8 @@ func (tracker *CaseTracker) Done() {
 func (tracker *CaseTracker) Report() int {
 	if len(tracker.failures) > 0 {
 		fmt.Printf("\n%d failures:\n", len(tracker.failures))
-		for f, as := range tracker.failures {
-			fmt.Printf("  %s %s\n", f, as)
+		for _, f := range tracker.failuresInOrder {
+			fmt.Printf("  %s %s\n", f, tracker.failures[f])
 		}
 	}
 	if len(tracker.failures) > 127 {

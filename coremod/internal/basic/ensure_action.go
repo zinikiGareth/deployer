@@ -17,6 +17,7 @@ type EnsureAction struct {
 	what     pluggable.Identifier
 	resolved pluggable.Blank
 	named    pluggable.String
+	teardown *pluggable.TearDown
 	props    map[pluggable.Identifier]pluggable.Expr
 	ens      ensurable.Ensurable
 }
@@ -77,9 +78,16 @@ func (ea *EnsureAction) AddProperty(name pluggable.Identifier, value pluggable.E
 }
 
 func (ea *EnsureAction) Completed() {
+	if ea.tools.Reporter.HasErrors() {
+		return
+	}
 	if ea.named == nil {
 		ea.tools.Reporter.At(ea.loc.Line)
 		ea.tools.Reporter.Report(ea.loc.Offset, "ensure requires a name to be defined")
+	}
+	if ea.teardown == nil {
+		ea.tools.Reporter.At(ea.loc.Line)
+		ea.tools.Reporter.Report(ea.loc.Offset, "ensure requires a teardown strategy to be declared")
 	}
 }
 
@@ -90,7 +98,7 @@ func (ea *EnsureAction) Resolve(r pluggable.Resolver, b pluggable.Binder) {
 		return
 	}
 	ea.resolved = res
-	obj := ea.resolved.Mint(ea.tools, ea.Loc(), ea.named.Text())
+	obj := ea.resolved.Mint(ea.tools, ea.Loc(), ea.named.Text(), ea.teardown)
 	ens, ok := obj.(ensurable.Ensurable)
 	if !ok {
 		ea.tools.Storage.Errorf(ea.loc, "the type "+ea.what.Id()+" is not ensurable")

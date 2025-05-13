@@ -13,8 +13,9 @@ import (
 type bucketCreator struct {
 	tools *pluggable.Tools
 
-	loc  *errorsink.Location
-	name string
+	loc      *errorsink.Location
+	name     string
+	teardown *pluggable.TearDown
 
 	env   *TestAwsEnv
 	cloud *BucketCloud

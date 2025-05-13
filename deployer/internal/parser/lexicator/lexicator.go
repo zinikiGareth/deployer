@@ -27,6 +27,7 @@ const (
 	inNumber
 	inString
 	inSymbol
+	inAdverb
 	stringEnding
 )
 
@@ -74,8 +75,12 @@ loop:
 					tok = append(tok, r)
 				} else if isPuncChar(r) {
 					toks = ll.punctok(toks, line, k, r)
-				} else { // TODO: punc
+				} else if r == '@' {
+					from = k + 1
+					mode = inAdverb
+				} else {
 					ll.tools.Reporter.Report(k, fmt.Sprintf("invalid char '%c'", r))
+					return nil
 				}
 			case inIdentifier:
 				if unicode.IsSpace(r) || isSymbol(r) {
@@ -115,6 +120,22 @@ loop:
 				} else {
 					tok = append(tok, r)
 				}
+			case inAdverb:
+				if unicode.IsSpace(r) {
+					if k == from {
+						ll.tools.Reporter.Report(k, "adverb name required")
+						return nil
+					}
+					toks = ll.adverb(toks, line, from, tok)
+					tok = []rune{}
+					mode = starting
+					goAgain = true
+				} else if unicode.IsLetter(r) {
+					tok = append(tok, r)
+				} else { // TODO: stop on non-valid identifier char
+					ll.tools.Reporter.Report(k, "space required after adverb")
+					return nil
+				}
 			case inString:
 				if r == quoteRune {
 					mode = stringEnding
@@ -152,11 +173,21 @@ loop:
 			}
 		case inNumber:
 			toks = ll.numtok(toks, line, from, tok)
+		case inAdverb:
+			toks = ll.adverb(toks, line, from, tok)
 		case inString:
 			ll.tools.Reporter.Report(from, "unterminated string")
 			return nil
 		default:
 			panic("should not have leftover tok:" + string(tok))
+		}
+	} else {
+		switch mode {
+		case inAdverb:
+			ll.tools.Reporter.Report(from-1, "adverb name required")
+			return nil
+		default:
+			// no worries
 		}
 	}
 	return toks
@@ -248,6 +279,11 @@ func (ll *LineLexicator) numtok(toks []pluggable.Token, line *errorsink.LineLoc,
 		ll.tools.Reporter.Report(start, fmt.Sprintf("not a valid number: %s", string(text)))
 	}
 	tok := NewNumberToken(line, start, f64)
+	return append(toks, tok)
+}
+
+func (ll *LineLexicator) adverb(toks []pluggable.Token, line *errorsink.LineLoc, start int, text []rune) []pluggable.Token {
+	tok := NewAdverbToken(line, start, string(text))
 	return append(toks, tok)
 }
 

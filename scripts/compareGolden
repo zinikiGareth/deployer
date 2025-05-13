@@ -26,6 +26,9 @@ for i in errors repository prepare execute ; do
       echo "----"
       cat $golden-gen/$k
       echo "----"
+      if [ "$DOCOPY" -eq 1 ] ; then
+        cp $golden-gen/$k $golden/$k
+      fi
     fi
   done
   for j in `ls -1 $golden` ; do

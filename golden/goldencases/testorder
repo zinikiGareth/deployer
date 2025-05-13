@@ -2,13 +2,15 @@ nothing
 empty
 empty-target
 errorcases/blocking
+errorcases/invalid-char
 errorcases/missing-target
 errorcases/target-multiple-symbols
 errorcases/ensure-needs-object
 errorcases/ensure-needs-name
+errorcases/ensure-needs-teardown
 errorcases/ensure-only-one-name
 ensure-bucket
-named-bucket
+saved-bucket
 bucket-named-in-props
 show-string-literal
 read-env-var
