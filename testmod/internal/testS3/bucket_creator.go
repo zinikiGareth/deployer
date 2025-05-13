@@ -2,7 +2,6 @@ package testS3
 
 import (
 	"fmt"
-	"log"
 
 	"ziniki.org/deployer/coremod/pkg/files"
 	"ziniki.org/deployer/deployer/pkg/errorsink"
@@ -75,7 +74,13 @@ func (eb *bucketCreator) Execute() {
 }
 
 func (eb *bucketCreator) TearDown() {
-	log.Printf("you have asked to tear down bucket %s\n", eb.name)
+	tmp := eb.tools.Recall.ObtainDriver("testhelpers.TestStepLogger")
+	testLogger, ok := tmp.(testhelpers.TestStepLogger)
+	if !ok {
+		panic("could not cast logger to TestStepLogger")
+	}
+
+	testLogger.Log("we need to delete a bucket called %s in region %s\n", eb.name, eb.env.Region)
 }
 
 func (eb *bucketCreator) ObtainDest() files.FileDest {

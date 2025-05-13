@@ -10,6 +10,7 @@ errorcases/ensure-needs-name
 errorcases/ensure-needs-teardown
 errorcases/ensure-only-one-name
 ensure-bucket
+teardown-bucket
 saved-bucket
 bucket-named-in-props
 show-string-literal
