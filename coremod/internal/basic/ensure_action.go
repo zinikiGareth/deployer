@@ -83,7 +83,10 @@ func (ea *EnsureAction) AddAdverb(adv pluggable.Adverb, tokens []pluggable.Token
 		if ea.teardown != nil {
 			panic("duplicate teardown")
 		}
-		ea.teardown = &MyTearDown{}
+		if len(tokens) != 1 {
+			panic("invalid tokens")
+		}
+		ea.teardown = &MyTearDown{mode: tokens[0].(pluggable.Identifier).Id()}
 
 	}
 	return interpreters.DisallowInnerScope(ea.tools)
@@ -133,8 +136,9 @@ func (ea *EnsureAction) TearDown() {
 }
 
 type MyTearDown struct {
+	mode string
 }
 
 func (m *MyTearDown) Mode() string {
-	panic("unimplemented")
+	return m.mode
 }
