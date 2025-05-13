@@ -6,6 +6,7 @@ import (
 
 type PropertyParent interface {
 	AddProperty(name pluggable.Identifier, expr pluggable.Expr)
+	AddAdverb(adverb pluggable.Adverb, args []pluggable.Token) pluggable.Interpreter
 	Completed()
 }
 
@@ -15,6 +16,12 @@ type propertiesInnerScope struct {
 }
 
 func (pis *propertiesInnerScope) HaveTokens(tokens []pluggable.Token) pluggable.Interpreter {
+	if len(tokens) >= 1 {
+		if adv, ok := tokens[0].(pluggable.Adverb); ok {
+			return pis.parent.AddAdverb(adv, tokens[1:])
+		}
+	}
+
 	if len(tokens) < 3 {
 		pis.tools.Reporter.Report(0, "<prop> <- <expr>")
 		return DisallowInnerScope(pis.tools)

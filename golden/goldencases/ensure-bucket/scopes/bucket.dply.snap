@@ -7,4 +7,5 @@
 #       ^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
 >		ensure test.S3.Bucket "org.ziniki.launch_bucket"
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
->
+>			@teardown preserve
+#^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply

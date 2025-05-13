@@ -9,6 +9,8 @@
 #       ^^^^^^^^^^^^^^^^^^^ source.deployer-dply
 >		ensure test.S3.Bucket "org.ziniki.launch_bucket" => bucket
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>			@teardown preserve
+#^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
 >		env "GOLDEN_ROOT" => root
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
 >		files.dir root "filesrc" => src_dir

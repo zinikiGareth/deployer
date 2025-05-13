@@ -3,6 +3,7 @@ We want to be able to specify a local source for the files and copy them to a "b
 
 	target copyFilesToBucket
 		ensure test.S3.Bucket "org.ziniki.launch_bucket" => bucket
+			@teardown preserve
 		env "GOLDEN_ROOT" => root
 		files.dir root "filesrc" => src_dir
 		files.copy src_dir bucket

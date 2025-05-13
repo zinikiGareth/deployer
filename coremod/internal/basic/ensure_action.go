@@ -5,6 +5,7 @@ import (
 
 	"ziniki.org/deployer/coremod/pkg/ensurable"
 	"ziniki.org/deployer/deployer/pkg/errorsink"
+	"ziniki.org/deployer/deployer/pkg/interpreters"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
@@ -17,7 +18,7 @@ type EnsureAction struct {
 	what     pluggable.Identifier
 	resolved pluggable.Blank
 	named    pluggable.String
-	teardown *pluggable.TearDown
+	teardown pluggable.TearDown
 	props    map[pluggable.Identifier]pluggable.Expr
 	ens      ensurable.Ensurable
 }
@@ -77,6 +78,17 @@ func (ea *EnsureAction) AddProperty(name pluggable.Identifier, value pluggable.E
 	}
 }
 
+func (ea *EnsureAction) AddAdverb(adv pluggable.Adverb, tokens []pluggable.Token) pluggable.Interpreter {
+	if adv.Name() == "teardown" {
+		if ea.teardown != nil {
+			panic("duplicate teardown")
+		}
+		ea.teardown = &MyTearDown{}
+
+	}
+	return interpreters.DisallowInnerScope(ea.tools)
+}
+
 func (ea *EnsureAction) Completed() {
 	if ea.tools.Reporter.HasErrors() {
 		return
@@ -118,4 +130,11 @@ func (ea *EnsureAction) Execute() {
 
 func (ea *EnsureAction) TearDown() {
 	ea.ens.TearDown()
+}
+
+type MyTearDown struct {
+}
+
+func (m *MyTearDown) Mode() string {
+	panic("unimplemented")
 }

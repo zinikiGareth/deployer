@@ -15,7 +15,7 @@ type bucketCreator struct {
 
 	loc      *errorsink.Location
 	name     string
-	teardown *pluggable.TearDown
+	teardown pluggable.TearDown
 
 	env   *TestAwsEnv
 	cloud *BucketCloud

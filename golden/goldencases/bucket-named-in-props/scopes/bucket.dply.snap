@@ -11,4 +11,5 @@
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
 >			retentionLength <- 24 hours
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
->
+>			@teardown preserve
+#^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
