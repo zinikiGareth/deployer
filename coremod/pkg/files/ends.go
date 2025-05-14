@@ -12,6 +12,6 @@ type FileDest interface {
 	PourInto(name string /* TODO: needs a second arg with the body in it */)
 }
 
-type ThingyHolder interface {
+type DestHolder interface {
 	ObtainDest() FileDest
 }

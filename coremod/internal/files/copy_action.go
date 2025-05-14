@@ -3,8 +3,6 @@ package files
 import (
 	"fmt"
 	"log"
-	"os"
-	"path/filepath"
 
 	"ziniki.org/deployer/coremod/pkg/files"
 	"ziniki.org/deployer/deployer/pkg/errorsink"
@@ -15,6 +13,9 @@ type copyAction struct {
 	tools *pluggable.Tools
 	loc   *errorsink.Location
 	exprs []pluggable.Expr
+
+	Src  files.FileSource
+	Dest files.DestHolder
 }
 
 func (ca *copyAction) Loc() *errorsink.Location {
@@ -47,58 +48,39 @@ func (ca *copyAction) Prepare(pres pluggable.ValuePresenter) {
 	if ca.tools.Reporter.HasErrors() {
 		return
 	}
-	// Not quite sure what to do here ...
-	// Need to prepare
-	// Should check things like permissions
-	copyFrom := ca.tools.Storage.Eval(ca.exprs[0])
-	copyFS, ok := copyFrom.(*files.Path)
+
+	from := ca.exprs[0]
+	copyFrom := ca.tools.Storage.Eval(from)
+	copyFS, ok := copyFrom.(files.FileSource)
 	if !ok {
-		panic("not a path")
+		ca.tools.Reporter.At(from.Loc().Line)
+		ca.tools.Reporter.Report(from.Loc().Offset, "was not a file source")
+		return
 	}
-	path := copyFS.File
-	if !filepath.IsAbs(path) {
-		panic("not an absolute path")
-	}
-	dir, err := os.Stat(path)
-	if err != nil {
-		log.Fatalf("stat file failed: %v", err)
-	}
-	if !dir.IsDir() {
-		log.Fatalf("%s not a directory", path)
-	}
-	srcVar := ca.tools.Storage.Eval(ca.exprs[0])
-	src, ok := srcVar.(*files.Path)
-	if !ok {
-		panic("src was not the bucket i was looking for")
-	}
+	ca.Src = copyFS
 	destVar := ca.tools.Storage.Eval(ca.exprs[1])
-	dest, ok := destVar.(files.ThingyHolder)
+	dest, ok := destVar.(files.DestHolder)
 	if !ok {
-		panic(fmt.Sprintf("dest was %T not a ThingyHolder", destVar))
+		panic(fmt.Sprintf("dest was %T not a DestHolder", destVar))
 	}
-	log.Printf("%v %v\n", src, dest)
+	ca.Dest = dest
+	log.Printf("%v %v\n", copyFS, dest)
 }
 
 func (ca *copyAction) Execute() {
-	srcVar := ca.tools.Storage.Eval(ca.exprs[0])
-	src, ok := srcVar.(*files.Path)
-	if !ok {
-		panic("src was not the bucket i was looking for")
-	}
-	destVar := ca.tools.Storage.Eval(ca.exprs[1])
-	dest, ok := destVar.(files.ThingyHolder)
-	if !ok {
-		panic("dest was not the bucket i was looking for")
-	}
-	files, err := os.ReadDir(src.File)
-	if err != nil {
-		panic(err)
-	}
+	d := ca.Dest.ObtainDest()
+	ca.Src.PourOut("intro", d)
+	/*
+		files, err := os.ReadDir(src.File)
+		if err != nil {
+			panic(err)
+		}
 
-	d := dest.ObtainDest()
-	for _, f := range files {
-		d.PourInto(f.Name())
-	}
+		d := dest.ObtainDest()
+		for _, f := range files {
+			d.PourInto(f.Name())
+		}
+	*/
 }
 
 func (ca *copyAction) TearDown() {

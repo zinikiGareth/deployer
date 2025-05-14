@@ -49,18 +49,22 @@ func (da *dirAction) Prepare(pres pluggable.ValuePresenter) {
 	if da.tools.Reporter.HasErrors() {
 		return
 	}
-	var val *files.Path
+	var val *DirectoryPourer
+	var err error
 	for _, e := range da.exprs {
 		v := da.tools.Storage.Eval(e)
 		if val == nil {
-			p, ok := v.(files.Path)
+			p, ok := v.(*DirectoryPourer)
 			if ok {
-				val = &p
+				val = p
 			} else {
 				s, ok := v.(string)
 				if ok {
 					if filepath.IsAbs(s) {
-						val = &files.Path{File: s}
+						val, err = NewDirectoryPourer(s)
+						if err != nil {
+							panic(err)
+						}
 					} else {
 						panic(fmt.Sprintf("cannot use non-abs path here: %v\n", v))
 					}
@@ -72,7 +76,10 @@ func (da *dirAction) Prepare(pres pluggable.ValuePresenter) {
 			s, ok := v.(string)
 			if ok {
 				if !filepath.IsAbs(s) {
-					val = &files.Path{File: filepath.Join(val.File, s)}
+					val, err = val.Relative(s)
+					if err != nil {
+						panic(err)
+					}
 				} else {
 					panic(fmt.Sprintf("cannot use abs path here: %v\n", v))
 				}
@@ -94,7 +101,7 @@ func (ea *dirAction) TearDown() {
 
 type PathHolder struct {
 	loc  *errorsink.Location
-	path *files.Path
+	path files.FileSource
 }
 
 func (p *PathHolder) Loc() *errorsink.Location {
@@ -102,18 +109,14 @@ func (p *PathHolder) Loc() *errorsink.Location {
 }
 
 func (p *PathHolder) ShortDescription() string {
-	dir := "<nil>"
-	if p.path != nil {
-		dir = p.path.File
-	}
-	return fmt.Sprintf("PathHolder[%s]", dir)
+	return fmt.Sprintf("PathHolder[%v]", p.path)
 }
 
 func (p *PathHolder) DumpTo(iw pluggable.IndentWriter) {
 	iw.Intro("PathHolder")
 	iw.AttrsWhere(p)
-	if p.path != nil {
-		iw.TextAttr("path", p.path.File)
-	}
+	// if p.path != nil {
+	// 	iw.TextAttr("path", p.path)
+	// }
 	iw.EndAttrs()
 }
