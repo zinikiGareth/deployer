@@ -46,6 +46,9 @@ func (da *dirAction) Resolve(r pluggable.Resolver, b pluggable.Binder) {
 }
 
 func (da *dirAction) Prepare(pres pluggable.ValuePresenter) {
+	if da.tools.Reporter.HasErrors() {
+		return
+	}
 	var val *files.Path
 	for _, e := range da.exprs {
 		v := da.tools.Storage.Eval(e)

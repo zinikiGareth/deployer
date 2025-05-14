@@ -42,6 +42,11 @@ func (ea *EnvAction) Prepare(pres pluggable.ValuePresenter) {
 	// TODO: I think ALL this should really be something like e.Eval(runtime).ToString()
 	str := ea.tools.Storage.EvalAsString(ea.varname)
 	val := os.Getenv(str)
+	if val == "" {
+		ea.tools.Reporter.At(ea.varname.Loc().Line)
+		ea.tools.Reporter.Reportf(ea.varname.Loc().Offset, "the env var %s is not set", str)
+		return
+	}
 	pres.Present(val)
 }
 

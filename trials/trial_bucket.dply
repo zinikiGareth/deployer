@@ -2,3 +2,7 @@
 	target bucket_1
 		ensure aws.S3.Bucket "news.consolidator.info" => consolidator_bucket
 			@teardown delete
+		env "CONSOLIDATOR_SRC" => root
+		files.dir root "IMAGE" => src_dir
+		files.copy src_dir consolidator_bucket
+

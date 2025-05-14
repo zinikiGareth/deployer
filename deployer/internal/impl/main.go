@@ -60,6 +60,7 @@ func RunDeployer(args []string) int {
 	for _, s := range targets {
 		err = d.Deploy(s)
 		if err != nil {
+			fmt.Printf("%v", err)
 			return 1
 		}
 	}

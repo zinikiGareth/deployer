@@ -75,6 +75,10 @@ func (d *DeployerImpl) Deploy(targetNames ...string) error {
 		t.Prepare()
 	}
 
+	if d.tools.Reporter.HasErrors() {
+		return fmt.Errorf("errors during preparation ... NOT EXECUTING\n")
+	}
+
 	if d.tools.Options.TearDown {
 		d.tools.Storage.SetMode(pluggable.EXECUTE_MODE)
 		for _, t := range targets {

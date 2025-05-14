@@ -44,6 +44,9 @@ func (ca *copyAction) Resolve(r pluggable.Resolver, b pluggable.Binder) {
 }
 
 func (ca *copyAction) Prepare(pres pluggable.ValuePresenter) {
+	if ca.tools.Reporter.HasErrors() {
+		return
+	}
 	// Not quite sure what to do here ...
 	// Need to prepare
 	// Should check things like permissions
@@ -63,18 +66,29 @@ func (ca *copyAction) Prepare(pres pluggable.ValuePresenter) {
 	if !dir.IsDir() {
 		log.Fatalf("%s not a directory", path)
 	}
+	srcVar := ca.tools.Storage.Eval(ca.exprs[0])
+	src, ok := srcVar.(*files.Path)
+	if !ok {
+		panic("src was not the bucket i was looking for")
+	}
+	destVar := ca.tools.Storage.Eval(ca.exprs[1])
+	dest, ok := destVar.(files.ThingyHolder)
+	if !ok {
+		panic(fmt.Sprintf("dest was %T not a ThingyHolder", destVar))
+	}
+	log.Printf("%v %v\n", src, dest)
 }
 
 func (ca *copyAction) Execute() {
 	srcVar := ca.tools.Storage.Eval(ca.exprs[0])
 	src, ok := srcVar.(*files.Path)
 	if !ok {
-		panic("not the bucket i was looking for")
+		panic("src was not the bucket i was looking for")
 	}
 	destVar := ca.tools.Storage.Eval(ca.exprs[1])
 	dest, ok := destVar.(files.ThingyHolder)
 	if !ok {
-		panic("not the bucket i was looking for")
+		panic("dest was not the bucket i was looking for")
 	}
 	files, err := os.ReadDir(src.File)
 	if err != nil {
@@ -83,7 +97,7 @@ func (ca *copyAction) Execute() {
 
 	d := dest.ObtainDest()
 	for _, f := range files {
-		d.Pour(f.Name())
+		d.PourInto(f.Name())
 	}
 }
 
