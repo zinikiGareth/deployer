@@ -16,6 +16,19 @@ func (dp *DirectoryPourer) Relative(s string) (*DirectoryPourer, error) {
 	return NewDirectoryPourer(filepath.Join(dp.Path, s))
 }
 
+func (dp *DirectoryPourer) PourAll(into files.FileDest) {
+	// TODO: just file case
+	// TODO: recursive dir case
+	files, err := os.ReadDir(dp.Path)
+	if err != nil {
+		panic(err)
+	}
+
+	for _, f := range files {
+		into.PourInto(f.Name())
+	}
+}
+
 func (dp *DirectoryPourer) PourOut(name string, into files.FileDest) {
 	into.PourInto(name)
 }

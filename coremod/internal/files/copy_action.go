@@ -69,18 +69,7 @@ func (ca *copyAction) Prepare(pres pluggable.ValuePresenter) {
 
 func (ca *copyAction) Execute() {
 	d := ca.Dest.ObtainDest()
-	ca.Src.PourOut("intro", d)
-	/*
-		files, err := os.ReadDir(src.File)
-		if err != nil {
-			panic(err)
-		}
-
-		d := dest.ObtainDest()
-		for _, f := range files {
-			d.PourInto(f.Name())
-		}
-	*/
+	ca.Src.PourAll(d)
 }
 
 func (ca *copyAction) TearDown() {

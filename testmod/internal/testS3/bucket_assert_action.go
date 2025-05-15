@@ -46,7 +46,8 @@ func (ca *assertBucketAction) Execute() {
 	bucketVar := ca.tools.Storage.Eval(ca.bucket)
 	bucket, ok := bucketVar.(*bucketCreator)
 	if !ok {
-		panic("not the bucket i was looking for")
+		ca.tools.Reporter.At(ca.bucket.Loc().Line)
+		ca.tools.Reporter.Reportf(ca.bucket.Loc().Offset, "was not a bucket: %T", bucketVar)
 	}
 	// TODO: our test environment needs to create a bucket "in memory"
 	// This then needs to be able to be the destination for copy
@@ -55,7 +56,8 @@ func (ca *assertBucketAction) Execute() {
 
 	for _, f := range ca.files {
 		if !bucket.cloud.HasFile(f) {
-			panic("do not have the file")
+			ca.tools.Reporter.At(ca.bucket.Loc().Line)
+			ca.tools.Reporter.Reportf(ca.bucket.Loc().Offset, "do not have the file %s", f)
 		}
 	}
 }
@@ -63,5 +65,5 @@ func (ca *assertBucketAction) Execute() {
 func (ca *assertBucketAction) TearDown() {
 	// Does this just want to do nothing?
 	// Or assert that the bucket has gone away?
-	
+
 }

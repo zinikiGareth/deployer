@@ -5,6 +5,7 @@ type FileSource interface {
 	// All() FileSource
 	// Match(pattern string) FileSource
 	// One(name string) FileSource
+	PourAll(into FileDest)
 	PourOut(name string, into FileDest)
 }
 
