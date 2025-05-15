@@ -1,8 +1,30 @@
+This is my attempt at duplicating the "cloudfront with S3 bucket" example
+that AWS offers at https://github.com/aws-samples/amazon-cloudfront-secure-static-site/tree/master/templates 
+
+I would like to think this is both clearer and better explained.  In terms of the "better explained", I challenge myself to write a lot of commentary.
+
+This is the target that creates everything - and then strips it down
 
 	target bucket_1
+
+The core of the solution is to have a bucket which has all of the files in it that we want
+
 		ensure aws.S3.Bucket "news.consolidator.info" => consolidator_bucket
 			@teardown delete
-		env "CONSOLIDATOR_SRC" => root
-		files.dir root "IMAGE" => src_dir
-		files.copy src_dir consolidator_bucket
 
+We need to copy some files into that, so we assume that there are files in a directory
+indicated by ${CONSOLIDATOR_SRC}/IMAGE.  We find that directory (if it exists) and copy
+the files into the bucket.
+
+Get the value of the CONSOLIDATOR_SRC variable.  This will be a string
+
+		env "CONSOLIDATOR_SRC" => root
+
+We can now find the directory corresponding to that, which is also an active "file source",
+so we can use it as the source of files for a copy action.
+
+		files.dir root "IMAGE" => src_dir
+
+Now copy the files from the src dir to the bucket.
+
+		files.copy src_dir consolidator_bucket
