@@ -2,7 +2,6 @@ package files
 
 import (
 	"fmt"
-	"log"
 
 	"ziniki.org/deployer/coremod/pkg/files"
 	"ziniki.org/deployer/deployer/pkg/errorsink"
@@ -64,7 +63,6 @@ func (ca *copyAction) Prepare(pres pluggable.ValuePresenter) {
 		panic(fmt.Sprintf("dest was %T not a DestHolder", destVar))
 	}
 	ca.Dest = dest
-	log.Printf("%v %v\n", copyFS, dest)
 }
 
 func (ca *copyAction) Execute() {

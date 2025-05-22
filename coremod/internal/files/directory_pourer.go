@@ -2,6 +2,7 @@ package files
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 
@@ -25,12 +26,19 @@ func (dp *DirectoryPourer) PourAll(into files.FileDest) {
 	}
 
 	for _, f := range files {
-		into.PourInto(f.Name())
+		dp.PourOut(f.Name(), into)
 	}
 }
 
 func (dp *DirectoryPourer) PourOut(name string, into files.FileDest) {
-	into.PourInto(name)
+	full := filepath.Join(dp.Path, name)
+	fd, err := os.Open(full)
+	if err != nil {
+		log.Printf("could not open %s\n", full)
+		return
+	}
+	defer fd.Close()
+	into.PourInto(name, fd)
 }
 
 func NewDirectoryPourer(path string) (*DirectoryPourer, error) {

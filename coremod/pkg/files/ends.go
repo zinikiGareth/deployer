@@ -1,5 +1,7 @@
 package files
 
+import "io"
+
 type FileSource interface {
 	// TODO: something that says "here's what I got" (TDA, of course)
 	// All() FileSource
@@ -10,7 +12,7 @@ type FileSource interface {
 }
 
 type FileDest interface {
-	PourInto(name string /* TODO: needs a second arg with the body in it */)
+	PourInto(name string, contents io.Reader)
 }
 
 type DestHolder interface {

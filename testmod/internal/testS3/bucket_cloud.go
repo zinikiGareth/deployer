@@ -1,5 +1,7 @@
 package testS3
 
+import "io"
+
 type BucketCloud struct {
 	name     string
 	contents map[string]*BucketEntry
@@ -14,7 +16,7 @@ func (b *BucketCloud) HasFile(name string) bool {
 	return b.contents[name] != nil
 }
 
-func (b *BucketCloud) PourInto(name string) {
+func (b *BucketCloud) PourInto(name string, contents io.Reader) {
 	entry := &BucketEntry{Key: name}
 	b.contents[name] = entry
 }
