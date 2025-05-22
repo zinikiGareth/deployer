@@ -1,6 +1,8 @@
 package target
 
 import (
+	"slices"
+
 	"ziniki.org/deployer/deployer/pkg/errorsink"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
@@ -58,7 +60,7 @@ func (t *coreTarget) Execute() {
 }
 
 func (t *coreTarget) TearDown() {
-	for _, a := range t.actions {
+	for _, a := range slices.Backward(t.actions) {
 		a.TearDown()
 	}
 }

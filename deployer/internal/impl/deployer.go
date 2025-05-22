@@ -71,24 +71,24 @@ func (d *DeployerImpl) Deploy(targetNames ...string) error {
 
 	d.tools.Storage.SetMode(pluggable.PREPARE_MODE)
 	for _, t := range targets {
-		fmt.Printf("preparing %s:\n", t.String())
+		// fmt.Printf("preparing %s:\n", t.String())
 		t.Prepare()
 	}
 
 	if d.tools.Reporter.HasErrors() {
-		return fmt.Errorf("errors during preparation ... NOT EXECUTING\n")
+		return fmt.Errorf("errors during preparation ... NOT EXECUTING")
 	}
 
 	if d.tools.Options.TearDown {
 		d.tools.Storage.SetMode(pluggable.EXECUTE_MODE)
 		for _, t := range targets {
-			fmt.Printf("tearing down %s:\n", t)
+			// fmt.Printf("tearing down %s:\n", t)
 			t.TearDown()
 		}
 	} else {
 		d.tools.Storage.SetMode(pluggable.EXECUTE_MODE)
 		for _, t := range targets {
-			fmt.Printf("executing %s:\n", t)
+			// fmt.Printf("executing %s:\n", t)
 			t.Execute()
 		}
 	}
