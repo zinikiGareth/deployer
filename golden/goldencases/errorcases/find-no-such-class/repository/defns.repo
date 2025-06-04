@@ -1,0 +1,16 @@
+symbol cantFindANonClass is bound to:
+target cantFindANonClass {
+	_where_: find.dply:4.7
+	actions: [
+		AssignTo {
+			_where_: find.dply:5.52
+			assignTo: fred
+			FindAction {
+				_where_: find.dply:5.0
+				what: notthere.Missing
+				not-resolved: notthere.Missing
+				named: org.ziniki.launch_bucket
+			}
+		}
+	]
+}

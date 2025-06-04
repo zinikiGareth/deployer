@@ -95,7 +95,6 @@ func (ea *FindAction) Completed() {
 func (ea *FindAction) Resolve(r pluggable.Resolver, b pluggable.Binder) {
 	res, ok := r.Resolve(ea.what).(pluggable.Blank)
 	if !ok {
-		ea.tools.Storage.Errorf(ea.loc, "could not find "+ea.what.Id())
 		return
 	}
 	ea.resolved = res

@@ -1,0 +1,12 @@
+>This demonstrates that an error occurs if the class being mentioned is not 
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
+>defined anywhere
+#^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
+>
+>	target cantFindANonClass
+#^ source.deployer-dply
+# ^^^^^^ source.deployer-dply keyword.target
+#       ^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>		find notthere.Missing "org.ziniki.launch_bucket" => fred
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>

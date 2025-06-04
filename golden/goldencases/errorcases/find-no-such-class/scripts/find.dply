@@ -1,0 +1,5 @@
+This demonstrates that an error occurs if the class being mentioned is not 
+defined anywhere
+
+	target cantFindANonClass
+		find notthere.Missing "org.ziniki.launch_bucket" => fred

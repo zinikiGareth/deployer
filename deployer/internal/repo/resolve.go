@@ -26,13 +26,13 @@ type Searcher struct {
 }
 
 func (s *Searcher) Resolve(name pluggable.Identifier) pluggable.Describable {
+	// log.Printf("attempting to resolve %s\n", name)
 	defn := s.repo.GetDefinition(pluggable.SymbolName(name.Id()))
-	ret, ok := defn.(pluggable.Describable)
-	if ret != nil && ok {
-		return ret
+	if defn != nil {
+		return defn
 	}
-	ret, ok = s.recall.Find(reflect.TypeFor[pluggable.Blank](), name.Id()).(pluggable.Describable)
-	if ret != nil {
+	ret, ok := s.recall.Find(reflect.TypeFor[pluggable.Blank](), name.Id()).(pluggable.Describable)
+	if ret != nil && ok {
 		return ret
 	}
 	log.Printf("failed to resolve %s\n", name)

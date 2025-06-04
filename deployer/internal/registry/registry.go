@@ -16,7 +16,7 @@ type Registry struct {
 
 func (r *Registry) Register(what reflect.Type, called string, impl any) {
 	if !reflect.TypeOf(impl).Implements(what) {
-		log.Fatalf("%v is not a %v", impl, what)
+		log.Fatalf("Register %s: %v is not a %v", called, impl, what)
 	}
 	m := r.impls[what]
 	if m == nil {

@@ -18,3 +18,4 @@ read-env-var
 copy-files
 errorcases/find-cannot-have-teardown
 find-bucket
+errorcases/find-no-such-class
