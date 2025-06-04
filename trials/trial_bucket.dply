@@ -3,9 +3,9 @@ that AWS offers at https://github.com/aws-samples/amazon-cloudfront-secure-stati
 
 I would like to think this is both clearer and better explained.  In terms of the "better explained", I challenge myself to write a lot of commentary.
 
-This is the target that creates everything - and then strips it down
+This is the target that creates everything - and can also strip it down if run as "--teardown"
 
-	target bucket_1
+	target cloudfront_website_from_bucket
 
 The core of the solution is to have a bucket which has all of the files in it that we want
 
@@ -28,3 +28,9 @@ so we can use it as the source of files for a copy action.
 Now copy the files from the src dir to the bucket.
 
 		files.copy src_dir consolidator_bucket
+
+Turning to the other end, it's a requirement that we have a domain name that we can use.  A lot of the example seems to revolve around whether
+or not you want the domain to respond, or whether you just want a subdomain to respond (they call this "apex" which is apparently
+official DNS terminology - the "root" domain).
+
+		find aws.Route53.DomainName "consolidator.news" => domain_name

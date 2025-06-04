@@ -1,0 +1,12 @@
+symbol findABucket is bound to:
+target findABucket {
+	_where_: find.dply:3.7
+	actions: [
+		FindAction {
+			_where_: find.dply:4.0
+			what: test.S3.Bucket
+			resolved: test.S3.Bucket[]
+			named: org.ziniki.launch_bucket
+		}
+	]
+}

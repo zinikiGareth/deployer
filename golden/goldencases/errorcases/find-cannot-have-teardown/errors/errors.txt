@@ -1,0 +1,3 @@
+  5.1   find cannot handle teardown
+
+  ==> @teardown delete

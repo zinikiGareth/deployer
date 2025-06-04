@@ -27,6 +27,7 @@ func RunDeployer(args []string) int {
 			i++
 			mod, err := nextArg(args, i, "there is no argument module")
 			if err != nil {
+				fmt.Printf("%v\n", err)
 				return 1
 			}
 			err = d.UseModule(mod)
@@ -36,13 +37,6 @@ func RunDeployer(args []string) int {
 			}
 		case "--teardown":
 			options.TearDown = true
-		// case "--pattern":
-		// 	i++
-		// 	patt, err := nextArg(args, i, "there is no argument pattern")
-		// 	if err != nil {
-		// 		return nil, err
-		// 	}
-		// 	deployer.MatchPattern(patt)
 		default:
 			if strings.HasPrefix(args[i], "-") {
 				fmt.Printf("unknown option: %s\n", args[i])
@@ -60,7 +54,7 @@ func RunDeployer(args []string) int {
 	for _, s := range targets {
 		err = d.Deploy(s)
 		if err != nil {
-			fmt.Printf("%v", err)
+			fmt.Printf("%v\n", err)
 			return 1
 		}
 	}
