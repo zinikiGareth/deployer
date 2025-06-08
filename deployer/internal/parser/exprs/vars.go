@@ -1,6 +1,8 @@
 package exprs
 
 import (
+	"log"
+
 	"ziniki.org/deployer/deployer/pkg/errorsink"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
@@ -40,6 +42,9 @@ func (a *VarReference) Named() pluggable.Identifier {
 }
 
 func (a *VarReference) Binding() pluggable.Describable {
+	if a.actualVar == nil {
+		log.Fatalf("var was not resolved: %s %s\n", a.id.Id(), a.id.Loc().String())
+	}
 	return a.actualVar
 }
 

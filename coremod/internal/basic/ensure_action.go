@@ -19,8 +19,11 @@ type EnsureAction struct {
 	resolved pluggable.Blank
 	named    pluggable.String
 	teardown pluggable.TearDown
-	props    map[pluggable.Identifier]pluggable.Expr
-	ens      ensurable.Ensurable
+	// TODO: this really isn't a map here, because what we want is to index by string name
+	// Now, we possibly want the "identifier" to that we have the location of the symbol, but it can't be the key
+	// because the same "symbol" at two different locations will be different, and we can't index by it.
+	props map[pluggable.Identifier]pluggable.Expr
+	ens   ensurable.Ensurable
 }
 
 func (ea *EnsureAction) Loc() *errorsink.Location {
@@ -111,8 +114,11 @@ func (ea *EnsureAction) Resolve(r pluggable.Resolver, b pluggable.Binder) {
 	if !ok {
 		return
 	}
+	for _, y := range ea.props {
+		y.Resolve(r)
+	}
 	ea.resolved = res
-	obj := ea.resolved.Mint(ea.tools, ea.Loc(), ea.named.Text(), ea.teardown)
+	obj := ea.resolved.Mint(ea.tools, ea.Loc(), ea.named.Text(), ea.props, ea.teardown)
 	ens, ok := obj.(ensurable.Ensurable)
 	if !ok {
 		ea.tools.Storage.Errorf(ea.loc, "the type "+ea.what.Id()+" is not ensurable")
