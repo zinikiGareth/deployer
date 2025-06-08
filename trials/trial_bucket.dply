@@ -33,4 +33,16 @@ Turning to the other end, it's a requirement that we have a domain name that we 
 or not you want the domain to respond, or whether you just want a subdomain to respond (they call this "apex" which is apparently
 official DNS terminology - the "root" domain).
 
-		find aws.Route53.DomainName "consolidator.news" => domain_name
+		find aws.Route53.DomainName "consolidator.news" => domain
+
+The domain needs a certificate.  In addition to the "www" subdomain, we want to create
+an alias for the "apex" node.
+
+This is touch-and-go complexity for doing something using ensure rather than stepping up to adding
+a specific "certificate" verb.  The big clue is in the duplication.
+
+		ensure aws.CertificateManager.Certificate "www.consolidator.news" => cert
+			@teardown delete
+			Domain <- domain
+			SubjectAlternativeNames <- "consolidator.news" // The apex node
+			ValidationMethod <- "DNS"
