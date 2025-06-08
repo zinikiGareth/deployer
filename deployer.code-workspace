@@ -55,6 +55,24 @@
 					"${workspaceFolder:TestMod}/plugin/testmod.so",
 					"${workspaceFolder:GoldenTester}/goldencases"
 				]
+			},
+			{
+				"name": "trial",
+				"type": "go",
+				"request": "launch",
+				"program": "${workspaceFolder:Deployer}/cmd/deployer",
+				"cwd": "${workspaceFolder:Deployer}/..",
+				"args": [
+					"--module",
+					"${workspaceFolder:CoreMod}/plugin/coremod.so",
+					"--module",
+					"${workspaceFolder:AWS}/plugin/deployer_module_aws.so",
+					"cloudfront_website_from_bucket"
+				],
+				"env": {
+					"AWS_PROFILE": "ziniki-admin",
+					"CONSOLIDATOR_SRC": "/Users/gareth/Clients/consolidator.news"
+				}
 			}
 		],
 		"compounds": []
