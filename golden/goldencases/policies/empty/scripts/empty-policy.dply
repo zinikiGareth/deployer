@@ -1,0 +1,12 @@
+Policies have to be able to do something.
+
+We can construct abstract policies which should be basically cross-platform as the principal/action/resource thing is fairly standard.
+However, we are going to sail closer to the AWS wind because that's our target.
+I don't think I'm going to over-commit, but you never know.
+
+This example is just a really simple one that we can create a policy.
+Note that this is entirely in memory: you need to "ensure" it somewhere or attach it to something to make it take shape in the real world.
+
+	target createASimplePolicy
+		policy => hello_world_policy
+		

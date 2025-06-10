@@ -1,0 +1,2 @@
+createASimplePolicy => Target[createASimplePolicy]
+hello_world_policy => PolicyDocument[]

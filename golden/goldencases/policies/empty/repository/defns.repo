@@ -1,0 +1,17 @@
+symbol createASimplePolicy is bound to:
+target createASimplePolicy {
+	_where_: empty-policy.dply:10.7
+	actions: [
+		AssignTo {
+			_where_: empty-policy.dply:11.10
+			assignTo: hello_world_policy
+			PolicyAction {
+				_where_: empty-policy.dply:11.0
+			}
+		}
+	]
+}
+symbol hello_world_policy is bound to:
+PolicyDocument[] {
+	_where_: empty-policy.dply:11.0
+}

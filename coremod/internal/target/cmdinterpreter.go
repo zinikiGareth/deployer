@@ -114,11 +114,17 @@ func (d *DoAssign) Prepare(pres pluggable.ValuePresenter) {
 }
 
 func (d *DoAssign) Execute() {
-	d.action.Execute()
+	amis, ok := d.action.(pluggable.AndMakeItSo)
+	if ok {
+		amis.Execute()
+	}
 }
 
 func (d *DoAssign) TearDown() {
-	d.action.TearDown()
+	amis, ok := d.action.(pluggable.AndMakeItSo)
+	if ok {
+		amis.TearDown()
+	}
 }
 
 func (d *DoAssign) MayBind(val pluggable.Describable) {

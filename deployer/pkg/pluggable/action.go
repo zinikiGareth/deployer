@@ -7,6 +7,11 @@ type Action interface {
 	Resolve(r Resolver, b Binder)
 
 	Prepare(pres ValuePresenter)
+}
+
+type AndMakeItSo interface {
+	Action
+
 	Execute()
 	TearDown()
 }

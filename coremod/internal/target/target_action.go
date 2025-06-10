@@ -55,13 +55,19 @@ func (t *coreTarget) Prepare() {
 
 func (t *coreTarget) Execute() {
 	for _, a := range t.actions {
-		a.Execute()
+		amis, ok := a.(pluggable.AndMakeItSo)
+		if ok {
+			amis.Execute()
+		}
 	}
 }
 
 func (t *coreTarget) TearDown() {
 	for _, a := range slices.Backward(t.actions) {
-		a.TearDown()
+		amis, ok := a.(pluggable.AndMakeItSo)
+		if ok {
+			amis.TearDown()
+		}
 	}
 }
 

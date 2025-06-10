@@ -9,13 +9,14 @@ errorcases/ensure-needs-object
 errorcases/ensure-needs-name
 errorcases/ensure-needs-teardown
 errorcases/ensure-only-one-name
+errorcases/find-no-such-class
+errorcases/find-cannot-have-teardown
 ensure-bucket
 teardown-bucket
+find-bucket
 saved-bucket
 bucket-named-in-props
 show-string-literal
 read-env-var
 copy-files
-errorcases/find-cannot-have-teardown
-find-bucket
-errorcases/find-no-such-class
+policies/empty

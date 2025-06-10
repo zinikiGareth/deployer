@@ -46,3 +46,27 @@ a specific "certificate" verb.  The big clue is in the duplication.
 			Domain <- domain
 			SubjectAlternativeNames <- "consolidator.news" // The apex node
 			ValidationMethod <- "DNS"
+
+Now we are in a position to set up our cloudfront distribution, which will serve content on the named
+site from the bucket we created earlier.
+
+		ensure aws.CloudFront.Distribution "for-consolidator-news" => cloudfront
+			@teardown delete
+
+In order to use the bucket with cloudfront, we need to say that we have a policy in place on the bucket
+I think it's reasonable to do this in two steps; I think it may also be reasonable to allow it to be done
+in a single step, but let's start with the more flexible approach
+
+//		policy "allow-cloudfront-to-access-bucket"
+//			principal "cloudfront.amazonaws.com"
+//			action "s3:GetObject"
+
+I also think it's reasonable, given that we need this, that it all happens in one step.
+I think I want a "cloudfront" step at this point, quite apart from the fact that I want to build one.
+
+		policy => cloudfront_policy
+			allow aws.action.S3.GetObject (consolidator_bucket->allResources) aws.principal.CloudFront
+				condition aws.cond.StringEquals "AWS:SourceArn" (cloudfront->arn)
+
+		ensure aws.Policy "allow-cloudfront-to-access-bucket"
+			Policy <- cloudfront_policy
