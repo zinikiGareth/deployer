@@ -6,6 +6,8 @@ type IndentWriter interface {
 	TextAttr(field string, value string)
 	ListAttr(field string)
 	EndList()
+	NestedAttr(field string)
+	EndNested()
 	EndAttrs()
 
 	// And to cope with everything else

@@ -1,6 +1,10 @@
 package exprs
 
-import "ziniki.org/deployer/deployer/pkg/pluggable"
+import (
+	"fmt"
+
+	"ziniki.org/deployer/deployer/pkg/pluggable"
+)
 
 type Apply struct {
 	pluggable.Locatable
@@ -24,5 +28,5 @@ func (a Apply) DumpTo(iw pluggable.IndentWriter) {
 }
 
 func (a Apply) String() string {
-	return "APPPLLY"
+	return fmt.Sprintf("Apply[%d]", len(a.Args))
 }

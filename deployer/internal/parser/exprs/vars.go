@@ -37,8 +37,8 @@ func (v *VarReference) String() string {
 	return "Var[" + v.id.Id() + "]"
 }
 
-func (a *VarReference) Named() pluggable.Identifier {
-	panic("unimplemented")
+func (v *VarReference) Named() pluggable.Identifier {
+	return v.id
 }
 
 func (a *VarReference) Binding() pluggable.Describable {

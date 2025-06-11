@@ -1,8 +1,6 @@
 package policy
 
 import (
-	"log"
-
 	"ziniki.org/deployer/deployer/pkg/interpreters"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
@@ -16,7 +14,6 @@ func (pah *policyAllowCommandHandler) Handle(parent pluggable.ContainingContext,
 	if !ok {
 		return interpreters.IgnoreInnerScope()
 	}
-	log.Printf("pah has %d exprs\n", len(exprs))
 
 	if len(exprs) > 3 {
 		pah.tools.Reporter.Report(tokens[0].Loc().Offset, "allow: <action> <resource> <principal>")

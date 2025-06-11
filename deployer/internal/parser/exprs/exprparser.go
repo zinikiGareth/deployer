@@ -43,7 +43,7 @@ func (p *exprParser) Parse(tokens []pluggable.Token) (pluggable.Expr, bool) {
 		return fn.Eval(tok, makeArgs(before), makeArgs(after)), true
 	} else {
 		if len(before) > 1 {
-			p.tools.Reporter.Reportf(before[0].Loc().Offset, "no function found")
+			p.tools.Reporter.Reportf(before[0].Loc().Offset, "no function symbol found in this expression")
 			return nil, false
 		}
 		return AsExpr(before[0]), true
@@ -51,11 +51,11 @@ func (p *exprParser) Parse(tokens []pluggable.Token) (pluggable.Expr, bool) {
 }
 
 func AsExpr(x pluggable.Token) pluggable.Expr {
-	switch x.(type) {
+	switch x := x.(type) {
 	case pluggable.Expr:
-		return x.(pluggable.Expr)
+		return x
 	case pluggable.Identifier:
-		return VarRefer(x.(pluggable.Identifier))
+		return VarRefer(x)
 	default:
 		panic(fmt.Sprintf("cannot handle type %T", x))
 	}
@@ -145,7 +145,13 @@ func makeArgs(tokens []pluggable.Token) []pluggable.Expr {
 func (p *exprParser) split(tokens []pluggable.Token) (pluggable.Token, pluggable.Function, []pluggable.Token, []pluggable.Token) {
 	for i, t := range tokens {
 		if f := p.matchFunc(t); f != nil {
-			return t, f, tokens[0:i], tokens[i+1:]
+			k := 0
+			p1, ok1 := tokens[0].(pluggable.Punc)
+			p2, ok2 := tokens[len(tokens)-1].(pluggable.Punc)
+			if ok1 && ok2 && p1.Is('(') && p2.Is(')') {
+				k = 1
+			}
+			return t, f, tokens[k:i], tokens[i+1 : len(tokens)-k]
 		}
 	}
 	return nil, nil, tokens, nil

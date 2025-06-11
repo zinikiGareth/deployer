@@ -21,3 +21,4 @@ read-env-var
 copy-files
 policies/empty
 policies/allow-one
+invoke-method/simple

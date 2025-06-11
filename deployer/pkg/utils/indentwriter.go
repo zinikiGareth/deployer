@@ -44,6 +44,19 @@ func (iw *indentingWriter) EndList() {
 	iw.Printf("]\n")
 }
 
+func (iw *indentingWriter) NestedAttr(field string) {
+	iw.showIndent()
+	iw.Printf("%s:\n", field)
+	iw.levels = append(iw.levels, "N")
+}
+
+func (iw *indentingWriter) EndNested() {
+	if iw.levels[len(iw.levels)-1] != "N" {
+		panic("EndList but top of stack was not L")
+	}
+	iw.levels = iw.levels[0 : len(iw.levels)-1]
+}
+
 func (iw *indentingWriter) EndAttrs() {
 	if iw.levels[len(iw.levels)-1] != "A" {
 		panic("EndAttrs but top of stack was not A")

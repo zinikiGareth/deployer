@@ -20,7 +20,7 @@ func TestMustHaveAtLeastOneToken(t *testing.T) {
 func TestCannotHaveTwoNouns(t *testing.T) {
 	p, h := makeParser(t)
 	lineloc.Text = "hello world"
-	h.Sink.Expect(1, 1, 0, "hello world", "no function found")
+	h.Sink.Expect(1, 1, 0, "hello world", "no function symbol found in this expression")
 	hello := lexicator.NewIdentifierToken(lineloc, 0, "hello")
 	world := lexicator.NewStringToken(lineloc, 6, "world")
 	_, ok := p.Parse([]pluggable.Token{hello, world})

@@ -5,6 +5,7 @@ import (
 
 	"ziniki.org/deployer/coremod/internal/basic"
 	"ziniki.org/deployer/coremod/internal/files"
+	"ziniki.org/deployer/coremod/internal/methods"
 	"ziniki.org/deployer/coremod/internal/policy"
 	"ziniki.org/deployer/coremod/internal/target"
 	"ziniki.org/deployer/coremod/internal/time"
@@ -39,6 +40,7 @@ func RegisterWithDeployer(deployer deployer.Deployer) error {
 
 	tools.Register.Register(reflect.TypeFor[pluggable.TargetCommand](), "policy", policy.NewPolicyCommandHandler(tools))
 
+	tools.Register.Register(reflect.TypeFor[pluggable.Function](), "->", methods.MakeInvokeFunc(tools))
 	tools.Register.Register(reflect.TypeFor[pluggable.Function](), "hours", time.MakeHoursFunc(tools))
 
 	return nil

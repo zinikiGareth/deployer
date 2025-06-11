@@ -1,0 +1,32 @@
+symbol a_blob is bound to:
+ABlobber {
+	_where_: invoke.dply:13.0
+	expr:
+		String {
+			_where_: invoke.dply:13.6
+			"hello"
+		}
+}
+symbol showBlob is bound to:
+target showBlob {
+	_where_: invoke.dply:12.7
+	actions: [
+		AssignTo {
+			_where_: invoke.dply:13.16
+			assignTo: a_blob
+			create_blob {
+				_where_: invoke.dply:13.0
+				String {
+					_where_: invoke.dply:13.6
+					"hello"
+				}
+			}
+		}
+		ShowAction {
+			_where_: invoke.dply:14.0
+			exprs: [
+				Invoke{invoke.dply:14.6 Var[a_blob]->invoke.dply:14.14 name()}
+			]
+		}
+	]
+}

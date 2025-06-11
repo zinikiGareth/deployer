@@ -1,0 +1,3 @@
+a_blob => aBlobber invoke.dply:13.6 hello
+
+showBlob => Target[showBlob]

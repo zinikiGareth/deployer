@@ -1,0 +1,15 @@
+We need an operator "->" which in reality is "invoke method",
+but in the degenerate case (with no arguments) becomes "get value".
+
+It is my opinion that, for any given object, between updates, the
+value should be idempotent.  This means that if you want an incrementing
+counter or anything like that, you need an explicit verb for that.
+
+This is the simplest case I can think of.  A "blob" is a verb
+provided by testmod that generates an object.  We can use its "name"
+method to get back the name we provided.
+
+	target showBlob
+		blob "hello" => a_blob
+		show (a_blob->name)
+
