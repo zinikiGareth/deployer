@@ -83,7 +83,7 @@ loop:
 					return nil
 				}
 			case inIdentifier:
-				if unicode.IsSpace(r) || isSymbol(r) {
+				if unicode.IsSpace(r) || isSymbol(r) || isPuncChar(r) {
 					toks = ll.token(toks, line, from, tok)
 					tok = []rune{}
 					mode = starting
