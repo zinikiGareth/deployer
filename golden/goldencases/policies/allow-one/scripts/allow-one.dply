@@ -7,6 +7,7 @@ I don't think I'm going to over-commit, but you never know.
 This example is just a really simple one that we can create a policy.
 Note that this is entirely in memory: you need to "ensure" it somewhere or attach it to something to make it take shape in the real world.
 
-	target createAnEmptyPolicy
-		policy => hello_world_policy
+	target createAPolicyAllowingOneThing
+		policy => allow_one_policy
+			allow "action" "resource" "principal"
 		

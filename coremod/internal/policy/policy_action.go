@@ -6,9 +6,17 @@ import (
 )
 
 type PolicyAction struct {
-	tools *pluggable.Tools
-	loc   *errorsink.Location
-	doc   *PolicyDocument
+	tools   *pluggable.Tools
+	loc     *errorsink.Location
+	actions []pluggable.Action
+	doc     *PolicyDocument
+}
+
+// This feels weird to me and I'm not sure what to do about it.
+// It's the "action" bit that seems wrong, when I expect to be assembling an object
+// But I think the thing is that we need the idea of "actions" to make the whole "pineal" model work
+func (pa *PolicyAction) Add(entry pluggable.Action) {
+	pa.actions = append(pa.actions, entry)
 }
 
 func (pa *PolicyAction) Loc() *errorsink.Location {
@@ -18,7 +26,11 @@ func (pa *PolicyAction) Loc() *errorsink.Location {
 func (pa *PolicyAction) DumpTo(w pluggable.IndentWriter) {
 	w.Intro("PolicyAction")
 	w.AttrsWhere(pa)
-	// w.TextAttr("varname", pa.varname.String())
+	w.ListAttr("actions")
+	for _, a := range pa.actions {
+		a.DumpTo(w)
+	}
+	w.EndList()
 	w.EndAttrs()
 }
 

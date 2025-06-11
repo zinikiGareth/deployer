@@ -1,2 +1,2 @@
-createASimplePolicy => Target[createASimplePolicy]
+createAnEmptyPolicy => Target[createAnEmptyPolicy]
 hello_world_policy => PolicyDocument[]

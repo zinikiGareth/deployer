@@ -15,10 +15,10 @@ func (ech *policyCommandHandler) Handle(parent pluggable.ContainingContext, toke
 		return interpreters.IgnoreInnerScope()
 	}
 
-	ea := &PolicyAction{tools: ech.tools, loc: tokens[0].Loc()}
-	parent.Add(ea)
+	pa := &PolicyAction{tools: ech.tools, loc: tokens[0].Loc()}
+	parent.Add(pa)
 
-	return interpreters.DisallowInnerScope(ech.tools)
+	return NewPolicyNestedIntepreter(ech.tools, pa)
 }
 
 func NewPolicyCommandHandler(tools *pluggable.Tools) pluggable.TargetCommand {

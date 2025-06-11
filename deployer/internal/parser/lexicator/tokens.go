@@ -121,7 +121,10 @@ func (tok *StringToken) ShortDescription() string {
 }
 
 func (t *StringToken) DumpTo(iw pluggable.IndentWriter) {
-	panic("not implemented")
+	iw.Intro("String")
+	iw.AttrsWhere(t)
+	iw.IndPrintf("\"%s\"\n", t.text)
+	iw.EndAttrs()
 }
 
 func (tok *StringToken) String() string {

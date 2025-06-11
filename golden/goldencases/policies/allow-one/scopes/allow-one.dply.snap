@@ -13,10 +13,12 @@
 >Note that this is entirely in memory: you need to "ensure" it somewhere or attach it to something to make it take shape in the real world.
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
 >
->	target createAnEmptyPolicy
+>	target createAPolicyAllowingOneThing
 #^ source.deployer-dply
 # ^^^^^^ source.deployer-dply keyword.target
-#       ^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
->		policy => hello_world_policy
-#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+#       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>		policy => allow_one_policy
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>			allow "action" "resource" "principal"
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
 >		

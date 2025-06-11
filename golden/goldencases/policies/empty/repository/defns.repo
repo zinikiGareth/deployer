@@ -1,5 +1,5 @@
-symbol createASimplePolicy is bound to:
-target createASimplePolicy {
+symbol createAnEmptyPolicy is bound to:
+target createAnEmptyPolicy {
 	_where_: empty-policy.dply:10.7
 	actions: [
 		AssignTo {
@@ -7,6 +7,8 @@ target createASimplePolicy {
 			assignTo: hello_world_policy
 			PolicyAction {
 				_where_: empty-policy.dply:11.0
+				actions: [
+				]
 			}
 		}
 	]

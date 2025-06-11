@@ -1,0 +1,42 @@
+symbol allow_one_policy is bound to:
+PolicyDocument[] {
+	_where_: allow-one.dply:11.0
+}
+symbol createAPolicyAllowingOneThing is bound to:
+target createAPolicyAllowingOneThing {
+	_where_: allow-one.dply:10.7
+	actions: [
+		AssignTo {
+			_where_: allow-one.dply:11.10
+			assignTo: allow_one_policy
+			PolicyAction {
+				_where_: allow-one.dply:11.0
+				actions: [
+					PolicyAllowAction {
+						_where_: allow-one.dply:12.0
+						allowActions: [
+							String {
+								_where_: allow-one.dply:12.7
+								"action"
+							}
+						]
+						allowResources: [
+							String {
+								_where_: allow-one.dply:12.16
+								"resource"
+							}
+						]
+						allowPrincipals: [
+							String {
+								_where_: allow-one.dply:12.27
+								"principal"
+							}
+						]
+						actions: [
+						]
+					}
+				]
+			}
+		}
+	]
+}
