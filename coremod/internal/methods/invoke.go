@@ -64,7 +64,7 @@ type InvokeFunc struct {
 	tools *pluggable.Tools
 }
 
-func (i *InvokeFunc) Eval(me pluggable.Token, before []pluggable.Expr, after []pluggable.Expr) pluggable.Expr {
+func (i *InvokeFunc) ReduceExpr(me pluggable.Token, before []pluggable.Expr, after []pluggable.Expr) pluggable.Expr {
 	if len(before) != 1 {
 		panic("should be an error")
 	}

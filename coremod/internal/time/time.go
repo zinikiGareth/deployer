@@ -39,7 +39,7 @@ type HoursFunc struct {
 	tools *pluggable.Tools
 }
 
-func (h *HoursFunc) Eval(me pluggable.Token, before []pluggable.Expr, after []pluggable.Expr) pluggable.Expr {
+func (h *HoursFunc) ReduceExpr(me pluggable.Token, before []pluggable.Expr, after []pluggable.Expr) pluggable.Expr {
 	rep := h.tools.Reporter
 	if len(before) != 1 || len(after) != 0 {
 		rep.Report(me.Loc().Offset, "<nn> hours")

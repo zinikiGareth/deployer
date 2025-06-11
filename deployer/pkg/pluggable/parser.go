@@ -76,7 +76,7 @@ type Blank interface {
 }
 
 type Function interface {
-	Eval(me Token, before []Expr, after []Expr) Expr
+	ReduceExpr(me Token, before []Expr, after []Expr) Expr
 }
 
 type Expr interface {
