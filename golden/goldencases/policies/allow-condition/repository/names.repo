@@ -1,0 +1,2 @@
+allow_one_policy => PolicyDocument[]
+createAPolicyAllowingOneThingConditionally => Target[createAPolicyAllowingOneThingConditionally]

@@ -39,8 +39,17 @@ func (i *InvokeExpr) String() string {
 	panic("unimplemented")
 }
 
-func (i *InvokeExpr) DumpTo(to pluggable.IndentWriter) {
-	panic("unimplemented")
+func (i *InvokeExpr) DumpTo(iw pluggable.IndentWriter) {
+	iw.Intro("Invoke")
+	iw.AttrsWhere(i)
+	iw.NestedAttr("on", i.on)
+	iw.NestedAttr("meth", i.call)
+	iw.ListAttr("args")
+	for _, a := range i.args {
+		a.DumpTo(iw)
+	}
+	iw.EndList()
+	iw.EndAttrs()
 }
 
 func (i *InvokeExpr) Resolve(r pluggable.Resolver) {

@@ -1,0 +1,71 @@
+symbol allow_one_policy is bound to:
+PolicyDocument[] {
+	_where_: allow-cond.dply:6.0
+}
+symbol createAPolicyAllowingOneThingConditionally is bound to:
+target createAPolicyAllowingOneThingConditionally {
+	_where_: allow-cond.dply:5.7
+	actions: [
+		AssignTo {
+			_where_: allow-cond.dply:6.10
+			assignTo: allow_one_policy
+			PolicyAction {
+				_where_: allow-cond.dply:6.0
+				actions: [
+					PolicyAllowAction {
+						_where_: allow-cond.dply:7.0
+						allowActions: [
+							String {
+								_where_: allow-cond.dply:7.7
+								"action"
+							}
+						]
+						allowResources: [
+							String {
+								_where_: allow-cond.dply:7.16
+								"resource"
+							}
+						]
+						allowPrincipals: [
+							String {
+								_where_: allow-cond.dply:7.27
+								"principal"
+							}
+						]
+						actions: [
+							PolicyCondAction {
+								_where_: allow-cond.dply:8.0
+								test:
+									Var allow-cond.dply:8.10 aws.cond.StringEquals {
+										_where_: allow-cond.dply:8.10
+									}
+								left:
+									String {
+										_where_: allow-cond.dply:8.33
+										"AWS:SourceArn"
+									}
+								right:
+									Invoke {
+										_where_: allow-cond.dply:8.59
+										on:
+											Var allow-cond.dply:8.49 cloudfront {
+												_where_: allow-cond.dply:8.49
+											}
+										meth:
+											Identifier {
+												_where_: allow-cond.dply:8.61
+												"arn"
+											}
+										args: [
+										]
+									}
+								actions: [
+								]
+							}
+						]
+					}
+				]
+			}
+		}
+	]
+}

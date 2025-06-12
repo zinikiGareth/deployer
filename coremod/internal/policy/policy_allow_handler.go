@@ -23,8 +23,7 @@ func (pah *policyAllowCommandHandler) Handle(parent pluggable.ContainingContext,
 	pa := &PolicyAllowAction{tools: pah.tools, loc: tokens[0].Loc(), allowActions: []pluggable.Expr{exprs[0]}, allowResources: []pluggable.Expr{exprs[1]}, allowPrincipals: []pluggable.Expr{exprs[2]}}
 	parent.Add(pa)
 
-	// TODO: not true; should allow inner things like "actions", "resources" and "principals"
-	return interpreters.DisallowInnerScope(pah.tools)
+	return NewPolicyAllowNestedInterpreter(pah.tools, pa)
 }
 
 func NewPolicyAllowCommandHandler(tools *pluggable.Tools) pluggable.TargetCommand {

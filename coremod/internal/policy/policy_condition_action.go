@@ -1,0 +1,51 @@
+package policy
+
+import (
+	"ziniki.org/deployer/deployer/pkg/errorsink"
+	"ziniki.org/deployer/deployer/pkg/pluggable"
+)
+
+type PolicyCondAction struct {
+	tools   *pluggable.Tools
+	loc     *errorsink.Location
+	actions []pluggable.Action
+
+	test  pluggable.Expr
+	left  pluggable.Expr
+	right pluggable.Expr
+}
+
+func (pca *PolicyCondAction) Loc() *errorsink.Location {
+	return pca.loc
+}
+
+func (pca *PolicyCondAction) DumpTo(w pluggable.IndentWriter) {
+	w.Intro("PolicyCondAction")
+	w.AttrsWhere(pca)
+	w.NestedAttr("test", pca.test)
+	w.NestedAttr("left", pca.left)
+	w.NestedAttr("right", pca.right)
+	w.ListAttr("actions")
+	for _, a := range pca.actions {
+		a.DumpTo(w)
+	}
+	w.EndList()
+	w.EndAttrs()
+}
+
+func (pca *PolicyCondAction) ShortDescription() string {
+	return "PolicyCond[" + pca.test.ShortDescription() + "]"
+}
+
+func (pca *PolicyCondAction) Completed() {
+}
+
+func (pca *PolicyCondAction) Add(entry pluggable.Action) {
+	pca.actions = append(pca.actions, entry)
+}
+
+func (pca *PolicyCondAction) Resolve(r pluggable.Resolver, b pluggable.Binder) {
+}
+
+func (pca *PolicyCondAction) Prepare(pres pluggable.ValuePresenter) {
+}

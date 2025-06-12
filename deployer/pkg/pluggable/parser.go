@@ -28,6 +28,7 @@ type Token interface {
 
 type Identifier interface {
 	Token
+	Describable
 	Id() string
 }
 

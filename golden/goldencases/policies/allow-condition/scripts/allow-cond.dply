@@ -1,0 +1,8 @@
+AWS Policies support the idea of adding "Condition" elements (I think to specific allow/deny)
+
+We can support this by offering the "condition" verb within an allow or deny
+
+	target createAPolicyAllowingOneThingConditionally
+		policy => allow_one_policy
+			allow "action" "resource" "principal"
+				condition aws.cond.StringEquals "AWS:SourceArn" (cloudfront->arn)

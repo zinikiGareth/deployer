@@ -57,6 +57,17 @@ func (tok *IdentifierToken) String() string {
 	return fmt.Sprintf("%s %s", tok.BaseToken.String(), tok.id)
 }
 
+func (tok *IdentifierToken) ShortDescription() string {
+	panic("not implemented")
+}
+
+func (tok *IdentifierToken) DumpTo(iw pluggable.IndentWriter) {
+	iw.Intro("Identifier")
+	iw.AttrsWhere(tok)
+	iw.IndPrintf("\"%s\"\n", tok.id)
+	iw.EndAttrs()
+}
+
 func (tok *NumberToken) Value() float64 {
 	return tok.value
 }

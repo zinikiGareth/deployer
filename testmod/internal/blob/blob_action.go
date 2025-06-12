@@ -23,9 +23,7 @@ func (a Blobber) ShortDescription() string {
 func (a Blobber) DumpTo(iw pluggable.IndentWriter) {
 	iw.Intro("ABlobber")
 	iw.AttrsWhere(a)
-	iw.NestedAttr("expr")
-	a.expr.DumpTo(iw)
-	iw.EndNested()
+	iw.NestedAttr("expr", a.expr)
 	iw.EndAttrs()
 }
 

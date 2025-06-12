@@ -22,3 +22,4 @@ copy-files
 policies/empty
 policies/allow-one
 invoke-method/simple
+policies/allow-condition

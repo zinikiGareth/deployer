@@ -29,8 +29,13 @@ func (v *VarReference) ShortDescription() string {
 	return v.Loc().String() + " Var[" + v.id.Id() + "]"
 }
 
-func (t *VarReference) DumpTo(iw pluggable.IndentWriter) {
-	panic("not implemented")
+func (v *VarReference) DumpTo(iw pluggable.IndentWriter) {
+	iw.Intro("Var %s", v.id)
+	iw.AttrsWhere(v)
+	if v.actualVar != nil {
+		iw.NestedAttr("actualVar", v.actualVar)
+	}
+	iw.EndAttrs()
 }
 
 func (v *VarReference) String() string {
