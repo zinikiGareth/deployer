@@ -5,30 +5,69 @@ import (
 )
 
 type ScopeInterpreter struct {
-	tools *pluggable.Tools
+	tools        *pluggable.Tools
+	forExtension string
+	allowAssign  bool
+	attacher     pluggable.AttachResult
 }
 
 func (si *ScopeInterpreter) HaveTokens(tokens []pluggable.Token) pluggable.Interpreter {
-	// There are probably a "number" of cases here, but the two I am aware of are:
-	// <verb> <arg>...
-	// <var> "<-" <verb> <arg> ...  ||  <var> "<-" <expr>
-	// And it should be fairly easy to tell this with little more than a verb-scoping thing ...
-
+	ok, toks, assignTo := si.splitOnArrow(tokens)
+	if !ok { //
+		return NewIgnoreInnerScope()
+	}
+	if len(toks) < 1 {
+		si.tools.Reporter.Reportf(0, "must have a command")
+		return NewIgnoreInnerScope()
+	}
 	verb, ok := tokens[0].(pluggable.Identifier)
 	if !ok {
 		si.tools.Reporter.Report(0, "first token must be an identifier")
-	}
-	action := si.tools.Recall.Find("top-level", verb.Id()).(pluggable.VerbCommand)
-	if action == nil {
-		si.tools.Reporter.Reportf(0, "there is no error handler for %s", verb)
 		return NewIgnoreInnerScope()
 	}
-	return action.Handle(nil, tokens) // Will need other things as well as time goes on ...
+	cmd := si.tools.Recall.Find(si.forExtension, verb.Id())
+	if cmd == nil {
+		si.tools.Reporter.Reportf(0, "there is no command %s", verb)
+		return NewIgnoreInnerScope()
+	}
+	action, ok := cmd.(pluggable.VerbCommand)
+	if !ok {
+		si.tools.Reporter.Reportf(0, "%s is not a command", verb)
+		return NewIgnoreInnerScope()
+	}
+
+	a := si.attacher
+	if assignTo != nil {
+		a = &WithAssignTo{tools: si.tools, container: a, assignTo: assignTo}
+	}
+	return action.Handle(a, tokens)
 }
 
 func (b *ScopeInterpreter) Completed() {
 }
 
-func NewInterpreter(tools *pluggable.Tools) pluggable.Interpreter {
-	return &ScopeInterpreter{tools: tools}
+func (b *ScopeInterpreter) splitOnArrow(tokens []pluggable.Token) (bool, []pluggable.Token, pluggable.Identifier) {
+	if !b.allowAssign {
+		return true, tokens, nil
+	}
+	for i, t := range tokens {
+		arrow, ok := t.(pluggable.Operator)
+		if ok && arrow.Is("=>") {
+			if i+2 != len(tokens) {
+				b.tools.Reporter.Reportf(arrow.Loc().Offset, "invalid use of =>")
+				return false, nil, nil
+			}
+			id, ok := tokens[i+1].(pluggable.Identifier)
+			if !ok {
+				b.tools.Reporter.Reportf(tokens[i+1].Loc().Offset, "can only assign to a variable")
+				return false, nil, nil
+			}
+			return true, tokens[0:i], id
+		}
+	}
+	return true, tokens, nil
+}
+
+func NewInterpreter(tools *pluggable.Tools, forExtensionPoint string, allowAssignments bool) pluggable.Interpreter {
+	return &ScopeInterpreter{tools: tools, forExtension: forExtensionPoint, allowAssign: allowAssignments}
 }

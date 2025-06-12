@@ -11,7 +11,7 @@ import (
 )
 
 func Parse(tools *pluggable.Tools, fileName, file string) {
-	globalInterpreter := interpreters.NewInterpreter(tools)
+	globalInterpreter := interpreters.NewInterpreter(tools, "top-level", false)
 	lineLexicator := lexicator.NewLineLexicator(tools, fileName)
 	tools.Parser = exprs.NewExprParser(tools)
 	blocker := blocker.NewBlocker(tools, lineLexicator, globalInterpreter)
