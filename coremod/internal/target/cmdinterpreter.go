@@ -13,24 +13,24 @@ type commandScope struct {
 func (cs *commandScope) HaveTokens(tokens []pluggable.Token) pluggable.Interpreter {
 	ok, toks, assignTo := cs.splitOnArrow(tokens)
 	if !ok { //
-		return interpreters.IgnoreInnerScope()
+		return interpreters.NewIgnoreInnerScope()
 	}
 	if len(toks) < 1 {
 		cs.tools.Reporter.Reportf(0, "must have a command")
-		return interpreters.IgnoreInnerScope()
+		return interpreters.NewIgnoreInnerScope()
 	}
 
 	tok0 := toks[0]
 	cmd, ok := tok0.(pluggable.Identifier)
 	if !ok {
 		cs.tools.Reporter.Reportf(tok0.Loc().Offset, "invalid command: %s", tok0.String())
-		return interpreters.IgnoreInnerScope()
+		return interpreters.NewIgnoreInnerScope()
 	}
 
 	action, ok := cs.tools.Recall.Find("target", cmd.Id()).(pluggable.VerbCommand)
 	if !ok {
 		cs.tools.Reporter.Reportf(tok0.Loc().Offset, "unknown command: %s", cmd.Id())
-		return interpreters.IgnoreInnerScope()
+		return interpreters.NewIgnoreInnerScope()
 	}
 
 	cc := cs.container

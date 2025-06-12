@@ -13,15 +13,15 @@ type bucketContentsScope struct {
 func (b *bucketContentsScope) HaveTokens(tokens []pluggable.Token) pluggable.Interpreter {
 	if len(tokens) != 1 {
 		b.tools.Reporter.Reportf(0, "may only have one file per line")
-		return interpreters.IgnoreInnerScope()
+		return interpreters.NewIgnoreInnerScope()
 	}
 	str, ok := tokens[0].(pluggable.String)
 	if !ok {
 		b.tools.Reporter.Reportf(0, "file name must be a string literal")
-		return interpreters.IgnoreInnerScope()
+		return interpreters.NewIgnoreInnerScope()
 	}
 	b.aba.files = append(b.aba.files, str.Text())
-	return interpreters.DisallowInnerScope(b.tools)
+	return interpreters.NewDisallowInnerScope(b.tools)
 }
 
 func (b *bucketContentsScope) Completed() {

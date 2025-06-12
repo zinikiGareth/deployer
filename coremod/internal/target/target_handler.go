@@ -12,7 +12,7 @@ type CoreTargetHandler struct {
 func (t *CoreTargetHandler) Handle(attacher pluggable.AttachResult, tokens []pluggable.Token) pluggable.Interpreter {
 	if len(tokens) != 2 {
 		t.tools.Reporter.Reportf(0, "target: <name>")
-		return interpreters.IgnoreInnerScope()
+		return interpreters.NewIgnoreInnerScope()
 	}
 	t1 := tokens[1].(pluggable.Identifier)
 	name := pluggable.SymbolName(t1.Id())

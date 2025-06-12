@@ -12,16 +12,16 @@ type assertBucketHandler struct {
 func (abh *assertBucketHandler) Handle(parent pluggable.AttachResult, tokens []pluggable.Token) pluggable.Interpreter {
 	if len(tokens) < 1 {
 		abh.tools.Reporter.Report(tokens[0].Loc().Offset, "test.assertBucketHas: <bucket>")
-		return interpreters.IgnoreInnerScope()
+		return interpreters.NewIgnoreInnerScope()
 	}
 	// if assignTo != nil {
 	// 	abh.tools.Reporter.Report(tokens[0].Loc().Offset, "test.assertBucketHas: cannot assign an output variable")
-	// 	return interpreters.IgnoreInnerScope()
+	// 	return interpreters.NewIgnoreInnerScope()
 	// }
 
 	expr, ok := abh.tools.Parser.Parse(tokens[1:])
 	if !ok {
-		return interpreters.IgnoreInnerScope()
+		return interpreters.NewIgnoreInnerScope()
 	}
 
 	ca := &assertBucketAction{tools: abh.tools, loc: tokens[0].Loc(), bucket: expr}

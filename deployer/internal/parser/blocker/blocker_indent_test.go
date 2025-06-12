@@ -83,7 +83,7 @@ func (t *tmp) HaveTokens(toks []pluggable.Token) pluggable.Interpreter {
 			if l.inner != nil {
 				return l.inner
 			} else {
-				return interpreters.DisallowInnerScope(t.tools)
+				return interpreters.NewDisallowInnerScope(t.tools)
 			}
 		}
 	}

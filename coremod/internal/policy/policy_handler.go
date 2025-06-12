@@ -12,7 +12,7 @@ type policyCommandHandler struct {
 func (ech *policyCommandHandler) Handle(parent pluggable.AttachResult, tokens []pluggable.Token) pluggable.Interpreter {
 	if len(tokens) != 1 {
 		ech.tools.Reporter.Report(tokens[0].Loc().Offset, "policy: this may in fact be valid, but if so I don't know how ")
-		return interpreters.IgnoreInnerScope()
+		return interpreters.NewIgnoreInnerScope()
 	}
 
 	pa := &PolicyAction{tools: ech.tools, loc: tokens[0].Loc()}

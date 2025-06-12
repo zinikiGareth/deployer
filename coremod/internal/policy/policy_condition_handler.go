@@ -12,19 +12,19 @@ type policyConditionCommandHandler struct {
 func (pah *policyConditionCommandHandler) Handle(parent pluggable.AttachResult, tokens []pluggable.Token) pluggable.Interpreter {
 	exprs, ok := pah.tools.Parser.ParseMultiple(tokens[1:])
 	if !ok {
-		return interpreters.IgnoreInnerScope()
+		return interpreters.NewIgnoreInnerScope()
 	}
 
 	// TODO: I don't think it's as simple as this and depends on the "test"
 	if len(exprs) != 3 {
 		pah.tools.Reporter.Report(tokens[0].Loc().Offset, "condition: <test> <left> <right>")
-		return interpreters.IgnoreInnerScope()
+		return interpreters.NewIgnoreInnerScope()
 	}
 
 	pa := &PolicyCondAction{tools: pah.tools, loc: tokens[0].Loc(), test: exprs[0], left: exprs[1], right: exprs[2]}
 	parent.Attach(pa)
 
-	return interpreters.DisallowInnerScope(pah.tools)
+	return interpreters.NewDisallowInnerScope(pah.tools)
 }
 
 func NewPolicyConditionCommandHandler(tools *pluggable.Tools) pluggable.VerbCommand {

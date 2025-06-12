@@ -12,22 +12,22 @@ type dirCommandHandler struct {
 func (dch *dirCommandHandler) Handle(parent pluggable.AttachResult, tokens []pluggable.Token) pluggable.Interpreter {
 	if len(tokens) < 2 {
 		dch.tools.Reporter.Report(tokens[0].Loc().Offset, "files.dir: expr...")
-		return interpreters.IgnoreInnerScope()
+		return interpreters.NewIgnoreInnerScope()
 	}
 	// if assignTo == nil {
 	// 	dch.tools.Reporter.Report(tokens[0].Loc().Offset, "files.dir: must assign to an output variable")
-	// 	return interpreters.IgnoreInnerScope()
+	// 	return interpreters.NewIgnoreInnerScope()
 	// }
 
 	exprs, ok := dch.tools.Parser.ParseMultiple(tokens[1:])
 	if !ok {
-		return interpreters.IgnoreInnerScope()
+		return interpreters.NewIgnoreInnerScope()
 	}
 
 	da := &dirAction{tools: dch.tools, loc: tokens[0].Loc(), exprs: exprs}
 	parent.Attach(da)
 
-	return interpreters.DisallowInnerScope(dch.tools)
+	return interpreters.NewDisallowInnerScope(dch.tools)
 }
 
 func NewDirCommandHandler(tools *pluggable.Tools) pluggable.VerbCommand {

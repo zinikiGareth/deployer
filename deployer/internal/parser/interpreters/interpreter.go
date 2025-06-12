@@ -1,7 +1,6 @@
 package interpreters
 
 import (
-	"ziniki.org/deployer/deployer/pkg/interpreters"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
@@ -23,7 +22,7 @@ func (si *ScopeInterpreter) HaveTokens(tokens []pluggable.Token) pluggable.Inter
 	action := si.scoper.FindVerbCommand(verb)
 	if action == nil {
 		si.tools.Reporter.Reportf(0, "there is no error handler for %s", verb)
-		return interpreters.IgnoreInnerScope()
+		return NewIgnoreInnerScope()
 	}
 	return action.Handle(nil, tokens) // Will need other things as well as time goes on ...
 }

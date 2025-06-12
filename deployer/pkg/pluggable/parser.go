@@ -17,6 +17,12 @@ type Interpreter interface {
 	Completed()
 }
 
+type PropertyParent interface {
+	AddProperty(name Identifier, expr Expr)
+	AddAdverb(adverb Adverb, args []Token) Interpreter
+	Completed()
+}
+
 type Scoper interface {
 	FindVerbCommand(v Identifier) VerbCommand
 }

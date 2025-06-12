@@ -79,7 +79,7 @@ func (ea *FindAction) AddProperty(name pluggable.Identifier, value pluggable.Exp
 
 func (ea *FindAction) AddAdverb(adv pluggable.Adverb, tokens []pluggable.Token) pluggable.Interpreter {
 	ea.tools.Reporter.Reportf(adv.Loc().Offset, "find cannot handle %s\n", adv.Name())
-	return interpreters.DisallowInnerScope(ea.tools)
+	return interpreters.NewDisallowInnerScope(ea.tools)
 }
 
 func (ea *FindAction) Completed() {

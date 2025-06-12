@@ -14,13 +14,13 @@ type FindCommandHandler struct {
 func (ech *FindCommandHandler) Handle(parent pluggable.AttachResult, tokens []pluggable.Token) pluggable.Interpreter {
 	if len(tokens) < 2 || len(tokens) > 3 {
 		ech.tools.Reporter.Report(tokens[0].Loc().Offset, "Find: <class-identifier> [instance-name]")
-		return interpreters.IgnoreInnerScope()
+		return interpreters.NewIgnoreInnerScope()
 	}
 
 	clz, ok := tokens[1].(pluggable.Identifier)
 	if !ok {
 		ech.tools.Reporter.Report(tokens[1].Loc().Offset, "Find: <class-identifier> [instance-name]")
-		return interpreters.IgnoreInnerScope()
+		return interpreters.NewIgnoreInnerScope()
 	}
 
 	var name pluggable.String
@@ -28,14 +28,14 @@ func (ech *FindCommandHandler) Handle(parent pluggable.AttachResult, tokens []pl
 		name, ok = tokens[2].(pluggable.String)
 		if !ok {
 			ech.tools.Reporter.Report(tokens[1].Loc().Offset, "Find: <class-identifier> [instance-name]")
-			return interpreters.IgnoreInnerScope()
+			return interpreters.NewIgnoreInnerScope()
 		}
 	}
 
 	ea := &FindAction{tools: ech.tools, loc: tokens[0].Loc(), what: clz, named: name, props: make(map[pluggable.Identifier]pluggable.Expr)}
 	parent.Attach(ea)
 
-	return interpreters.PropertiesInnerScope(ech.tools, ea)
+	return interpreters.NewPropertiesInnerScope(ech.tools, ea)
 }
 
 func NewFindCommandHandler(tools *pluggable.Tools) pluggable.VerbCommand {

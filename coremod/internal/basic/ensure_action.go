@@ -92,7 +92,7 @@ func (ea *EnsureAction) AddAdverb(adv pluggable.Adverb, tokens []pluggable.Token
 		ea.teardown = &MyTearDown{mode: tokens[0].(pluggable.Identifier).Id()}
 
 	}
-	return interpreters.DisallowInnerScope(ea.tools)
+	return interpreters.NewDisallowInnerScope(ea.tools)
 }
 
 func (ea *EnsureAction) Completed() {

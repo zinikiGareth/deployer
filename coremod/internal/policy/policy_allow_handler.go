@@ -12,12 +12,12 @@ type policyAllowCommandHandler struct {
 func (pah *policyAllowCommandHandler) Handle(parent pluggable.AttachResult, tokens []pluggable.Token) pluggable.Interpreter {
 	exprs, ok := pah.tools.Parser.ParseMultiple(tokens[1:])
 	if !ok {
-		return interpreters.IgnoreInnerScope()
+		return interpreters.NewIgnoreInnerScope()
 	}
 
 	if len(exprs) > 3 {
 		pah.tools.Reporter.Report(tokens[0].Loc().Offset, "allow: <action> <resource> <principal>")
-		return interpreters.IgnoreInnerScope()
+		return interpreters.NewIgnoreInnerScope()
 	}
 
 	pa := &PolicyAllowAction{tools: pah.tools, loc: tokens[0].Loc(), allowActions: []pluggable.Expr{exprs[0]}, allowResources: []pluggable.Expr{exprs[1]}, allowPrincipals: []pluggable.Expr{exprs[2]}}

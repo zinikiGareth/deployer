@@ -12,18 +12,18 @@ type envCommandHandler struct {
 func (ech *envCommandHandler) Handle(parent pluggable.AttachResult, tokens []pluggable.Token) pluggable.Interpreter {
 	if len(tokens) < 2 {
 		ech.tools.Reporter.Report(tokens[0].Loc().Offset, "env: expr")
-		return interpreters.IgnoreInnerScope()
+		return interpreters.NewIgnoreInnerScope()
 	}
 
 	expr, ok := ech.tools.Parser.Parse(tokens[1:])
 	if !ok {
-		return interpreters.IgnoreInnerScope()
+		return interpreters.NewIgnoreInnerScope()
 	}
 
 	ea := &EnvAction{tools: ech.tools, loc: tokens[0].Loc(), varname: expr}
 	parent.Attach(ea)
 
-	return interpreters.DisallowInnerScope(ech.tools)
+	return interpreters.NewDisallowInnerScope(ech.tools)
 }
 
 func NewEnvCommandHandler(tools *pluggable.Tools) pluggable.VerbCommand {
