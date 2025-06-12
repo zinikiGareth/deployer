@@ -81,6 +81,6 @@ func (c *createBlobAction) Resolve(r pluggable.Resolver) pluggable.BindingRequir
 	return pluggable.MUST_BE_BOUND
 }
 
-func (c *createBlobAction) Prepare(pres pluggable.ValuePresenter) {
+func (c *createBlobAction) BuildModel(pres pluggable.ValuePresenter) {
 	pres.Present(c.blobber)
 }

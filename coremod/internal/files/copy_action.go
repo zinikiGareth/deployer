@@ -44,7 +44,7 @@ func (ca *copyAction) Resolve(r pluggable.Resolver) pluggable.BindingRequirement
 	return pluggable.NO_VALUE
 }
 
-func (ca *copyAction) Prepare(pres pluggable.ValuePresenter) {
+func (ca *copyAction) BuildModel(pres pluggable.ValuePresenter) {
 	if ca.tools.Reporter.HasErrors() {
 		return
 	}
@@ -66,7 +66,7 @@ func (ca *copyAction) Prepare(pres pluggable.ValuePresenter) {
 	ca.Dest = dest
 }
 
-func (ca *copyAction) Execute() {
+func (ca *copyAction) UpdateReality() {
 	d := ca.Dest.ObtainDest()
 	ca.Src.PourAll(d)
 }

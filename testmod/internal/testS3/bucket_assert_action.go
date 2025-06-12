@@ -40,10 +40,10 @@ func (ca *assertBucketAction) Resolve(r pluggable.Resolver) pluggable.BindingReq
 	return pluggable.NO_VALUE
 }
 
-func (ca *assertBucketAction) Prepare(pres pluggable.ValuePresenter) {
+func (ca *assertBucketAction) BuildModel(pres pluggable.ValuePresenter) {
 }
 
-func (ca *assertBucketAction) Execute() {
+func (ca *assertBucketAction) UpdateReality() {
 	bucketVar := ca.tools.Storage.Eval(ca.bucket)
 	bucket, ok := bucketVar.(*bucketCreator)
 	if !ok {

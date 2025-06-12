@@ -39,7 +39,7 @@ func (sa *EnvAction) Resolve(r pluggable.Resolver) pluggable.BindingRequirement 
 	return pluggable.MUST_BE_BOUND
 }
 
-func (ea *EnvAction) Prepare(pres pluggable.ValuePresenter) {
+func (ea *EnvAction) BuildModel(pres pluggable.ValuePresenter) {
 	// TODO: I think ALL this should really be something like e.Eval(runtime).ToString()
 	str := ea.tools.Storage.EvalAsString(ea.varname)
 	val := os.Getenv(str)
@@ -51,7 +51,7 @@ func (ea *EnvAction) Prepare(pres pluggable.ValuePresenter) {
 	pres.Present(val)
 }
 
-func (ea *EnvAction) Execute() {
+func (ea *EnvAction) UpdateReality() {
 
 }
 

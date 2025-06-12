@@ -15,13 +15,13 @@ type Action interface {
 	// Resolve asks the definition to examine all of its structure and ask for resolution of any unresolved names
 	Resolve(r Resolver) BindingRequirement
 
-	Prepare(pres ValuePresenter)
+	BuildModel(pres ValuePresenter)
 }
 
 type AndMakeItSo interface {
 	Action
 
-	Execute()
+	UpdateReality()
 	TearDown()
 }
 

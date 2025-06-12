@@ -78,14 +78,14 @@ func (d *DoAssign) ShortDescription() string {
 	return "DoAssign[" + d.assignTo.Id() + "<-" + d.action.ShortDescription() + "]"
 }
 
-func (d *DoAssign) Prepare(pres pluggable.ValuePresenter) {
-	d.action.Prepare(d)
+func (d *DoAssign) BuildModel(pres pluggable.ValuePresenter) {
+	d.action.BuildModel(d)
 }
 
-func (d *DoAssign) Execute() {
+func (d *DoAssign) UpdateReality() {
 	amis, ok := d.action.(pluggable.AndMakeItSo)
 	if ok {
-		amis.Execute()
+		amis.UpdateReality()
 	}
 }
 

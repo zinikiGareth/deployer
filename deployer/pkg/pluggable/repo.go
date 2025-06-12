@@ -35,8 +35,8 @@ type TargetThing interface {
 	fmt.Stringer
 	Describable
 	Resolvable
-	Prepare()
-	Execute()
+	BuildModel()
+	UpdateReality()
 	TearDown()
 }
 

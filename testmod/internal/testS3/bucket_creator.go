@@ -36,7 +36,7 @@ func (b *bucketCreator) DumpTo(iw pluggable.IndentWriter) {
 }
 
 // This is called during the "Prepare" phase
-func (b *bucketCreator) Prepare(pres pluggable.ValuePresenter) {
+func (b *bucketCreator) BuildModel(pres pluggable.ValuePresenter) {
 	tmp := b.tools.Recall.ObtainDriver("testS3.TestAwsEnv")
 	testAwsEnv, ok := tmp.(*TestAwsEnv)
 	if !ok {
@@ -54,7 +54,7 @@ func (b *bucketCreator) Prepare(pres pluggable.ValuePresenter) {
 	pres.Present(b)
 }
 
-func (eb *bucketCreator) Execute() {
+func (eb *bucketCreator) UpdateReality() {
 	tmp := eb.tools.Recall.ObtainDriver("testhelpers.TestStepLogger")
 	testLogger, ok := tmp.(testhelpers.TestStepLogger)
 	if !ok {

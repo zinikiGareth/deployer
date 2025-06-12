@@ -128,12 +128,12 @@ func (ea *EnsureAction) Resolve(r pluggable.Resolver) pluggable.BindingRequireme
 	return pluggable.MAY_BE_BOUND
 }
 
-func (ea *EnsureAction) Prepare(pres pluggable.ValuePresenter) {
-	ea.ens.Prepare(pres)
+func (ea *EnsureAction) BuildModel(pres pluggable.ValuePresenter) {
+	ea.ens.BuildModel(pres)
 }
 
-func (ea *EnsureAction) Execute() {
-	ea.ens.Execute()
+func (ea *EnsureAction) UpdateReality() {
+	ea.ens.UpdateReality()
 }
 
 func (ea *EnsureAction) TearDown() {

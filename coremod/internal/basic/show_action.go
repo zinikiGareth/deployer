@@ -43,10 +43,10 @@ func (sa *ShowAction) Resolve(r pluggable.Resolver) pluggable.BindingRequirement
 	return pluggable.NO_VALUE
 }
 
-func (sa *ShowAction) Prepare(pres pluggable.ValuePresenter) {
+func (sa *ShowAction) BuildModel(pres pluggable.ValuePresenter) {
 }
 
-func (sa *ShowAction) Execute() {
+func (sa *ShowAction) UpdateReality() {
 	// This probably needs a lot more work and a lot more infrastructure
 	// I don't think I even know *how* I expect it to work at the moment ...
 
@@ -71,5 +71,5 @@ func (sa *ShowAction) Execute() {
 
 func (sa *ShowAction) TearDown() {
 	// This seems one option among several
-	sa.Execute()
+	sa.UpdateReality()
 }

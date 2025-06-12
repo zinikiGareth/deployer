@@ -48,5 +48,5 @@ func (pca *PolicyCondAction) Resolve(r pluggable.Resolver) pluggable.BindingRequ
 	return pluggable.MAY_BE_BOUND
 }
 
-func (pca *PolicyCondAction) Prepare(pres pluggable.ValuePresenter) {
+func (pca *PolicyCondAction) BuildModel(pres pluggable.ValuePresenter) {
 }

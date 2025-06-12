@@ -72,7 +72,7 @@ func (d *DeployerImpl) Deploy(targetNames ...string) error {
 	d.tools.Storage.SetMode(pluggable.PREPARE_MODE)
 	for _, t := range targets {
 		// fmt.Printf("preparing %s:\n", t.String())
-		t.Prepare()
+		t.BuildModel()
 	}
 
 	if d.tools.Reporter.HasErrors() {
@@ -89,7 +89,7 @@ func (d *DeployerImpl) Deploy(targetNames ...string) error {
 		d.tools.Storage.SetMode(pluggable.EXECUTE_MODE)
 		for _, t := range targets {
 			// fmt.Printf("executing %s:\n", t)
-			t.Execute()
+			t.UpdateReality()
 		}
 	}
 

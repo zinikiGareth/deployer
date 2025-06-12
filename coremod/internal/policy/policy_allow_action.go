@@ -60,5 +60,5 @@ func (paa *PolicyAllowAction) Resolve(r pluggable.Resolver) pluggable.BindingReq
 	return pluggable.MAY_BE_BOUND
 }
 
-func (paa *PolicyAllowAction) Prepare(pres pluggable.ValuePresenter) {
+func (paa *PolicyAllowAction) BuildModel(pres pluggable.ValuePresenter) {
 }

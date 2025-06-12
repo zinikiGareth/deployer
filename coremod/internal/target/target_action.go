@@ -58,17 +58,17 @@ func (t *CoreTarget) Resolve(r pluggable.Resolver) {
 	}
 }
 
-func (t *CoreTarget) Prepare() {
+func (t *CoreTarget) BuildModel() {
 	for _, a := range t.actions {
-		a.Prepare(t)
+		a.BuildModel(t)
 	}
 }
 
-func (t *CoreTarget) Execute() {
+func (t *CoreTarget) UpdateReality() {
 	for _, a := range t.actions {
 		amis, ok := a.(pluggable.AndMakeItSo)
 		if ok {
-			amis.Execute()
+			amis.UpdateReality()
 		}
 	}
 }

@@ -46,7 +46,7 @@ func (da *dirAction) Resolve(r pluggable.Resolver) pluggable.BindingRequirement 
 	return pluggable.MUST_BE_BOUND
 }
 
-func (da *dirAction) Prepare(pres pluggable.ValuePresenter) {
+func (da *dirAction) BuildModel(pres pluggable.ValuePresenter) {
 	if da.tools.Reporter.HasErrors() {
 		return
 	}
@@ -92,7 +92,7 @@ func (da *dirAction) Prepare(pres pluggable.ValuePresenter) {
 	pres.Present(val)
 }
 
-func (ea *dirAction) Execute() {
+func (ea *dirAction) UpdateReality() {
 
 }
 

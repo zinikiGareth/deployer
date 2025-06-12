@@ -108,12 +108,12 @@ func (ea *FindAction) Resolve(r pluggable.Resolver) pluggable.BindingRequirement
 	return pluggable.MAY_BE_BOUND
 }
 
-func (ea *FindAction) Prepare(pres pluggable.ValuePresenter) {
-	ea.ens.Prepare(pres)
+func (ea *FindAction) BuildModel(pres pluggable.ValuePresenter) {
+	ea.ens.BuildModel(pres)
 }
 
-func (ea *FindAction) Execute() {
-	ea.ens.Execute()
+func (ea *FindAction) UpdateReality() {
+	ea.ens.UpdateReality()
 }
 
 func (ea *FindAction) TearDown() {
