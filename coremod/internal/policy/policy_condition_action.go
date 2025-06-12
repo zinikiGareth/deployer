@@ -40,10 +40,6 @@ func (pca *PolicyCondAction) ShortDescription() string {
 func (pca *PolicyCondAction) Completed() {
 }
 
-func (pca *PolicyCondAction) Add(entry pluggable.ModelBuilder) {
-	pca.actions = append(pca.actions, entry)
-}
-
 func (pca *PolicyCondAction) Resolve(r pluggable.Resolver) pluggable.BindingRequirement {
 	return pluggable.MAY_BE_BOUND
 }

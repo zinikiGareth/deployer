@@ -83,6 +83,6 @@ func (t *CoreTarget) TearDown() {
 }
 
 func (d *CoreTarget) Present(value any) {
-	// If I have understood the flow correctly, if you arrive here without having reported an error in MustBind,
-	// then binding is optional and no assignTo has been specified.  So doing nothing is fine.
+	// If I have understood the flow correctly, if you arrive here,
+	// it must be the case that binding is optional and no variable has been provided.
 }
