@@ -3,8 +3,8 @@ package impl
 import (
 	"fmt"
 	"os"
-	"strings"
 
+	"ziniki.org/deployer/deployer/pkg/deployer"
 	"ziniki.org/deployer/deployer/pkg/errorsink"
 )
 
@@ -15,8 +15,7 @@ func Usage() {
 func RunDeployer(args []string) int {
 	sink := errorsink.NewConsoleSink()
 	d := NewDeployer(sink, os.Stdout)
-	var targets []string
-	options := d.ObtainTools().Options
+	var others []string
 
 	i := 0
 	for i < len(args) {
@@ -35,14 +34,8 @@ func RunDeployer(args []string) int {
 				fmt.Printf("Could not open module %s: %v\n", mod, err)
 				return 1
 			}
-		case "--teardown":
-			options.TearDown = true
 		default:
-			if strings.HasPrefix(args[i], "-") {
-				fmt.Printf("unknown option: %s\n", args[i])
-				return 1
-			}
-			targets = append(targets, args[i])
+			others = append(others, args[i])
 		}
 		i++
 	}
@@ -51,13 +44,12 @@ func RunDeployer(args []string) int {
 	if err != nil {
 		return 1
 	}
-	for _, s := range targets {
-		err = d.Deploy(s)
-		if err != nil {
-			fmt.Printf("%v\n", err)
-			return 1
-		}
+	mainArgs := d.ObtainTools().Recall.Find("main-args", "main")
+	runAs, ok := mainArgs.(deployer.MainHandler)
+	if !ok {
+		panic("main handler was not a MainHandler")
 	}
+	runAs.RunWithArgs(d, others)
 	return 0
 }
 

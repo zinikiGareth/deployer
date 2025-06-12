@@ -5,6 +5,7 @@ import (
 	"ziniki.org/deployer/coremod/internal/files"
 	"ziniki.org/deployer/coremod/internal/methods"
 	"ziniki.org/deployer/coremod/internal/policy"
+	"ziniki.org/deployer/coremod/internal/runmain"
 	"ziniki.org/deployer/coremod/internal/target"
 	"ziniki.org/deployer/coremod/internal/time"
 	"ziniki.org/deployer/deployer/pkg/deployer"
@@ -25,16 +26,21 @@ func RegisterWithDeployer(deployer deployer.Deployer) error {
 
 	tools := deployer.ObtainTools()
 
+	// Logically, I think, these three have to go in "deployer", not in a module.
+	tools.Register.ExtensionPoint("main-args")
 	tools.Register.ExtensionPoint("top-level")
+	tools.Register.ExtensionPoint("function-defn")
+
 	tools.Register.ExtensionPoint("target")
 	tools.Register.ExtensionPoint("policy-statements")
 	tools.Register.ExtensionPoint("policy-inner")
 
 	tools.Register.ExtensionPoint("blank")
 
-	tools.Register.ExtensionPoint("function-defn")
-
 	// TODO: I think we should be registering "creation methods" not the created objects ...
+
+	// we need to register something that handles the main arguments, in our case targets to execute
+	tools.Register.Register("main-args", "main", runmain.MakeMainHandler(tools))
 
 	// top commands
 	tools.Register.Register("top-level", "target", target.MakeCoreTargetVerb(tools))
