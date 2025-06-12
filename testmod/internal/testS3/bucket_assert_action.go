@@ -35,8 +35,9 @@ func (ca *assertBucketAction) ShortDescription() string {
 func (ca *assertBucketAction) Completed() {
 }
 
-func (ca *assertBucketAction) Resolve(r pluggable.Resolver, b pluggable.Binder) {
+func (ca *assertBucketAction) Resolve(r pluggable.Resolver) pluggable.BindingRequirement {
 	ca.bucket.Resolve(r)
+	return pluggable.NO_VALUE
 }
 
 func (ca *assertBucketAction) Prepare(pres pluggable.ValuePresenter) {

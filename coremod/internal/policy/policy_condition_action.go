@@ -44,7 +44,8 @@ func (pca *PolicyCondAction) Add(entry pluggable.Action) {
 	pca.actions = append(pca.actions, entry)
 }
 
-func (pca *PolicyCondAction) Resolve(r pluggable.Resolver, b pluggable.Binder) {
+func (pca *PolicyCondAction) Resolve(r pluggable.Resolver) pluggable.BindingRequirement {
+	return pluggable.MAY_BE_BOUND
 }
 
 func (pca *PolicyCondAction) Prepare(pres pluggable.ValuePresenter) {

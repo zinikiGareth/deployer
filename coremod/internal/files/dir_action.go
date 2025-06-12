@@ -36,13 +36,14 @@ func (da *dirAction) ShortDescription() string {
 func (da *dirAction) Completed() {
 }
 
-func (da *dirAction) Resolve(r pluggable.Resolver, b pluggable.Binder) {
+func (da *dirAction) Resolve(r pluggable.Resolver) pluggable.BindingRequirement {
 	// da.resolved = make([]pluggable.Expr, len(da.exprs))
 	for _, e := range da.exprs {
 		/*da.resolved[i] = */ e.Resolve(r)
 	}
 	da.res = &PathHolder{loc: da.loc}
-	b.MustBind(da.res)
+	// b.MustBind(da.res)
+	return pluggable.MUST_BE_BOUND
 }
 
 func (da *dirAction) Prepare(pres pluggable.ValuePresenter) {

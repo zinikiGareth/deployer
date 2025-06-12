@@ -19,7 +19,7 @@ target readAndShowEnvVar {
 	]
 }
 symbol var is bound to:
-EnvVar {
-	_where_: readenv.dply:6.5
-	var: readenv.dply:6.5 SETME
+VarHolder {
+	_where_: readenv.dply:6.15
+	storeFor: var
 }

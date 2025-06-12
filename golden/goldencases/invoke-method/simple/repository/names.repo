@@ -1,3 +1,2 @@
-a_blob => aBlobber invoke.dply:13.6 hello
-
+a_blob => VarExpr[a_blob]
 showBlob => Target[showBlob]

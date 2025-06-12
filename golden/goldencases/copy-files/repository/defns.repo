@@ -1,7 +1,7 @@
 symbol bucket is bound to:
-test.S3.Bucket[ {
-	_where_: copy.dply:5.0
-	named: org.ziniki.launch_bucket
+VarHolder {
+	_where_: copy.dply:5.52
+	storeFor: bucket
 }
 symbol copyFilesToBucket is bound to:
 target copyFilesToBucket {
@@ -47,11 +47,12 @@ target copyFilesToBucket {
 	]
 }
 symbol root is bound to:
-EnvVar {
-	_where_: copy.dply:7.5
-	var: copy.dply:7.5 GOLDEN_ROOT
+VarHolder {
+	_where_: copy.dply:7.21
+	storeFor: root
 }
 symbol src_dir is bound to:
-PathHolder {
-	_where_: copy.dply:8.0
+VarHolder {
+	_where_: copy.dply:8.28
+	storeFor: src_dir
 }

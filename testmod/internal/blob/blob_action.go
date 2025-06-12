@@ -75,9 +75,10 @@ func (c *createBlobAction) DumpTo(iw pluggable.IndentWriter) {
 	iw.EndAttrs()
 }
 
-func (c *createBlobAction) Resolve(r pluggable.Resolver, b pluggable.Binder) {
+func (c *createBlobAction) Resolve(r pluggable.Resolver) pluggable.BindingRequirement {
 	c.blobber = &Blobber{Locatable: c.Locatable, expr: c.expr}
-	b.MustBind(c.blobber)
+	// b.MustBind(c.blobber)
+	return pluggable.MUST_BE_BOUND
 }
 
 func (c *createBlobAction) Prepare(pres pluggable.ValuePresenter) {

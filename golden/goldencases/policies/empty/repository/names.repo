@@ -1,2 +1,2 @@
 createAnEmptyPolicy => Target[createAnEmptyPolicy]
-hello_world_policy => PolicyDocument[]
+hello_world_policy => VarExpr[hello_world_policy]

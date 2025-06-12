@@ -92,20 +92,21 @@ func (ea *FindAction) Completed() {
 	}
 }
 
-func (ea *FindAction) Resolve(r pluggable.Resolver, b pluggable.Binder) {
+func (ea *FindAction) Resolve(r pluggable.Resolver) pluggable.BindingRequirement {
 	res, ok := r.Resolve(ea.what).(pluggable.Blank)
 	if !ok {
-		return
+		return pluggable.ERROR_OCCURRED
 	}
 	ea.resolved = res
 	obj := ea.resolved.Find(ea.tools, ea.Loc(), ea.named.Text())
 	ens, ok := obj.(findable.Findable)
 	if !ok {
 		ea.tools.Storage.Errorf(ea.loc, "the type "+ea.what.Id()+" is not findable")
-		return
+		return pluggable.ERROR_OCCURRED
 	}
 	ea.ens = ens
-	b.MayBind(ens)
+	// b.MayBind(ens)
+	return pluggable.MAY_BE_BOUND
 }
 
 func (ea *FindAction) Prepare(pres pluggable.ValuePresenter) {

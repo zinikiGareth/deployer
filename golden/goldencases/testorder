@@ -11,6 +11,7 @@ errorcases/ensure-needs-teardown
 errorcases/ensure-only-one-name
 errorcases/find-no-such-class
 errorcases/find-cannot-have-teardown
+invoke-method/simple
 ensure-bucket
 teardown-bucket
 find-bucket
@@ -21,5 +22,4 @@ read-env-var
 copy-files
 policies/empty
 policies/allow-one
-invoke-method/simple
 policies/allow-condition

@@ -109,10 +109,10 @@ func (ea *EnsureAction) Completed() {
 	}
 }
 
-func (ea *EnsureAction) Resolve(r pluggable.Resolver, b pluggable.Binder) {
+func (ea *EnsureAction) Resolve(r pluggable.Resolver) pluggable.BindingRequirement {
 	res, ok := r.Resolve(ea.what).(pluggable.Blank)
 	if !ok {
-		return
+		return pluggable.ERROR_OCCURRED
 	}
 	for _, y := range ea.props {
 		y.Resolve(r)
@@ -122,10 +122,11 @@ func (ea *EnsureAction) Resolve(r pluggable.Resolver, b pluggable.Binder) {
 	ens, ok := obj.(ensurable.Ensurable)
 	if !ok {
 		ea.tools.Storage.Errorf(ea.loc, "the type "+ea.what.Id()+" is not ensurable")
-		return
+		return pluggable.ERROR_OCCURRED
 	}
 	ea.ens = ens
-	b.MayBind(ens)
+	// b.MayBind(ens)
+	return pluggable.MAY_BE_BOUND
 }
 
 func (ea *EnsureAction) Prepare(pres pluggable.ValuePresenter) {

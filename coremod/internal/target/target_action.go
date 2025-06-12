@@ -43,7 +43,7 @@ func (t *coreTarget) DumpTo(w pluggable.IndentWriter) {
 
 func (t *coreTarget) Resolve(r pluggable.Resolver) {
 	for _, a := range t.actions {
-		a.Resolve(r, t)
+		a.Resolve(r)
 	}
 }
 

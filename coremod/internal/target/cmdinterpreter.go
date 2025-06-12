@@ -1,6 +1,7 @@
 package target
 
 import (
+	"fmt"
 	"reflect"
 
 	"ziniki.org/deployer/deployer/pkg/errorsink"
@@ -78,7 +79,33 @@ type WithAssignTo struct {
 }
 
 func (wat *WithAssignTo) Add(d pluggable.Action) {
-	wat.container.Add(&DoAssign{tools: wat.tools, assignTo: wat.assignTo, action: d})
+	wat.container.Add(MakeDoAssign(wat.tools, wat.assignTo, d))
+}
+
+func MakeDoAssign(tools *pluggable.Tools, assignTo pluggable.Identifier, action pluggable.Action) *DoAssign {
+	thingy := &VarHolder{storeFor: assignTo}
+	ret := DoAssign{tools: tools, assignTo: assignTo, resolved: thingy, action: action}
+	tools.Repository.IntroduceSymbol(pluggable.SymbolName(assignTo.Id()), thingy)
+	return &ret
+}
+
+type VarHolder struct {
+	storeFor pluggable.Identifier
+}
+
+func (v *VarHolder) Loc() *errorsink.Location {
+	return v.storeFor.Loc()
+}
+
+func (v *VarHolder) DumpTo(iw pluggable.IndentWriter) {
+	iw.Intro("VarHolder")
+	iw.AttrsWhere(v.storeFor)
+	iw.TextAttr("storeFor", v.storeFor.Id())
+	iw.EndAttrs()
+}
+
+func (v *VarHolder) ShortDescription() string {
+	return fmt.Sprintf("VarExpr[%s]", v.storeFor.Id())
 }
 
 type DoAssign struct {
@@ -100,9 +127,10 @@ func (d *DoAssign) DumpTo(w pluggable.IndentWriter) {
 	w.EndAttrs()
 }
 
-func (d *DoAssign) Resolve(r pluggable.Resolver, b pluggable.Binder) {
+func (d *DoAssign) Resolve(r pluggable.Resolver) pluggable.BindingRequirement {
 	// d.resolved = r.MakeNew(d.assignTo)
-	d.action.Resolve(r, d)
+	d.action.Resolve(r)
+	return pluggable.NO_VALUE
 }
 
 func (d *DoAssign) ShortDescription() string {
@@ -130,7 +158,6 @@ func (d *DoAssign) TearDown() {
 func (d *DoAssign) MayBind(val pluggable.Describable) {
 	if d.assignTo != nil {
 		d.resolved = val
-		d.tools.Repository.IntroduceSymbol(pluggable.SymbolName(d.assignTo.Id()), val)
 	}
 }
 

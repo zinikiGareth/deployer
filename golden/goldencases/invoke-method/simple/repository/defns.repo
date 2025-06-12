@@ -1,11 +1,7 @@
 symbol a_blob is bound to:
-ABlobber {
-	_where_: invoke.dply:13.0
-	expr:
-		String {
-			_where_: invoke.dply:13.6
-			"hello"
-		}
+VarHolder {
+	_where_: invoke.dply:13.16
+	storeFor: a_blob
 }
 symbol showBlob is bound to:
 target showBlob {

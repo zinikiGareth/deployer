@@ -37,10 +37,11 @@ func (ca *copyAction) ShortDescription() string {
 func (ca *copyAction) Completed() {
 }
 
-func (ca *copyAction) Resolve(r pluggable.Resolver, b pluggable.Binder) {
+func (ca *copyAction) Resolve(r pluggable.Resolver) pluggable.BindingRequirement {
 	for _, e := range ca.exprs {
 		e.Resolve(r)
 	}
+	return pluggable.NO_VALUE
 }
 
 func (ca *copyAction) Prepare(pres pluggable.ValuePresenter) {

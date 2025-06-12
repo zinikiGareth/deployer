@@ -1,2 +1,2 @@
-allow_one_policy => PolicyDocument[]
+allow_one_policy => VarExpr[allow_one_policy]
 createAPolicyAllowingOneThing => Target[createAPolicyAllowingOneThing]

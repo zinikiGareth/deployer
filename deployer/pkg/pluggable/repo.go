@@ -29,11 +29,6 @@ type TargetThing interface {
 	TearDown()
 }
 
-type Binder interface {
-	MayBind(v Describable)
-	MustBind(v Describable)
-}
-
 type Resolver interface {
 	Resolve(name Identifier) Describable
 }

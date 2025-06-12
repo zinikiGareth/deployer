@@ -56,7 +56,8 @@ func (paa *PolicyAllowAction) Add(entry pluggable.Action) {
 	paa.actions = append(paa.actions, entry)
 }
 
-func (paa *PolicyAllowAction) Resolve(r pluggable.Resolver, b pluggable.Binder) {
+func (paa *PolicyAllowAction) Resolve(r pluggable.Resolver) pluggable.BindingRequirement {
+	return pluggable.MAY_BE_BOUND
 }
 
 func (paa *PolicyAllowAction) Prepare(pres pluggable.ValuePresenter) {

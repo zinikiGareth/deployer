@@ -1,6 +1,7 @@
 symbol allow_one_policy is bound to:
-PolicyDocument[] {
-	_where_: allow-one.dply:11.0
+VarHolder {
+	_where_: allow-one.dply:11.10
+	storeFor: allow_one_policy
 }
 symbol createAPolicyAllowingOneThing is bound to:
 target createAPolicyAllowingOneThing {

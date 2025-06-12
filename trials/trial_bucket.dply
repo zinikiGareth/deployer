@@ -69,4 +69,5 @@ I think I want a "cloudfront" step at this point, quite apart from the fact that
 				condition aws.cond.StringEquals "AWS:SourceArn" (cloudfront->arn)
 
 		ensure aws.Policy "allow-cloudfront-to-access-bucket"
+			@teardown delete
 			Policy <- cloudfront_policy

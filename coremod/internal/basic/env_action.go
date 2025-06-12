@@ -32,10 +32,11 @@ func (ea *EnvAction) ShortDescription() string {
 func (ea *EnvAction) Completed() {
 }
 
-func (sa *EnvAction) Resolve(r pluggable.Resolver, b pluggable.Binder) {
+func (sa *EnvAction) Resolve(r pluggable.Resolver) pluggable.BindingRequirement {
 	sa.varname.Resolve(r)
-	b.MustBind(&EnvVar{varname: sa.varname})
+	// b.MustBind(&EnvVar{varname: sa.varname})
 	// ea.resolved = r.Resolve(ea.what)
+	return pluggable.MUST_BE_BOUND
 }
 
 func (ea *EnvAction) Prepare(pres pluggable.ValuePresenter) {

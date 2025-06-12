@@ -41,9 +41,10 @@ func (pa *PolicyAction) ShortDescription() string {
 func (pa *PolicyAction) Completed() {
 }
 
-func (pa *PolicyAction) Resolve(r pluggable.Resolver, b pluggable.Binder) {
+func (pa *PolicyAction) Resolve(r pluggable.Resolver) pluggable.BindingRequirement {
 	pa.doc = &PolicyDocument{loc: pa.loc}
-	b.MustBind(pa.doc)
+	// b.MustBind(pa.doc)
+	return pluggable.MUST_BE_BOUND
 }
 
 func (pa *PolicyAction) Prepare(pres pluggable.ValuePresenter) {

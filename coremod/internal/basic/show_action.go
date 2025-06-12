@@ -36,10 +36,11 @@ func (sa *ShowAction) ShortDescription() string {
 func (sa *ShowAction) Completed() {
 }
 
-func (sa *ShowAction) Resolve(r pluggable.Resolver, b pluggable.Binder) {
+func (sa *ShowAction) Resolve(r pluggable.Resolver) pluggable.BindingRequirement {
 	for _, e := range sa.exprs {
 		e.Resolve(r)
 	}
+	return pluggable.NO_VALUE
 }
 
 func (sa *ShowAction) Prepare(pres pluggable.ValuePresenter) {
