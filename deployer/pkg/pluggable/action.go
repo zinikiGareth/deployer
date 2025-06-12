@@ -9,7 +9,7 @@ const (
 	ERROR_OCCURRED
 )
 
-type Action interface {
+type ModelBuilder interface {
 	Describable
 
 	// Resolve asks the definition to examine all of its structure and ask for resolution of any unresolved names
@@ -18,13 +18,13 @@ type Action interface {
 	BuildModel(pres ValuePresenter)
 }
 
-type AndMakeItSo interface {
-	Action
+type ValuePresenter interface {
+	Present(value any)
+}
+
+type RealityShifter interface {
+	ModelBuilder
 
 	UpdateReality()
 	TearDown()
-}
-
-type ValuePresenter interface {
-	Present(value any)
 }

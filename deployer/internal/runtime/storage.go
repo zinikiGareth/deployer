@@ -37,20 +37,6 @@ func (s *Storage) IsMode(mode int) bool {
 
 func (s *Storage) Eval(e pluggable.Expr) any {
 	return e.Eval(s)
-	/*
-		str, ok := e.(pluggable.String)
-		if ok {
-			return str.Text()
-		} else {
-			id, ok := e.(pluggable.Identifier)
-			if ok {
-				return s.Get(pluggable.SymbolName(id.Id()))
-			} else {
-				log.Fatalf("cannot evaluate %v", e)
-				return nil
-			}
-		}
-	*/
 }
 
 func (s *Storage) EvalAsString(e pluggable.Expr) string {

@@ -16,7 +16,7 @@ func (t *CoreTargetHandler) Handle(attacher pluggable.AttachResult, tokens []plu
 	}
 	t1 := tokens[1].(pluggable.Identifier)
 	name := pluggable.SymbolName(t1.Id())
-	target := &CoreTarget{loc: t1.Loc(), name: name, actions: []pluggable.Action{}}
+	target := &CoreTarget{loc: t1.Loc(), name: name, actions: []pluggable.ModelBuilder{}}
 
 	attacher.Attach(target)
 	return interpreters.NewVerbCommandInterpreter(t.tools, target, "target", true)

@@ -11,7 +11,7 @@ type CoreTarget struct {
 	loc  *errorsink.Location
 	name pluggable.SymbolName
 
-	actions []pluggable.Action
+	actions []pluggable.ModelBuilder
 }
 
 func (cc *CoreTarget) Name() pluggable.SymbolName {
@@ -23,7 +23,7 @@ func (cc *CoreTarget) String() string {
 }
 
 func (cc *CoreTarget) Attach(entry any) {
-	action, ok := entry.(pluggable.Action)
+	action, ok := entry.(pluggable.ModelBuilder)
 	if !ok {
 		panic("not an action")
 	}
@@ -66,7 +66,7 @@ func (t *CoreTarget) BuildModel() {
 
 func (t *CoreTarget) UpdateReality() {
 	for _, a := range t.actions {
-		amis, ok := a.(pluggable.AndMakeItSo)
+		amis, ok := a.(pluggable.RealityShifter)
 		if ok {
 			amis.UpdateReality()
 		}
@@ -75,7 +75,7 @@ func (t *CoreTarget) UpdateReality() {
 
 func (t *CoreTarget) TearDown() {
 	for _, a := range slices.Backward(t.actions) {
-		amis, ok := a.(pluggable.AndMakeItSo)
+		amis, ok := a.(pluggable.RealityShifter)
 		if ok {
 			amis.TearDown()
 		}

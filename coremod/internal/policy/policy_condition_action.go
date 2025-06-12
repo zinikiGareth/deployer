@@ -8,7 +8,7 @@ import (
 type PolicyCondAction struct {
 	tools   *pluggable.Tools
 	loc     *errorsink.Location
-	actions []pluggable.Action
+	actions []pluggable.ModelBuilder
 
 	test  pluggable.Expr
 	left  pluggable.Expr
@@ -40,7 +40,7 @@ func (pca *PolicyCondAction) ShortDescription() string {
 func (pca *PolicyCondAction) Completed() {
 }
 
-func (pca *PolicyCondAction) Add(entry pluggable.Action) {
+func (pca *PolicyCondAction) Add(entry pluggable.ModelBuilder) {
 	pca.actions = append(pca.actions, entry)
 }
 

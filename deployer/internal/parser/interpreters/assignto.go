@@ -14,14 +14,14 @@ type WithAssignTo struct {
 }
 
 func (wat *WithAssignTo) Attach(d any) {
-	container, ok := d.(pluggable.Action)
+	container, ok := d.(pluggable.ModelBuilder)
 	if !ok {
 		panic("not an action")
 	}
 	wat.container.Attach(MakeDoAssign(wat.tools, wat.assignTo, container))
 }
 
-func MakeDoAssign(tools *pluggable.Tools, assignTo pluggable.Identifier, action pluggable.Action) *DoAssign {
+func MakeDoAssign(tools *pluggable.Tools, assignTo pluggable.Identifier, action pluggable.ModelBuilder) *DoAssign {
 	holder := &VarHolder{storeFor: assignTo}
 	ret := DoAssign{tools: tools, assignTo: assignTo, holder: holder, action: action}
 	tools.Repository.IntroduceSymbol(pluggable.SymbolName(assignTo.Id()), holder)
@@ -51,7 +51,7 @@ type DoAssign struct {
 	tools    *pluggable.Tools
 	assignTo pluggable.Identifier
 	holder   pluggable.Describable
-	action   pluggable.Action
+	action   pluggable.ModelBuilder
 }
 
 func (d *DoAssign) Loc() *errorsink.Location {
@@ -83,14 +83,14 @@ func (d *DoAssign) BuildModel(pres pluggable.ValuePresenter) {
 }
 
 func (d *DoAssign) UpdateReality() {
-	amis, ok := d.action.(pluggable.AndMakeItSo)
+	amis, ok := d.action.(pluggable.RealityShifter)
 	if ok {
 		amis.UpdateReality()
 	}
 }
 
 func (d *DoAssign) TearDown() {
-	amis, ok := d.action.(pluggable.AndMakeItSo)
+	amis, ok := d.action.(pluggable.RealityShifter)
 	if ok {
 		amis.TearDown()
 	}
