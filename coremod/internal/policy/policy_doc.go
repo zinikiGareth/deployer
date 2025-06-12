@@ -7,7 +7,9 @@ import (
 )
 
 type policyDocument struct {
-	loc *errorsink.Location
+	loc   *errorsink.Location
+	name  string
+	items []external.PolicyEffect
 }
 
 // DumpTo implements pluggable.Describable.
@@ -27,6 +29,20 @@ func (p *policyDocument) ShortDescription() string {
 	return "PolicyDocument[]"
 }
 
-func NewPolicyDocument(loc *errorsink.Location) external.PolicyDocument {
-	return &policyDocument{loc: loc}
+func (p *policyDocument) Name() string {
+	return p.name
+}
+
+func (p *policyDocument) Item(effect string) external.PolicyEffect {
+	ret := &policyItem{effect: effect}
+	p.items = append(p.items, ret)
+	return ret
+}
+
+func (p *policyDocument) Items() []external.PolicyEffect {
+	return p.items
+}
+
+func NewPolicyDocument(loc *errorsink.Location, name string) external.PolicyDocument {
+	return &policyDocument{loc: loc, name: name}
 }
