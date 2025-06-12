@@ -43,7 +43,10 @@ func (t *coreTarget) DumpTo(w pluggable.IndentWriter) {
 
 func (t *coreTarget) Resolve(r pluggable.Resolver) {
 	for _, a := range t.actions {
-		a.Resolve(r)
+		binding := a.Resolve(r)
+		if binding == pluggable.MUST_BE_BOUND {
+			panic("assignTo is not specified") // should be an error
+		}
 	}
 }
 
@@ -69,14 +72,6 @@ func (t *coreTarget) TearDown() {
 			amis.TearDown()
 		}
 	}
-}
-
-func (d *coreTarget) MayBind(val pluggable.Describable) {
-	// There is nothing to bind ...
-}
-
-func (d *coreTarget) MustBind(val pluggable.Describable) {
-	panic("assignTo is not specified") // should be an error
 }
 
 func (d *coreTarget) Present(value any) {

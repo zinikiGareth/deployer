@@ -105,7 +105,6 @@ func (ea *FindAction) Resolve(r pluggable.Resolver) pluggable.BindingRequirement
 		return pluggable.ERROR_OCCURRED
 	}
 	ea.ens = ens
-	// b.MayBind(ens)
 	return pluggable.MAY_BE_BOUND
 }
 
