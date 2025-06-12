@@ -7,7 +7,7 @@ import (
 type SimpleRepository struct {
 	symbolLsnrs []pluggable.SymbolListener
 	symbols     map[pluggable.SymbolName]pluggable.Describable
-	tops        []pluggable.TargetThing
+	tops        []pluggable.TopLevelForm
 }
 
 func (d *SimpleRepository) ReadingFile(file string) {
@@ -26,7 +26,7 @@ func (d *SimpleRepository) IntroduceSymbol(who pluggable.SymbolName, is pluggabl
 	}
 }
 
-func (d *SimpleRepository) TopLevel(defn pluggable.TargetThing) {
+func (d *SimpleRepository) TopLevel(defn pluggable.TopLevelForm) {
 	d.tops = append(d.tops, defn)
 }
 

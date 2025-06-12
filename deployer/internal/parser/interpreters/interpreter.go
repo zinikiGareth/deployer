@@ -6,9 +6,9 @@ import (
 
 type ScopeInterpreter struct {
 	tools        *pluggable.Tools
+	attacher     pluggable.AttachResult
 	forExtension string
 	allowAssign  bool
-	attacher     pluggable.AttachResult
 }
 
 func (si *ScopeInterpreter) HaveTokens(tokens []pluggable.Token) pluggable.Interpreter {
@@ -40,7 +40,7 @@ func (si *ScopeInterpreter) HaveTokens(tokens []pluggable.Token) pluggable.Inter
 	if assignTo != nil {
 		a = &WithAssignTo{tools: si.tools, container: a, assignTo: assignTo}
 	}
-	return action.Handle(a, tokens)
+	return action.Handle(a, toks)
 }
 
 func (b *ScopeInterpreter) Completed() {
@@ -68,6 +68,6 @@ func (b *ScopeInterpreter) splitOnArrow(tokens []pluggable.Token) (bool, []plugg
 	return true, tokens, nil
 }
 
-func NewInterpreter(tools *pluggable.Tools, forExtensionPoint string, allowAssignments bool) pluggable.Interpreter {
-	return &ScopeInterpreter{tools: tools, forExtension: forExtensionPoint, allowAssign: allowAssignments}
+func NewVerbCommandInterpreter(tools *pluggable.Tools, attacher pluggable.AttachResult, forExtensionPoint string, allowAssignments bool) pluggable.Interpreter {
+	return &ScopeInterpreter{tools: tools, attacher: attacher, forExtension: forExtensionPoint, allowAssign: allowAssignments}
 }

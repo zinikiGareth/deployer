@@ -13,7 +13,7 @@ type RepositoryTraverser interface {
 type Repository interface {
 	ReadingFile(file string)
 	IntroduceSymbol(who SymbolName, is Describable)
-	TopLevel(is TargetThing)
+	TopLevel(tlf TopLevelForm)
 	AddSymbolListener(lsnr SymbolListener)
 	Traverse(lsnr RepositoryTraverser)
 
@@ -21,9 +21,20 @@ type Repository interface {
 	FindTarget(name SymbolName) TargetThing
 }
 
+type Resolvable interface {
+	Resolve(r Resolver)
+}
+
+type TopLevelForm interface {
+	Describable
+	Resolvable
+	Name() SymbolName
+}
+
 type TargetThing interface {
 	fmt.Stringer
-	Resolve(r Resolver)
+	Describable
+	Resolvable
 	Prepare()
 	Execute()
 	TearDown()

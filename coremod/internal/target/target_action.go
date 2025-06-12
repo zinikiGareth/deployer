@@ -7,18 +7,22 @@ import (
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
-type coreTarget struct {
+type CoreTarget struct {
 	loc  *errorsink.Location
 	name pluggable.SymbolName
 
 	actions []pluggable.Action
 }
 
-func (cc *coreTarget) String() string {
+func (cc *CoreTarget) Name() pluggable.SymbolName {
+	return cc.name
+}
+
+func (cc *CoreTarget) String() string {
 	return string(cc.name)
 }
 
-func (cc *coreTarget) Attach(entry any) {
+func (cc *CoreTarget) Attach(entry any) {
 	action, ok := entry.(pluggable.Action)
 	if !ok {
 		panic("not an action")
@@ -26,15 +30,15 @@ func (cc *coreTarget) Attach(entry any) {
 	cc.actions = append(cc.actions, action)
 }
 
-func (t *coreTarget) Loc() *errorsink.Location {
+func (t *CoreTarget) Loc() *errorsink.Location {
 	return t.loc
 }
 
-func (t *coreTarget) ShortDescription() string {
+func (t *CoreTarget) ShortDescription() string {
 	return "Target[" + string(t.name) + "]"
 }
 
-func (t *coreTarget) DumpTo(w pluggable.IndentWriter) {
+func (t *CoreTarget) DumpTo(w pluggable.IndentWriter) {
 	w.Intro("target %s", t.name)
 	w.AttrsWhere(t)
 	w.ListAttr("actions")
@@ -45,7 +49,7 @@ func (t *coreTarget) DumpTo(w pluggable.IndentWriter) {
 	w.EndAttrs()
 }
 
-func (t *coreTarget) Resolve(r pluggable.Resolver) {
+func (t *CoreTarget) Resolve(r pluggable.Resolver) {
 	for _, a := range t.actions {
 		binding := a.Resolve(r)
 		if binding == pluggable.MUST_BE_BOUND {
@@ -54,13 +58,13 @@ func (t *coreTarget) Resolve(r pluggable.Resolver) {
 	}
 }
 
-func (t *coreTarget) Prepare() {
+func (t *CoreTarget) Prepare() {
 	for _, a := range t.actions {
 		a.Prepare(t)
 	}
 }
 
-func (t *coreTarget) Execute() {
+func (t *CoreTarget) Execute() {
 	for _, a := range t.actions {
 		amis, ok := a.(pluggable.AndMakeItSo)
 		if ok {
@@ -69,7 +73,7 @@ func (t *coreTarget) Execute() {
 	}
 }
 
-func (t *coreTarget) TearDown() {
+func (t *CoreTarget) TearDown() {
 	for _, a := range slices.Backward(t.actions) {
 		amis, ok := a.(pluggable.AndMakeItSo)
 		if ok {
@@ -78,7 +82,7 @@ func (t *coreTarget) TearDown() {
 	}
 }
 
-func (d *coreTarget) Present(value any) {
+func (d *CoreTarget) Present(value any) {
 	// If I have understood the flow correctly, if you arrive here without having reported an error in MustBind,
 	// then binding is optional and no assignTo has been specified.  So doing nothing is fine.
 }

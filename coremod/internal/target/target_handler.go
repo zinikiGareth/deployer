@@ -16,13 +16,10 @@ func (t *CoreTargetHandler) Handle(attacher pluggable.AttachResult, tokens []plu
 	}
 	t1 := tokens[1].(pluggable.Identifier)
 	name := pluggable.SymbolName(t1.Id())
-	target := &coreTarget{loc: t1.Loc(), name: name, actions: []pluggable.Action{}}
+	target := &CoreTarget{loc: t1.Loc(), name: name, actions: []pluggable.Action{}}
 
-	// TODO: move these out into the "attacher"
-
-	t.tools.Repository.TopLevel(target)
-	t.tools.Repository.IntroduceSymbol(name, target)
-	return VerbCommandInterpreter(t.tools, target)
+	attacher.Attach(target)
+	return interpreters.NewVerbCommandInterpreter(t.tools, target, "target", true)
 }
 
 func MakeCoreTargetVerb(tools *pluggable.Tools) *CoreTargetHandler {
