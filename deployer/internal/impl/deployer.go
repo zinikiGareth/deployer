@@ -69,24 +69,24 @@ func (d *DeployerImpl) Deploy(targetNames ...string) error {
 		return err
 	}
 
-	d.tools.Storage.SetMode(pluggable.PREPARE_MODE)
+	d.tools.Storage.SetMode(pluggable.BUILD_MODEL_MODE)
 	for _, t := range targets {
 		// fmt.Printf("preparing %s:\n", t.String())
 		t.BuildModel()
 	}
 
 	if d.tools.Reporter.HasErrors() {
-		return fmt.Errorf("errors during preparation ... NOT EXECUTING")
+		return fmt.Errorf("errors building model ... NOT UPDATING REALITY")
 	}
 
 	if d.tools.Options.TearDown {
-		d.tools.Storage.SetMode(pluggable.EXECUTE_MODE)
+		d.tools.Storage.SetMode(pluggable.UPDATE_REALITY_MODE)
 		for _, t := range targets {
 			// fmt.Printf("tearing down %s:\n", t)
 			t.TearDown()
 		}
 	} else {
-		d.tools.Storage.SetMode(pluggable.EXECUTE_MODE)
+		d.tools.Storage.SetMode(pluggable.UPDATE_REALITY_MODE)
 		for _, t := range targets {
 			// fmt.Printf("executing %s:\n", t)
 			t.UpdateReality()

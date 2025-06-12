@@ -16,7 +16,7 @@ type TestStepLoggerFile struct {
 
 func (logger *TestStepLoggerFile) Log(format string, args ...any) {
 	var toFile *os.File
-	if logger.tools.Storage.IsMode(pluggable.PREPARE_MODE) {
+	if logger.tools.Storage.IsMode(pluggable.BUILD_MODEL_MODE) {
 		toFile = logger.prepFile
 	} else {
 		toFile = logger.execFile

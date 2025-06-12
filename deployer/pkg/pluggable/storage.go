@@ -3,8 +3,8 @@ package pluggable
 import "ziniki.org/deployer/deployer/pkg/errorsink"
 
 const (
-	PREPARE_MODE int = iota
-	EXECUTE_MODE
+	BUILD_MODEL_MODE int = iota
+	UPDATE_REALITY_MODE
 )
 
 type RuntimeStorage interface {
