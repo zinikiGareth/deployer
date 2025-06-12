@@ -5,23 +5,23 @@ import (
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
-type PolicyDocument struct {
+type policyDocument struct {
 	loc *errorsink.Location
 }
 
 // DumpTo implements pluggable.Describable.
-func (p *PolicyDocument) DumpTo(w pluggable.IndentWriter) {
+func (p *policyDocument) DumpTo(w pluggable.IndentWriter) {
 	w.Intro("PolicyDocument[]")
 	w.AttrsWhere(p)
 	w.EndAttrs()
 }
 
 // Loc implements pluggable.Describable.
-func (p *PolicyDocument) Loc() *errorsink.Location {
+func (p *policyDocument) Loc() *errorsink.Location {
 	return p.loc
 }
 
 // ShortDescription implements pluggable.Describable.
-func (p *PolicyDocument) ShortDescription() string {
+func (p *policyDocument) ShortDescription() string {
 	return "PolicyDocument[]"
 }

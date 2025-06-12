@@ -68,6 +68,6 @@ I think I want a "cloudfront" step at this point, quite apart from the fact that
 			allow aws.action.S3.GetObject (consolidator_bucket->allResources) aws.principal.CloudFront
 				condition aws.cond.StringEquals "AWS:SourceArn" (cloudfront->arn)
 
-		ensure aws.Policy "allow-cloudfront-to-access-bucket"
+		ensure aws.IAM.Policy "allow-cloudfront-to-access-bucket"
 			@teardown delete
 			Policy <- cloudfront_policy

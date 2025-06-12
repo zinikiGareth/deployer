@@ -9,7 +9,7 @@ type PolicyAction struct {
 	tools   *pluggable.Tools
 	loc     *errorsink.Location
 	actions []pluggable.Describable
-	doc     *PolicyDocument
+	doc     *policyDocument
 }
 
 // This feels weird to me and I'm not sure what to do about it.
@@ -42,7 +42,7 @@ func (pa *PolicyAction) Completed() {
 }
 
 func (pa *PolicyAction) Resolve(r pluggable.Resolver) pluggable.BindingRequirement {
-	pa.doc = &PolicyDocument{loc: pa.loc}
+	pa.doc = &policyDocument{loc: pa.loc}
 	// b.MustBind(pa.doc)
 	return pluggable.MUST_BE_BOUND
 }
