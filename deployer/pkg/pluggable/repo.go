@@ -18,7 +18,7 @@ type Repository interface {
 	Traverse(lsnr RepositoryTraverser)
 
 	ResolveAll(tools *Tools)
-	FindTarget(name SymbolName) TargetThing
+	FindTop(name SymbolName) TopLevelForm
 }
 
 type Resolvable interface {

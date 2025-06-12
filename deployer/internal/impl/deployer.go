@@ -109,15 +109,20 @@ func (d *DeployerImpl) findTargets(names ...string) ([]pluggable.TargetThing, er
 	var targets []pluggable.TargetThing
 	var ue error
 	for _, n := range names {
-		t := d.tools.Repository.FindTarget(pluggable.SymbolName(n))
-		if t == nil {
+		t := d.tools.Repository.FindTop(pluggable.SymbolName(n))
+		var target pluggable.TargetThing
+		var ok bool
+		if t != nil {
+			target, ok = t.(pluggable.TargetThing)
+		}
+		if t == nil || !ok {
 			msg := fmt.Sprintf("there is no target %s\n", n)
 			d.userErrorsTo.WriteString(msg)
 			if ue == nil {
 				ue = deployer.UserError(msg)
 			}
 		}
-		targets = append(targets, t)
+		targets = append(targets, target)
 	}
 	if ue != nil {
 		return nil, ue

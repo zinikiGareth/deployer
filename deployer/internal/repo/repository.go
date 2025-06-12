@@ -40,16 +40,13 @@ func (d *SimpleRepository) Traverse(lsnr pluggable.RepositoryTraverser) {
 	}
 }
 
-func (d *SimpleRepository) FindTarget(name pluggable.SymbolName) pluggable.TargetThing {
-	defn := d.symbols[name]
-	if defn == nil {
-		return nil
+func (d *SimpleRepository) FindTop(name pluggable.SymbolName) pluggable.TopLevelForm {
+	for _, top := range d.tops {
+		if top.Name() == name {
+			return top
+		}
 	}
-	target, ok := defn.(pluggable.TargetThing)
-	if !ok {
-		return nil
-	}
-	return target
+	return nil
 }
 
 func NewRepository() pluggable.Repository {
