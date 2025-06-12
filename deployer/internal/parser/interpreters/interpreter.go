@@ -5,8 +5,7 @@ import (
 )
 
 type ScopeInterpreter struct {
-	tools  *pluggable.Tools
-	scoper pluggable.Scoper
+	tools *pluggable.Tools
 }
 
 func (si *ScopeInterpreter) HaveTokens(tokens []pluggable.Token) pluggable.Interpreter {
@@ -19,7 +18,7 @@ func (si *ScopeInterpreter) HaveTokens(tokens []pluggable.Token) pluggable.Inter
 	if !ok {
 		si.tools.Reporter.Report(0, "first token must be an identifier")
 	}
-	action := si.scoper.FindVerbCommand(verb)
+	action := si.tools.Recall.Find("top-level", verb.Id()).(pluggable.VerbCommand)
 	if action == nil {
 		si.tools.Reporter.Reportf(0, "there is no error handler for %s", verb)
 		return NewIgnoreInnerScope()
@@ -30,6 +29,6 @@ func (si *ScopeInterpreter) HaveTokens(tokens []pluggable.Token) pluggable.Inter
 func (b *ScopeInterpreter) Completed() {
 }
 
-func NewInterpreter(tools *pluggable.Tools, s pluggable.Scoper) pluggable.Interpreter {
-	return &ScopeInterpreter{tools: tools, scoper: s}
+func NewInterpreter(tools *pluggable.Tools) pluggable.Interpreter {
+	return &ScopeInterpreter{tools: tools}
 }

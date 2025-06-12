@@ -5,15 +5,13 @@ import (
 	"ziniki.org/deployer/deployer/internal/parser/exprs"
 	"ziniki.org/deployer/deployer/internal/parser/interpreters"
 	"ziniki.org/deployer/deployer/internal/parser/lexicator"
-	"ziniki.org/deployer/deployer/internal/parser/scopes"
 	"ziniki.org/deployer/deployer/pkg/errorsink"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 	"ziniki.org/deployer/deployer/pkg/utils"
 )
 
 func Parse(tools *pluggable.Tools, fileName, file string) {
-	globalScope := scopes.NewScopedHandlers(tools)
-	globalInterpreter := interpreters.NewInterpreter(tools, globalScope)
+	globalInterpreter := interpreters.NewInterpreter(tools)
 	lineLexicator := lexicator.NewLineLexicator(tools, fileName)
 	tools.Parser = exprs.NewExprParser(tools)
 	blocker := blocker.NewBlocker(tools, lineLexicator, globalInterpreter)
