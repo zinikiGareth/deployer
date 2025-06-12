@@ -4,14 +4,14 @@ import (
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
-type ScopeInterpreter struct {
+type verbCommandInterpreter struct {
 	tools        *pluggable.Tools
 	attacher     pluggable.AttachResult
 	forExtension string
 	allowAssign  bool
 }
 
-func (si *ScopeInterpreter) HaveTokens(tokens []pluggable.Token) pluggable.Interpreter {
+func (si *verbCommandInterpreter) HaveTokens(tokens []pluggable.Token) pluggable.Interpreter {
 	ok, toks, assignTo := si.splitOnArrow(tokens)
 	if !ok { //
 		return NewIgnoreInnerScope()
@@ -43,10 +43,10 @@ func (si *ScopeInterpreter) HaveTokens(tokens []pluggable.Token) pluggable.Inter
 	return action.Handle(a, toks)
 }
 
-func (b *ScopeInterpreter) Completed() {
+func (b *verbCommandInterpreter) Completed() {
 }
 
-func (b *ScopeInterpreter) splitOnArrow(tokens []pluggable.Token) (bool, []pluggable.Token, pluggable.Identifier) {
+func (b *verbCommandInterpreter) splitOnArrow(tokens []pluggable.Token) (bool, []pluggable.Token, pluggable.Identifier) {
 	if !b.allowAssign {
 		return true, tokens, nil
 	}
@@ -69,5 +69,5 @@ func (b *ScopeInterpreter) splitOnArrow(tokens []pluggable.Token) (bool, []plugg
 }
 
 func NewVerbCommandInterpreter(tools *pluggable.Tools, attacher pluggable.AttachResult, forExtensionPoint string, allowAssignments bool) pluggable.Interpreter {
-	return &ScopeInterpreter{tools: tools, attacher: attacher, forExtension: forExtensionPoint, allowAssign: allowAssignments}
+	return &verbCommandInterpreter{tools: tools, attacher: attacher, forExtension: forExtensionPoint, allowAssign: allowAssignments}
 }

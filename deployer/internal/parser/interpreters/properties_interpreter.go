@@ -4,12 +4,12 @@ import (
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
-type PropertiesInnerScope struct {
+type propertiesInterpreter struct {
 	tools  *pluggable.Tools
 	parent pluggable.PropertyParent
 }
 
-func (pis *PropertiesInnerScope) HaveTokens(tokens []pluggable.Token) pluggable.Interpreter {
+func (pis *propertiesInterpreter) HaveTokens(tokens []pluggable.Token) pluggable.Interpreter {
 	if len(tokens) >= 1 {
 		if adv, ok := tokens[0].(pluggable.Adverb); ok {
 			return pis.parent.AddAdverb(adv, tokens[1:])
@@ -44,6 +44,6 @@ func (pis *PropertiesInnerScope) HaveTokens(tokens []pluggable.Token) pluggable.
 	return NewDisallowInnerScope(pis.tools)
 }
 
-func (pis *PropertiesInnerScope) Completed() {
+func (pis *propertiesInterpreter) Completed() {
 	pis.parent.Completed()
 }
