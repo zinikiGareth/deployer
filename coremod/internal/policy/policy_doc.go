@@ -1,6 +1,7 @@
 package policy
 
 import (
+	"ziniki.org/deployer/coremod/pkg/external"
 	"ziniki.org/deployer/deployer/pkg/errorsink"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
@@ -24,4 +25,8 @@ func (p *policyDocument) Loc() *errorsink.Location {
 // ShortDescription implements pluggable.Describable.
 func (p *policyDocument) ShortDescription() string {
 	return "PolicyDocument[]"
+}
+
+func NewPolicyDocument(loc *errorsink.Location) external.PolicyDocument {
+	return &policyDocument{loc: loc}
 }

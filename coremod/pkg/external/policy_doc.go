@@ -1,4 +1,4 @@
-package coremod
+package external
 
 type PolicyDocument interface {
 }

@@ -1,6 +1,7 @@
 package policy
 
 import (
+	"ziniki.org/deployer/coremod/pkg/external"
 	"ziniki.org/deployer/deployer/pkg/errorsink"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
@@ -9,7 +10,7 @@ type PolicyAction struct {
 	tools   *pluggable.Tools
 	loc     *errorsink.Location
 	actions []pluggable.Describable
-	doc     *policyDocument
+	doc     external.PolicyDocument
 }
 
 // This feels weird to me and I'm not sure what to do about it.
@@ -42,7 +43,7 @@ func (pa *PolicyAction) Completed() {
 }
 
 func (pa *PolicyAction) Resolve(r pluggable.Resolver) pluggable.BindingRequirement {
-	pa.doc = &policyDocument{loc: pa.loc}
+	pa.doc = NewPolicyDocument(pa.loc)
 	// b.MustBind(pa.doc)
 	return pluggable.MUST_BE_BOUND
 }
