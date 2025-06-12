@@ -1,33 +1,36 @@
 package registry
 
 import (
-	"log"
-	"reflect"
-
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
 type Registry struct {
-	impls       map[reflect.Type]map[string]any
+	points      map[string]map[string]any
 	drivers     map[string]any
 	initDrivers map[string]any
 	tools       *pluggable.Tools
 }
 
-func (r *Registry) Register(what reflect.Type, called string, impl any) {
-	if !reflect.TypeOf(impl).Implements(what) {
-		log.Fatalf("Register %s: %v is not a %v", called, impl, what)
+func (r *Registry) ExtensionPoint(name string) {
+	if r.points[name] != nil {
+		panic("duplicate extension point " + name)
 	}
-	m := r.impls[what]
+	r.points[name] = make(map[string]any)
+}
+
+func (r *Registry) Register(point string, called string, impl any) {
+	// if !reflect.TypeOf(impl).Implements(what) {
+	// 	log.Fatalf("Register %s: %v is not a %v", called, impl, what)
+	// }
+	m := r.points[point]
 	if m == nil {
-		m = make(map[string]any)
-		r.impls[what] = m
+		panic("there is no extension point " + point)
 	}
 	m[called] = impl
 }
 
-func (r *Registry) Find(ty reflect.Type, called string) any {
-	m := r.impls[ty]
+func (r *Registry) Find(point string, called string) any {
+	m := r.points[point]
 	if m == nil {
 		return nil
 	}
@@ -62,5 +65,5 @@ func (reg *Registry) BindTools(tools *pluggable.Tools) {
 }
 
 func NewRegistry() *Registry {
-	return &Registry{impls: make(map[reflect.Type]map[string]any), drivers: make(map[string]any), initDrivers: make(map[string]any)}
+	return &Registry{points: make(map[string]map[string]any), drivers: make(map[string]any), initDrivers: make(map[string]any)}
 }

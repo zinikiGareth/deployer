@@ -2,7 +2,6 @@ package exprs
 
 import (
 	"fmt"
-	"reflect"
 	"strings"
 
 	"ziniki.org/deployer/deployer/pkg/errorsink"
@@ -160,14 +159,14 @@ func (p *exprParser) split(tokens []pluggable.Token) (pluggable.Token, pluggable
 func (p *exprParser) matchFunc(tok pluggable.Token) pluggable.Function {
 	id, isId := tok.(pluggable.Identifier)
 	if isId {
-		v, ok := p.tools.Recall.Find(reflect.TypeFor[pluggable.Function](), id.Id()).(pluggable.Function)
+		v, ok := p.tools.Recall.Find("function-defn", id.Id()).(pluggable.Function)
 		if ok && v != nil {
 			return v
 		}
 	}
 	op, isOp := tok.(pluggable.Operator)
 	if isOp {
-		v, ok := p.tools.Recall.Find(reflect.TypeFor[pluggable.Function](), op.Op()).(pluggable.Function)
+		v, ok := p.tools.Recall.Find("function-defn", op.Op()).(pluggable.Function)
 		if ok && v != nil {
 			return v
 		}

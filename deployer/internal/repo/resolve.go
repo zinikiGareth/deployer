@@ -2,7 +2,6 @@ package repo
 
 import (
 	"log"
-	"reflect"
 
 	"ziniki.org/deployer/deployer/pkg/errorsink"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
@@ -31,7 +30,7 @@ func (s *Searcher) Resolve(name pluggable.Identifier) pluggable.Describable {
 	if defn != nil {
 		return defn
 	}
-	ret, ok := s.recall.Find(reflect.TypeFor[pluggable.Blank](), name.Id()).(pluggable.Describable)
+	ret, ok := s.recall.Find("blank", name.Id()).(pluggable.Describable)
 	if ret != nil && ok {
 		return ret
 	}

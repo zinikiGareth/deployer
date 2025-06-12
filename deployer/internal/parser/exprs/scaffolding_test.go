@@ -1,7 +1,6 @@
 package exprs_test
 
 import (
-	"reflect"
 	"slices"
 	"testing"
 
@@ -47,7 +46,7 @@ func init() {
 	crb = lexicator.NewPuncToken(lineloc, 12, ')')
 }
 
-func (m myRecall) Find(ty reflect.Type, noun string) any {
+func (m myRecall) Find(_ string, noun string) any {
 	return m.things[noun]
 }
 

@@ -1,8 +1,6 @@
 package scopes
 
 import (
-	"reflect"
-
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
@@ -11,7 +9,7 @@ type ScopedHandlers struct {
 }
 
 func (sh *ScopedHandlers) FindVerbCommand(v pluggable.Identifier) pluggable.VerbCommand {
-	cmd := sh.tools.Recall.Find(reflect.TypeFor[pluggable.VerbCommand](), v.Id())
+	cmd := sh.tools.Recall.Find("top-level", v.Id())
 	if cmd == nil {
 		sh.tools.Reporter.Reportf(v.Loc().Offset, "there is no top-level command %s", v.Id())
 		return nil

@@ -1,8 +1,6 @@
 package target
 
 import (
-	"reflect"
-
 	"ziniki.org/deployer/deployer/pkg/interpreters"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
@@ -29,7 +27,7 @@ func (cs *commandScope) HaveTokens(tokens []pluggable.Token) pluggable.Interpret
 		return interpreters.IgnoreInnerScope()
 	}
 
-	action, ok := cs.tools.Recall.Find(reflect.TypeFor[pluggable.VerbCommand](), cmd.Id()).(pluggable.VerbCommand)
+	action, ok := cs.tools.Recall.Find("target", cmd.Id()).(pluggable.VerbCommand)
 	if !ok {
 		cs.tools.Reporter.Reportf(tok0.Loc().Offset, "unknown command: %s", cmd.Id())
 		return interpreters.IgnoreInnerScope()

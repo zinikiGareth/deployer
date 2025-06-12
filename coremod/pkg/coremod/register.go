@@ -1,8 +1,6 @@
 package coremod
 
 import (
-	"reflect"
-
 	"ziniki.org/deployer/coremod/internal/basic"
 	"ziniki.org/deployer/coremod/internal/files"
 	"ziniki.org/deployer/coremod/internal/methods"
@@ -10,7 +8,6 @@ import (
 	"ziniki.org/deployer/coremod/internal/target"
 	"ziniki.org/deployer/coremod/internal/time"
 	"ziniki.org/deployer/deployer/pkg/deployer"
-	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
 var testRunner deployer.TestRunner
@@ -28,23 +25,32 @@ func RegisterWithDeployer(deployer deployer.Deployer) error {
 
 	tools := deployer.ObtainTools()
 
+	tools.Register.ExtensionPoint("top-level")
+	tools.Register.ExtensionPoint("target")
+	tools.Register.ExtensionPoint("policy-statements")
+	tools.Register.ExtensionPoint("policy-inner")
+
+	tools.Register.ExtensionPoint("blank")
+
+	tools.Register.ExtensionPoint("function-defn")
+
 	// top commands
-	tools.Register.Register(reflect.TypeFor[pluggable.VerbCommand](), "target", target.MakeCoreTargetVerb(tools))
+	tools.Register.Register("top-level", "target", target.MakeCoreTargetVerb(tools))
 
 	// target commands
-	tools.Register.Register(reflect.TypeFor[pluggable.VerbCommand](), "ensure", basic.NewEnsureCommandHandler(tools))
-	tools.Register.Register(reflect.TypeFor[pluggable.VerbCommand](), "find", basic.NewFindCommandHandler(tools))
-	tools.Register.Register(reflect.TypeFor[pluggable.VerbCommand](), "env", basic.NewEnvCommandHandler(tools))
-	tools.Register.Register(reflect.TypeFor[pluggable.VerbCommand](), "show", basic.NewShowCommandHandler(tools))
+	tools.Register.Register("target", "ensure", basic.NewEnsureCommandHandler(tools))
+	tools.Register.Register("target", "find", basic.NewFindCommandHandler(tools))
+	tools.Register.Register("target", "env", basic.NewEnvCommandHandler(tools))
+	tools.Register.Register("target", "show", basic.NewShowCommandHandler(tools))
 
-	tools.Register.Register(reflect.TypeFor[pluggable.VerbCommand](), "files.dir", files.NewDirCommandHandler(tools))
-	tools.Register.Register(reflect.TypeFor[pluggable.VerbCommand](), "files.copy", files.NewCopyCommandHandler(tools))
+	tools.Register.Register("target", "files.dir", files.NewDirCommandHandler(tools))
+	tools.Register.Register("target", "files.copy", files.NewCopyCommandHandler(tools))
 
-	tools.Register.Register(reflect.TypeFor[pluggable.VerbCommand](), "policy", policy.NewPolicyCommandHandler(tools))
+	tools.Register.Register("target", "policy", policy.NewPolicyCommandHandler(tools))
 
 	// functions
-	tools.Register.Register(reflect.TypeFor[pluggable.Function](), "->", methods.MakeInvokeFunc(tools))
-	tools.Register.Register(reflect.TypeFor[pluggable.Function](), "hours", time.MakeHoursFunc(tools))
+	tools.Register.Register("function-defn", "->", methods.MakeInvokeFunc(tools))
+	tools.Register.Register("function-defn", "hours", time.MakeHoursFunc(tools))
 
 	return nil
 }
