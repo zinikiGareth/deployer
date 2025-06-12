@@ -34,6 +34,8 @@ func RegisterWithDeployer(deployer deployer.Deployer) error {
 
 	tools.Register.ExtensionPoint("function-defn")
 
+	// TODO: I think we should be registering "creation methods" not the created objects ...
+
 	// top commands
 	tools.Register.Register("top-level", "target", target.MakeCoreTargetVerb(tools))
 
@@ -47,6 +49,9 @@ func RegisterWithDeployer(deployer deployer.Deployer) error {
 	tools.Register.Register("target", "files.copy", files.NewCopyCommandHandler(tools))
 
 	tools.Register.Register("target", "policy", policy.NewPolicyCommandHandler(tools))
+
+	tools.Register.Register("policy-statements", "allow", policy.NewPolicyAllowCommandHandler(tools))
+	tools.Register.Register("policy-inner", "condition", policy.NewPolicyConditionCommandHandler(tools))
 
 	// functions
 	tools.Register.Register("function-defn", "->", methods.MakeInvokeFunc(tools))

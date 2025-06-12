@@ -32,7 +32,7 @@ func (r *Registry) Register(point string, called string, impl any) {
 func (r *Registry) Find(point string, called string) any {
 	m := r.points[point]
 	if m == nil {
-		return nil
+		panic("there is no extension point " + point)
 	}
 	return m[called]
 }

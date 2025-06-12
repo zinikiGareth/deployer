@@ -26,6 +26,9 @@ for i in errors repository prepare execute ; do
       echo "----"
       cat $golden-gen/$k
       echo "----"
+      if [ "$i" = "errors" ] ; then
+        exit 1
+      fi
       if [ "$DOCOPY" -eq 1 ] ; then
         cp $golden-gen/$k $golden/$k
       fi
@@ -42,6 +45,9 @@ for i in errors repository prepare execute ; do
       sdiff -W -w 200 "$golden/$j" "$golden-gen/$j"
       if [ "$DOCOPY" -eq 1 ] ; then
         cp $golden-gen/$j $golden/$j
+      fi
+      if [ "$i" = "errors" ] ; then
+        exit 1
       fi
     fi
     rm /tmp/golddiff

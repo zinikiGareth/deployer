@@ -27,12 +27,12 @@ func (si *ScopeInterpreter) HaveTokens(tokens []pluggable.Token) pluggable.Inter
 	}
 	cmd := si.tools.Recall.Find(si.forExtension, verb.Id())
 	if cmd == nil {
-		si.tools.Reporter.Reportf(0, "there is no command %s", verb)
+		si.tools.Reporter.Reportf(0, "there is no command %s", verb.Id())
 		return NewIgnoreInnerScope()
 	}
 	action, ok := cmd.(pluggable.VerbCommand)
 	if !ok {
-		si.tools.Reporter.Reportf(0, "%s is not a command", verb)
+		si.tools.Reporter.Reportf(0, "%s is not a command", verb.Id())
 		return NewIgnoreInnerScope()
 	}
 
