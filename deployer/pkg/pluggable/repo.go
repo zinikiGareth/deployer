@@ -46,7 +46,3 @@ type Describable interface {
 	// DumpTo renders the whole of the text of the definition in a reproducible and unique, but not necessarily parseable form
 	DumpTo(to IndentWriter)
 }
-
-type ContainingContext interface {
-	Add(entry Action)
-}

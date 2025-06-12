@@ -9,7 +9,7 @@ type showCommandHandler struct {
 	tools *pluggable.Tools
 }
 
-func (sch *showCommandHandler) Handle(parent pluggable.ContainingContext, tokens []pluggable.Token) pluggable.Interpreter {
+func (sch *showCommandHandler) Handle(parent pluggable.AttachResult, tokens []pluggable.Token) pluggable.Interpreter {
 	if len(tokens) < 2 {
 		sch.tools.Reporter.Report(tokens[0].Loc().Offset, "show: expr...")
 		return interpreters.IgnoreInnerScope()
@@ -25,11 +25,11 @@ func (sch *showCommandHandler) Handle(parent pluggable.ContainingContext, tokens
 	}
 
 	sa := &ShowAction{tools: sch.tools, loc: tokens[0].Loc(), exprs: exprs}
-	parent.Add(sa)
+	parent.Attach(sa)
 
 	return interpreters.DisallowInnerScope(sch.tools)
 }
 
-func NewShowCommandHandler(tools *pluggable.Tools) pluggable.TargetCommand {
+func NewShowCommandHandler(tools *pluggable.Tools) pluggable.VerbCommand {
 	return &showCommandHandler{tools: tools}
 }

@@ -28,18 +28,21 @@ func RegisterWithDeployer(deployer deployer.Deployer) error {
 
 	tools := deployer.ObtainTools()
 
-	tools.Register.Register(reflect.TypeFor[pluggable.TopCommand](), "target", target.MakeCoreTargetVerb(tools))
+	// top commands
+	tools.Register.Register(reflect.TypeFor[pluggable.VerbCommand](), "target", target.MakeCoreTargetVerb(tools))
 
-	tools.Register.Register(reflect.TypeFor[pluggable.TargetCommand](), "ensure", basic.NewEnsureCommandHandler(tools))
-	tools.Register.Register(reflect.TypeFor[pluggable.TargetCommand](), "find", basic.NewFindCommandHandler(tools))
-	tools.Register.Register(reflect.TypeFor[pluggable.TargetCommand](), "env", basic.NewEnvCommandHandler(tools))
-	tools.Register.Register(reflect.TypeFor[pluggable.TargetCommand](), "show", basic.NewShowCommandHandler(tools))
+	// target commands
+	tools.Register.Register(reflect.TypeFor[pluggable.VerbCommand](), "ensure", basic.NewEnsureCommandHandler(tools))
+	tools.Register.Register(reflect.TypeFor[pluggable.VerbCommand](), "find", basic.NewFindCommandHandler(tools))
+	tools.Register.Register(reflect.TypeFor[pluggable.VerbCommand](), "env", basic.NewEnvCommandHandler(tools))
+	tools.Register.Register(reflect.TypeFor[pluggable.VerbCommand](), "show", basic.NewShowCommandHandler(tools))
 
-	tools.Register.Register(reflect.TypeFor[pluggable.TargetCommand](), "files.dir", files.NewDirCommandHandler(tools))
-	tools.Register.Register(reflect.TypeFor[pluggable.TargetCommand](), "files.copy", files.NewCopyCommandHandler(tools))
+	tools.Register.Register(reflect.TypeFor[pluggable.VerbCommand](), "files.dir", files.NewDirCommandHandler(tools))
+	tools.Register.Register(reflect.TypeFor[pluggable.VerbCommand](), "files.copy", files.NewCopyCommandHandler(tools))
 
-	tools.Register.Register(reflect.TypeFor[pluggable.TargetCommand](), "policy", policy.NewPolicyCommandHandler(tools))
+	tools.Register.Register(reflect.TypeFor[pluggable.VerbCommand](), "policy", policy.NewPolicyCommandHandler(tools))
 
+	// functions
 	tools.Register.Register(reflect.TypeFor[pluggable.Function](), "->", methods.MakeInvokeFunc(tools))
 	tools.Register.Register(reflect.TypeFor[pluggable.Function](), "hours", time.MakeHoursFunc(tools))
 

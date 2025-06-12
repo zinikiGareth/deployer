@@ -20,12 +20,12 @@ func (si *ScopeInterpreter) HaveTokens(tokens []pluggable.Token) pluggable.Inter
 	if !ok {
 		si.tools.Reporter.Report(0, "first token must be an identifier")
 	}
-	action := si.scoper.FindTopCommand(verb)
+	action := si.scoper.FindVerbCommand(verb)
 	if action == nil {
 		si.tools.Reporter.Reportf(0, "there is no error handler for %s", verb)
 		return interpreters.IgnoreInnerScope()
 	}
-	return action.Handle(tokens) // Will need other things as well as time goes on ...
+	return action.Handle(nil, tokens) // Will need other things as well as time goes on ...
 }
 
 func (b *ScopeInterpreter) Completed() {

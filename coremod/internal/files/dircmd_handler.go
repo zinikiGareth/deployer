@@ -9,7 +9,7 @@ type dirCommandHandler struct {
 	tools *pluggable.Tools
 }
 
-func (dch *dirCommandHandler) Handle(parent pluggable.ContainingContext, tokens []pluggable.Token) pluggable.Interpreter {
+func (dch *dirCommandHandler) Handle(parent pluggable.AttachResult, tokens []pluggable.Token) pluggable.Interpreter {
 	if len(tokens) < 2 {
 		dch.tools.Reporter.Report(tokens[0].Loc().Offset, "files.dir: expr...")
 		return interpreters.IgnoreInnerScope()
@@ -25,11 +25,11 @@ func (dch *dirCommandHandler) Handle(parent pluggable.ContainingContext, tokens 
 	}
 
 	da := &dirAction{tools: dch.tools, loc: tokens[0].Loc(), exprs: exprs}
-	parent.Add(da)
+	parent.Attach(da)
 
 	return interpreters.DisallowInnerScope(dch.tools)
 }
 
-func NewDirCommandHandler(tools *pluggable.Tools) pluggable.TargetCommand {
+func NewDirCommandHandler(tools *pluggable.Tools) pluggable.VerbCommand {
 	return &dirCommandHandler{tools: tools}
 }

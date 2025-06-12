@@ -9,7 +9,7 @@ type assertBucketHandler struct {
 	tools *pluggable.Tools
 }
 
-func (abh *assertBucketHandler) Handle(parent pluggable.ContainingContext, tokens []pluggable.Token) pluggable.Interpreter {
+func (abh *assertBucketHandler) Handle(parent pluggable.AttachResult, tokens []pluggable.Token) pluggable.Interpreter {
 	if len(tokens) < 1 {
 		abh.tools.Reporter.Report(tokens[0].Loc().Offset, "test.assertBucketHas: <bucket>")
 		return interpreters.IgnoreInnerScope()
@@ -25,11 +25,11 @@ func (abh *assertBucketHandler) Handle(parent pluggable.ContainingContext, token
 	}
 
 	ca := &assertBucketAction{tools: abh.tools, loc: tokens[0].Loc(), bucket: expr}
-	parent.Add(ca)
+	parent.Attach(ca)
 
 	return BucketContentsScope(abh.tools, ca)
 }
 
-func NewAssertBucketHandler(tools *pluggable.Tools) pluggable.TargetCommand {
+func NewAssertBucketHandler(tools *pluggable.Tools) pluggable.VerbCommand {
 	return &assertBucketHandler{tools: tools}
 }

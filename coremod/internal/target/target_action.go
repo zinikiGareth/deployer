@@ -18,8 +18,12 @@ func (cc *coreTarget) String() string {
 	return string(cc.name)
 }
 
-func (cc *coreTarget) Add(entry pluggable.Action) {
-	cc.actions = append(cc.actions, entry)
+func (cc *coreTarget) Attach(entry any) {
+	action, ok := entry.(pluggable.Action)
+	if !ok {
+		panic("not an action")
+	}
+	cc.actions = append(cc.actions, action)
 }
 
 func (t *coreTarget) Loc() *errorsink.Location {

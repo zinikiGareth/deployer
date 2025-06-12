@@ -8,7 +8,7 @@ import (
 type PolicyAllowAction struct {
 	tools   *pluggable.Tools
 	loc     *errorsink.Location
-	actions []pluggable.Action
+	actions []pluggable.Describable
 
 	allowActions    []pluggable.Expr
 	allowResources  []pluggable.Expr
@@ -52,8 +52,8 @@ func (paa *PolicyAllowAction) ShortDescription() string {
 func (paa *PolicyAllowAction) Completed() {
 }
 
-func (paa *PolicyAllowAction) Add(entry pluggable.Action) {
-	paa.actions = append(paa.actions, entry)
+func (paa *PolicyAllowAction) Attach(entry any) {
+	paa.actions = append(paa.actions, entry.(pluggable.Describable))
 }
 
 func (paa *PolicyAllowAction) Resolve(r pluggable.Resolver) pluggable.BindingRequirement {

@@ -9,7 +9,7 @@ import (
 
 type commandScope struct {
 	tools     *pluggable.Tools
-	container pluggable.ContainingContext
+	container pluggable.AttachResult
 }
 
 func (cs *commandScope) HaveTokens(tokens []pluggable.Token) pluggable.Interpreter {
@@ -29,7 +29,7 @@ func (cs *commandScope) HaveTokens(tokens []pluggable.Token) pluggable.Interpret
 		return interpreters.IgnoreInnerScope()
 	}
 
-	action, ok := cs.tools.Recall.Find(reflect.TypeFor[pluggable.TargetCommand](), cmd.Id()).(pluggable.TargetCommand)
+	action, ok := cs.tools.Recall.Find(reflect.TypeFor[pluggable.VerbCommand](), cmd.Id()).(pluggable.VerbCommand)
 	if !ok {
 		cs.tools.Reporter.Reportf(tok0.Loc().Offset, "unknown command: %s", cmd.Id())
 		return interpreters.IgnoreInnerScope()
@@ -47,7 +47,7 @@ func (cs *commandScope) HaveTokens(tokens []pluggable.Token) pluggable.Interpret
 func (b *commandScope) Completed() {
 }
 
-func TargetCommandInterpreter(tools *pluggable.Tools, container pluggable.ContainingContext) pluggable.Interpreter {
+func VerbCommandInterpreter(tools *pluggable.Tools, container pluggable.AttachResult) pluggable.Interpreter {
 	return &commandScope{tools: tools, container: container}
 }
 

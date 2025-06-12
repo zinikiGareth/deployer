@@ -10,11 +10,15 @@ import (
 type WithAssignTo struct {
 	tools     *pluggable.Tools
 	assignTo  pluggable.Identifier
-	container pluggable.ContainingContext
+	container pluggable.AttachResult
 }
 
-func (wat *WithAssignTo) Add(d pluggable.Action) {
-	wat.container.Add(MakeDoAssign(wat.tools, wat.assignTo, d))
+func (wat *WithAssignTo) Attach(d any) {
+	container, ok := d.(pluggable.Action)
+	if !ok {
+		panic("not an action")
+	}
+	wat.container.Attach(MakeDoAssign(wat.tools, wat.assignTo, container))
 }
 
 func MakeDoAssign(tools *pluggable.Tools, assignTo pluggable.Identifier, action pluggable.Action) *DoAssign {

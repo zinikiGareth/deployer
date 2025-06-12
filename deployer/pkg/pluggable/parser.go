@@ -18,7 +18,7 @@ type Interpreter interface {
 }
 
 type Scoper interface {
-	FindTopCommand(v Identifier) TopCommand
+	FindVerbCommand(v Identifier) VerbCommand
 }
 
 type Token interface {
@@ -61,12 +61,12 @@ type Punc interface {
 	Which() rune
 }
 
-type TopCommand interface {
-	Handle(tokens []Token) Interpreter
+type AttachResult interface {
+	Attach(item any)
 }
 
-type TargetCommand interface {
-	Handle(parent ContainingContext, tokens []Token) Interpreter
+type VerbCommand interface {
+	Handle(attacher AttachResult, tokens []Token) Interpreter
 }
 
 // Replace this with a notion of minting, blanks, dies ... I think this would be a blank

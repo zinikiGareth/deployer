@@ -9,7 +9,7 @@ type policyAllowCommandHandler struct {
 	tools *pluggable.Tools
 }
 
-func (pah *policyAllowCommandHandler) Handle(parent pluggable.ContainingContext, tokens []pluggable.Token) pluggable.Interpreter {
+func (pah *policyAllowCommandHandler) Handle(parent pluggable.AttachResult, tokens []pluggable.Token) pluggable.Interpreter {
 	exprs, ok := pah.tools.Parser.ParseMultiple(tokens[1:])
 	if !ok {
 		return interpreters.IgnoreInnerScope()
@@ -21,11 +21,11 @@ func (pah *policyAllowCommandHandler) Handle(parent pluggable.ContainingContext,
 	}
 
 	pa := &PolicyAllowAction{tools: pah.tools, loc: tokens[0].Loc(), allowActions: []pluggable.Expr{exprs[0]}, allowResources: []pluggable.Expr{exprs[1]}, allowPrincipals: []pluggable.Expr{exprs[2]}}
-	parent.Add(pa)
+	parent.Attach(pa)
 
 	return NewPolicyAllowNestedInterpreter(pah.tools, pa)
 }
 
-func NewPolicyAllowCommandHandler(tools *pluggable.Tools) pluggable.TargetCommand {
+func NewPolicyAllowCommandHandler(tools *pluggable.Tools) pluggable.VerbCommand {
 	return &policyAllowCommandHandler{tools: tools}
 }

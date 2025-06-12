@@ -9,7 +9,7 @@ type blobCommandHandler struct {
 	tools *pluggable.Tools
 }
 
-func (bch *blobCommandHandler) Handle(parent pluggable.ContainingContext, tokens []pluggable.Token) pluggable.Interpreter {
+func (bch *blobCommandHandler) Handle(parent pluggable.AttachResult, tokens []pluggable.Token) pluggable.Interpreter {
 	if len(tokens) < 1 {
 		bch.tools.Reporter.Report(tokens[0].Loc().Offset, "blob <name>")
 		return interpreters.IgnoreInnerScope()
@@ -20,11 +20,11 @@ func (bch *blobCommandHandler) Handle(parent pluggable.ContainingContext, tokens
 		return interpreters.IgnoreInnerScope()
 	}
 
-	parent.Add(&createBlobAction{Locatable: tokens[0], expr: expr})
+	parent.Attach(&createBlobAction{Locatable: tokens[0], expr: expr})
 
 	return interpreters.DisallowInnerScope(bch.tools)
 }
 
-func NewBlobCommandHandler(tools *pluggable.Tools) pluggable.TargetCommand {
+func NewBlobCommandHandler(tools *pluggable.Tools) pluggable.VerbCommand {
 	return &blobCommandHandler{tools: tools}
 }

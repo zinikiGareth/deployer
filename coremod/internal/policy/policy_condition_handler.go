@@ -9,7 +9,7 @@ type policyConditionCommandHandler struct {
 	tools *pluggable.Tools
 }
 
-func (pah *policyConditionCommandHandler) Handle(parent pluggable.ContainingContext, tokens []pluggable.Token) pluggable.Interpreter {
+func (pah *policyConditionCommandHandler) Handle(parent pluggable.AttachResult, tokens []pluggable.Token) pluggable.Interpreter {
 	exprs, ok := pah.tools.Parser.ParseMultiple(tokens[1:])
 	if !ok {
 		return interpreters.IgnoreInnerScope()
@@ -22,11 +22,11 @@ func (pah *policyConditionCommandHandler) Handle(parent pluggable.ContainingCont
 	}
 
 	pa := &PolicyCondAction{tools: pah.tools, loc: tokens[0].Loc(), test: exprs[0], left: exprs[1], right: exprs[2]}
-	parent.Add(pa)
+	parent.Attach(pa)
 
 	return interpreters.DisallowInnerScope(pah.tools)
 }
 
-func NewPolicyConditionCommandHandler(tools *pluggable.Tools) pluggable.TargetCommand {
+func NewPolicyConditionCommandHandler(tools *pluggable.Tools) pluggable.VerbCommand {
 	return &policyConditionCommandHandler{tools: tools}
 }

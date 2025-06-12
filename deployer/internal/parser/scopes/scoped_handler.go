@@ -10,13 +10,13 @@ type ScopedHandlers struct {
 	tools *pluggable.Tools
 }
 
-func (sh *ScopedHandlers) FindTopCommand(v pluggable.Identifier) pluggable.TopCommand {
-	cmd := sh.tools.Recall.Find(reflect.TypeFor[pluggable.TopCommand](), v.Id())
+func (sh *ScopedHandlers) FindVerbCommand(v pluggable.Identifier) pluggable.VerbCommand {
+	cmd := sh.tools.Recall.Find(reflect.TypeFor[pluggable.VerbCommand](), v.Id())
 	if cmd == nil {
 		sh.tools.Reporter.Reportf(v.Loc().Offset, "there is no top-level command %s", v.Id())
 		return nil
 	}
-	tc, ok := cmd.(pluggable.TopCommand)
+	tc, ok := cmd.(pluggable.VerbCommand)
 	if !ok {
 		sh.tools.Reporter.Reportf(v.Loc().Offset, "%s: not a top-level command", v.Id())
 		return nil
