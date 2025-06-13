@@ -1,8 +1,6 @@
 package policy
 
 import (
-	"log"
-
 	"ziniki.org/deployer/coremod/pkg/external"
 	"ziniki.org/deployer/deployer/pkg/errorsink"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
@@ -71,18 +69,38 @@ func (paa *PolicyAllowAction) ApplyTo(doc external.PolicyDocument) {
 		panic("internal error")
 	}
 	actions := []string{}
+	resources := []string{}
+	principals := []string{}
 	for _, a := range paa.allowActions {
-		v := paa.tools.Storage.Eval(a)
-		log.Printf("a = %T %v %T %v\n", a, a, v, v)
+		// v := paa.tools.Storage.Eval(a)
+		// log.Printf("a = %T %v %T %v\n", a, a, v, v)
 		actions = append(actions, paa.tools.Storage.EvalAsString(a))
 	}
-	pd.items = append(pd.items, &policyItem{effect: "allow", actions: actions})
+	for _, r := range paa.allowResources {
+		// v := paa.tools.Storage.Eval(r)
+		// log.Printf("r = %T %v %T %v\n", r, r, v, v)
+		resources = append(resources, paa.tools.Storage.EvalAsString(r))
+	}
+	for _, p := range paa.allowPrincipals {
+		// v := paa.tools.Storage.Eval(r)
+		// log.Printf("r = %T %v %T %v\n", r, r, v, v)
+		principals = append(principals, paa.tools.Storage.EvalAsString(p))
+	}
+	pd.items = append(pd.items, &policyItem{effect: "Allow", actions: actions, resources: resources, principals: principals})
 }
 
 func (paa *PolicyAllowAction) Resolve(r pluggable.Resolver) pluggable.BindingRequirement {
 	for _, a := range paa.allowActions {
-		log.Printf("need to resolve %T %v\n", a, a)
+		// log.Printf("need to resolve %T %v\n", a, a)
 		a.Resolve(r)
+	}
+	for _, ar := range paa.allowResources {
+		// log.Printf("need to resolve %T %v\n", ar, ar)
+		ar.Resolve(r)
+	}
+	for _, ap := range paa.allowPrincipals {
+		// log.Printf("need to resolve %T %v\n", ap, ap)
+		ap.Resolve(r)
 	}
 	return pluggable.MAY_BE_BOUND
 }

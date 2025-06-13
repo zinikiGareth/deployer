@@ -2,7 +2,6 @@ package lexicator
 
 import (
 	"fmt"
-	"log"
 
 	"ziniki.org/deployer/deployer/pkg/errorsink"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
@@ -147,7 +146,7 @@ func (tok *StringToken) Resolve(r pluggable.Resolver) {
 }
 
 func (tok *StringToken) Eval(s pluggable.RuntimeStorage) any {
-	log.Printf("Eval(String) = %s\n", tok.Text())
+	// log.Printf("Eval(String) = %s\n", tok.Text())
 	return tok.text
 }
 

@@ -9,7 +9,9 @@ type PolicyEffect interface {
 	Effect() string
 	Actions() []string
 	Resources() []string
+	Principals() []string
 
 	Action(s string)
 	Resource(s string)
+	Principal(s string)
 }

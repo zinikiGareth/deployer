@@ -28,7 +28,7 @@ func (s *Searcher) Resolve(name pluggable.Identifier) pluggable.Describable {
 	// log.Printf("attempting to resolve %s\n", name)
 	defn := s.repo.GetDefinition(pluggable.SymbolName(name.Id()))
 	if defn != nil {
-		log.Printf("defn for %s => %T %v\n", name, defn, defn)
+		// log.Printf("defn for %s => %T %v\n", name, defn, defn)
 		return defn
 	}
 	ret, ok := s.recall.Find("blank", name.Id()).(pluggable.Describable)

@@ -3,7 +3,6 @@ package runtime
 import (
 	"fmt"
 	"io"
-	"log"
 
 	"ziniki.org/deployer/deployer/pkg/errorsink"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
@@ -23,12 +22,12 @@ func (s *Storage) Bind(v pluggable.Describable, value any) {
 }
 
 func (s *Storage) Get(v pluggable.Var) any {
-	log.Printf("have %v with %v\n", v, v.Binding())
+	// log.Printf("have %v with %v\n", v, v.Binding())
 	return s.runtime[v.Binding()]
 }
 
 func (s *Storage) Read(name pluggable.SymbolName) any {
-	log.Printf("read %v\n", name)
+	// log.Printf("read %v\n", name)
 	return s.repo.GetDefinition(name)
 }
 

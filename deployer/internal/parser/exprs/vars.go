@@ -19,7 +19,7 @@ func (a *VarReference) Resolve(r pluggable.Resolver) {
 }
 
 func (v *VarReference) Eval(s pluggable.RuntimeStorage) any {
-	log.Printf("Eval(vr) %s %v => %T %v\n", v.id, v, s.Get(v), s.Get(v))
+	// log.Printf("Eval(vr) %s %v => %T %v\n", v.id, v, s.Get(v), s.Get(v))
 	out := s.Get(v)
 	if out != nil {
 		return out
@@ -58,8 +58,8 @@ func (v *VarReference) Named() pluggable.Identifier {
 
 func (a *VarReference) Binding() pluggable.Describable {
 	if a.actualVar == nil {
-		panic("help!")
-		// log.Fatalf("var was not resolved: %s %s\n", a.id.Id(), a.id.Loc().String())
+		// panic("help!")
+		log.Fatalf("var was not resolved: %s %s\n", a.id.Id(), a.id.Loc().String())
 	}
 	return a.actualVar
 }

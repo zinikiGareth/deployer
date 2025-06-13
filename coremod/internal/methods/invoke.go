@@ -1,6 +1,7 @@
 package methods
 
 import (
+	"log"
 	"strings"
 
 	"ziniki.org/deployer/deployer/pkg/errorsink"
@@ -63,9 +64,12 @@ func (i *InvokeExpr) Eval(s pluggable.RuntimeStorage) any {
 	obj := i.on.Eval(s)
 	hm, ok := obj.(pluggable.HasMethods)
 	if !ok {
-		panic("we need to think about this since it's a <<runtime>> error")
+		log.Fatalf("Value for %v was %v which was not a HasMethods\n", i.on, obj)
 	}
 	meth := hm.ObtainMethod(i.call.Id())
+	if meth == nil {
+		log.Fatalf("No method %s on %v", i.call.Id(), i.on)
+	}
 	return meth.Invoke(s, i.on, i.args)
 }
 
