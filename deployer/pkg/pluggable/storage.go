@@ -1,6 +1,10 @@
 package pluggable
 
-import "ziniki.org/deployer/deployer/pkg/errorsink"
+import (
+	"io"
+
+	"ziniki.org/deployer/deployer/pkg/errorsink"
+)
 
 const (
 	BUILD_MODEL_MODE int = iota
@@ -15,6 +19,7 @@ type RuntimeStorage interface {
 	IsMode(mode int) bool
 	Eval(e Expr) any
 	EvalAsString(e Expr) string
+	DumpTo(w io.Writer)
 }
 
 type InitMe interface {

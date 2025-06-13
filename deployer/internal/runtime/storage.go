@@ -2,6 +2,7 @@ package runtime
 
 import (
 	"fmt"
+	"io"
 
 	"ziniki.org/deployer/deployer/pkg/errorsink"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
@@ -56,6 +57,14 @@ func (s *Storage) EvalAsString(e pluggable.Expr) string {
 	return fmt.Sprintf("%v", val)
 }
 
+func (s *Storage) DumpTo(w io.Writer) {
+	fmt.Fprintf(w, "#keys = %d\n", len(s.runtime))
+	for k, v := range s.runtime {
+		fmt.Fprintf(w, "  var %s = %v\n", k, v)
+	}
+}
+
 func NewRuntimeStorage(registry pluggable.Recall, sink errorsink.ErrorSink) pluggable.RuntimeStorage {
-	return &Storage{sink: sink, registry: registry, drivers: make(map[string]any), runtime: make(map[pluggable.Describable]any)}
+	ret := &Storage{sink: sink, registry: registry, drivers: make(map[string]any), runtime: make(map[pluggable.Describable]any)}
+	return ret
 }

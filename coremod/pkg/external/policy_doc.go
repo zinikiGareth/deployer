@@ -1,7 +1,6 @@
 package external
 
 type PolicyDocument interface {
-	Name() string
 	Item(s string) PolicyEffect
 	Items() []PolicyEffect
 }

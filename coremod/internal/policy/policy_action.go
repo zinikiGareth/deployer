@@ -8,15 +8,15 @@ import (
 type PolicyAction struct {
 	tools   *pluggable.Tools
 	loc     *errorsink.Location
-	actions []pluggable.Describable
-	// doc     external.PolicyDocument
+	actions []PolicyRuleAction
 }
 
-// This feels weird to me and I'm not sure what to do about it.
-// It's the "action" bit that seems wrong, when I expect to be assembling an object
-// But I think the thing is that we need the idea of "actions" to make the whole "pineal" model work
 func (pa *PolicyAction) Attach(entry any) {
-	pa.actions = append(pa.actions, entry.(pluggable.Describable))
+	a, ok := entry.(PolicyRuleAction)
+	if !ok {
+		panic("throw an error")
+	}
+	pa.actions = append(pa.actions, a)
 }
 
 func (pa *PolicyAction) Loc() *errorsink.Location {
@@ -42,10 +42,15 @@ func (pa *PolicyAction) Completed() {
 }
 
 func (pa *PolicyAction) Resolve(r pluggable.Resolver) pluggable.BindingRequirement {
-	// pa.doc = NewPolicyDocument(pa.loc)
-	// b.MustBind(pa.doc)
 	return pluggable.MUST_BE_BOUND
 }
 
 func (pa *PolicyAction) BuildModel(pres pluggable.ValuePresenter) {
+	doc := NewPolicyDocument(pa.loc)
+
+	for _, a := range pa.actions {
+		a.ApplyTo(doc)
+	}
+
+	pres.Present(doc)
 }

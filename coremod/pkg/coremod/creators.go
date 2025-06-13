@@ -6,6 +6,6 @@ import (
 	"ziniki.org/deployer/deployer/pkg/errorsink"
 )
 
-func NewPolicyDocument(loc *errorsink.Location, name string) external.PolicyDocument {
-	return policy.NewPolicyDocument(loc, name)
+func NewPolicyDocument(loc *errorsink.Location) external.PolicyDocument {
+	return policy.NewPolicyDocument(loc)
 }

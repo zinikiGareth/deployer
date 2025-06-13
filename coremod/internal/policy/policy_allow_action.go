@@ -1,9 +1,15 @@
 package policy
 
 import (
+	"ziniki.org/deployer/coremod/pkg/external"
 	"ziniki.org/deployer/deployer/pkg/errorsink"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
+
+type PolicyRuleAction interface {
+	pluggable.Describable
+	ApplyTo(doc external.PolicyDocument)
+}
 
 type PolicyAllowAction struct {
 	tools   *pluggable.Tools
@@ -54,6 +60,18 @@ func (paa *PolicyAllowAction) Completed() {
 
 func (paa *PolicyAllowAction) Attach(entry any) {
 	paa.actions = append(paa.actions, entry.(pluggable.Describable))
+}
+
+func (paa *PolicyAllowAction) ApplyTo(doc external.PolicyDocument) {
+	pd, ok := doc.(*policyDocument)
+	if !ok {
+		panic("internal error")
+	}
+	actions := []string{}
+	for _, a := range paa.allowActions {
+		actions = append(actions, paa.tools.Storage.EvalAsString(a))
+	}
+	pd.items = append(pd.items, &policyItem{effect: "allow", actions: actions})
 }
 
 func (paa *PolicyAllowAction) Resolve(r pluggable.Resolver) pluggable.BindingRequirement {
