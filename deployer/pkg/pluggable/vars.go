@@ -5,3 +5,7 @@ type Var interface {
 	Named() Identifier
 	Binding() Describable
 }
+
+type Holder interface {
+	Describable
+}

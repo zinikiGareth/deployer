@@ -42,6 +42,9 @@ func (pa *PolicyAction) Completed() {
 }
 
 func (pa *PolicyAction) Resolve(r pluggable.Resolver) pluggable.BindingRequirement {
+	for _, a := range pa.actions {
+		a.Resolve(r)
+	}
 	return pluggable.MUST_BE_BOUND
 }
 

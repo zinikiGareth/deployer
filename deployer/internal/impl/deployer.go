@@ -133,8 +133,8 @@ func (d *DeployerImpl) findTargets(names ...string) ([]pluggable.TargetThing, er
 func NewDeployer(sink errorsink.ErrorSink, userErrorsTo io.StringWriter) deployer.Deployer {
 	reg := registry.NewRegistry()
 	reporter := errorsink.NewErrorReporter(sink)
-	storage := runtime.NewRuntimeStorage(reg, sink)
 	repo := repo.NewRepository()
+	storage := runtime.NewRuntimeStorage(reg, repo, sink)
 	opts := pluggable.Options{}
 	tools := pluggable.NewTools(reporter, reg, reg, repo, storage, &opts)
 	reg.BindTools(tools)

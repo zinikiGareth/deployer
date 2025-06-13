@@ -14,6 +14,7 @@ const (
 type RuntimeStorage interface {
 	Bind(name Describable, value any)
 	Get(name Var) any
+	Read(name SymbolName) any
 	Errorf(loc *errorsink.Location, msg string, args ...any)
 	SetMode(mode int)
 	IsMode(mode int) bool

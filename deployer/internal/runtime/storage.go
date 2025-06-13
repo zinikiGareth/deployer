@@ -3,6 +3,7 @@ package runtime
 import (
 	"fmt"
 	"io"
+	"log"
 
 	"ziniki.org/deployer/deployer/pkg/errorsink"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
@@ -10,6 +11,7 @@ import (
 
 type Storage struct {
 	registry pluggable.Recall
+	repo     pluggable.Repository
 	sink     errorsink.ErrorSink
 	mode     int
 	drivers  map[string]any
@@ -21,7 +23,13 @@ func (s *Storage) Bind(v pluggable.Describable, value any) {
 }
 
 func (s *Storage) Get(v pluggable.Var) any {
+	log.Printf("have %v with %v\n", v, v.Binding())
 	return s.runtime[v.Binding()]
+}
+
+func (s *Storage) Read(name pluggable.SymbolName) any {
+	log.Printf("read %v\n", name)
+	return s.repo.GetDefinition(name)
 }
 
 func (s *Storage) Errorf(loc *errorsink.Location, msg string, args ...any) {
@@ -64,7 +72,7 @@ func (s *Storage) DumpTo(w io.Writer) {
 	}
 }
 
-func NewRuntimeStorage(registry pluggable.Recall, sink errorsink.ErrorSink) pluggable.RuntimeStorage {
-	ret := &Storage{sink: sink, registry: registry, drivers: make(map[string]any), runtime: make(map[pluggable.Describable]any)}
+func NewRuntimeStorage(registry pluggable.Recall, repo pluggable.Repository, sink errorsink.ErrorSink) pluggable.RuntimeStorage {
+	ret := &Storage{sink: sink, registry: registry, repo: repo, drivers: make(map[string]any), runtime: make(map[pluggable.Describable]any)}
 	return ret
 }

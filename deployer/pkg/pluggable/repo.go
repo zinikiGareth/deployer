@@ -13,6 +13,8 @@ type Repository interface {
 
 	ResolveAll(tools *Tools)
 	FindTop(name SymbolName) TopLevelForm
+
+	GetDefinition(id SymbolName) Describable
 }
 
 type Resolver interface {

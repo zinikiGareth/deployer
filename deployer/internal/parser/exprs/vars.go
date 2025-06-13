@@ -1,6 +1,7 @@
 package exprs
 
 import (
+	"fmt"
 	"log"
 
 	"ziniki.org/deployer/deployer/pkg/errorsink"
@@ -18,7 +19,16 @@ func (a *VarReference) Resolve(r pluggable.Resolver) {
 }
 
 func (v *VarReference) Eval(s pluggable.RuntimeStorage) any {
-	return s.Get(v)
+	log.Printf("Eval(vr) %s %v => %T %v\n", v.id, v, s.Get(v), s.Get(v))
+	out := s.Get(v)
+	if out != nil {
+		return out
+	}
+	out = s.Read(pluggable.SymbolName(v.id.Id()))
+	if out != nil {
+		return out
+	}
+	panic(fmt.Sprintf("cannot find %v\n", v))
 }
 
 func (v *VarReference) Loc() *errorsink.Location {
@@ -48,7 +58,8 @@ func (v *VarReference) Named() pluggable.Identifier {
 
 func (a *VarReference) Binding() pluggable.Describable {
 	if a.actualVar == nil {
-		log.Fatalf("var was not resolved: %s %s\n", a.id.Id(), a.id.Loc().String())
+		panic("help!")
+		// log.Fatalf("var was not resolved: %s %s\n", a.id.Id(), a.id.Loc().String())
 	}
 	return a.actualVar
 }

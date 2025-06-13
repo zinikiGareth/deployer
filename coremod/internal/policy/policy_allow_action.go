@@ -1,6 +1,8 @@
 package policy
 
 import (
+	"log"
+
 	"ziniki.org/deployer/coremod/pkg/external"
 	"ziniki.org/deployer/deployer/pkg/errorsink"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
@@ -8,6 +10,7 @@ import (
 
 type PolicyRuleAction interface {
 	pluggable.Describable
+	Resolve(r pluggable.Resolver) pluggable.BindingRequirement
 	ApplyTo(doc external.PolicyDocument)
 }
 
@@ -69,12 +72,18 @@ func (paa *PolicyAllowAction) ApplyTo(doc external.PolicyDocument) {
 	}
 	actions := []string{}
 	for _, a := range paa.allowActions {
+		v := paa.tools.Storage.Eval(a)
+		log.Printf("a = %T %v %T %v\n", a, a, v, v)
 		actions = append(actions, paa.tools.Storage.EvalAsString(a))
 	}
 	pd.items = append(pd.items, &policyItem{effect: "allow", actions: actions})
 }
 
 func (paa *PolicyAllowAction) Resolve(r pluggable.Resolver) pluggable.BindingRequirement {
+	for _, a := range paa.allowActions {
+		log.Printf("need to resolve %T %v\n", a, a)
+		a.Resolve(r)
+	}
 	return pluggable.MAY_BE_BOUND
 }
 
