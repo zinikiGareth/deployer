@@ -10,8 +10,8 @@
 #       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
 >		policy => allow_one_policy
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
->			allow "action" "resource" "principal"
-#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>			allow "action" "resource"
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
 >				condition aws.cond.StringEquals "AWS:SourceArn" (cloudfront->arn)
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
 >

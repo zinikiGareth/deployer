@@ -9,5 +9,5 @@ Note that this is entirely in memory: you need to "ensure" it somewhere or attac
 
 	target createAPolicyAllowingOneThing
 		policy => allow_one_policy
-			allow "action" "resource" "principal"
+			allow "action" "resource"
 		

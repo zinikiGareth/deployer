@@ -1,0 +1,3 @@
+allow-with-principal.dply:
+5.7 createAPolicyWithAPrincipal
+6.10 allow_one_policy

@@ -15,12 +15,12 @@ func (pah *policyAllowCommandHandler) Handle(parent pluggable.AttachResult, toke
 		return interpreters.NewIgnoreInnerScope()
 	}
 
-	if len(exprs) > 3 {
-		pah.tools.Reporter.Report(tokens[0].Loc().Offset, "allow: <action> <resource> <principal>")
+	if len(exprs) > 2 {
+		pah.tools.Reporter.Report(tokens[0].Loc().Offset, "allow: <action> <resource>")
 		return interpreters.NewIgnoreInnerScope()
 	}
 
-	pa := &PolicyAllowAction{tools: pah.tools, loc: tokens[0].Loc(), allowActions: []pluggable.Expr{exprs[0]}, allowResources: []pluggable.Expr{exprs[1]}, allowPrincipals: []pluggable.Expr{exprs[2]}}
+	pa := &PolicyAllowAction{tools: pah.tools, loc: tokens[0].Loc(), allowActions: []pluggable.Expr{exprs[0]}, allowResources: []pluggable.Expr{exprs[1]}}
 	parent.Attach(pa)
 
 	return interpreters.NewVerbCommandInterpreter(pah.tools, pa, "policy-inner", false)

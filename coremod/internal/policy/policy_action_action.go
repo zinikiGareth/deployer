@@ -1,0 +1,55 @@
+package policy
+
+import (
+	"fmt"
+
+	"ziniki.org/deployer/deployer/pkg/errorsink"
+	"ziniki.org/deployer/deployer/pkg/pluggable"
+)
+
+type policyAction struct {
+	tools *pluggable.Tools
+	loc   *errorsink.Location
+
+	exprs []pluggable.Expr
+}
+
+func (pca *policyAction) Loc() *errorsink.Location {
+	return pca.loc
+}
+
+func (pca *policyAction) DumpTo(w pluggable.IndentWriter) {
+	w.Intro("policyAction")
+	w.AttrsWhere(pca)
+	w.ListAttr("exprs")
+	for _, e := range pca.exprs {
+		e.DumpTo(w)
+	}
+	w.EndList()
+	w.EndAttrs()
+}
+
+func (pca *policyAction) ShortDescription() string {
+	return fmt.Sprintf("policyAction[%d]", len(pca.exprs))
+}
+
+func (pca *policyAction) Completed() {
+}
+
+func (pca *policyAction) Resolve(r pluggable.Resolver) pluggable.BindingRequirement {
+	for _, a := range pca.exprs {
+		a.Resolve(r)
+	}
+	return pluggable.MAY_BE_BOUND
+}
+
+func (pca *policyAction) BuildModel(pres pluggable.ValuePresenter) {
+}
+
+func (pca *policyAction) ApplyTo(pi *policyItem) {
+	for _, a := range pca.exprs {
+		pi.actions = append(pi.actions, pca.tools.Storage.EvalAsString(a))
+	}
+}
+
+var _ UpdatePolicyAllowAction = &policyAction{}

@@ -65,7 +65,9 @@ I also think it's reasonable, given that we need this, that it all happens in on
 I think I want a "cloudfront" step at this point, quite apart from the fact that I want to build one.
 
 		policy => cloudfront_policy
-			allow aws.action.S3.GetObject (consolidator_bucket->allResources) aws.principal.CloudFront
+			allow aws.action.S3.GetObject (consolidator_bucket->allResources)
+				action aws.action.S3.PutObject
+				principal aws.principal.Service aws.principal.CloudFront
 				condition aws.cond.StringEquals "AWS:SourceArn" (cloudfront->arn)
 
 		ensure aws.IAM.Policy "allow-cloudfront-to-access-bucket"

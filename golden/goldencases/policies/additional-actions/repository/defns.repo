@@ -1,0 +1,46 @@
+symbol allow_one_policy is bound to:
+VarHolder {
+	_where_: second-action.dply:6.10
+	storeFor: allow_one_policy
+}
+symbol createAPolicyWithANestedAction is bound to:
+target createAPolicyWithANestedAction {
+	_where_: second-action.dply:5.7
+	actions: [
+		AssignTo {
+			_where_: second-action.dply:6.10
+			assignTo: allow_one_policy
+			PolicyAction {
+				_where_: second-action.dply:6.0
+				actions: [
+					PolicyAllowAction {
+						_where_: second-action.dply:7.0
+						allowActions: [
+							String {
+								_where_: second-action.dply:7.7
+								"action"
+							}
+						]
+						allowResources: [
+							String {
+								_where_: second-action.dply:7.16
+								"resource"
+							}
+						]
+						actions: [
+							policyAction {
+								_where_: second-action.dply:8.0
+								exprs: [
+									String {
+										_where_: second-action.dply:8.8
+										"other"
+									}
+								]
+							}
+						]
+					}
+				]
+			}
+		}
+	]
+}

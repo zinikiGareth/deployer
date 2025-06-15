@@ -6,20 +6,20 @@ import (
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
-type PolicyRuleAction interface {
+// Is probably more general than this, but who knows?
+type UpdatePolicyAllowAction interface {
 	pluggable.Describable
 	Resolve(r pluggable.Resolver) pluggable.BindingRequirement
-	ApplyTo(doc external.PolicyDocument)
+	ApplyTo(doc *policyItem)
 }
 
 type PolicyAllowAction struct {
 	tools   *pluggable.Tools
 	loc     *errorsink.Location
-	actions []pluggable.Describable
+	actions []UpdatePolicyAllowAction
 
-	allowActions    []pluggable.Expr
-	allowResources  []pluggable.Expr
-	allowPrincipals []pluggable.Expr
+	allowActions   []pluggable.Expr
+	allowResources []pluggable.Expr
 }
 
 func (paa *PolicyAllowAction) Loc() *errorsink.Location {
@@ -39,11 +39,6 @@ func (paa *PolicyAllowAction) DumpTo(w pluggable.IndentWriter) {
 		a.DumpTo(w)
 	}
 	w.EndList()
-	w.ListAttr("allowPrincipals")
-	for _, a := range paa.allowPrincipals {
-		a.DumpTo(w)
-	}
-	w.EndList()
 	w.ListAttr("actions")
 	for _, a := range paa.actions {
 		a.DumpTo(w)
@@ -60,7 +55,7 @@ func (paa *PolicyAllowAction) Completed() {
 }
 
 func (paa *PolicyAllowAction) Attach(entry any) {
-	paa.actions = append(paa.actions, entry.(pluggable.Describable))
+	paa.actions = append(paa.actions, entry.(UpdatePolicyAllowAction))
 }
 
 func (paa *PolicyAllowAction) ApplyTo(doc external.PolicyDocument) {
@@ -70,7 +65,6 @@ func (paa *PolicyAllowAction) ApplyTo(doc external.PolicyDocument) {
 	}
 	actions := []string{}
 	resources := []string{}
-	principals := []string{}
 	for _, a := range paa.allowActions {
 		// v := paa.tools.Storage.Eval(a)
 		// log.Printf("a = %T %v %T %v\n", a, a, v, v)
@@ -81,15 +75,18 @@ func (paa *PolicyAllowAction) ApplyTo(doc external.PolicyDocument) {
 		// log.Printf("r = %T %v %T %v\n", r, r, v, v)
 		resources = append(resources, paa.tools.Storage.EvalAsString(r))
 	}
-	for _, p := range paa.allowPrincipals {
-		// v := paa.tools.Storage.Eval(r)
-		// log.Printf("r = %T %v %T %v\n", r, r, v, v)
-		principals = append(principals, paa.tools.Storage.EvalAsString(p))
+	item := &policyItem{effect: "Allow", actions: actions, resources: resources}
+	pd.items = append(pd.items, item)
+
+	for _, aa := range paa.actions {
+		aa.ApplyTo(item)
 	}
-	pd.items = append(pd.items, &policyItem{effect: "Allow", actions: actions, resources: resources, principals: principals})
 }
 
 func (paa *PolicyAllowAction) Resolve(r pluggable.Resolver) pluggable.BindingRequirement {
+	for _, a := range paa.actions {
+		a.Resolve(r)
+	}
 	for _, a := range paa.allowActions {
 		// log.Printf("need to resolve %T %v\n", a, a)
 		a.Resolve(r)
@@ -97,10 +94,6 @@ func (paa *PolicyAllowAction) Resolve(r pluggable.Resolver) pluggable.BindingReq
 	for _, ar := range paa.allowResources {
 		// log.Printf("need to resolve %T %v\n", ar, ar)
 		ar.Resolve(r)
-	}
-	for _, ap := range paa.allowPrincipals {
-		// log.Printf("need to resolve %T %v\n", ap, ap)
-		ap.Resolve(r)
 	}
 	return pluggable.MAY_BE_BOUND
 }

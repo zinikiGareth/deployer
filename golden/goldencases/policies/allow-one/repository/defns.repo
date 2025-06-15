@@ -27,12 +27,6 @@ target createAPolicyAllowingOneThing {
 								"resource"
 							}
 						]
-						allowPrincipals: [
-							String {
-								_where_: allow-one.dply:12.27
-								"principal"
-							}
-						]
 						actions: [
 						]
 					}

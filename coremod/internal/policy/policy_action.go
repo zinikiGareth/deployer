@@ -1,9 +1,16 @@
 package policy
 
 import (
+	"ziniki.org/deployer/coremod/pkg/external"
 	"ziniki.org/deployer/deployer/pkg/errorsink"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
+
+type PolicyRuleAction interface {
+	pluggable.Describable
+	Resolve(r pluggable.Resolver) pluggable.BindingRequirement
+	ApplyTo(doc external.PolicyDocument)
+}
 
 type PolicyAction struct {
 	tools   *pluggable.Tools

@@ -3,6 +3,7 @@ package runner
 import (
 	"fmt"
 	"log"
+	"os"
 	"path/filepath"
 	"plugin"
 	"strings"
@@ -30,6 +31,13 @@ func (r *TestRunner) Run(modules []string) {
 	err := r.Setup(modules)
 	if err != nil {
 		fmt.Printf("Error during setup: %v\n", err)
+		return
+	}
+
+	ignoreFile := filepath.Join(r.scripts, "ignore")
+	_, err = os.Stat(ignoreFile)
+	if err == nil {
+		log.Printf("ignoring test in %s\n", r.scripts)
 		return
 	}
 

@@ -1,0 +1,9 @@
+An allow action generally has an action and a resource on the "command line"
+
+If you want more than one action, add them later
+
+	target createAPolicyWithANestedAction
+		policy => allow_one_policy
+			allow "action" "resource"
+				action "other"
+		

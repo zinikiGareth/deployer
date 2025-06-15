@@ -23,3 +23,5 @@ copy-files
 policies/empty
 policies/allow-one
 policies/allow-condition
+policies/with-principal
+policies/additional-actions

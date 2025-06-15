@@ -1,0 +1,9 @@
+Principals in AWS are key/value pairs such as "AWS: id" or "Service: cloudfront"
+
+We have them as inner blocks in the allow; you can have zero, one or more than one
+
+	target createAPolicyWithAPrincipal
+		policy => allow_one_policy
+			allow "action" "resource"
+				principal "Service" "cloudfront"
+		

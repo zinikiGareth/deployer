@@ -1,0 +1,50 @@
+symbol allow_one_policy is bound to:
+VarHolder {
+	_where_: allow-with-principal.dply:6.10
+	storeFor: allow_one_policy
+}
+symbol createAPolicyWithAPrincipal is bound to:
+target createAPolicyWithAPrincipal {
+	_where_: allow-with-principal.dply:5.7
+	actions: [
+		AssignTo {
+			_where_: allow-with-principal.dply:6.10
+			assignTo: allow_one_policy
+			PolicyAction {
+				_where_: allow-with-principal.dply:6.0
+				actions: [
+					PolicyAllowAction {
+						_where_: allow-with-principal.dply:7.0
+						allowActions: [
+							String {
+								_where_: allow-with-principal.dply:7.7
+								"action"
+							}
+						]
+						allowResources: [
+							String {
+								_where_: allow-with-principal.dply:7.16
+								"resource"
+							}
+						]
+						actions: [
+							policyPrincipalAction {
+								_where_: allow-with-principal.dply:8.0
+								type:
+									String {
+										_where_: allow-with-principal.dply:8.11
+										"Service"
+									}
+								id:
+									String {
+										_where_: allow-with-principal.dply:8.21
+										"cloudfront"
+									}
+							}
+						]
+					}
+				]
+			}
+		}
+	]
+}

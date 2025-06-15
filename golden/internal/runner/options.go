@@ -7,10 +7,7 @@ import (
 func (r *TestRunner) ReadTeardown(file string) bool {
 	_, err := utils.FileAsLines(file)
 
-	if err != nil {
-		return false
-	}
-	return true
+	return err == nil
 }
 
 func (r *TestRunner) SetTearDown(b bool) {

@@ -57,7 +57,9 @@ func RegisterWithDeployer(deployer deployer.Deployer) error {
 	tools.Register.Register("target", "policy", policy.NewPolicyCommandHandler(tools))
 
 	tools.Register.Register("policy-statements", "allow", policy.NewPolicyAllowCommandHandler(tools))
+	tools.Register.Register("policy-inner", "action", policy.NewPolicyActionCommandHandler(tools))
 	tools.Register.Register("policy-inner", "condition", policy.NewPolicyConditionCommandHandler(tools))
+	tools.Register.Register("policy-inner", "principal", policy.NewPolicyPrincipalCommandHandler(tools))
 
 	// functions
 	tools.Register.Register("function-defn", "->", methods.MakeInvokeFunc(tools))

@@ -46,3 +46,8 @@ func (pca *PolicyCondAction) Resolve(r pluggable.Resolver) pluggable.BindingRequ
 
 func (pca *PolicyCondAction) BuildModel(pres pluggable.ValuePresenter) {
 }
+
+func (pca *PolicyCondAction) ApplyTo(pi *policyItem) {
+}
+
+var _ UpdatePolicyAllowAction = &PolicyCondAction{}

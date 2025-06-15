@@ -1,0 +1,17 @@
+>An allow action generally has an action and a resource on the "command line"
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
+>
+>If you want more than one action, add them later
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
+>
+>	target createAPolicyWithANestedAction
+#^ source.deployer-dply
+# ^^^^^^ source.deployer-dply keyword.target
+#       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>		policy => allow_one_policy
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>			allow "action" "resource"
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>				action "other"
+#^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>		

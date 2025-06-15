@@ -27,12 +27,6 @@ target createAPolicyAllowingOneThingConditionally {
 								"resource"
 							}
 						]
-						allowPrincipals: [
-							String {
-								_where_: allow-cond.dply:7.27
-								"principal"
-							}
-						]
 						actions: [
 							PolicyCondAction {
 								_where_: allow-cond.dply:8.0
