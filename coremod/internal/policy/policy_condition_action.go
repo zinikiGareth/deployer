@@ -1,14 +1,14 @@
 package policy
 
 import (
+	"ziniki.org/deployer/coremod/pkg/external"
 	"ziniki.org/deployer/deployer/pkg/errorsink"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
 type PolicyCondAction struct {
-	tools   *pluggable.Tools
-	loc     *errorsink.Location
-	actions []pluggable.ModelBuilder
+	tools *pluggable.Tools
+	loc   *errorsink.Location
 
 	test  pluggable.Expr
 	left  pluggable.Expr
@@ -25,11 +25,6 @@ func (pca *PolicyCondAction) DumpTo(w pluggable.IndentWriter) {
 	w.NestedAttr("test", pca.test)
 	w.NestedAttr("left", pca.left)
 	w.NestedAttr("right", pca.right)
-	w.ListAttr("actions")
-	for _, a := range pca.actions {
-		a.DumpTo(w)
-	}
-	w.EndList()
 	w.EndAttrs()
 }
 
@@ -41,13 +36,24 @@ func (pca *PolicyCondAction) Completed() {
 }
 
 func (pca *PolicyCondAction) Resolve(r pluggable.Resolver) pluggable.BindingRequirement {
+	pca.test.Resolve(r)
+	pca.left.Resolve(r)
+	pca.right.Resolve(r)
 	return pluggable.MAY_BE_BOUND
 }
 
 func (pca *PolicyCondAction) BuildModel(pres pluggable.ValuePresenter) {
 }
 
-func (pca *PolicyCondAction) ApplyTo(pi *policyItem) {
+func (pca *PolicyCondAction) ApplyTo(pi external.PolicyEffect) {
+	test := pca.tools.Storage.EvalAsString(pca.test)
+	left := pca.tools.Storage.EvalAsString(pca.left)
+	right := pca.tools.Storage.Eval(pca.right)
+	expr := map[string]any{}
+	expr[left] = right
+	cond := map[string]any{}
+	cond[test] = expr
+	pi.AMore("Condition", cond)
 }
 
 var _ UpdatePolicyAllowAction = &PolicyCondAction{}

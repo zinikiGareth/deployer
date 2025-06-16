@@ -64,7 +64,7 @@ func (i *InvokeExpr) Eval(s pluggable.RuntimeStorage) any {
 	obj := i.on.Eval(s)
 	hm, ok := obj.(pluggable.HasMethods)
 	if !ok {
-		log.Fatalf("Value for %v was %v which was not a HasMethods\n", i.on, obj)
+		log.Fatalf("Value for %v was of type %T which was not a HasMethods\n", i.on, obj)
 	}
 	meth := hm.ObtainMethod(i.call.Id())
 	if meth == nil {

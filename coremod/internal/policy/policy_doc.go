@@ -34,7 +34,7 @@ func (p *policyDocument) ShortDescription() string {
 // }
 
 func (p *policyDocument) Item(effect string) external.PolicyEffect {
-	ret := &policyItem{effect: effect}
+	ret := &policyItem{effect: effect, more: make(map[string][]any)}
 	p.items = append(p.items, ret)
 	return ret
 }

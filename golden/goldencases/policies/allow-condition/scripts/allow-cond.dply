@@ -5,4 +5,4 @@ We can support this by offering the "condition" verb within an allow or deny
 	target createAPolicyAllowingOneThingConditionally
 		policy => allow_one_policy
 			allow "action" "resource"
-				condition aws.cond.StringEquals "AWS:SourceArn" (cloudfront->arn)
+				condition "StringEquals" "AWS:SourceArn" "46"

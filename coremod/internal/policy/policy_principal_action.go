@@ -1,6 +1,7 @@
 package policy
 
 import (
+	"ziniki.org/deployer/coremod/pkg/external"
 	"ziniki.org/deployer/deployer/pkg/errorsink"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
@@ -41,8 +42,8 @@ func (pca *policyPrincipalAction) Resolve(r pluggable.Resolver) pluggable.Bindin
 func (pca *policyPrincipalAction) BuildModel(pres pluggable.ValuePresenter) {
 }
 
-func (pca *policyPrincipalAction) ApplyTo(pi *policyItem) {
-	pi.principals = append(pi.principals, NewPrincipal(pca.tools.Storage.EvalAsString(pca.ofType), pca.tools.Storage.EvalAsString(pca.id)))
+func (pca *policyPrincipalAction) ApplyTo(pi external.PolicyEffect) {
+	pi.Principal(NewPrincipal(pca.tools.Storage.EvalAsString(pca.ofType), pca.tools.Storage.EvalAsString(pca.id)))
 }
 
 var _ UpdatePolicyAllowAction = &policyPrincipalAction{}

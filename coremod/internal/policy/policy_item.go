@@ -7,6 +7,7 @@ type policyItem struct {
 	actions    []string
 	resources  []string
 	principals []external.PolicyPrincipal
+	more       map[string][]any
 }
 
 func (pi *policyItem) Effect() string {
@@ -25,6 +26,13 @@ func (pi *policyItem) Principal(principal external.PolicyPrincipal) {
 	pi.principals = append(pi.principals, principal)
 }
 
+func (pi *policyItem) AMore(key string, value any) {
+	if pi.more[key] == nil {
+		pi.more[key] = []any{}
+	}
+	pi.more[key] = append(pi.more[key], value)
+}
+
 func (pi *policyItem) Actions() []string {
 	return pi.actions
 }
@@ -35,4 +43,8 @@ func (pi *policyItem) Resources() []string {
 
 func (pi *policyItem) Principals() []external.PolicyPrincipal {
 	return pi.principals
+}
+
+func (pi *policyItem) More() map[string][]any {
+	return pi.more
 }

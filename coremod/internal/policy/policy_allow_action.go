@@ -10,7 +10,7 @@ import (
 type UpdatePolicyAllowAction interface {
 	pluggable.Describable
 	Resolve(r pluggable.Resolver) pluggable.BindingRequirement
-	ApplyTo(doc *policyItem)
+	ApplyTo(doc external.PolicyEffect)
 }
 
 type PolicyAllowAction struct {
@@ -59,24 +59,13 @@ func (paa *PolicyAllowAction) Attach(entry any) {
 }
 
 func (paa *PolicyAllowAction) ApplyTo(doc external.PolicyDocument) {
-	pd, ok := doc.(*policyDocument)
-	if !ok {
-		panic("internal error")
-	}
-	actions := []string{}
-	resources := []string{}
+	item := doc.Item("Allow")
 	for _, a := range paa.allowActions {
-		// v := paa.tools.Storage.Eval(a)
-		// log.Printf("a = %T %v %T %v\n", a, a, v, v)
-		actions = append(actions, paa.tools.Storage.EvalAsString(a))
+		item.Action(paa.tools.Storage.EvalAsString(a))
 	}
 	for _, r := range paa.allowResources {
-		// v := paa.tools.Storage.Eval(r)
-		// log.Printf("r = %T %v %T %v\n", r, r, v, v)
-		resources = append(resources, paa.tools.Storage.EvalAsString(r))
+		item.Resource(paa.tools.Storage.EvalAsString(r))
 	}
-	item := &policyItem{effect: "Allow", actions: actions, resources: resources}
-	pd.items = append(pd.items, item)
 
 	for _, aa := range paa.actions {
 		aa.ApplyTo(item)

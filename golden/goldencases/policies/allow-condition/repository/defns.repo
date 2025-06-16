@@ -31,31 +31,20 @@ target createAPolicyAllowingOneThingConditionally {
 							PolicyCondAction {
 								_where_: allow-cond.dply:8.0
 								test:
-									Var allow-cond.dply:8.10 aws.cond.StringEquals {
-										_where_: allow-cond.dply:8.10
+									String {
+										_where_: allow-cond.dply:8.11
+										"StringEquals"
 									}
 								left:
 									String {
-										_where_: allow-cond.dply:8.33
+										_where_: allow-cond.dply:8.26
 										"AWS:SourceArn"
 									}
 								right:
-									Invoke {
-										_where_: allow-cond.dply:8.59
-										on:
-											Var allow-cond.dply:8.49 cloudfront {
-												_where_: allow-cond.dply:8.49
-											}
-										meth:
-											Identifier {
-												_where_: allow-cond.dply:8.61
-												"arn"
-											}
-										args: [
-										]
+									String {
+										_where_: allow-cond.dply:8.42
+										"46"
 									}
-								actions: [
-								]
 							}
 						]
 					}

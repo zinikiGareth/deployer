@@ -3,6 +3,7 @@ package policy
 import (
 	"fmt"
 
+	"ziniki.org/deployer/coremod/pkg/external"
 	"ziniki.org/deployer/deployer/pkg/errorsink"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
@@ -46,9 +47,9 @@ func (pca *policyAction) Resolve(r pluggable.Resolver) pluggable.BindingRequirem
 func (pca *policyAction) BuildModel(pres pluggable.ValuePresenter) {
 }
 
-func (pca *policyAction) ApplyTo(pi *policyItem) {
+func (pca *policyAction) ApplyTo(pi external.PolicyEffect) {
 	for _, a := range pca.exprs {
-		pi.actions = append(pi.actions, pca.tools.Storage.EvalAsString(a))
+		pi.Action(pca.tools.Storage.EvalAsString(a))
 	}
 }
 

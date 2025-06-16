@@ -10,10 +10,12 @@ type PolicyEffect interface {
 	Actions() []string
 	Resources() []string
 	Principals() []PolicyPrincipal
+	More() map[string][]any
 
 	Action(s string)
 	Resource(s string)
 	Principal(s PolicyPrincipal)
+	AMore(key string, value any)
 }
 
 type PolicyPrincipal interface {

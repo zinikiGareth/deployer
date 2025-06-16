@@ -12,6 +12,6 @@
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
 >			allow "action" "resource"
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
->				condition aws.cond.StringEquals "AWS:SourceArn" (cloudfront->arn)
-#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>				condition "StringEquals" "AWS:SourceArn" "46"
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
 >
