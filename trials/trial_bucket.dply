@@ -56,6 +56,8 @@ site from the bucket we created earlier.
 
 		ensure aws.CloudFront.Distribution "for-consolidator-news" => cloudfront
 			@teardown delete
+			Certificate <- cert->arn
+			Domain <- "www.consolidator.news"
 
 In order to use the bucket with cloudfront, we need to say that we have a policy in place on the bucket
 I think it's reasonable to do this in two steps; I think it may also be reasonable to allow it to be done
