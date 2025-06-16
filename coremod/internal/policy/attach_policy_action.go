@@ -79,7 +79,6 @@ func (ea *AttachPolicyAction) BuildModel(pres pluggable.ValuePresenter) {
 	if !ok {
 		log.Fatalf("%T was not a policy", policy)
 	}
-	fmt.Printf("have %T %T\n", attacher, isPolicy)
 	ea.attachTo = attacher
 	ea.actualPolicy = isPolicy
 }

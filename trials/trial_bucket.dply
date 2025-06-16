@@ -47,6 +47,10 @@ a specific "certificate" verb.  The big clue is in the duplication.
 			SubjectAlternativeNames <- "consolidator.news" // The apex node
 			ValidationMethod <- "DNS"
 
+// TODO: it should be possible to do the same thing with other DNS providers
+// eg. Dreamhost
+// https://api.dreamhost.com/?key=1A2B3C4D5E6F7G8H&cmd=dns-add_record&record=example.com&type=TXT&value=test123
+
 Now we are in a position to set up our cloudfront distribution, which will serve content on the named
 site from the bucket we created earlier.
 
@@ -80,3 +84,10 @@ It needs to be explicitly attached to the bucket.  I'm not sure how general we c
 but I'm going to give it a go and say "why not completely general?" and "why not really simple?"
 
 		attachPolicy consolidator_bucket cloudfront_policy
+
+Then we need to bind the CNAME(s) and/or aliases that we want to use to the cloudfront domain name
+
+		ensure aws.Route53.CNAME "www.consolidator.news"
+			@teardown delete
+			PointsTo <- (cloudfront->domainName)
+			Zone <- domain->zoneId
