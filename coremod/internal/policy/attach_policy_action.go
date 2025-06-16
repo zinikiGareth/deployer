@@ -1,0 +1,93 @@
+package policy
+
+import (
+	"fmt"
+	"log"
+
+	"ziniki.org/deployer/coremod/pkg/external"
+	"ziniki.org/deployer/deployer/pkg/errorsink"
+	"ziniki.org/deployer/deployer/pkg/interpreters"
+	"ziniki.org/deployer/deployer/pkg/pluggable"
+)
+
+// The action is created by the handler.  It is added to a target.  It then takes on the rest of the work:
+// resolution, preparation, execution
+
+type AttachPolicyAction struct {
+	tools  *pluggable.Tools
+	loc    *errorsink.Location
+	to     pluggable.Expr
+	policy pluggable.Expr
+
+	attachTo     external.PolicyAttacher
+	actualPolicy external.PolicyDocument
+}
+
+func (ea *AttachPolicyAction) Loc() *errorsink.Location {
+	return ea.loc
+}
+
+func (ea *AttachPolicyAction) DumpTo(w pluggable.IndentWriter) {
+	w.Intro("AttachPolicyAction")
+	w.AttrsWhere(ea)
+	w.NestedAttr("to", ea.to)
+	w.NestedAttr("policy", ea.policy)
+	w.EndAttrs()
+}
+
+func (ea *AttachPolicyAction) ShortDescription() string {
+	return fmt.Sprintf("AttachPolicy[%s: %s]", ea.to.ShortDescription(), ea.policy.ShortDescription())
+}
+
+func (ea *AttachPolicyAction) AddProperty(name pluggable.Identifier, value pluggable.Expr) {
+}
+
+func (ea *AttachPolicyAction) AddAdverb(adv pluggable.Adverb, tokens []pluggable.Token) pluggable.Interpreter {
+	/*
+		if adv.Name() == "teardown" {
+			if ea.teardown != nil {
+				panic("duplicate teardown")
+			}
+			if len(tokens) != 1 {
+				panic("invalid tokens")
+			}
+			ea.teardown = &MyTearDown{mode: tokens[0].(pluggable.Identifier).Id()}
+
+		}
+	*/
+	return interpreters.NewDisallowInnerScope(ea.tools)
+}
+
+func (ea *AttachPolicyAction) Completed() {
+}
+
+func (ea *AttachPolicyAction) Resolve(r pluggable.Resolver) pluggable.BindingRequirement {
+	ea.to.Resolve(r)
+	ea.policy.Resolve(r)
+	return pluggable.NO_VALUE
+}
+
+func (ea *AttachPolicyAction) BuildModel(pres pluggable.ValuePresenter) {
+	attachTo := ea.to.Eval(ea.tools.Storage)
+	policy := ea.policy.Eval(ea.tools.Storage)
+
+	attacher, ok := attachTo.(external.PolicyAttacher)
+	if !ok {
+		log.Fatalf("cannot attach things to %T", attachTo)
+	}
+	isPolicy, ok := policy.(external.PolicyDocument)
+	if !ok {
+		log.Fatalf("%T was not a policy", policy)
+	}
+	fmt.Printf("have %T %T\n", attacher, isPolicy)
+	ea.attachTo = attacher
+	ea.actualPolicy = isPolicy
+}
+
+func (ea *AttachPolicyAction) UpdateReality() {
+	ea.attachTo.Attach(ea.actualPolicy)
+}
+
+func (ea *AttachPolicyAction) TearDown() {
+	// ea.ens.TearDown()
+}

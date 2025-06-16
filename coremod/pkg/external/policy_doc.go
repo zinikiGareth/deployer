@@ -22,3 +22,7 @@ type PolicyPrincipal interface {
 	Key() string
 	Value() string
 }
+
+type PolicyAttacher interface {
+	Attach(policy PolicyDocument)
+}

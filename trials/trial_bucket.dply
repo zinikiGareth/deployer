@@ -70,6 +70,13 @@ I think I want a "cloudfront" step at this point, quite apart from the fact that
 				principal aws.principal.Service aws.principal.CloudFront
 				condition aws.cond.StringEquals aws.SourceArn (cloudfront->arn)
 
-		ensure aws.IAM.Policy "allow-cloudfront-to-access-bucket"
-			@teardown delete
-			Policy <- cloudfront_policy
+You might think (as I did) that you can just "create" this policy, but not so.
+
+//		ensure aws.IAM.Policy "AllowCloudfrontToAccessBucket"
+//			@teardown delete
+//			Policy <- cloudfront_policy
+
+It needs to be explicitly attached to the bucket.  I'm not sure how general we can make this concept,
+but I'm going to give it a go and say "why not completely general?" and "why not really simple?"
+
+		attachPolicy consolidator_bucket cloudfront_policy

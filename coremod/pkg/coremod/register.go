@@ -55,6 +55,7 @@ func RegisterWithDeployer(deployer deployer.Deployer) error {
 	tools.Register.Register("target", "files.copy", files.NewCopyCommandHandler(tools))
 
 	tools.Register.Register("target", "policy", policy.NewPolicyCommandHandler(tools))
+	tools.Register.Register("target", "attachPolicy", policy.NewAttachPolicyCommandHandler(tools))
 
 	tools.Register.Register("policy-statements", "allow", policy.NewPolicyAllowCommandHandler(tools))
 	tools.Register.Register("policy-inner", "action", policy.NewPolicyActionCommandHandler(tools))
