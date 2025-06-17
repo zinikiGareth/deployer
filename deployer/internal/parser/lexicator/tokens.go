@@ -76,7 +76,7 @@ func (tok *NumberToken) Resolve(r pluggable.Resolver) {
 }
 
 func (tok *NumberToken) Eval(s pluggable.RuntimeStorage) any {
-	return tok
+	return tok.Value()
 }
 
 func (t *NumberToken) ShortDescription() string {
