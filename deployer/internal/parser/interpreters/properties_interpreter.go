@@ -17,7 +17,7 @@ func (pis *propertiesInterpreter) HaveTokens(tokens []pluggable.Token) pluggable
 	}
 
 	if len(tokens) < 3 {
-		pis.tools.Reporter.Report(0, "<prop> <- <expr>")
+		pis.tools.Reporter.Report(0, "line must be of form <prop> <- <expr> or @adverb ...")
 		return NewDisallowInnerScope(pis.tools)
 	}
 

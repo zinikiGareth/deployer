@@ -54,10 +54,43 @@ a specific "certificate" verb.  The big clue is in the duplication.
 Now we are in a position to set up our cloudfront distribution, which will serve content on the named
 site from the bucket we created earlier.
 
+In the fullness of time, I want a "cloudfront" statement that combines the next 4 or 5 operations, but for now,
+we can "hardcode" them using ensure.  These need to be created in the appropriate order, otherwise they aren't
+there when they're needed.  I'm not sure of all the constraints, but this order definitely works.
+
+The "OriginAccessControl" specifies the relationship between Cloudfront and "the source", in our case S3
+
+		ensure aws.CloudFront.OriginAccessControl "access-s3-bucket" => oac
+			@teardown delete
+			OriginAccessControlOriginType <- "s3"
+			SigningBehavior <- "always"
+			SigningProtocol <- "sigv4"
+
+We want to associate certain file extensions with certain MIME types, and to do that we need to define a
+ResponseHeadersPolicy and embed it in a custom CachePolicy.  Yes, it really is this complicated.  In fairness,
+this is in fact a much more powerful and general mechanism.
+
+		ensure aws.CloudFront.ResponseHeadersPolicy "html-mime-type" => rhp
+			@teardown delete
+			Header <- "Content-Type"
+			Value <- "text/html"
+
+And to make it clear that we are only doing this for HTML files, this RHP is associated with a custom cache policy
+for files ending in "*.html"
+
+		ensure aws.CloudFront.CacheBehavior "customize-html-headers" => cb
+			@teardown delete
+			PathPattern <- "*.html"
+			ResponseHeadersPolicy <- rhp
+
+Finally, we can put all these parts together to build up the entire picture of the distribution.
+
 		ensure aws.CloudFront.Distribution "for-consolidator-news" => cloudfront
 			@teardown delete
+			OriginAccessControl <- oac->id
 			Certificate <- cert->arn
-			Domain <- "www.consolidator.news"
+			Domain <- "www.consolidator.news" // this should be a list
+			CacheBehaviors <- cb // this should be a list
 
 In order to use the bucket with cloudfront, we need to say that we have a policy in place on the bucket
 I think it's reasonable to do this in two steps; I think it may also be reasonable to allow it to be done
