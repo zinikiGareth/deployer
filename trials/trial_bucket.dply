@@ -94,6 +94,8 @@ Finally, we can put all these parts together to build up the entire picture of t
 
 		ensure aws.CloudFront.Distribution "for-consolidator-news" => cloudfront
 			@teardown delete
+			Comment <- "a distribution for consolidator.news"
+			OriginDNS <- consolidator_bucket->dnsName
 			OriginAccessControl <- oac->id
 			Certificate <- cert->arn
 			CachePolicy <- cp->id
