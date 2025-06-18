@@ -89,6 +89,7 @@ for files ending in "*.html"
 			CachePolicy <- cp->id
 			PathPattern <- "*.html"
 			ResponseHeadersPolicy <- rhp->id
+			TargetOriginId <- "s3-bucket-target"
 
 Finally, we can put all these parts together to build up the entire picture of the distribution.
 
@@ -101,6 +102,7 @@ Finally, we can put all these parts together to build up the entire picture of t
 			CachePolicy <- cp->id
 			Domain <- "www.consolidator.news" // this should be a list
 			CacheBehaviors <- cb // this should be a list
+			TargetOriginId <- "s3-bucket-target"
 
 In order to use the bucket with cloudfront, we need to say that we have a policy in place on the bucket
 I think it's reasonable to do this in two steps; I think it may also be reasonable to allow it to be done

@@ -44,6 +44,9 @@ func (s *Storage) IsMode(mode int) bool {
 }
 
 func (s *Storage) Eval(e pluggable.Expr) any {
+	if e == nil {
+		return nil
+	}
 	return e.Eval(s)
 }
 
