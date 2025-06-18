@@ -11,9 +11,9 @@ type Deployer interface {
 	UseModule(mod string) error
 	ReadScriptsFrom(indir string) error
 	FindAndReadEnvs(dirs []string, file string) bool
-	Deploy(targets ...string) error
-
 	Traverse(lsnr pluggable.RepositoryTraverser)
+
+	Deploy(targets ...string) error
 	ObtainTools() *pluggable.Tools // for the benefit of plugins
 }
 
@@ -21,7 +21,6 @@ type TestRunner interface {
 	ErrorHandlerFor(purpose string) ErrorHandler
 }
 
-// TODO: the deployer cmd will want a version of this that writes to stdout
 type ErrorHandler interface {
 	io.Writer
 	WriteMsg(msg string)
