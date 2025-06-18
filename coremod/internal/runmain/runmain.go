@@ -16,6 +16,8 @@ func (m *mainHandler) RunWithArgs(d deployer.Deployer, args []string) {
 	options := m.tools.Options
 	targets := []string{}
 
+	failed := false
+
 	for _, x := range args {
 		switch x {
 		case "--teardown":
@@ -23,10 +25,14 @@ func (m *mainHandler) RunWithArgs(d deployer.Deployer, args []string) {
 		default:
 			if strings.HasPrefix(x, "-") {
 				fmt.Printf("unknown option: %s\n", x)
-				return
+				failed = true
 			}
 			targets = append(targets, x)
 		}
+	}
+
+	if failed {
+		return
 	}
 
 	for _, s := range targets {

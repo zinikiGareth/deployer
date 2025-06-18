@@ -1,15 +1,15 @@
-package runner
+package utils
 
 import (
+	"log"
 	"os"
 	"strings"
 	"syscall"
-
-	"ziniki.org/deployer/deployer/pkg/utils"
 )
 
-func (r *TestRunner) ReadEnvs(file string) (map[string]string, error) {
-	lines, err := utils.FileAsLines(file)
+// Is it worth abstracting this return into an actual struct with "Set" and "Reset" methods?
+func ReadEnvs(file string) (map[string]string, error) {
+	lines, err := FileAsLines(file)
 
 	if err != nil {
 		pe, ok := err.(*os.PathError)
@@ -34,14 +34,30 @@ func (r *TestRunner) ReadEnvs(file string) (map[string]string, error) {
 	return ret, nil
 }
 
-func (r *TestRunner) SetEnvs(envs map[string]string) {
+func SetEnvs(envs map[string]string) {
 	for k, v := range envs {
+		log.Printf("setting %s to %s\n", k, v)
 		os.Setenv(k, v)
 	}
 }
 
-func (r *TestRunner) UnsetEnvs(envs map[string]string) {
+func UnsetEnvs(envs map[string]string) {
 	for k := range envs {
 		os.Setenv(k, "") // this is as close as go will let you get to unset, but it doesn't matter because get on an unset will return "" anyway
 	}
+}
+
+func PruneLines(lines []string) []string {
+	var ret []string
+	for _, l := range lines {
+		l = strings.TrimSpace(l)
+		if l == "" {
+			continue
+		}
+		if strings.HasPrefix(l, "#") {
+			continue
+		}
+		ret = append(ret, l)
+	}
+	return ret
 }

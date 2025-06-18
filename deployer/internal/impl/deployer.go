@@ -32,10 +32,23 @@ func (d *DeployerImpl) ReadScriptsFrom(indir string) error {
 	d.srcdir = indir
 	input, err := utils.FindFiles(indir, ".dply")
 	if err != nil {
+		fmt.Printf("could not read dir %s: %v\n", indir, err)
 		return err
 	}
 	d.input = append(d.input, input...)
 	return nil
+}
+
+func (d *DeployerImpl) FindAndReadEnvs(dirs []string, file string) bool {
+	found := false
+	for _, d := range dirs {
+		envs, err := utils.ReadEnvs(filepath.Join(d, file))
+		if err == nil {
+			found = true
+			utils.SetEnvs(envs)
+		}
+	}
+	return found
 }
 
 func (d *DeployerImpl) UseModule(mod string) error {

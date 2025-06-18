@@ -10,6 +10,7 @@ type Deployer interface {
 	AddSymbolListener(lsnr pluggable.SymbolListener)
 	UseModule(mod string) error
 	ReadScriptsFrom(indir string) error
+	FindAndReadEnvs(dirs []string, file string) bool
 	Deploy(targets ...string) error
 
 	Traverse(lsnr pluggable.RepositoryTraverser)
