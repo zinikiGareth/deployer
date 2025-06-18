@@ -13,7 +13,7 @@ type PolicyRuleAction interface {
 }
 
 type PolicyAction struct {
-	tools   *pluggable.Tools
+	tools   *external.Tools
 	loc     *errorsink.Location
 	actions []PolicyRuleAction
 }

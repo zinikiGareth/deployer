@@ -6,15 +6,12 @@ import (
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
-type Deployer interface {
+type Driver interface {
 	AddSymbolListener(lsnr pluggable.SymbolListener)
 	UseModule(mod string) error
 	ReadScriptsFrom(indir string) error
 	FindAndReadEnvs(dirs []string, file string) bool
 	Traverse(lsnr pluggable.RepositoryTraverser)
-
-	Deploy(targets ...string) error
-	ObtainTools() *pluggable.Tools // for the benefit of plugins
 }
 
 type TestRunner interface {

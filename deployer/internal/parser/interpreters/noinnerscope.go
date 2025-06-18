@@ -5,7 +5,7 @@ import (
 )
 
 type disallowInnerScope struct {
-	tools *pluggable.Tools
+	tools *pluggable.CoreTools
 }
 
 func (b *disallowInnerScope) HaveTokens(tokens []pluggable.Token) pluggable.Interpreter {

@@ -14,7 +14,7 @@ import (
 // resolution, preparation, execution
 
 type AttachPolicyAction struct {
-	tools  *pluggable.Tools
+	tools  *external.Tools
 	loc    *errorsink.Location
 	to     pluggable.Expr
 	policy pluggable.Expr
@@ -55,7 +55,7 @@ func (ea *AttachPolicyAction) AddAdverb(adv pluggable.Adverb, tokens []pluggable
 
 		}
 	*/
-	return interpreters.NewDisallowInnerScope(ea.tools)
+	return interpreters.NewDisallowInnerScope(&ea.tools.CoreTools)
 }
 
 func (ea *AttachPolicyAction) Completed() {

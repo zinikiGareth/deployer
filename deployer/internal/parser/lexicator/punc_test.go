@@ -10,7 +10,7 @@ import (
 
 func TestForPuncIdPunc(t *testing.T) {
 	reporter, _ := testhelpers.MockReporter(t)
-	tools := pluggable.NewTools(reporter, nil, nil, nil, nil, nil)
+	tools := pluggable.NewTools(reporter, nil, nil, nil, nil)
 	lex := lexicator.NewLineLexicator(tools, "test")
 	toks := lex.BlockedLine(lineOf("(hello)"))
 	if len(toks) != 3 {

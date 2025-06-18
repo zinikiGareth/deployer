@@ -1,12 +1,13 @@
 package testS3
 
 import (
+	"ziniki.org/deployer/coremod/pkg/external"
 	"ziniki.org/deployer/deployer/pkg/interpreters"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
 type bucketContentsScope struct {
-	tools *pluggable.Tools
+	tools *external.Tools
 	aba   *assertBucketAction
 }
 
@@ -21,12 +22,12 @@ func (b *bucketContentsScope) HaveTokens(tokens []pluggable.Token) pluggable.Int
 		return interpreters.NewIgnoreInnerScope()
 	}
 	b.aba.files = append(b.aba.files, str.Text())
-	return interpreters.NewDisallowInnerScope(b.tools)
+	return interpreters.NewDisallowInnerScope(&b.tools.CoreTools)
 }
 
 func (b *bucketContentsScope) Completed() {
 }
 
-func BucketContentsScope(tools *pluggable.Tools, aba *assertBucketAction) pluggable.Interpreter {
+func BucketContentsScope(tools *external.Tools, aba *assertBucketAction) pluggable.Interpreter {
 	return &bucketContentsScope{tools: tools, aba: aba}
 }

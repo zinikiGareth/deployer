@@ -4,15 +4,15 @@ import (
 	"fmt"
 	"strings"
 
+	"ziniki.org/deployer/coremod/pkg/external"
 	"ziniki.org/deployer/deployer/pkg/deployer"
-	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
 type mainHandler struct {
-	tools *pluggable.Tools
+	tools *external.Tools
 }
 
-func (m *mainHandler) RunWithArgs(d deployer.Deployer, args []string) {
+func (m *mainHandler) RunWithArgs(d deployer.Driver, args []string) {
 	options := m.tools.Options
 	targets := []string{}
 
@@ -44,6 +44,6 @@ func (m *mainHandler) RunWithArgs(d deployer.Deployer, args []string) {
 	}
 }
 
-func MakeMainHandler(tools *pluggable.Tools) deployer.MainHandler {
+func MakeMainHandler(tools *external.Tools) deployer.MainHandler {
 	return &mainHandler{tools: tools}
 }

@@ -5,7 +5,7 @@ import (
 )
 
 type propertiesInterpreter struct {
-	tools  *pluggable.Tools
+	tools  *pluggable.CoreTools
 	parent pluggable.PropertyParent
 }
 

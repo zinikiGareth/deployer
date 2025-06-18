@@ -7,7 +7,7 @@ import (
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
-func (repo *SimpleRepository) ResolveAll(tools *pluggable.Tools) {
+func (repo *SimpleRepository) ResolveAll(tools *pluggable.CoreTools) {
 	for _, what := range repo.tops {
 		searcher := &Searcher{repo: repo, recall: tools.Recall, reporter: tools.Reporter}
 		what.Resolve(searcher)

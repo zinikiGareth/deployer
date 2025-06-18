@@ -10,7 +10,7 @@ import (
 	"ziniki.org/deployer/deployer/pkg/utils"
 )
 
-func Parse(tools *pluggable.Tools, fileName, file string) {
+func Parse(tools *pluggable.CoreTools, fileName, file string) {
 	globalInterpreter := interpreters.NewVerbCommandInterpreter(tools, NewTopLevelAttacher(tools), "top-level", false)
 	lineLexicator := lexicator.NewLineLexicator(tools, fileName)
 	tools.Parser = exprs.NewExprParser(tools)

@@ -4,6 +4,7 @@ import (
 	"log"
 	"strings"
 
+	"ziniki.org/deployer/coremod/pkg/external"
 	"ziniki.org/deployer/deployer/pkg/errorsink"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
@@ -74,7 +75,7 @@ func (i *InvokeExpr) Eval(s pluggable.RuntimeStorage) any {
 }
 
 type InvokeFunc struct {
-	tools *pluggable.Tools
+	tools *external.Tools
 }
 
 func (i *InvokeFunc) ReduceExpr(me pluggable.Token, before []pluggable.Expr, after []pluggable.Expr) pluggable.Expr {
@@ -91,6 +92,6 @@ func (i *InvokeFunc) ReduceExpr(me pluggable.Token, before []pluggable.Expr, aft
 	return &InvokeExpr{Locatable: me, on: before[0], call: meth.Named(), args: after[1:]}
 }
 
-func MakeInvokeFunc(tools *pluggable.Tools) *InvokeFunc {
+func MakeInvokeFunc(tools *external.Tools) *InvokeFunc {
 	return &InvokeFunc{tools: tools}
 }

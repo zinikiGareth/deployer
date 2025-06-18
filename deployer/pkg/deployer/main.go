@@ -1,5 +1,5 @@
 package deployer
 
 type MainHandler interface {
-	RunWithArgs(deployer Deployer, args []string)
+	RunWithArgs(deployer Driver, args []string)
 }

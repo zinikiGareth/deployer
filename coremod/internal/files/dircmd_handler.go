@@ -1,12 +1,13 @@
 package files
 
 import (
+	"ziniki.org/deployer/coremod/pkg/external"
 	"ziniki.org/deployer/deployer/pkg/interpreters"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
 type dirCommandHandler struct {
-	tools *pluggable.Tools
+	tools *external.Tools
 }
 
 func (dch *dirCommandHandler) Handle(parent pluggable.AttachResult, tokens []pluggable.Token) pluggable.Interpreter {
@@ -27,9 +28,9 @@ func (dch *dirCommandHandler) Handle(parent pluggable.AttachResult, tokens []plu
 	da := &dirAction{tools: dch.tools, loc: tokens[0].Loc(), exprs: exprs}
 	parent.Attach(da)
 
-	return interpreters.NewDisallowInnerScope(dch.tools)
+	return interpreters.NewDisallowInnerScope(&dch.tools.CoreTools)
 }
 
-func NewDirCommandHandler(tools *pluggable.Tools) pluggable.VerbCommand {
+func NewDirCommandHandler(tools *external.Tools) pluggable.VerbCommand {
 	return &dirCommandHandler{tools: tools}
 }

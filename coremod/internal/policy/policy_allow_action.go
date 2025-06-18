@@ -14,7 +14,7 @@ type UpdatePolicyAllowAction interface {
 }
 
 type PolicyAllowAction struct {
-	tools   *pluggable.Tools
+	tools   *external.Tools
 	loc     *errorsink.Location
 	actions []UpdatePolicyAllowAction
 

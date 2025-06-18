@@ -9,7 +9,7 @@ import (
 )
 
 type policyAction struct {
-	tools *pluggable.Tools
+	tools *external.Tools
 	loc   *errorsink.Location
 
 	exprs []pluggable.Expr

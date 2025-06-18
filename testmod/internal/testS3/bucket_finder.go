@@ -3,6 +3,7 @@ package testS3
 import (
 	"fmt"
 
+	"ziniki.org/deployer/coremod/pkg/external"
 	"ziniki.org/deployer/coremod/pkg/files"
 	"ziniki.org/deployer/deployer/pkg/errorsink"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
@@ -10,7 +11,7 @@ import (
 )
 
 type bucketFinder struct {
-	tools *pluggable.Tools
+	tools *external.Tools
 
 	loc  *errorsink.Location
 	name string

@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"ziniki.org/deployer/coremod/pkg/ensurable"
+	"ziniki.org/deployer/coremod/pkg/external"
 	"ziniki.org/deployer/deployer/pkg/errorsink"
 	"ziniki.org/deployer/deployer/pkg/interpreters"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
@@ -13,12 +14,12 @@ import (
 // resolution, preparation, execution
 
 type EnsureAction struct {
-	tools    *pluggable.Tools
+	tools    *external.Tools
 	loc      *errorsink.Location
 	what     pluggable.Identifier
 	resolved pluggable.Blank
 	named    pluggable.String
-	teardown pluggable.TearDown
+	teardown external.TearDown
 	// TODO: this really isn't a map here, because what we want is to index by string name
 	// Now, we possibly want the "identifier" to that we have the location of the symbol, but it can't be the key
 	// because the same "symbol" at two different locations will be different, and we can't index by it.
@@ -92,7 +93,7 @@ func (ea *EnsureAction) AddAdverb(adv pluggable.Adverb, tokens []pluggable.Token
 		ea.teardown = &MyTearDown{mode: tokens[0].(pluggable.Identifier).Id()}
 
 	}
-	return interpreters.NewDisallowInnerScope(ea.tools)
+	return interpreters.NewDisallowInnerScope(&ea.tools.CoreTools)
 }
 
 func (ea *EnsureAction) Completed() {
@@ -118,7 +119,7 @@ func (ea *EnsureAction) Resolve(r pluggable.Resolver) pluggable.BindingRequireme
 		y.Resolve(r)
 	}
 	ea.resolved = res
-	obj := ea.resolved.Mint(ea.tools, ea.Loc(), ea.named.Text(), ea.props, ea.teardown)
+	obj := ea.resolved.Mint(&ea.tools.CoreTools, ea.Loc(), ea.named.Text(), ea.props, ea.teardown)
 	ens, ok := obj.(ensurable.Ensurable)
 	if !ok {
 		ea.tools.Storage.Errorf(ea.loc, "the type "+ea.what.Id()+" is not ensurable")

@@ -7,7 +7,7 @@ import (
 )
 
 type PolicyCondAction struct {
-	tools *pluggable.Tools
+	tools *external.Tools
 	loc   *errorsink.Location
 
 	test  pluggable.Expr

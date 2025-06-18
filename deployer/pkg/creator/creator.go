@@ -11,8 +11,8 @@ import (
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
-func NewDeployer(sink errorsink.ErrorSink, userErrorsTo io.StringWriter) deployer.Deployer {
-	return impl.NewDeployer(sink, userErrorsTo)
+func NewDriver(sink errorsink.ErrorSink, userErrorsTo io.StringWriter) deployer.Driver {
+	return impl.NewDriver(sink, userErrorsTo)
 }
 
 func MakeVar(name string) pluggable.Holder {

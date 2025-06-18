@@ -7,7 +7,7 @@ import (
 )
 
 type policyPrincipalAction struct {
-	tools *pluggable.Tools
+	tools *external.Tools
 	loc   *errorsink.Location
 
 	ofType pluggable.Expr

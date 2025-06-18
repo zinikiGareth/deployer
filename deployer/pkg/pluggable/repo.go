@@ -11,7 +11,7 @@ type Repository interface {
 	AddSymbolListener(lsnr SymbolListener)
 	Traverse(lsnr RepositoryTraverser)
 
-	ResolveAll(tools *Tools)
+	ResolveAll(tools *CoreTools)
 	FindTop(name SymbolName) TopLevelForm
 
 	GetDefinition(id SymbolName) Describable

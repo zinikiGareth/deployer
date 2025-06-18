@@ -3,13 +3,14 @@ package basic
 import (
 	"fmt"
 
+	"ziniki.org/deployer/coremod/pkg/external"
 	"ziniki.org/deployer/deployer/pkg/errorsink"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 	"ziniki.org/deployer/deployer/pkg/testhelpers"
 )
 
 type ShowAction struct {
-	tools *pluggable.Tools
+	tools *external.Tools
 	loc   *errorsink.Location
 	exprs []pluggable.Expr
 }

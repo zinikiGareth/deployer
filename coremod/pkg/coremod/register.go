@@ -18,7 +18,7 @@ func ProvideTestRunner(runner deployer.TestRunner) error {
 	return nil
 }
 
-func RegisterWithDeployer(deployer deployer.Deployer) error {
+func RegisterWithDriver(deployer deployer.Driver) error {
 	if testRunner != nil {
 		eh := testRunner.ErrorHandlerFor("log")
 		eh.WriteMsg("Installing things from coremod\n")

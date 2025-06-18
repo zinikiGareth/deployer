@@ -3,13 +3,14 @@ package files
 import (
 	"fmt"
 
+	"ziniki.org/deployer/coremod/pkg/external"
 	"ziniki.org/deployer/coremod/pkg/files"
 	"ziniki.org/deployer/deployer/pkg/errorsink"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
 type copyAction struct {
-	tools *pluggable.Tools
+	tools *external.Tools
 	loc   *errorsink.Location
 	exprs []pluggable.Expr
 

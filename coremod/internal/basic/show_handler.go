@@ -1,12 +1,13 @@
 package basic
 
 import (
+	"ziniki.org/deployer/coremod/pkg/external"
 	"ziniki.org/deployer/deployer/pkg/interpreters"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
 type showCommandHandler struct {
-	tools *pluggable.Tools
+	tools *external.Tools
 }
 
 func (sch *showCommandHandler) Handle(parent pluggable.AttachResult, tokens []pluggable.Token) pluggable.Interpreter {
@@ -27,9 +28,9 @@ func (sch *showCommandHandler) Handle(parent pluggable.AttachResult, tokens []pl
 	sa := &ShowAction{tools: sch.tools, loc: tokens[0].Loc(), exprs: exprs}
 	parent.Attach(sa)
 
-	return interpreters.NewDisallowInnerScope(sch.tools)
+	return interpreters.NewDisallowInnerScope(&sch.tools.CoreTools)
 }
 
-func NewShowCommandHandler(tools *pluggable.Tools) pluggable.VerbCommand {
+func NewShowCommandHandler(tools *external.Tools) pluggable.VerbCommand {
 	return &showCommandHandler{tools: tools}
 }

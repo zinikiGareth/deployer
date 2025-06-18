@@ -8,7 +8,7 @@ import (
 )
 
 type WithAssignTo struct {
-	tools     *pluggable.Tools
+	tools     *pluggable.CoreTools
 	assignTo  pluggable.Identifier
 	container pluggable.AttachResult
 }
@@ -21,7 +21,7 @@ func (wat *WithAssignTo) Attach(d any) {
 	wat.container.Attach(MakeDoAssign(wat.tools, wat.assignTo, container))
 }
 
-func MakeDoAssign(tools *pluggable.Tools, assignTo pluggable.Identifier, action pluggable.ModelBuilder) *DoAssign {
+func MakeDoAssign(tools *pluggable.CoreTools, assignTo pluggable.Identifier, action pluggable.ModelBuilder) *DoAssign {
 	holder := &VarHolder{storeFor: assignTo}
 	ret := DoAssign{tools: tools, assignTo: assignTo, holder: holder, action: action}
 	tools.Repository.IntroduceSymbol(pluggable.SymbolName(assignTo.Id()), holder)
@@ -48,7 +48,7 @@ func (v *VarHolder) ShortDescription() string {
 }
 
 type DoAssign struct {
-	tools    *pluggable.Tools
+	tools    *pluggable.CoreTools
 	assignTo pluggable.Identifier
 	holder   pluggable.Describable
 	action   pluggable.ModelBuilder

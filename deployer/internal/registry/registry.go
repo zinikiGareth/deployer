@@ -8,7 +8,7 @@ type Registry struct {
 	points      map[string]map[string]any
 	drivers     map[string]any
 	initDrivers map[string]any
-	tools       *pluggable.Tools
+	tools       *pluggable.CoreTools
 }
 
 func (r *Registry) ExtensionPoint(name string) {
@@ -60,7 +60,7 @@ func (r *Registry) ObtainDriver(forType string) any {
 	return ret
 }
 
-func (reg *Registry) BindTools(tools *pluggable.Tools) {
+func (reg *Registry) BindTools(tools *pluggable.CoreTools) {
 	reg.tools = tools
 }
 

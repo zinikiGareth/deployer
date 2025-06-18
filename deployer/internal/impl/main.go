@@ -14,7 +14,7 @@ func Usage() {
 
 func RunDeployer(args []string) int {
 	sink := errorsink.NewConsoleSink()
-	d := NewDeployer(sink, os.Stdout)
+	d := NewDriver(sink, os.Stdout)
 	var dirs []string
 	var envs []string
 	var modules []string

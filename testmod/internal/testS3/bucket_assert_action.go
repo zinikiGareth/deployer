@@ -3,12 +3,13 @@ package testS3
 import (
 	"fmt"
 
+	"ziniki.org/deployer/coremod/pkg/external"
 	"ziniki.org/deployer/deployer/pkg/errorsink"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
 type assertBucketAction struct {
-	tools  *pluggable.Tools
+	tools  *external.Tools
 	loc    *errorsink.Location
 	bucket pluggable.Expr
 	files  []string

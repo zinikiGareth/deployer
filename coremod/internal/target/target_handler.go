@@ -1,12 +1,13 @@
 package target
 
 import (
+	"ziniki.org/deployer/coremod/pkg/external"
 	"ziniki.org/deployer/deployer/pkg/interpreters"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
 type CoreTargetHandler struct {
-	tools *pluggable.Tools
+	tools *external.Tools
 }
 
 func (t *CoreTargetHandler) Handle(attacher pluggable.AttachResult, tokens []pluggable.Token) pluggable.Interpreter {
@@ -22,6 +23,6 @@ func (t *CoreTargetHandler) Handle(attacher pluggable.AttachResult, tokens []plu
 	return interpreters.NewVerbCommandInterpreter(t.tools, target, "target", true)
 }
 
-func MakeCoreTargetVerb(tools *pluggable.Tools) *CoreTargetHandler {
+func MakeCoreTargetVerb(tools *external.Tools) *CoreTargetHandler {
 	return &CoreTargetHandler{tools: tools}
 }

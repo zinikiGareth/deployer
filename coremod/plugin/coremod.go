@@ -9,6 +9,6 @@ func ProvideTestRunner(runner deployer.TestRunner) error {
 	return coremod.ProvideTestRunner(runner)
 }
 
-func RegisterWithDeployer(deployer deployer.Deployer) error {
-	return coremod.RegisterWithDeployer(deployer)
+func RegisterWithDriver(deployer deployer.Driver) error {
+	return coremod.RegisterWithDriver(deployer)
 }

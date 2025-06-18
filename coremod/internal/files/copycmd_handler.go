@@ -1,12 +1,13 @@
 package files
 
 import (
+	"ziniki.org/deployer/coremod/pkg/external"
 	"ziniki.org/deployer/deployer/pkg/interpreters"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
 type copyCommandHandler struct {
-	tools *pluggable.Tools
+	tools *external.Tools
 }
 
 func (cch *copyCommandHandler) Handle(parent pluggable.AttachResult, tokens []pluggable.Token) pluggable.Interpreter {
@@ -28,9 +29,9 @@ func (cch *copyCommandHandler) Handle(parent pluggable.AttachResult, tokens []pl
 	ca := &copyAction{tools: cch.tools, loc: tokens[0].Loc(), exprs: exprs}
 	parent.Attach(ca)
 
-	return interpreters.NewDisallowInnerScope(cch.tools) // for now, but we want to support it really
+	return interpreters.NewDisallowInnerScope(&cch.tools.CoreTools) // for now, but we want to support it really
 }
 
-func NewCopyCommandHandler(tools *pluggable.Tools) pluggable.VerbCommand {
+func NewCopyCommandHandler(tools *external.Tools) pluggable.VerbCommand {
 	return &copyCommandHandler{tools: tools}
 }

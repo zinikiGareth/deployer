@@ -1,12 +1,13 @@
 package blob
 
 import (
+	"ziniki.org/deployer/coremod/pkg/external"
 	"ziniki.org/deployer/deployer/pkg/interpreters"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
 type blobCommandHandler struct {
-	tools *pluggable.Tools
+	tools *external.Tools
 }
 
 func (bch *blobCommandHandler) Handle(parent pluggable.AttachResult, tokens []pluggable.Token) pluggable.Interpreter {
@@ -22,9 +23,9 @@ func (bch *blobCommandHandler) Handle(parent pluggable.AttachResult, tokens []pl
 
 	parent.Attach(&createBlobAction{Locatable: tokens[0], expr: expr})
 
-	return interpreters.NewDisallowInnerScope(bch.tools)
+	return interpreters.NewDisallowInnerScope(&bch.tools.CoreTools)
 }
 
-func NewBlobCommandHandler(tools *pluggable.Tools) pluggable.VerbCommand {
+func NewBlobCommandHandler(tools *external.Tools) pluggable.VerbCommand {
 	return &blobCommandHandler{tools: tools}
 }

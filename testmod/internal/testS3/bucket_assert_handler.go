@@ -1,12 +1,13 @@
 package testS3
 
 import (
+	"ziniki.org/deployer/coremod/pkg/external"
 	"ziniki.org/deployer/deployer/pkg/interpreters"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
 type assertBucketHandler struct {
-	tools *pluggable.Tools
+	tools *external.Tools
 }
 
 func (abh *assertBucketHandler) Handle(parent pluggable.AttachResult, tokens []pluggable.Token) pluggable.Interpreter {
@@ -30,6 +31,6 @@ func (abh *assertBucketHandler) Handle(parent pluggable.AttachResult, tokens []p
 	return BucketContentsScope(abh.tools, ca)
 }
 
-func NewAssertBucketHandler(tools *pluggable.Tools) pluggable.VerbCommand {
+func NewAssertBucketHandler(tools *external.Tools) pluggable.VerbCommand {
 	return &assertBucketHandler{tools: tools}
 }

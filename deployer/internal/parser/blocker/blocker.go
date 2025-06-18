@@ -9,7 +9,7 @@ import (
 )
 
 type Blocker struct {
-	tools    *pluggable.Tools
+	tools    *pluggable.CoreTools
 	indents  []string
 	lex      lexicator.Lexicator
 	handlers []pluggable.Interpreter
@@ -90,6 +90,6 @@ func mapSpace(ch rune) rune {
 	}
 }
 
-func NewBlocker(tools *pluggable.Tools, lex lexicator.Lexicator, topLevel pluggable.Interpreter) *Blocker {
+func NewBlocker(tools *pluggable.CoreTools, lex lexicator.Lexicator, topLevel pluggable.Interpreter) *Blocker {
 	return &Blocker{tools: tools, lex: lex, handlers: []pluggable.Interpreter{topLevel}}
 }

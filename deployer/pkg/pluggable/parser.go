@@ -78,8 +78,8 @@ type VerbCommand interface {
 // Replace this with a notion of minting, blanks, dies ... I think this would be a blank
 type Blank interface {
 	ShortDescription() string
-	Find(tools *Tools, loc *errorsink.Location, named string) any
-	Mint(tools *Tools, loc *errorsink.Location, named string, props map[Identifier]Expr, teardown TearDown) any
+	Find(tools *CoreTools, loc *errorsink.Location, named string) any
+	Mint(tools *CoreTools, loc *errorsink.Location, named string, props map[Identifier]Expr, teardown TearDown) any
 }
 
 type Function interface {

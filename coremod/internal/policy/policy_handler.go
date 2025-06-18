@@ -1,12 +1,13 @@
 package policy
 
 import (
+	"ziniki.org/deployer/coremod/pkg/external"
 	"ziniki.org/deployer/deployer/pkg/interpreters"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
 type policyCommandHandler struct {
-	tools *pluggable.Tools
+	tools *external.Tools
 }
 
 func (pch *policyCommandHandler) Handle(parent pluggable.AttachResult, tokens []pluggable.Token) pluggable.Interpreter {
@@ -18,9 +19,9 @@ func (pch *policyCommandHandler) Handle(parent pluggable.AttachResult, tokens []
 	pa := &PolicyAction{tools: pch.tools, loc: tokens[0].Loc()}
 	parent.Attach(pa)
 
-	return interpreters.NewVerbCommandInterpreter(pch.tools, pa, "policy-statements", false)
+	return interpreters.NewVerbCommandInterpreter(&pch.tools.CoreTools, pa, "policy-statements", false)
 }
 
-func NewPolicyCommandHandler(tools *pluggable.Tools) pluggable.VerbCommand {
+func NewPolicyCommandHandler(tools *external.Tools) pluggable.VerbCommand {
 	return &policyCommandHandler{tools: tools}
 }

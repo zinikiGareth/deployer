@@ -4,12 +4,13 @@ import (
 	"fmt"
 	"os"
 
+	"ziniki.org/deployer/coremod/pkg/external"
 	"ziniki.org/deployer/deployer/pkg/errorsink"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
 type EnvAction struct {
-	tools   *pluggable.Tools
+	tools   *external.Tools
 	loc     *errorsink.Location
 	varname pluggable.Expr
 }

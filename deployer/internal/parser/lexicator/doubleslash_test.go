@@ -10,7 +10,7 @@ import (
 
 func TestALineBeginningDoubleSlashSpaceIsIgnored(t *testing.T) {
 	reporter, _ := testhelpers.MockReporter(t)
-	tools := pluggable.NewTools(reporter, nil, nil, nil, nil, nil)
+	tools := pluggable.NewTools(reporter, nil, nil, nil, nil)
 	lex := lexicator.NewLineLexicator(tools, "test")
 	toks := lex.BlockedLine(lineOf("// hello, world"))
 	if len(toks) != 0 {
@@ -20,7 +20,7 @@ func TestALineBeginningDoubleSlashSpaceIsIgnored(t *testing.T) {
 
 func TestALineWithDoubleSlashSpaceIsTerminated(t *testing.T) {
 	reporter, _ := testhelpers.MockReporter(t)
-	tools := pluggable.NewTools(reporter, nil, nil, nil, nil, nil)
+	tools := pluggable.NewTools(reporter, nil, nil, nil, nil)
 	lex := lexicator.NewLineLexicator(tools, "test")
 	toks := lex.BlockedLine(lineOf("hello // , world"))
 	if len(toks) != 1 {
@@ -33,7 +33,7 @@ func TestALineWithDoubleSlashSpaceIsTerminated(t *testing.T) {
 
 func TestALineBeginningTripleSlashIsIgnored(t *testing.T) {
 	reporter, _ := testhelpers.MockReporter(t)
-	tools := pluggable.NewTools(reporter, nil, nil, nil, nil, nil)
+	tools := pluggable.NewTools(reporter, nil, nil, nil, nil)
 	lex := lexicator.NewLineLexicator(tools, "test")
 	toks := lex.BlockedLine(lineOf("/// hello, world"))
 	if len(toks) != 0 {

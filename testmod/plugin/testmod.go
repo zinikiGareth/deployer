@@ -9,6 +9,6 @@ func ProvideTestRunner(runner deployer.TestRunner) error {
 	return testmod.ProvideTestRunner(runner)
 }
 
-func RegisterWithDeployer(deployer deployer.Deployer) error {
-	return testmod.RegisterWithDeployer(deployer)
+func RegisterWithDriver(deployer deployer.Driver) error {
+	return testmod.RegisterWithDriver(deployer)
 }

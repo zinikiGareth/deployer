@@ -61,7 +61,7 @@ type Helpers struct {
 func makeParser(t *testing.T) (pluggable.ExprParser, Helpers) {
 	reporter, sink := testhelpers.MockReporter(t)
 	recall = myRecall{things: make(map[string]any)}
-	tools := &pluggable.Tools{Reporter: reporter, Recall: recall}
+	tools := &pluggable.CoreTools{Reporter: reporter, Recall: recall}
 	reporter.At(lineloc)
 	return exprs.NewExprParser(tools), Helpers{Sink: sink}
 }

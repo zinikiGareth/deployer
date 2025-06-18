@@ -21,7 +21,7 @@ import (
 
 type TestRunner struct {
 	tracker    *errors.CaseTracker
-	deployer   deployer.Deployer
+	deployer   deployer.Driver
 	symbolLsnr *lsnrs.RepoListener
 	golden     *goldenComparator
 	RunnerPaths
@@ -109,12 +109,12 @@ func (r *TestRunner) Module(mod string) error {
 			return err
 		}
 	}
-	init, err := p.Lookup("RegisterWithDeployer")
+	init, err := p.Lookup("RegisterWithDriver")
 	if err != nil {
-		log.Printf("ignoring module " + mod + " as it does not have RegisterWithDeployer")
+		log.Printf("ignoring module " + mod + " as it does not have RegisterWithDriver")
 		return nil
 	}
-	return init.(func(deployer.Deployer) error)(r.deployer)
+	return init.(func(deployer.Driver) error)(r.deployer)
 }
 
 func (r *TestRunner) loadCoreMod() error {
@@ -122,7 +122,7 @@ func (r *TestRunner) loadCoreMod() error {
 	if err != nil {
 		return err
 	}
-	return coremod.RegisterWithDeployer(r.deployer)
+	return coremod.RegisterWithDriver(r.deployer)
 }
 
 func (r *TestRunner) loadTestMod() error {
@@ -130,7 +130,7 @@ func (r *TestRunner) loadTestMod() error {
 	if err != nil {
 		return err
 	}
-	return testmod.RegisterWithDeployer(r.deployer)
+	return testmod.RegisterWithDriver(r.deployer)
 }
 
 func NewTestRunner(tracker *errors.CaseTracker, root, test string) (*TestRunner, error) {

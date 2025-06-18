@@ -1,6 +1,7 @@
 package basic
 
 import (
+	"ziniki.org/deployer/coremod/pkg/external"
 	"ziniki.org/deployer/deployer/pkg/interpreters"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
@@ -8,7 +9,7 @@ import (
 // For each action verb, there is exactly one handler.  It is created up front and it does the job of parsing lines and creating individual actions.
 
 type FindCommandHandler struct {
-	tools *pluggable.Tools
+	tools *external.Tools
 }
 
 func (ech *FindCommandHandler) Handle(parent pluggable.AttachResult, tokens []pluggable.Token) pluggable.Interpreter {
@@ -35,9 +36,9 @@ func (ech *FindCommandHandler) Handle(parent pluggable.AttachResult, tokens []pl
 	ea := &FindAction{tools: ech.tools, loc: tokens[0].Loc(), what: clz, named: name, props: make(map[pluggable.Identifier]pluggable.Expr)}
 	parent.Attach(ea)
 
-	return interpreters.NewPropertiesInnerScope(ech.tools, ea)
+	return interpreters.NewPropertiesInnerScope(&ech.tools.CoreTools, ea)
 }
 
-func NewFindCommandHandler(tools *pluggable.Tools) pluggable.VerbCommand {
+func NewFindCommandHandler(tools *external.Tools) pluggable.VerbCommand {
 	return &FindCommandHandler{tools: tools}
 }

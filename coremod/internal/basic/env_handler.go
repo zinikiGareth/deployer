@@ -1,12 +1,13 @@
 package basic
 
 import (
+	"ziniki.org/deployer/coremod/pkg/external"
 	"ziniki.org/deployer/deployer/pkg/interpreters"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
 type envCommandHandler struct {
-	tools *pluggable.Tools
+	tools *external.Tools
 }
 
 func (ech *envCommandHandler) Handle(parent pluggable.AttachResult, tokens []pluggable.Token) pluggable.Interpreter {
@@ -23,9 +24,9 @@ func (ech *envCommandHandler) Handle(parent pluggable.AttachResult, tokens []plu
 	ea := &EnvAction{tools: ech.tools, loc: tokens[0].Loc(), varname: expr}
 	parent.Attach(ea)
 
-	return interpreters.NewDisallowInnerScope(ech.tools)
+	return interpreters.NewDisallowInnerScope(&ech.tools.CoreTools)
 }
 
-func NewEnvCommandHandler(tools *pluggable.Tools) pluggable.VerbCommand {
+func NewEnvCommandHandler(tools *external.Tools) pluggable.VerbCommand {
 	return &envCommandHandler{tools: tools}
 }

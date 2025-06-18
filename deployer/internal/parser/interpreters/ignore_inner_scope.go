@@ -19,10 +19,10 @@ func NewIgnoreInnerScope() pluggable.Interpreter {
 	return &ignoreInnerScope{}
 }
 
-func NewDisallowInnerScope(tools *pluggable.Tools) pluggable.Interpreter {
+func NewDisallowInnerScope(tools *pluggable.CoreTools) pluggable.Interpreter {
 	return &disallowInnerScope{tools: tools}
 }
 
-func NewPropertiesInnerScope(tools *pluggable.Tools, parent pluggable.PropertyParent) pluggable.Interpreter {
+func NewPropertiesInnerScope(tools *pluggable.CoreTools, parent pluggable.PropertyParent) pluggable.Interpreter {
 	return &propertiesInterpreter{tools: tools, parent: parent}
 }

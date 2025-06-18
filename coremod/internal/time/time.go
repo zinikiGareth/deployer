@@ -3,6 +3,7 @@ package time
 import (
 	"fmt"
 
+	"ziniki.org/deployer/coremod/pkg/external"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
@@ -36,7 +37,7 @@ func (t TimeOf) String() string {
 }
 
 type HoursFunc struct {
-	tools *pluggable.Tools
+	tools *external.Tools
 }
 
 func (h *HoursFunc) ReduceExpr(me pluggable.Token, before []pluggable.Expr, after []pluggable.Expr) pluggable.Expr {
@@ -53,6 +54,6 @@ func (h *HoursFunc) ReduceExpr(me pluggable.Token, before []pluggable.Expr, afte
 	return &TimeOf{Locatable: konst, Number: int(konst.Value()), Unit: HOURS}
 }
 
-func MakeHoursFunc(tools *pluggable.Tools) *HoursFunc {
+func MakeHoursFunc(tools *external.Tools) *HoursFunc {
 	return &HoursFunc{tools: tools}
 }

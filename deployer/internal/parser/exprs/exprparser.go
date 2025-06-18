@@ -29,7 +29,7 @@ func (b Bracketed) String() string {
 }
 
 type exprParser struct {
-	tools *pluggable.Tools
+	tools *pluggable.CoreTools
 }
 
 func (p *exprParser) Parse(tokens []pluggable.Token) (pluggable.Expr, bool) {
@@ -187,6 +187,6 @@ func IsPuncChar(tok pluggable.Token, pc rune) bool {
 	return punc.Is(pc)
 }
 
-func NewExprParser(tools *pluggable.Tools) pluggable.ExprParser {
+func NewExprParser(tools *pluggable.CoreTools) pluggable.ExprParser {
 	return &exprParser{tools: tools}
 }

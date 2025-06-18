@@ -15,7 +15,7 @@ type Lexicator interface {
 }
 
 type LineLexicator struct {
-	tools *pluggable.Tools
+	tools *pluggable.CoreTools
 	file  string
 }
 
@@ -287,6 +287,6 @@ func (ll *LineLexicator) adverb(toks []pluggable.Token, line *errorsink.LineLoc,
 	return append(toks, tok)
 }
 
-func NewLineLexicator(tools *pluggable.Tools, file string) Lexicator {
+func NewLineLexicator(tools *pluggable.CoreTools, file string) Lexicator {
 	return &LineLexicator{tools: tools, file: file}
 }

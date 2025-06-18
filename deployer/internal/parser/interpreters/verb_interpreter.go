@@ -5,7 +5,7 @@ import (
 )
 
 type verbCommandInterpreter struct {
-	tools        *pluggable.Tools
+	tools        *pluggable.CoreTools
 	attacher     pluggable.AttachResult
 	forExtension string
 	allowAssign  bool
@@ -68,6 +68,6 @@ func (b *verbCommandInterpreter) splitOnArrow(tokens []pluggable.Token) (bool, [
 	return true, tokens, nil
 }
 
-func NewVerbCommandInterpreter(tools *pluggable.Tools, attacher pluggable.AttachResult, forExtensionPoint string, allowAssignments bool) pluggable.Interpreter {
+func NewVerbCommandInterpreter(tools *pluggable.CoreTools, attacher pluggable.AttachResult, forExtensionPoint string, allowAssignments bool) pluggable.Interpreter {
 	return &verbCommandInterpreter{tools: tools, attacher: attacher, forExtension: forExtensionPoint, allowAssign: allowAssignments}
 }

@@ -3,7 +3,7 @@ package parser
 import "ziniki.org/deployer/deployer/pkg/pluggable"
 
 type TopLevelAttacher struct {
-	tools *pluggable.Tools
+	tools *pluggable.CoreTools
 }
 
 func (a *TopLevelAttacher) Attach(tlf any) {
@@ -15,6 +15,6 @@ func (a *TopLevelAttacher) Attach(tlf any) {
 	a.tools.Repository.IntroduceSymbol(top.Name(), top)
 
 }
-func NewTopLevelAttacher(tools *pluggable.Tools) pluggable.AttachResult {
+func NewTopLevelAttacher(tools *pluggable.CoreTools) pluggable.AttachResult {
 	return &TopLevelAttacher{tools: tools}
 }
