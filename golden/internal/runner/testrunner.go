@@ -9,9 +9,8 @@ import (
 	"strings"
 
 	"ziniki.org/deployer/coremod/pkg/coremod"
-	"ziniki.org/deployer/deployer/pkg/creator"
+	"ziniki.org/deployer/coremod/pkg/external"
 	"ziniki.org/deployer/deployer/pkg/deployer"
-	sink "ziniki.org/deployer/deployer/pkg/errorsink"
 	"ziniki.org/deployer/deployer/pkg/utils"
 	"ziniki.org/deployer/golden/internal/errors"
 	"ziniki.org/deployer/golden/internal/lsnrs"
@@ -21,7 +20,8 @@ import (
 
 type TestRunner struct {
 	tracker    *errors.CaseTracker
-	deployer   deployer.Driver
+	driver     deployer.Driver
+	deployer   external.Deployer
 	symbolLsnr *lsnrs.RepoListener
 	golden     *goldenComparator
 	RunnerPaths
@@ -71,7 +71,7 @@ func (r *TestRunner) Setup(modules []string) error {
 	if err != nil {
 		return err
 	}
-	r.deployer.AddSymbolListener(r.symbolLsnr)
+	r.driver.AddSymbolListener(r.symbolLsnr)
 
 	tsl, err := testing.NewTestStepLogger(r.deployer.ObtainTools(), filepath.Join(r.prepOut, "steps.txt"), filepath.Join(r.execOut, "steps.txt"))
 	if err != nil {
@@ -114,7 +114,7 @@ func (r *TestRunner) Module(mod string) error {
 		log.Printf("ignoring module " + mod + " as it does not have RegisterWithDriver")
 		return nil
 	}
-	return init.(func(deployer.Driver) error)(r.deployer)
+	return init.(func(deployer.Driver) error)(r.driver)
 }
 
 func (r *TestRunner) loadCoreMod() error {
@@ -122,7 +122,7 @@ func (r *TestRunner) loadCoreMod() error {
 	if err != nil {
 		return err
 	}
-	return coremod.RegisterWithDriver(r.deployer)
+	return coremod.RegisterWithDriver(r.driver)
 }
 
 func (r *TestRunner) loadTestMod() error {
@@ -130,7 +130,7 @@ func (r *TestRunner) loadTestMod() error {
 	if err != nil {
 		return err
 	}
-	return testmod.RegisterWithDriver(r.deployer)
+	return testmod.RegisterWithDriver(r.driver)
 }
 
 func NewTestRunner(tracker *errors.CaseTracker, root, test string) (*TestRunner, error) {
@@ -140,10 +140,11 @@ func NewTestRunner(tracker *errors.CaseTracker, root, test string) (*TestRunner,
 	if err != nil {
 		panic(fmt.Sprintf("error creating error dir %s: %v", paths.errorsOut, err))
 	}
-	ueTxt := filepath.Join(paths.errorsOut, "usererrors.txt")
-	userErrorsTo := utils.NewLazyFileCreator(ueTxt)
-	sink := sink.NewFileSink(paths.errorFile)
-	deployerInst := creator.NewDeployer(sink, userErrorsTo)
+	// ueTxt := filepath.Join(paths.errorsOut, "usererrors.txt")
+	// userErrorsTo := utils.NewLazyFileCreator(ueTxt)
+	// sink := sink.NewFileSink(paths.errorFile)
+	tools := &external.Tools{}
+	deployerInst := coremod.NewDeployer(tools)
 
 	gc := newGoldenComparator(tracker, paths)
 

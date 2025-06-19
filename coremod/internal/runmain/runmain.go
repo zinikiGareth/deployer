@@ -4,15 +4,16 @@ import (
 	"fmt"
 	"strings"
 
+	"ziniki.org/deployer/coremod/internal/deployer"
 	"ziniki.org/deployer/coremod/pkg/external"
-	"ziniki.org/deployer/deployer/pkg/deployer"
+	deployer2 "ziniki.org/deployer/deployer/pkg/deployer"
 )
 
 type mainHandler struct {
 	tools *external.Tools
 }
 
-func (m *mainHandler) RunWithArgs(d deployer.Driver, args []string) {
+func (m *mainHandler) RunWithArgs(d deployer2.Driver, args []string) {
 	options := m.tools.Options
 	targets := []string{}
 
@@ -35,8 +36,9 @@ func (m *mainHandler) RunWithArgs(d deployer.Driver, args []string) {
 		return
 	}
 
+	d2 := deployer.NewDeployer(m.tools)
 	for _, s := range targets {
-		err := d.Deploy(s)
+		err := d2.Deploy(s)
 		if err != nil {
 			fmt.Printf("%v\n", err)
 			return
@@ -44,6 +46,6 @@ func (m *mainHandler) RunWithArgs(d deployer.Driver, args []string) {
 	}
 }
 
-func MakeMainHandler(tools *external.Tools) deployer.MainHandler {
+func MakeMainHandler(tools *external.Tools) deployer2.MainHandler {
 	return &mainHandler{tools: tools}
 }

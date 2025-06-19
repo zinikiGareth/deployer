@@ -8,6 +8,7 @@ import (
 	"ziniki.org/deployer/coremod/internal/runmain"
 	"ziniki.org/deployer/coremod/internal/target"
 	"ziniki.org/deployer/coremod/internal/time"
+	"ziniki.org/deployer/coremod/pkg/external"
 	"ziniki.org/deployer/deployer/pkg/deployer"
 )
 
@@ -24,7 +25,11 @@ func RegisterWithDriver(deployer deployer.Driver) error {
 		eh.WriteMsg("Installing things from coremod\n")
 	}
 
-	tools := deployer.ObtainTools()
+	toolsI := deployer.ObtainCoreTools().RetrieveOther("coremod")
+	if toolsI == nil {
+		panic("must load coremod first")
+	}
+	tools := toolsI.(*external.Tools)
 
 	// Logically, I think, these three have to go in "deployer", not in a module.
 	tools.Register.ExtensionPoint("main-args")

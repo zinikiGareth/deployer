@@ -5,19 +5,24 @@ import (
 	"io"
 
 	"ziniki.org/deployer/coremod/pkg/external"
+	"ziniki.org/deployer/deployer/pkg/deployer"
 	"ziniki.org/deployer/deployer/pkg/pluggable"
 )
 
 type DeployerImpl struct {
-	driver       *impl.DriverImpl
+	driver       deployer.Driver
 	tools        *external.Tools
 	userErrorsTo io.StringWriter
 	srcdir       string
 	input        []string
 }
 
+func (d *DeployerImpl) ObtainTools() *external.Tools {
+	return d.tools
+}
+
 func (d *DeployerImpl) Deploy(targetNames ...string) error {
-	err := driver.DoStuff()
+	err := d.driver.DoStuff()
 	if err != nil {
 		return err
 	}
@@ -77,4 +82,8 @@ func (d *DeployerImpl) findTargets(names ...string) ([]pluggable.TargetThing, er
 		return nil, ue
 	}
 	return targets, nil
+}
+
+func NewDeployer(tools *external.Tools) external.Deployer {
+	return &DeployerImpl{tools: tools}
 }

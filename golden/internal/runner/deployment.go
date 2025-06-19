@@ -13,7 +13,7 @@ import (
 )
 
 func (r *TestRunner) TestDeployment(eh errors.TestErrorHandler) {
-	err := r.deployer.ReadScriptsFrom(r.scripts)
+	err := r.driver.ReadScriptsFrom(r.scripts)
 	if err != nil {
 		fmt.Printf("Error reading scripts from %s: %v\n", r.scripts, err)
 		return
@@ -45,7 +45,7 @@ func (r *TestRunner) TestDeployment(eh errors.TestErrorHandler) {
 		eh.Writef("Error deploying: %v\n", err)
 	}
 	storer := lsnrs.NewGoldenRepoStorer()
-	r.deployer.Traverse(storer)
+	r.driver.Traverse(storer)
 	storer.DumpNamesTo(r.repoOut)
 	storer.DumpDefnsTo(r.repoOut)
 	r.golden.compareAll()

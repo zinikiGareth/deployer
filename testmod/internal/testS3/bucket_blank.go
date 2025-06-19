@@ -12,8 +12,8 @@ func (b *BucketBlank) Find(tools *external.Tools, loc *errorsink.Location, named
 	return &bucketFinder{tools: tools, loc: loc, name: named}
 }
 
-func (b *BucketBlank) Mint(tools *external.Tools, loc *errorsink.Location, named string, props map[pluggable.Identifier]pluggable.Expr, teardown external.TearDown) any {
-	return &bucketCreator{tools: tools, loc: loc, name: named, teardown: teardown}
+func (b *BucketBlank) Mint(tools *external.Tools, loc *errorsink.Location, named string, props map[pluggable.Identifier]pluggable.Expr) any {
+	return &bucketCreator{tools: tools, loc: loc, name: named}
 }
 
 func (b *BucketBlank) Loc() *errorsink.Location {

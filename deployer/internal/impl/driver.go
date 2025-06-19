@@ -24,7 +24,7 @@ type DriverImpl struct {
 	input        []string
 }
 
-func (d *DriverImpl) ObtainTools() *pluggable.CoreTools {
+func (d *DriverImpl) ObtainCoreTools() *pluggable.CoreTools {
 	return d.tools
 }
 

@@ -75,11 +75,10 @@ type VerbCommand interface {
 	Handle(attacher AttachResult, tokens []Token) Interpreter
 }
 
-// Replace this with a notion of minting, blanks, dies ... I think this would be a blank
 type Blank interface {
 	ShortDescription() string
 	Find(tools *CoreTools, loc *errorsink.Location, named string) any
-	Mint(tools *CoreTools, loc *errorsink.Location, named string, props map[Identifier]Expr, teardown TearDown) any
+	Mint(tools *CoreTools, loc *errorsink.Location, named string, props map[Identifier]Expr) any
 }
 
 type Function interface {

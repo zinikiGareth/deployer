@@ -12,6 +12,9 @@ type Driver interface {
 	ReadScriptsFrom(indir string) error
 	FindAndReadEnvs(dirs []string, file string) bool
 	Traverse(lsnr pluggable.RepositoryTraverser)
+
+	DoStuff() error
+	ObtainCoreTools() *pluggable.CoreTools
 }
 
 type TestRunner interface {

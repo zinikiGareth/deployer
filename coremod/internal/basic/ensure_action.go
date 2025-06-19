@@ -119,7 +119,7 @@ func (ea *EnsureAction) Resolve(r pluggable.Resolver) pluggable.BindingRequireme
 		y.Resolve(r)
 	}
 	ea.resolved = res
-	obj := ea.resolved.Mint(&ea.tools.CoreTools, ea.Loc(), ea.named.Text(), ea.props, ea.teardown)
+	obj := ea.resolved.Mint(&ea.tools.CoreTools, ea.Loc(), ea.named.Text(), ea.props)
 	ens, ok := obj.(ensurable.Ensurable)
 	if !ok {
 		ea.tools.Storage.Errorf(ea.loc, "the type "+ea.what.Id()+" is not ensurable")

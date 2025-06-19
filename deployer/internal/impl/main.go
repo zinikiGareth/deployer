@@ -81,7 +81,7 @@ func RunDeployer(args []string) int {
 		}
 	}
 
-	mainArgs := d.ObtainTools().Recall.Find("main-args", "main")
+	mainArgs := d.ObtainCoreTools().Recall.Find("main-args", "main")
 	runAs, ok := mainArgs.(deployer.MainHandler)
 	if !ok {
 		panic("main handler was not a MainHandler")

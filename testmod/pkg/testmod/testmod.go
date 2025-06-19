@@ -1,6 +1,7 @@
 package testmod
 
 import (
+	"ziniki.org/deployer/coremod/pkg/external"
 	"ziniki.org/deployer/deployer/pkg/deployer"
 	"ziniki.org/deployer/testmod/internal/blob"
 	"ziniki.org/deployer/testmod/internal/testS3"
@@ -18,7 +19,12 @@ func RegisterWithDriver(deployer deployer.Driver) error {
 		eh := testRunner.ErrorHandlerFor("log")
 		eh.WriteMsg("Installing things from testmod\n")
 	}
-	tools := deployer.ObtainTools()
+	toolsI := deployer.ObtainCoreTools().RetrieveOther("coremod")
+	if toolsI == nil {
+		panic("must load coremod first")
+	}
+	tools := toolsI.(*external.Tools)
+
 	tools.Register.ProvideDriver("testS3.TestAwsEnv", &testS3.TestAwsEnv{})
 
 	tools.Register.Register("target", "test.assertBucketHas", testS3.NewAssertBucketHandler(tools))

@@ -20,9 +20,11 @@ func (t *CoreTargetHandler) Handle(attacher pluggable.AttachResult, tokens []plu
 	target := &CoreTarget{loc: t1.Loc(), name: name, actions: []pluggable.ModelBuilder{}}
 
 	attacher.Attach(target)
-	return interpreters.NewVerbCommandInterpreter(t.tools, target, "target", true)
+	return interpreters.NewVerbCommandInterpreter(&t.tools.CoreTools, target, "target", true)
 }
 
 func MakeCoreTargetVerb(tools *external.Tools) *CoreTargetHandler {
 	return &CoreTargetHandler{tools: tools}
 }
+
+var _ pluggable.VerbCommand = &CoreTargetHandler{}
