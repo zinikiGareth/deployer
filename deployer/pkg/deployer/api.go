@@ -15,6 +15,8 @@ type Driver interface {
 
 	DoStuff() error
 	ObtainCoreTools() *pluggable.CoreTools
+
+	UserError(msg string)
 }
 
 type TestRunner interface {

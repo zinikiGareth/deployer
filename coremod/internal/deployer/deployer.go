@@ -2,7 +2,6 @@ package deployer
 
 import (
 	"fmt"
-	"io"
 
 	"ziniki.org/deployer/coremod/pkg/external"
 	"ziniki.org/deployer/deployer/pkg/deployer"
@@ -10,11 +9,8 @@ import (
 )
 
 type DeployerImpl struct {
-	driver       deployer.Driver
-	tools        *external.Tools
-	userErrorsTo io.StringWriter
-	srcdir       string
-	input        []string
+	driver deployer.Driver
+	tools  *external.Tools
 }
 
 func (d *DeployerImpl) ObtainTools() *external.Tools {
@@ -71,7 +67,7 @@ func (d *DeployerImpl) findTargets(names ...string) ([]pluggable.TargetThing, er
 		}
 		if t == nil || !ok {
 			msg := fmt.Sprintf("there is no target %s\n", n)
-			d.userErrorsTo.WriteString(msg)
+			d.driver.UserError(msg)
 			if ue == nil {
 				ue = deployer.UserError(msg)
 			}

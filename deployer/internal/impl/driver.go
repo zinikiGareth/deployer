@@ -89,6 +89,10 @@ func (d *DriverImpl) Traverse(lsnr pluggable.RepositoryTraverser) {
 	d.tools.Repository.Traverse(lsnr)
 }
 
+func (d *DriverImpl) UserError(msg string) {
+	d.userErrorsTo.WriteString(msg)
+}
+
 func NewDriver(sink errorsink.ErrorSink, userErrorsTo io.StringWriter) *DriverImpl {
 	reg := registry.NewRegistry()
 	reporter := errorsink.NewErrorReporter(sink)
