@@ -10,8 +10,8 @@ import (
 
 	"ziniki.org/deployer/coremod/pkg/coremod"
 	"ziniki.org/deployer/coremod/pkg/external"
-	"ziniki.org/deployer/driver/pkg/creator"
 	"ziniki.org/deployer/driver/pkg/deployer"
+	"ziniki.org/deployer/driver/pkg/drivertop"
 	"ziniki.org/deployer/driver/pkg/errorsink"
 	"ziniki.org/deployer/driver/pkg/utils"
 	"ziniki.org/deployer/golden/internal/errors"
@@ -146,7 +146,7 @@ func NewTestRunner(tracker *errors.CaseTracker, root, test string) (*TestRunner,
 	userErrorsTo := utils.NewLazyFileCreator(ueTxt)
 	sink := errorsink.NewFileSink(paths.errorFile)
 
-	driverInst := creator.NewDriver(sink, userErrorsTo)
+	driverInst := drivertop.NewDriver(sink, userErrorsTo)
 	tools := external.NewTools(driverInst.ObtainCoreTools(), &external.Options{})
 	deployerInst := coremod.NewDeployer(driverInst, tools)
 
