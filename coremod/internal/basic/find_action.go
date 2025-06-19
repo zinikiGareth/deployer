@@ -7,7 +7,7 @@ import (
 	"ziniki.org/deployer/coremod/pkg/findable"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
-	"ziniki.org/deployer/driver/pkg/interpreters"
+	"ziniki.org/deployer/driver/pkg/drivertop"
 )
 
 // The action is created by the handler.  It is added to a target.  It then takes on the rest of the work:
@@ -80,7 +80,7 @@ func (ea *FindAction) AddProperty(name driverbottom.Identifier, value driverbott
 
 func (ea *FindAction) AddAdverb(adv driverbottom.Adverb, tokens []driverbottom.Token) driverbottom.Interpreter {
 	ea.tools.Reporter.Reportf(adv.Loc().Offset, "find cannot handle %s\n", adv.Name())
-	return interpreters.NewDisallowInnerScope(ea.tools.CoreTools)
+	return drivertop.NewDisallowInnerScope(ea.tools.CoreTools)
 }
 
 func (ea *FindAction) Completed() {

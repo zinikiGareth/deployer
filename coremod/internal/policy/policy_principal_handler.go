@@ -3,7 +3,7 @@ package policy
 import (
 	"ziniki.org/deployer/coremod/pkg/external"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
-	"ziniki.org/deployer/driver/pkg/interpreters"
+	"ziniki.org/deployer/driver/pkg/drivertop"
 )
 
 type policyPrincipalCommandHandler struct {
@@ -13,18 +13,18 @@ type policyPrincipalCommandHandler struct {
 func (pah *policyPrincipalCommandHandler) Handle(parent driverbottom.AttachResult, tokens []driverbottom.Token) driverbottom.Interpreter {
 	exprs, ok := pah.tools.Parser.ParseMultiple(tokens[1:])
 	if !ok {
-		return interpreters.NewIgnoreInnerScope()
+		return drivertop.NewIgnoreInnerScope()
 	}
 
 	if len(exprs) != 2 {
 		pah.tools.Reporter.Report(tokens[0].Loc().Offset, "principal: <type> <id>")
-		return interpreters.NewIgnoreInnerScope()
+		return drivertop.NewIgnoreInnerScope()
 	}
 
 	pa := &policyPrincipalAction{tools: pah.tools, loc: tokens[0].Loc(), ofType: exprs[0], id: exprs[1]}
 	parent.Attach(pa)
 
-	return interpreters.NewDisallowInnerScope(pah.tools.CoreTools)
+	return drivertop.NewDisallowInnerScope(pah.tools.CoreTools)
 }
 
 func NewPolicyPrincipalCommandHandler(tools *external.Tools) driverbottom.VerbCommand {

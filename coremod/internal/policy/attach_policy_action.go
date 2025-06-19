@@ -6,8 +6,8 @@ import (
 
 	"ziniki.org/deployer/coremod/pkg/external"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
+	"ziniki.org/deployer/driver/pkg/drivertop"
 	"ziniki.org/deployer/driver/pkg/errorsink"
-	"ziniki.org/deployer/driver/pkg/interpreters"
 )
 
 // The action is created by the handler.  It is added to a target.  It then takes on the rest of the work:
@@ -55,7 +55,7 @@ func (ea *AttachPolicyAction) AddAdverb(adv driverbottom.Adverb, tokens []driver
 
 		}
 	*/
-	return interpreters.NewDisallowInnerScope(ea.tools.CoreTools)
+	return drivertop.NewDisallowInnerScope(ea.tools.CoreTools)
 }
 
 func (ea *AttachPolicyAction) Completed() {

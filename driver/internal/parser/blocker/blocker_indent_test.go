@@ -6,8 +6,8 @@ import (
 
 	"ziniki.org/deployer/driver/internal/parser/blocker"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
+	"ziniki.org/deployer/driver/pkg/drivertop"
 	"ziniki.org/deployer/driver/pkg/errorsink"
-	"ziniki.org/deployer/driver/pkg/interpreters"
 )
 
 func TestCommentLinesAreDiscarded(t *testing.T) {
@@ -83,7 +83,7 @@ func (t *tmp) HaveTokens(toks []driverbottom.Token) driverbottom.Interpreter {
 			if l.inner != nil {
 				return l.inner
 			} else {
-				return interpreters.NewDisallowInnerScope(t.tools)
+				return drivertop.NewDisallowInnerScope(t.tools)
 			}
 		}
 	}

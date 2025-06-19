@@ -3,7 +3,7 @@ package basic
 import (
 	"ziniki.org/deployer/coremod/pkg/external"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
-	"ziniki.org/deployer/driver/pkg/interpreters"
+	"ziniki.org/deployer/driver/pkg/drivertop"
 )
 
 type showCommandHandler struct {
@@ -13,22 +13,22 @@ type showCommandHandler struct {
 func (sch *showCommandHandler) Handle(parent driverbottom.AttachResult, tokens []driverbottom.Token) driverbottom.Interpreter {
 	if len(tokens) < 2 {
 		sch.tools.Reporter.Report(tokens[0].Loc().Offset, "show: expr...")
-		return interpreters.NewIgnoreInnerScope()
+		return drivertop.NewIgnoreInnerScope()
 	}
 	// if assignTo != nil {
 	// 	sch.tools.Reporter.Report(tokens[0].Loc().Offset, "show: cannot assign an output variable")
-	// 	return interpreters.NewIgnoreInnerScope()
+	// 	return drivertop.NewIgnoreInnerScope()
 	// }
 
 	exprs, ok := sch.tools.Parser.ParseMultiple(tokens[1:])
 	if !ok {
-		return interpreters.NewIgnoreInnerScope()
+		return drivertop.NewIgnoreInnerScope()
 	}
 
 	sa := &ShowAction{tools: sch.tools, loc: tokens[0].Loc(), exprs: exprs}
 	parent.Attach(sa)
 
-	return interpreters.NewDisallowInnerScope(sch.tools.CoreTools)
+	return drivertop.NewDisallowInnerScope(sch.tools.CoreTools)
 }
 
 func NewShowCommandHandler(tools *external.Tools) driverbottom.VerbCommand {

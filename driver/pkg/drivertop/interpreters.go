@@ -1,4 +1,4 @@
-package interpreters
+package drivertop
 
 import (
 	"ziniki.org/deployer/driver/internal/parser/interpreters"

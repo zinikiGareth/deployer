@@ -3,7 +3,7 @@ package policy
 import (
 	"ziniki.org/deployer/coremod/pkg/external"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
-	"ziniki.org/deployer/driver/pkg/interpreters"
+	"ziniki.org/deployer/driver/pkg/drivertop"
 )
 
 type AttachPolicyCommandHandler struct {
@@ -13,18 +13,18 @@ type AttachPolicyCommandHandler struct {
 func (apch *AttachPolicyCommandHandler) Handle(parent driverbottom.AttachResult, tokens []driverbottom.Token) driverbottom.Interpreter {
 	exprs, ok := apch.tools.Parser.ParseMultiple(tokens[1:])
 	if !ok {
-		return interpreters.NewIgnoreInnerScope()
+		return drivertop.NewIgnoreInnerScope()
 	}
 
 	if len(exprs) != 2 {
 		apch.tools.Reporter.Report(tokens[0].Loc().Offset, "attachPolicy: <to> <policy>")
-		return interpreters.NewIgnoreInnerScope()
+		return drivertop.NewIgnoreInnerScope()
 	}
 
 	ea := &AttachPolicyAction{tools: apch.tools, loc: tokens[0].Loc(), to: exprs[0], policy: exprs[1]}
 	parent.Attach(ea)
 
-	return interpreters.NewPropertiesInnerScope(apch.tools.CoreTools, ea)
+	return drivertop.NewPropertiesInnerScope(apch.tools.CoreTools, ea)
 }
 
 func NewAttachPolicyCommandHandler(tools *external.Tools) driverbottom.VerbCommand {

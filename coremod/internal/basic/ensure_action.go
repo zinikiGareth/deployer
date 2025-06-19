@@ -6,8 +6,8 @@ import (
 	"ziniki.org/deployer/coremod/pkg/ensurable"
 	"ziniki.org/deployer/coremod/pkg/external"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
+	"ziniki.org/deployer/driver/pkg/drivertop"
 	"ziniki.org/deployer/driver/pkg/errorsink"
-	"ziniki.org/deployer/driver/pkg/interpreters"
 )
 
 // The action is created by the handler.  It is added to a target.  It then takes on the rest of the work:
@@ -93,7 +93,7 @@ func (ea *EnsureAction) AddAdverb(adv driverbottom.Adverb, tokens []driverbottom
 		ea.teardown = &MyTearDown{mode: tokens[0].(driverbottom.Identifier).Id()}
 
 	}
-	return interpreters.NewDisallowInnerScope(ea.tools.CoreTools)
+	return drivertop.NewDisallowInnerScope(ea.tools.CoreTools)
 }
 
 func (ea *EnsureAction) Completed() {
