@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"syscall"
 
-	"ziniki.org/deployer/driver/pkg/deployer"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/utils"
 	"ziniki.org/deployer/golden/internal/errors"
 	"ziniki.org/deployer/golden/internal/lsnrs"
@@ -74,6 +74,6 @@ func (r *TestRunner) WrapUp() {
 	r.tracker.Done()
 }
 
-func (r *TestRunner) ErrorHandlerFor(purpose string) deployer.ErrorHandler {
+func (r *TestRunner) ErrorHandlerFor(purpose string) driverbottom.ErrorHandler {
 	return r.tracker.ErrorHandlerFor(purpose)
 }

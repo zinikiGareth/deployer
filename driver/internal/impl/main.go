@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"ziniki.org/deployer/driver/pkg/deployer"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
 )
 
@@ -82,7 +82,7 @@ func RunDeployer(args []string) int {
 	}
 
 	mainArgs := d.ObtainCoreTools().Recall.Find("main-args", "main")
-	runAs, ok := mainArgs.(deployer.MainHandler)
+	runAs, ok := mainArgs.(driverbottom.MainHandler)
 	if !ok {
 		panic("main handler was not a MainHandler")
 	}

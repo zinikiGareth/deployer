@@ -11,7 +11,6 @@ import (
 	"ziniki.org/deployer/driver/internal/registry"
 	"ziniki.org/deployer/driver/internal/repo"
 	"ziniki.org/deployer/driver/internal/runtime"
-	"ziniki.org/deployer/driver/pkg/deployer"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
 	"ziniki.org/deployer/driver/pkg/utils"
@@ -61,7 +60,7 @@ func (d *DriverImpl) UseModule(mod string) error {
 		log.Printf("ignoring module " + mod + " as it does not have RegisterWithDriver")
 		return nil
 	}
-	return init.(func(deployer.Driver) error)(d)
+	return init.(func(driverbottom.Driver) error)(d)
 }
 
 func (d *DriverImpl) DoStuff() error {

@@ -6,12 +6,11 @@ import (
 	"ziniki.org/deployer/driver/internal/impl"
 	"ziniki.org/deployer/driver/internal/parser/interpreters"
 	"ziniki.org/deployer/driver/internal/parser/lexicator"
-	"ziniki.org/deployer/driver/pkg/deployer"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
 )
 
-func NewDriver(sink errorsink.ErrorSink, userErrorsTo io.StringWriter) deployer.Driver {
+func NewDriver(sink errorsink.ErrorSink, userErrorsTo io.StringWriter) driverbottom.Driver {
 	return impl.NewDriver(sink, userErrorsTo)
 }
 

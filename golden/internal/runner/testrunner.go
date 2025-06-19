@@ -10,7 +10,7 @@ import (
 
 	"ziniki.org/deployer/coremod/pkg/coremod"
 	"ziniki.org/deployer/coremod/pkg/external"
-	"ziniki.org/deployer/driver/pkg/deployer"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/drivertop"
 	"ziniki.org/deployer/driver/pkg/errorsink"
 	"ziniki.org/deployer/driver/pkg/utils"
@@ -22,7 +22,7 @@ import (
 
 type TestRunner struct {
 	tracker    *errors.CaseTracker
-	driver     deployer.Driver
+	driver     driverbottom.Driver
 	deployer   external.Deployer
 	symbolLsnr *lsnrs.RepoListener
 	golden     *goldenComparator
@@ -106,7 +106,7 @@ func (r *TestRunner) Module(mod string) error {
 	}
 	test, err := p.Lookup("ProvideTestRunner")
 	if err == nil {
-		err = test.(func(deployer.TestRunner) error)(r)
+		err = test.(func(driverbottom.TestRunner) error)(r)
 		if err != nil {
 			return err
 		}
@@ -116,7 +116,7 @@ func (r *TestRunner) Module(mod string) error {
 		log.Printf("ignoring module " + mod + " as it does not have RegisterWithDriver")
 		return nil
 	}
-	return init.(func(deployer.Driver) error)(r.driver)
+	return init.(func(driverbottom.Driver) error)(r.driver)
 }
 
 func (r *TestRunner) loadCoreMod() error {

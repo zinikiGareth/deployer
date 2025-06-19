@@ -4,12 +4,11 @@ import (
 	"fmt"
 
 	"ziniki.org/deployer/coremod/pkg/external"
-	"ziniki.org/deployer/driver/pkg/deployer"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 )
 
 type DeployerImpl struct {
-	driver deployer.Driver
+	driver driverbottom.Driver
 	tools  *external.Tools
 }
 
@@ -69,7 +68,7 @@ func (d *DeployerImpl) findTargets(names ...string) ([]driverbottom.TargetThing,
 			msg := fmt.Sprintf("there is no target %s\n", n)
 			d.driver.UserError(msg)
 			if ue == nil {
-				ue = deployer.UserError(msg)
+				ue = driverbottom.UserError(msg)
 			}
 		}
 		targets = append(targets, target)
@@ -80,6 +79,6 @@ func (d *DeployerImpl) findTargets(names ...string) ([]driverbottom.TargetThing,
 	return targets, nil
 }
 
-func NewDeployer(driver deployer.Driver, tools *external.Tools) external.Deployer {
+func NewDeployer(driver driverbottom.Driver, tools *external.Tools) external.Deployer {
 	return &DeployerImpl{driver: driver, tools: tools}
 }

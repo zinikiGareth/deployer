@@ -6,14 +6,14 @@ import (
 
 	"ziniki.org/deployer/coremod/internal/deployer"
 	"ziniki.org/deployer/coremod/pkg/external"
-	deployer2 "ziniki.org/deployer/driver/pkg/deployer"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 )
 
 type mainHandler struct {
 	tools *external.Tools
 }
 
-func (m *mainHandler) RunWithArgs(driver deployer2.Driver, args []string) {
+func (m *mainHandler) RunWithArgs(driver driverbottom.Driver, args []string) {
 	options := m.tools.Options
 	targets := []string{}
 
@@ -46,6 +46,6 @@ func (m *mainHandler) RunWithArgs(driver deployer2.Driver, args []string) {
 	}
 }
 
-func MakeMainHandler(tools *external.Tools) deployer2.MainHandler {
+func MakeMainHandler(tools *external.Tools) driverbottom.MainHandler {
 	return &mainHandler{tools: tools}
 }

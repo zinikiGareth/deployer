@@ -2,24 +2,24 @@ package testmod
 
 import (
 	"ziniki.org/deployer/coremod/pkg/external"
-	"ziniki.org/deployer/driver/pkg/deployer"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/testmod/internal/blob"
 	"ziniki.org/deployer/testmod/internal/testS3"
 )
 
-var testRunner deployer.TestRunner
+var testRunner driverbottom.TestRunner
 
-func ProvideTestRunner(runner deployer.TestRunner) error {
+func ProvideTestRunner(runner driverbottom.TestRunner) error {
 	testRunner = runner
 	return nil
 }
 
-func RegisterWithDriver(deployer deployer.Driver) error {
+func RegisterWithDriver(driver driverbottom.Driver) error {
 	if testRunner != nil {
 		eh := testRunner.ErrorHandlerFor("log")
 		eh.WriteMsg("Installing things from testmod\n")
 	}
-	toolsI := deployer.ObtainCoreTools().RetrieveOther("coremod")
+	toolsI := driver.ObtainCoreTools().RetrieveOther("coremod")
 	if toolsI == nil {
 		panic("must load coremod first")
 	}

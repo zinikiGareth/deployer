@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"os"
 
-	"ziniki.org/deployer/driver/pkg/deployer"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 )
 
 type TestErrorHandler interface {
-	deployer.ErrorHandler
+	driverbottom.ErrorHandler
 	Fail()
 }
 

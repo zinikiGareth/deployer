@@ -3,7 +3,7 @@ package runner
 import (
 	"path/filepath"
 
-	"ziniki.org/deployer/driver/pkg/deployer"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/utils"
 	"ziniki.org/deployer/golden/internal/errors"
 )
@@ -40,7 +40,7 @@ func (gc *goldenComparator) compareDirectory(golden, gen string, copyNewFiles bo
 	gc.copyGenned(eh, genmap, golden, gen, copyNewFiles)
 }
 
-func (gc *goldenComparator) prepare(eh deployer.ErrorHandler, golden, gen string) ([]string, []string, error) {
+func (gc *goldenComparator) prepare(eh driverbottom.ErrorHandler, golden, gen string) ([]string, []string, error) {
 	eh.Writef("comparing %s to %s\n", golden, gen)
 	goldenFiles, err1 := utils.FindFiles(golden, "")
 	genFiles, err2 := utils.FindFiles(gen, "")
@@ -69,7 +69,7 @@ func (gc *goldenComparator) catalogGenned(genFiles []string) map[string]int {
 	return genmap
 }
 
-func (gc *goldenComparator) traverseGolden(eh deployer.ErrorHandler, genmap map[string]int, golden, gen string, goldenFiles []string) {
+func (gc *goldenComparator) traverseGolden(eh driverbottom.ErrorHandler, genmap map[string]int, golden, gen string, goldenFiles []string) {
 	failed := false
 	for _, f := range goldenFiles {
 		if genmap[f] != 0 {
@@ -88,7 +88,7 @@ func (gc *goldenComparator) traverseGolden(eh deployer.ErrorHandler, genmap map[
 	}
 }
 
-func (gc *goldenComparator) copyGenned(eh deployer.ErrorHandler, genmap map[string]int, golden, gen string, copyNewFiles bool) {
+func (gc *goldenComparator) copyGenned(eh driverbottom.ErrorHandler, genmap map[string]int, golden, gen string, copyNewFiles bool) {
 	if len(genmap) > 0 {
 		if copyNewFiles {
 			eh.Writef("generated files in %s were not present in %s ... copying:\n", gen, golden)

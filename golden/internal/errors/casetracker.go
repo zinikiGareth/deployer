@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"slices"
 
-	"ziniki.org/deployer/driver/pkg/deployer"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 )
 
 type CaseTracker struct {
@@ -22,7 +22,7 @@ func (tracker *CaseTracker) NewCase(caseName, dir string) {
 	tracker.errhandlers = make(map[string]TestErrorHandler)
 }
 
-func (tracker *CaseTracker) ErrorHandlerFor(what string) deployer.ErrorHandler {
+func (tracker *CaseTracker) ErrorHandlerFor(what string) driverbottom.ErrorHandler {
 	eh := tracker.errhandlers[what]
 	if eh == nil {
 		eh = tracker.NewErrorHandler(what)

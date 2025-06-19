@@ -1,20 +1,18 @@
-package deployer
+package driverbottom
 
 import (
 	"io"
-
-	"ziniki.org/deployer/driver/pkg/driverbottom"
 )
 
 type Driver interface {
-	AddSymbolListener(lsnr driverbottom.SymbolListener)
+	AddSymbolListener(lsnr SymbolListener)
 	UseModule(mod string) error
 	ReadScriptsFrom(indir string) error
 	FindAndReadEnvs(dirs []string, file string) bool
-	Traverse(lsnr driverbottom.RepositoryTraverser)
+	Traverse(lsnr RepositoryTraverser)
 
 	DoStuff() error
-	ObtainCoreTools() *driverbottom.CoreTools
+	ObtainCoreTools() *CoreTools
 
 	UserError(msg string)
 }
