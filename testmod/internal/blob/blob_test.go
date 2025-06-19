@@ -3,7 +3,7 @@ package blob_test
 import (
 	"testing"
 
-	"ziniki.org/deployer/deployer/pkg/pluggable"
+	"ziniki.org/deployer/driver/pkg/pluggable"
 	"ziniki.org/deployer/testmod/internal/blob"
 )
 

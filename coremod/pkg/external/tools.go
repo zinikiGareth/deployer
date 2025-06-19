@@ -1,7 +1,7 @@
 package external
 
 import (
-	"ziniki.org/deployer/deployer/pkg/pluggable"
+	"ziniki.org/deployer/driver/pkg/pluggable"
 )
 
 type Tools struct {

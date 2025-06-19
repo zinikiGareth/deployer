@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"ziniki.org/deployer/coremod/internal/methods"
-	"ziniki.org/deployer/deployer/pkg/pluggable"
+	"ziniki.org/deployer/driver/pkg/pluggable"
 )
 
 func TestType(t *testing.T) {

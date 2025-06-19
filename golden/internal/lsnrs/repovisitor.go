@@ -7,8 +7,8 @@ import (
 	"path/filepath"
 	"slices"
 
-	"ziniki.org/deployer/deployer/pkg/pluggable"
-	"ziniki.org/deployer/deployer/pkg/utils"
+	"ziniki.org/deployer/driver/pkg/pluggable"
+	"ziniki.org/deployer/driver/pkg/utils"
 )
 
 type RepositoryStorer interface {

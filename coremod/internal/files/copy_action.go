@@ -5,8 +5,8 @@ import (
 
 	"ziniki.org/deployer/coremod/pkg/external"
 	"ziniki.org/deployer/coremod/pkg/files"
-	"ziniki.org/deployer/deployer/pkg/errorsink"
-	"ziniki.org/deployer/deployer/pkg/pluggable"
+	"ziniki.org/deployer/driver/pkg/errorsink"
+	"ziniki.org/deployer/driver/pkg/pluggable"
 )
 
 type copyAction struct {

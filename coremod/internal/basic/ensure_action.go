@@ -5,9 +5,9 @@ import (
 
 	"ziniki.org/deployer/coremod/pkg/ensurable"
 	"ziniki.org/deployer/coremod/pkg/external"
-	"ziniki.org/deployer/deployer/pkg/errorsink"
-	"ziniki.org/deployer/deployer/pkg/interpreters"
-	"ziniki.org/deployer/deployer/pkg/pluggable"
+	"ziniki.org/deployer/driver/pkg/errorsink"
+	"ziniki.org/deployer/driver/pkg/interpreters"
+	"ziniki.org/deployer/driver/pkg/pluggable"
 )
 
 // The action is created by the handler.  It is added to a target.  It then takes on the rest of the work:

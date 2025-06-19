@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"slices"
 
-	"ziniki.org/deployer/deployer/pkg/deployer"
+	"ziniki.org/deployer/driver/pkg/deployer"
 )
 
 type CaseTracker struct {

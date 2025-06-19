@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"ziniki.org/deployer/coremod/pkg/external"
-	"ziniki.org/deployer/deployer/pkg/pluggable"
+	"ziniki.org/deployer/driver/pkg/pluggable"
 )
 
 const (

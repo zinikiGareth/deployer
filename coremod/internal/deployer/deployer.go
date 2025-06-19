@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"ziniki.org/deployer/coremod/pkg/external"
-	"ziniki.org/deployer/deployer/pkg/deployer"
-	"ziniki.org/deployer/deployer/pkg/pluggable"
+	"ziniki.org/deployer/driver/pkg/deployer"
+	"ziniki.org/deployer/driver/pkg/pluggable"
 )
 
 type DeployerImpl struct {

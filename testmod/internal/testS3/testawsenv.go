@@ -1,6 +1,6 @@
 package testS3
 
-import "ziniki.org/deployer/deployer/pkg/pluggable"
+import "ziniki.org/deployer/driver/pkg/pluggable"
 
 type TestAwsEnv struct {
 	Region  string

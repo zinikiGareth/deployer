@@ -6,8 +6,8 @@ import (
 	"path/filepath"
 	"syscall"
 
-	"ziniki.org/deployer/deployer/pkg/deployer"
-	"ziniki.org/deployer/deployer/pkg/utils"
+	"ziniki.org/deployer/driver/pkg/deployer"
+	"ziniki.org/deployer/driver/pkg/utils"
 	"ziniki.org/deployer/golden/internal/errors"
 	"ziniki.org/deployer/golden/internal/lsnrs"
 )

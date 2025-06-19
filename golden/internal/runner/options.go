@@ -1,7 +1,7 @@
 package runner
 
 import (
-	"ziniki.org/deployer/deployer/pkg/utils"
+	"ziniki.org/deployer/driver/pkg/utils"
 )
 
 func (r *TestRunner) ReadTeardown(file string) bool {

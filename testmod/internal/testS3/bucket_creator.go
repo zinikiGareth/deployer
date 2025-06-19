@@ -5,9 +5,9 @@ import (
 
 	"ziniki.org/deployer/coremod/pkg/external"
 	"ziniki.org/deployer/coremod/pkg/files"
-	"ziniki.org/deployer/deployer/pkg/errorsink"
-	"ziniki.org/deployer/deployer/pkg/pluggable"
-	"ziniki.org/deployer/deployer/pkg/testhelpers"
+	"ziniki.org/deployer/driver/pkg/errorsink"
+	"ziniki.org/deployer/driver/pkg/pluggable"
+	"ziniki.org/deployer/driver/pkg/testhelpers"
 )
 
 type bucketCreator struct {

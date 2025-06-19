@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"ziniki.org/deployer/deployer/pkg/deployer"
+	"ziniki.org/deployer/driver/pkg/deployer"
 )
 
 type TestErrorHandler interface {

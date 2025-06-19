@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"ziniki.org/deployer/deployer/pkg/pluggable"
+	"ziniki.org/deployer/driver/pkg/pluggable"
 )
 
 type RepoListener struct {

@@ -2,7 +2,7 @@ package main
 
 import (
 	"ziniki.org/deployer/coremod/pkg/coremod"
-	"ziniki.org/deployer/deployer/pkg/deployer"
+	"ziniki.org/deployer/driver/pkg/deployer"
 )
 
 func ProvideTestRunner(runner deployer.TestRunner) error {

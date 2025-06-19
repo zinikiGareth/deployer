@@ -2,8 +2,8 @@ package testS3
 
 import (
 	"ziniki.org/deployer/coremod/pkg/external"
-	"ziniki.org/deployer/deployer/pkg/interpreters"
-	"ziniki.org/deployer/deployer/pkg/pluggable"
+	"ziniki.org/deployer/driver/pkg/interpreters"
+	"ziniki.org/deployer/driver/pkg/pluggable"
 )
 
 type bucketContentsScope struct {

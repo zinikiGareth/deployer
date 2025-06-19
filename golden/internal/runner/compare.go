@@ -3,8 +3,8 @@ package runner
 import (
 	"path/filepath"
 
-	"ziniki.org/deployer/deployer/pkg/deployer"
-	"ziniki.org/deployer/deployer/pkg/utils"
+	"ziniki.org/deployer/driver/pkg/deployer"
+	"ziniki.org/deployer/driver/pkg/utils"
 	"ziniki.org/deployer/golden/internal/errors"
 )
 

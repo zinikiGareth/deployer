@@ -5,7 +5,7 @@ import (
 	"os/exec"
 	"path/filepath"
 
-	"ziniki.org/deployer/deployer/pkg/utils"
+	"ziniki.org/deployer/driver/pkg/utils"
 	"ziniki.org/deployer/golden/internal/errors"
 )
 

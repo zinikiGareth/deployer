@@ -2,7 +2,7 @@ package testmod
 
 import (
 	"ziniki.org/deployer/coremod/pkg/external"
-	"ziniki.org/deployer/deployer/pkg/deployer"
+	"ziniki.org/deployer/driver/pkg/deployer"
 	"ziniki.org/deployer/testmod/internal/blob"
 	"ziniki.org/deployer/testmod/internal/testS3"
 )

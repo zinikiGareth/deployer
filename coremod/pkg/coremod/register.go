@@ -9,7 +9,7 @@ import (
 	"ziniki.org/deployer/coremod/internal/target"
 	"ziniki.org/deployer/coremod/internal/time"
 	"ziniki.org/deployer/coremod/pkg/external"
-	"ziniki.org/deployer/deployer/pkg/deployer"
+	"ziniki.org/deployer/driver/pkg/deployer"
 )
 
 var testRunner deployer.TestRunner

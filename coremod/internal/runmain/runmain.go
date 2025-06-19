@@ -6,7 +6,7 @@ import (
 
 	"ziniki.org/deployer/coremod/internal/deployer"
 	"ziniki.org/deployer/coremod/pkg/external"
-	deployer2 "ziniki.org/deployer/deployer/pkg/deployer"
+	deployer2 "ziniki.org/deployer/driver/pkg/deployer"
 )
 
 type mainHandler struct {

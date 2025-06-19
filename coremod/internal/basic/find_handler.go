@@ -2,8 +2,8 @@ package basic
 
 import (
 	"ziniki.org/deployer/coremod/pkg/external"
-	"ziniki.org/deployer/deployer/pkg/interpreters"
-	"ziniki.org/deployer/deployer/pkg/pluggable"
+	"ziniki.org/deployer/driver/pkg/interpreters"
+	"ziniki.org/deployer/driver/pkg/pluggable"
 )
 
 // For each action verb, there is exactly one handler.  It is created up front and it does the job of parsing lines and creating individual actions.

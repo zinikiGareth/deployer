@@ -1,6 +1,6 @@
 package ensurable
 
-import "ziniki.org/deployer/deployer/pkg/pluggable"
+import "ziniki.org/deployer/driver/pkg/pluggable"
 
 type Ensurable interface {
 	pluggable.Describable

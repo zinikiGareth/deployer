@@ -3,7 +3,7 @@ package coremod
 import (
 	deployer2 "ziniki.org/deployer/coremod/internal/deployer"
 	"ziniki.org/deployer/coremod/pkg/external"
-	"ziniki.org/deployer/deployer/pkg/deployer"
+	"ziniki.org/deployer/driver/pkg/deployer"
 )
 
 func NewDeployer(driver deployer.Driver, tools *external.Tools) external.Deployer {

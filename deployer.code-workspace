@@ -1,8 +1,8 @@
 {
 	"folders": [
 		{
-			"name": "Deployer",
-			"path": "deployer"
+			"name": "Driver",
+			"path": "driver"
 		},
 		{
 			"name": "GoldenTester",
