@@ -1,4 +1,4 @@
-package external
+package corebottom
 
 import "ziniki.org/deployer/driver/pkg/driverbottom"
 

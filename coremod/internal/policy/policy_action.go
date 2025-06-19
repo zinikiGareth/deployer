@@ -1,7 +1,7 @@
 package policy
 
 import (
-	"ziniki.org/deployer/coremod/pkg/external"
+	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
 )
@@ -9,11 +9,11 @@ import (
 type PolicyRuleAction interface {
 	driverbottom.Describable
 	Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement
-	ApplyTo(doc external.PolicyDocument)
+	ApplyTo(doc corebottom.PolicyDocument)
 }
 
 type PolicyAction struct {
-	tools   *external.Tools
+	tools   *corebottom.Tools
 	loc     *errorsink.Location
 	actions []PolicyRuleAction
 }

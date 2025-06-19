@@ -1,7 +1,7 @@
 package policy
 
 import (
-	"ziniki.org/deployer/coremod/pkg/external"
+	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
 )
@@ -10,11 +10,11 @@ import (
 type UpdatePolicyAllowAction interface {
 	driverbottom.Describable
 	Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement
-	ApplyTo(doc external.PolicyEffect)
+	ApplyTo(doc corebottom.PolicyEffect)
 }
 
 type PolicyAllowAction struct {
-	tools   *external.Tools
+	tools   *corebottom.Tools
 	loc     *errorsink.Location
 	actions []UpdatePolicyAllowAction
 
@@ -58,7 +58,7 @@ func (paa *PolicyAllowAction) Attach(entry any) {
 	paa.actions = append(paa.actions, entry.(UpdatePolicyAllowAction))
 }
 
-func (paa *PolicyAllowAction) ApplyTo(doc external.PolicyDocument) {
+func (paa *PolicyAllowAction) ApplyTo(doc corebottom.PolicyDocument) {
 	item := doc.Item("Allow")
 	for _, a := range paa.allowActions {
 		item.Action(paa.tools.Storage.EvalAsString(a))

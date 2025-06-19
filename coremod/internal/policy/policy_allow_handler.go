@@ -1,13 +1,13 @@
 package policy
 
 import (
-	"ziniki.org/deployer/coremod/pkg/external"
+	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/drivertop"
 )
 
 type policyAllowCommandHandler struct {
-	tools *external.Tools
+	tools *corebottom.Tools
 }
 
 func (pah *policyAllowCommandHandler) Handle(parent driverbottom.AttachResult, tokens []driverbottom.Token) driverbottom.Interpreter {
@@ -27,6 +27,6 @@ func (pah *policyAllowCommandHandler) Handle(parent driverbottom.AttachResult, t
 	return drivertop.NewVerbCommandInterpreter(pah.tools.CoreTools, pa, "policy-inner", false)
 }
 
-func NewPolicyAllowCommandHandler(tools *external.Tools) driverbottom.VerbCommand {
+func NewPolicyAllowCommandHandler(tools *corebottom.Tools) driverbottom.VerbCommand {
 	return &policyAllowCommandHandler{tools: tools}
 }

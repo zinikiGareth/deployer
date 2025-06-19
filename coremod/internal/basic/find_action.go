@@ -3,24 +3,23 @@ package basic
 import (
 	"fmt"
 
-	"ziniki.org/deployer/coremod/pkg/external"
-	"ziniki.org/deployer/coremod/pkg/findable"
+	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
-	"ziniki.org/deployer/driver/pkg/errorsink"
 	"ziniki.org/deployer/driver/pkg/drivertop"
+	"ziniki.org/deployer/driver/pkg/errorsink"
 )
 
 // The action is created by the handler.  It is added to a target.  It then takes on the rest of the work:
 // resolution, preparation, execution
 
 type FindAction struct {
-	tools    *external.Tools
+	tools    *corebottom.Tools
 	loc      *errorsink.Location
 	what     driverbottom.Identifier
 	resolved driverbottom.Blank
 	named    driverbottom.String
 	props    map[driverbottom.Identifier]driverbottom.Expr
-	ens      findable.Findable
+	ens      corebottom.Findable
 }
 
 func (ea *FindAction) Loc() *errorsink.Location {
@@ -100,7 +99,7 @@ func (ea *FindAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequi
 	}
 	ea.resolved = res
 	obj := ea.resolved.Find(ea.tools.CoreTools, ea.Loc(), ea.named.Text())
-	ens, ok := obj.(findable.Findable)
+	ens, ok := obj.(corebottom.Findable)
 	if !ok {
 		ea.tools.Storage.Errorf(ea.loc, "the type "+ea.what.Id()+" is not findable")
 		return driverbottom.ERROR_OCCURRED
@@ -114,7 +113,6 @@ func (ea *FindAction) BuildModel(pres driverbottom.ValuePresenter) {
 }
 
 func (ea *FindAction) UpdateReality() {
-	ea.ens.UpdateReality()
 }
 
 func (ea *FindAction) TearDown() {

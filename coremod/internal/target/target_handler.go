@@ -1,13 +1,13 @@
 package target
 
 import (
-	"ziniki.org/deployer/coremod/pkg/external"
+	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/drivertop"
 )
 
 type CoreTargetHandler struct {
-	tools *external.Tools
+	tools *corebottom.Tools
 }
 
 func (t *CoreTargetHandler) Handle(attacher driverbottom.AttachResult, tokens []driverbottom.Token) driverbottom.Interpreter {
@@ -23,7 +23,7 @@ func (t *CoreTargetHandler) Handle(attacher driverbottom.AttachResult, tokens []
 	return drivertop.NewVerbCommandInterpreter(t.tools.CoreTools, target, "target", true)
 }
 
-func MakeCoreTargetVerb(tools *external.Tools) *CoreTargetHandler {
+func MakeCoreTargetVerb(tools *corebottom.Tools) *CoreTargetHandler {
 	return &CoreTargetHandler{tools: tools}
 }
 

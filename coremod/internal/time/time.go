@@ -3,7 +3,7 @@ package time
 import (
 	"fmt"
 
-	"ziniki.org/deployer/coremod/pkg/external"
+	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 )
 
@@ -37,7 +37,7 @@ func (t TimeOf) String() string {
 }
 
 type HoursFunc struct {
-	tools *external.Tools
+	tools *corebottom.Tools
 }
 
 func (h *HoursFunc) ReduceExpr(me driverbottom.Token, before []driverbottom.Expr, after []driverbottom.Expr) driverbottom.Expr {
@@ -54,6 +54,6 @@ func (h *HoursFunc) ReduceExpr(me driverbottom.Token, before []driverbottom.Expr
 	return &TimeOf{Locatable: konst, Number: int(konst.Value()), Unit: HOURS}
 }
 
-func MakeHoursFunc(tools *external.Tools) *HoursFunc {
+func MakeHoursFunc(tools *corebottom.Tools) *HoursFunc {
 	return &HoursFunc{tools: tools}
 }

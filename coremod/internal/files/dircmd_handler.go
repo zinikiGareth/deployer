@@ -1,13 +1,13 @@
 package files
 
 import (
-	"ziniki.org/deployer/coremod/pkg/external"
+	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/drivertop"
 )
 
 type dirCommandHandler struct {
-	tools *external.Tools
+	tools *corebottom.Tools
 }
 
 func (dch *dirCommandHandler) Handle(parent driverbottom.AttachResult, tokens []driverbottom.Token) driverbottom.Interpreter {
@@ -31,6 +31,6 @@ func (dch *dirCommandHandler) Handle(parent driverbottom.AttachResult, tokens []
 	return drivertop.NewDisallowInnerScope(dch.tools.CoreTools)
 }
 
-func NewDirCommandHandler(tools *external.Tools) driverbottom.VerbCommand {
+func NewDirCommandHandler(tools *corebottom.Tools) driverbottom.VerbCommand {
 	return &dirCommandHandler{tools: tools}
 }

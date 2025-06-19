@@ -1,13 +1,13 @@
 package testS3
 
 import (
-	"ziniki.org/deployer/coremod/pkg/external"
+	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/drivertop"
 )
 
 type assertBucketHandler struct {
-	tools *external.Tools
+	tools *corebottom.Tools
 }
 
 func (abh *assertBucketHandler) Handle(parent driverbottom.AttachResult, tokens []driverbottom.Token) driverbottom.Interpreter {
@@ -31,6 +31,6 @@ func (abh *assertBucketHandler) Handle(parent driverbottom.AttachResult, tokens 
 	return BucketContentsScope(abh.tools, ca)
 }
 
-func NewAssertBucketHandler(tools *external.Tools) driverbottom.VerbCommand {
+func NewAssertBucketHandler(tools *corebottom.Tools) driverbottom.VerbCommand {
 	return &assertBucketHandler{tools: tools}
 }

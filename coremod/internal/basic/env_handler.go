@@ -1,13 +1,13 @@
 package basic
 
 import (
-	"ziniki.org/deployer/coremod/pkg/external"
+	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/drivertop"
 )
 
 type envCommandHandler struct {
-	tools *external.Tools
+	tools *corebottom.Tools
 }
 
 func (ech *envCommandHandler) Handle(parent driverbottom.AttachResult, tokens []driverbottom.Token) driverbottom.Interpreter {
@@ -27,6 +27,6 @@ func (ech *envCommandHandler) Handle(parent driverbottom.AttachResult, tokens []
 	return drivertop.NewDisallowInnerScope(ech.tools.CoreTools)
 }
 
-func NewEnvCommandHandler(tools *external.Tools) driverbottom.VerbCommand {
+func NewEnvCommandHandler(tools *corebottom.Tools) driverbottom.VerbCommand {
 	return &envCommandHandler{tools: tools}
 }

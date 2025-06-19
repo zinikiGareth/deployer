@@ -6,7 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"ziniki.org/deployer/coremod/pkg/files"
+	"ziniki.org/deployer/coremod/pkg/corebottom"
 )
 
 type DirectoryPourer struct {
@@ -17,7 +17,7 @@ func (dp *DirectoryPourer) Relative(s string) (*DirectoryPourer, error) {
 	return NewDirectoryPourer(filepath.Join(dp.Path, s))
 }
 
-func (dp *DirectoryPourer) PourAll(into files.FileDest) {
+func (dp *DirectoryPourer) PourAll(into corebottom.FileDest) {
 	// TODO: just file case
 	// TODO: recursive dir case
 	files, err := os.ReadDir(dp.Path)
@@ -30,7 +30,7 @@ func (dp *DirectoryPourer) PourAll(into files.FileDest) {
 	}
 }
 
-func (dp *DirectoryPourer) PourOut(name string, into files.FileDest) {
+func (dp *DirectoryPourer) PourOut(name string, into corebottom.FileDest) {
 	full := filepath.Join(dp.Path, name)
 	fd, err := os.Open(full)
 	if err != nil {

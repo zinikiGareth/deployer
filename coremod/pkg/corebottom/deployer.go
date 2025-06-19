@@ -1,4 +1,4 @@
-package external
+package corebottom
 
 type Deployer interface {
 	// driverbottom.Driver

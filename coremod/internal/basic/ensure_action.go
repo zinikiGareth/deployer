@@ -3,8 +3,7 @@ package basic
 import (
 	"fmt"
 
-	"ziniki.org/deployer/coremod/pkg/ensurable"
-	"ziniki.org/deployer/coremod/pkg/external"
+	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/drivertop"
 	"ziniki.org/deployer/driver/pkg/errorsink"
@@ -14,17 +13,17 @@ import (
 // resolution, preparation, execution
 
 type EnsureAction struct {
-	tools    *external.Tools
+	tools    *corebottom.Tools
 	loc      *errorsink.Location
 	what     driverbottom.Identifier
 	resolved driverbottom.Blank
 	named    driverbottom.String
-	teardown external.TearDown
+	teardown corebottom.TearDown
 	// TODO: this really isn't a map here, because what we want is to index by string name
 	// Now, we possibly want the "identifier" to that we have the location of the symbol, but it can't be the key
 	// because the same "symbol" at two different locations will be different, and we can't index by it.
 	props map[driverbottom.Identifier]driverbottom.Expr
-	ens   ensurable.Ensurable
+	ens   corebottom.Ensurable
 }
 
 func (ea *EnsureAction) Loc() *errorsink.Location {
@@ -121,7 +120,7 @@ func (ea *EnsureAction) Resolve(r driverbottom.Resolver) driverbottom.BindingReq
 	}
 	ea.resolved = res
 	obj := ea.resolved.Mint(ea.tools.CoreTools, ea.Loc(), ea.named.Text(), ea.props)
-	ens, ok := obj.(ensurable.Ensurable)
+	ens, ok := obj.(corebottom.Ensurable)
 	if !ok {
 		ea.tools.Storage.Errorf(ea.loc, "the type "+ea.what.Id()+" is not ensurable")
 		return driverbottom.ERROR_OCCURRED

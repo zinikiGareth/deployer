@@ -1,7 +1,7 @@
 package basic
 
 import (
-	"ziniki.org/deployer/coremod/pkg/external"
+	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/drivertop"
 )
@@ -9,7 +9,7 @@ import (
 // For each action verb, there is exactly one handler.  It is created up front and it does the job of parsing lines and creating individual actions.
 
 type FindCommandHandler struct {
-	tools *external.Tools
+	tools *corebottom.Tools
 }
 
 func (ech *FindCommandHandler) Handle(parent driverbottom.AttachResult, tokens []driverbottom.Token) driverbottom.Interpreter {
@@ -39,6 +39,6 @@ func (ech *FindCommandHandler) Handle(parent driverbottom.AttachResult, tokens [
 	return drivertop.NewPropertiesInnerScope(ech.tools.CoreTools, ea)
 }
 
-func NewFindCommandHandler(tools *external.Tools) driverbottom.VerbCommand {
+func NewFindCommandHandler(tools *corebottom.Tools) driverbottom.VerbCommand {
 	return &FindCommandHandler{tools: tools}
 }

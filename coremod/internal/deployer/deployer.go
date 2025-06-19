@@ -3,16 +3,16 @@ package deployer
 import (
 	"fmt"
 
-	"ziniki.org/deployer/coremod/pkg/external"
+	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 )
 
 type DeployerImpl struct {
 	driver driverbottom.Driver
-	tools  *external.Tools
+	tools  *corebottom.Tools
 }
 
-func (d *DeployerImpl) ObtainTools() *external.Tools {
+func (d *DeployerImpl) ObtainTools() *corebottom.Tools {
 	return d.tools
 }
 
@@ -79,6 +79,6 @@ func (d *DeployerImpl) findTargets(names ...string) ([]driverbottom.TargetThing,
 	return targets, nil
 }
 
-func NewDeployer(driver driverbottom.Driver, tools *external.Tools) external.Deployer {
+func NewDeployer(driver driverbottom.Driver, tools *corebottom.Tools) corebottom.Deployer {
 	return &DeployerImpl{driver: driver, tools: tools}
 }

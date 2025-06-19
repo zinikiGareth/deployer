@@ -4,14 +4,13 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"ziniki.org/deployer/coremod/pkg/external"
-	"ziniki.org/deployer/coremod/pkg/files"
+	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
 )
 
 type dirAction struct {
-	tools *external.Tools
+	tools *corebottom.Tools
 	loc   *errorsink.Location
 	exprs []driverbottom.Expr
 	res   *PathHolder
@@ -103,7 +102,7 @@ func (ea *dirAction) TearDown() {
 
 type PathHolder struct {
 	loc  *errorsink.Location
-	path files.FileSource
+	path corebottom.FileSource
 }
 
 func (p *PathHolder) Loc() *errorsink.Location {

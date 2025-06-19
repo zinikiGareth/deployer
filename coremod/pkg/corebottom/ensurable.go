@@ -1,9 +1,10 @@
-package findable
+package corebottom
 
 import "ziniki.org/deployer/driver/pkg/driverbottom"
 
-type Findable interface {
+type Ensurable interface {
 	driverbottom.Describable
 	BuildModel(pres driverbottom.ValuePresenter)
 	UpdateReality()
+	TearDown()
 }

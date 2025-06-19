@@ -3,14 +3,14 @@ package basic
 import (
 	"fmt"
 
-	"ziniki.org/deployer/coremod/pkg/external"
+	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
 	"ziniki.org/deployer/driver/pkg/testhelpers"
 )
 
 type ShowAction struct {
-	tools *external.Tools
+	tools *corebottom.Tools
 	loc   *errorsink.Location
 	exprs []driverbottom.Expr
 }

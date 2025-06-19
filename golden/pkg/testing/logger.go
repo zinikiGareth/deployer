@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"os"
 
-	"ziniki.org/deployer/coremod/pkg/external"
+	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/testhelpers"
 )
 
 type TestStepLoggerFile struct {
-	tools    *external.Tools
+	tools    *corebottom.Tools
 	prepFile *os.File
 	execFile *os.File
 }
@@ -25,7 +25,7 @@ func (logger *TestStepLoggerFile) Log(format string, args ...any) {
 	fmt.Fprintf(toFile, format, args...)
 }
 
-func NewTestStepLogger(tools *external.Tools, prepFile string, execFile string) (testhelpers.TestStepLogger, error) {
+func NewTestStepLogger(tools *corebottom.Tools, prepFile string, execFile string) (testhelpers.TestStepLogger, error) {
 	prep, err := os.Create(prepFile)
 	if err != nil {
 		return nil, err

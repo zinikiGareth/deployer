@@ -1,12 +1,12 @@
 package policy
 
-import "ziniki.org/deployer/coremod/pkg/external"
+import "ziniki.org/deployer/coremod/pkg/corebottom"
 
 type policyItem struct {
 	effect     string
 	actions    []string
 	resources  []string
-	principals []external.PolicyPrincipal
+	principals []corebottom.PolicyPrincipal
 	more       map[string][]any
 }
 
@@ -22,7 +22,7 @@ func (pi *policyItem) Resource(resource string) {
 	pi.resources = append(pi.resources, resource)
 }
 
-func (pi *policyItem) Principal(principal external.PolicyPrincipal) {
+func (pi *policyItem) Principal(principal corebottom.PolicyPrincipal) {
 	pi.principals = append(pi.principals, principal)
 }
 
@@ -41,7 +41,7 @@ func (pi *policyItem) Resources() []string {
 	return pi.resources
 }
 
-func (pi *policyItem) Principals() []external.PolicyPrincipal {
+func (pi *policyItem) Principals() []corebottom.PolicyPrincipal {
 	return pi.principals
 }
 

@@ -1,4 +1,4 @@
-package external
+package corebottom
 
 type PolicyDocument interface {
 	Item(s string) PolicyEffect

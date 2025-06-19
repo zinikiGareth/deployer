@@ -3,19 +3,18 @@ package files
 import (
 	"fmt"
 
-	"ziniki.org/deployer/coremod/pkg/external"
-	"ziniki.org/deployer/coremod/pkg/files"
+	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
 )
 
 type copyAction struct {
-	tools *external.Tools
+	tools *corebottom.Tools
 	loc   *errorsink.Location
 	exprs []driverbottom.Expr
 
-	Src  files.FileSource
-	Dest files.DestHolder
+	Src  corebottom.FileSource
+	Dest corebottom.DestHolder
 }
 
 func (ca *copyAction) Loc() *errorsink.Location {
@@ -52,7 +51,7 @@ func (ca *copyAction) BuildModel(pres driverbottom.ValuePresenter) {
 
 	from := ca.exprs[0]
 	copyFrom := ca.tools.Storage.Eval(from)
-	copyFS, ok := copyFrom.(files.FileSource)
+	copyFS, ok := copyFrom.(corebottom.FileSource)
 	if !ok {
 		ca.tools.Reporter.At(from.Loc().Line)
 		ca.tools.Reporter.Report(from.Loc().Offset, "was not a file source")
@@ -60,7 +59,7 @@ func (ca *copyAction) BuildModel(pres driverbottom.ValuePresenter) {
 	}
 	ca.Src = copyFS
 	destVar := ca.tools.Storage.Eval(ca.exprs[1])
-	dest, ok := destVar.(files.DestHolder)
+	dest, ok := destVar.(corebottom.DestHolder)
 	if !ok {
 		panic(fmt.Sprintf("dest was %T not a DestHolder", destVar))
 	}

@@ -8,8 +8,8 @@ import (
 	"plugin"
 	"strings"
 
-	"ziniki.org/deployer/coremod/pkg/coremod"
-	"ziniki.org/deployer/coremod/pkg/external"
+	"ziniki.org/deployer/coremod/pkg/corebottom"
+	"ziniki.org/deployer/coremod/pkg/coretop"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/drivertop"
 	"ziniki.org/deployer/driver/pkg/errorsink"
@@ -23,7 +23,7 @@ import (
 type TestRunner struct {
 	tracker    *errors.CaseTracker
 	driver     driverbottom.Driver
-	deployer   external.Deployer
+	deployer   corebottom.Deployer
 	symbolLsnr *lsnrs.RepoListener
 	golden     *goldenComparator
 	RunnerPaths
@@ -120,11 +120,11 @@ func (r *TestRunner) Module(mod string) error {
 }
 
 func (r *TestRunner) loadCoreMod() error {
-	err := coremod.ProvideTestRunner(r)
+	err := coretop.ProvideTestRunner(r)
 	if err != nil {
 		return err
 	}
-	return coremod.RegisterWithDriver(r.driver)
+	return coretop.RegisterWithDriver(r.driver)
 }
 
 func (r *TestRunner) loadTestMod() error {
@@ -147,8 +147,8 @@ func NewTestRunner(tracker *errors.CaseTracker, root, test string) (*TestRunner,
 	sink := errorsink.NewFileSink(paths.errorFile)
 
 	driverInst := drivertop.NewDriver(sink, userErrorsTo)
-	tools := external.NewTools(driverInst.ObtainCoreTools(), &external.Options{})
-	deployerInst := coremod.NewDeployer(driverInst, tools)
+	tools := corebottom.NewTools(driverInst.ObtainCoreTools(), &corebottom.Options{})
+	deployerInst := coretop.NewDeployer(driverInst, tools)
 
 	gc := newGoldenComparator(tracker, paths)
 

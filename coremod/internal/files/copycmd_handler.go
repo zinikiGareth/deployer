@@ -1,13 +1,13 @@
 package files
 
 import (
-	"ziniki.org/deployer/coremod/pkg/external"
+	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/drivertop"
 )
 
 type copyCommandHandler struct {
-	tools *external.Tools
+	tools *corebottom.Tools
 }
 
 func (cch *copyCommandHandler) Handle(parent driverbottom.AttachResult, tokens []driverbottom.Token) driverbottom.Interpreter {
@@ -32,6 +32,6 @@ func (cch *copyCommandHandler) Handle(parent driverbottom.AttachResult, tokens [
 	return drivertop.NewDisallowInnerScope(cch.tools.CoreTools) // for now, but we want to support it really
 }
 
-func NewCopyCommandHandler(tools *external.Tools) driverbottom.VerbCommand {
+func NewCopyCommandHandler(tools *corebottom.Tools) driverbottom.VerbCommand {
 	return &copyCommandHandler{tools: tools}
 }

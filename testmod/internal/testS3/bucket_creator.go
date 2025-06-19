@@ -3,15 +3,14 @@ package testS3
 import (
 	"fmt"
 
-	"ziniki.org/deployer/coremod/pkg/external"
-	"ziniki.org/deployer/coremod/pkg/files"
+	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
 	"ziniki.org/deployer/driver/pkg/testhelpers"
 )
 
 type bucketCreator struct {
-	tools *external.Tools
+	tools *corebottom.Tools
 
 	loc  *errorsink.Location
 	name string
@@ -83,7 +82,7 @@ func (eb *bucketCreator) TearDown() {
 	testLogger.Log("we need to delete a bucket called %s in region %s\n", eb.name, eb.env.Region)
 }
 
-func (eb *bucketCreator) ObtainDest() files.FileDest {
+func (eb *bucketCreator) ObtainDest() corebottom.FileDest {
 	return eb.cloud
 }
 

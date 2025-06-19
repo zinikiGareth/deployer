@@ -1,7 +1,7 @@
 package testmod
 
 import (
-	"ziniki.org/deployer/coremod/pkg/external"
+	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/testmod/internal/blob"
 	"ziniki.org/deployer/testmod/internal/testS3"
@@ -23,7 +23,7 @@ func RegisterWithDriver(driver driverbottom.Driver) error {
 	if toolsI == nil {
 		panic("must load coremod first")
 	}
-	tools := toolsI.(*external.Tools)
+	tools := toolsI.(*corebottom.Tools)
 
 	tools.Register.ProvideDriver("testS3.TestAwsEnv", &testS3.TestAwsEnv{})
 

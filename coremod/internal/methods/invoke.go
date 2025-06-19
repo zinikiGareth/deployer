@@ -4,7 +4,7 @@ import (
 	"log"
 	"strings"
 
-	"ziniki.org/deployer/coremod/pkg/external"
+	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
 )
@@ -75,7 +75,7 @@ func (i *InvokeExpr) Eval(s driverbottom.RuntimeStorage) any {
 }
 
 type InvokeFunc struct {
-	tools *external.Tools
+	tools *corebottom.Tools
 }
 
 func (i *InvokeFunc) ReduceExpr(me driverbottom.Token, before []driverbottom.Expr, after []driverbottom.Expr) driverbottom.Expr {
@@ -92,6 +92,6 @@ func (i *InvokeFunc) ReduceExpr(me driverbottom.Token, before []driverbottom.Exp
 	return &InvokeExpr{Locatable: me, on: before[0], call: meth.Named(), args: after[1:]}
 }
 
-func MakeInvokeFunc(tools *external.Tools) *InvokeFunc {
+func MakeInvokeFunc(tools *corebottom.Tools) *InvokeFunc {
 	return &InvokeFunc{tools: tools}
 }

@@ -1,13 +1,13 @@
 package blob
 
 import (
-	"ziniki.org/deployer/coremod/pkg/external"
+	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/drivertop"
 )
 
 type blobCommandHandler struct {
-	tools *external.Tools
+	tools *corebottom.Tools
 }
 
 func (bch *blobCommandHandler) Handle(parent driverbottom.AttachResult, tokens []driverbottom.Token) driverbottom.Interpreter {
@@ -26,6 +26,6 @@ func (bch *blobCommandHandler) Handle(parent driverbottom.AttachResult, tokens [
 	return drivertop.NewDisallowInnerScope(bch.tools.CoreTools)
 }
 
-func NewBlobCommandHandler(tools *external.Tools) driverbottom.VerbCommand {
+func NewBlobCommandHandler(tools *corebottom.Tools) driverbottom.VerbCommand {
 	return &blobCommandHandler{tools: tools}
 }

@@ -1,13 +1,13 @@
 package testS3
 
 import (
-	"ziniki.org/deployer/coremod/pkg/external"
+	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/drivertop"
 )
 
 type bucketContentsScope struct {
-	tools *external.Tools
+	tools *corebottom.Tools
 	aba   *assertBucketAction
 }
 
@@ -28,6 +28,6 @@ func (b *bucketContentsScope) HaveTokens(tokens []driverbottom.Token) driverbott
 func (b *bucketContentsScope) Completed() {
 }
 
-func BucketContentsScope(tools *external.Tools, aba *assertBucketAction) driverbottom.Interpreter {
+func BucketContentsScope(tools *corebottom.Tools, aba *assertBucketAction) driverbottom.Interpreter {
 	return &bucketContentsScope{tools: tools, aba: aba}
 }

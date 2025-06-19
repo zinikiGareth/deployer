@@ -1,4 +1,4 @@
-package coremod
+package coretop
 
 import (
 	"ziniki.org/deployer/coremod/internal/basic"
@@ -8,7 +8,7 @@ import (
 	"ziniki.org/deployer/coremod/internal/runmain"
 	"ziniki.org/deployer/coremod/internal/target"
 	"ziniki.org/deployer/coremod/internal/time"
-	"ziniki.org/deployer/coremod/pkg/external"
+	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 )
 
@@ -26,7 +26,7 @@ func RegisterWithDriver(driver driverbottom.Driver) error {
 	}
 
 	ct := driver.ObtainCoreTools()
-	tools := external.NewTools(ct, &external.Options{})
+	tools := corebottom.NewTools(ct, &corebottom.Options{})
 	tools.CoreTools.StoreOther("coremod", tools)
 
 	// Logically, I think, these three have to go in "deployer", not in a module.

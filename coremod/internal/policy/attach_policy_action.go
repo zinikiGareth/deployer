@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"ziniki.org/deployer/coremod/pkg/external"
+	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/drivertop"
 	"ziniki.org/deployer/driver/pkg/errorsink"
@@ -14,13 +14,13 @@ import (
 // resolution, preparation, execution
 
 type AttachPolicyAction struct {
-	tools  *external.Tools
+	tools  *corebottom.Tools
 	loc    *errorsink.Location
 	to     driverbottom.Expr
 	policy driverbottom.Expr
 
-	attachTo     external.PolicyAttacher
-	actualPolicy external.PolicyDocument
+	attachTo     corebottom.PolicyAttacher
+	actualPolicy corebottom.PolicyDocument
 }
 
 func (ea *AttachPolicyAction) Loc() *errorsink.Location {
@@ -71,11 +71,11 @@ func (ea *AttachPolicyAction) BuildModel(pres driverbottom.ValuePresenter) {
 	attachTo := ea.to.Eval(ea.tools.Storage)
 	policy := ea.policy.Eval(ea.tools.Storage)
 
-	attacher, ok := attachTo.(external.PolicyAttacher)
+	attacher, ok := attachTo.(corebottom.PolicyAttacher)
 	if !ok {
 		log.Fatalf("cannot attach things to %T", attachTo)
 	}
-	isPolicy, ok := policy.(external.PolicyDocument)
+	isPolicy, ok := policy.(corebottom.PolicyDocument)
 	if !ok {
 		log.Fatalf("%T was not a policy", policy)
 	}

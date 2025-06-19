@@ -1,13 +1,13 @@
 package policy
 
 import (
-	"ziniki.org/deployer/coremod/pkg/external"
+	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
 )
 
 type policyPrincipalAction struct {
-	tools *external.Tools
+	tools *corebottom.Tools
 	loc   *errorsink.Location
 
 	ofType driverbottom.Expr
@@ -42,7 +42,7 @@ func (pca *policyPrincipalAction) Resolve(r driverbottom.Resolver) driverbottom.
 func (pca *policyPrincipalAction) BuildModel(pres driverbottom.ValuePresenter) {
 }
 
-func (pca *policyPrincipalAction) ApplyTo(pi external.PolicyEffect) {
+func (pca *policyPrincipalAction) ApplyTo(pi corebottom.PolicyEffect) {
 	pi.Principal(NewPrincipal(pca.tools.Storage.EvalAsString(pca.ofType), pca.tools.Storage.EvalAsString(pca.id)))
 }
 
