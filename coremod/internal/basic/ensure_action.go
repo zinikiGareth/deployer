@@ -16,7 +16,7 @@ type EnsureAction struct {
 	tools    *corebottom.Tools
 	loc      *errorsink.Location
 	what     driverbottom.Identifier
-	resolved driverbottom.Blank
+	resolved corebottom.Blank
 	named    driverbottom.String
 	teardown corebottom.TearDown
 	// TODO: this really isn't a map here, because what we want is to index by string name
@@ -111,7 +111,7 @@ func (ea *EnsureAction) Completed() {
 
 func (ea *EnsureAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
 	tmp := r.Resolve(ea.what)
-	res, ok := tmp.(driverbottom.Blank)
+	res, ok := tmp.(corebottom.Blank)
 	if !ok {
 		return driverbottom.ERROR_OCCURRED
 	}
@@ -119,7 +119,7 @@ func (ea *EnsureAction) Resolve(r driverbottom.Resolver) driverbottom.BindingReq
 		y.Resolve(r)
 	}
 	ea.resolved = res
-	obj := ea.resolved.Mint(ea.tools.CoreTools, ea.Loc(), ea.named.Text(), ea.props)
+	obj := ea.resolved.Mint(ea.tools, ea.Loc(), ea.named.Text(), ea.props, ea.teardown)
 	ens, ok := obj.(corebottom.Ensurable)
 	if !ok {
 		ea.tools.Storage.Errorf(ea.loc, "the type "+ea.what.Id()+" is not ensurable")

@@ -16,7 +16,7 @@ type FindAction struct {
 	tools    *corebottom.Tools
 	loc      *errorsink.Location
 	what     driverbottom.Identifier
-	resolved driverbottom.Blank
+	resolved corebottom.Blank
 	named    driverbottom.String
 	props    map[driverbottom.Identifier]driverbottom.Expr
 	ens      corebottom.Findable
@@ -93,12 +93,12 @@ func (ea *FindAction) Completed() {
 }
 
 func (ea *FindAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
-	res, ok := r.Resolve(ea.what).(driverbottom.Blank)
+	res, ok := r.Resolve(ea.what).(corebottom.Blank)
 	if !ok {
 		return driverbottom.ERROR_OCCURRED
 	}
 	ea.resolved = res
-	obj := ea.resolved.Find(ea.tools.CoreTools, ea.Loc(), ea.named.Text())
+	obj := ea.resolved.Find(ea.tools, ea.Loc(), ea.named.Text())
 	ens, ok := obj.(corebottom.Findable)
 	if !ok {
 		ea.tools.Storage.Errorf(ea.loc, "the type "+ea.what.Id()+" is not findable")

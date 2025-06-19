@@ -8,13 +8,12 @@ import (
 
 type BucketBlank struct{}
 
-func (b *BucketBlank) Find(ct *driverbottom.CoreTools, loc *errorsink.Location, named string) any {
-	return &bucketFinder{tools: ct.RetrieveOther("coremod").(*corebottom.Tools), loc: loc, name: named}
+func (b *BucketBlank) Find(ct *corebottom.Tools, loc *errorsink.Location, named string) any {
+	return &bucketFinder{tools: ct, loc: loc, name: named}
 }
 
-func (b *BucketBlank) Mint(ct *driverbottom.CoreTools, loc *errorsink.Location, named string, props map[driverbottom.Identifier]driverbottom.Expr) any {
-	tools := ct.RetrieveOther("coremod").(*corebottom.Tools)
-	return &bucketCreator{tools: tools, loc: loc, name: named}
+func (b *BucketBlank) Mint(ct *corebottom.Tools, loc *errorsink.Location, named string, props map[driverbottom.Identifier]driverbottom.Expr, teardown corebottom.TearDown) any {
+	return &bucketCreator{tools: ct, loc: loc, name: named}
 }
 
 func (b *BucketBlank) Loc() *errorsink.Location {
@@ -29,4 +28,4 @@ func (b *BucketBlank) DumpTo(iw driverbottom.IndentWriter) {
 	panic("not implemented")
 }
 
-var _ driverbottom.Blank = &BucketBlank{}
+var _ corebottom.Blank = &BucketBlank{}

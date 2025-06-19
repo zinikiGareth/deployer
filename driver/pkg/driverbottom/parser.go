@@ -2,8 +2,6 @@ package driverbottom
 
 import (
 	"fmt"
-
-	"ziniki.org/deployer/driver/pkg/errorsink"
 )
 
 type ProvideLine interface {
@@ -73,12 +71,6 @@ type AttachResult interface {
 
 type VerbCommand interface {
 	Handle(attacher AttachResult, tokens []Token) Interpreter
-}
-
-type Blank interface {
-	ShortDescription() string
-	Find(tools *CoreTools, loc *errorsink.Location, named string) any
-	Mint(tools *CoreTools, loc *errorsink.Location, named string, props map[Identifier]Expr) any
 }
 
 type Function interface {
