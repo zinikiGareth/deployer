@@ -25,7 +25,7 @@ func (pah *policyConditionCommandHandler) Handle(parent pluggable.AttachResult, 
 	pa := &PolicyCondAction{tools: pah.tools, loc: tokens[0].Loc(), test: exprs[0], left: exprs[1], right: exprs[2]}
 	parent.Attach(pa)
 
-	return interpreters.NewDisallowInnerScope(&pah.tools.CoreTools)
+	return interpreters.NewDisallowInnerScope(pah.tools.CoreTools)
 }
 
 func NewPolicyConditionCommandHandler(tools *external.Tools) pluggable.VerbCommand {

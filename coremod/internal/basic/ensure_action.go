@@ -93,7 +93,7 @@ func (ea *EnsureAction) AddAdverb(adv pluggable.Adverb, tokens []pluggable.Token
 		ea.teardown = &MyTearDown{mode: tokens[0].(pluggable.Identifier).Id()}
 
 	}
-	return interpreters.NewDisallowInnerScope(&ea.tools.CoreTools)
+	return interpreters.NewDisallowInnerScope(ea.tools.CoreTools)
 }
 
 func (ea *EnsureAction) Completed() {
@@ -111,7 +111,8 @@ func (ea *EnsureAction) Completed() {
 }
 
 func (ea *EnsureAction) Resolve(r pluggable.Resolver) pluggable.BindingRequirement {
-	res, ok := r.Resolve(ea.what).(pluggable.Blank)
+	tmp := r.Resolve(ea.what)
+	res, ok := tmp.(pluggable.Blank)
 	if !ok {
 		return pluggable.ERROR_OCCURRED
 	}
@@ -119,7 +120,7 @@ func (ea *EnsureAction) Resolve(r pluggable.Resolver) pluggable.BindingRequireme
 		y.Resolve(r)
 	}
 	ea.resolved = res
-	obj := ea.resolved.Mint(&ea.tools.CoreTools, ea.Loc(), ea.named.Text(), ea.props)
+	obj := ea.resolved.Mint(ea.tools.CoreTools, ea.Loc(), ea.named.Text(), ea.props)
 	ens, ok := obj.(ensurable.Ensurable)
 	if !ok {
 		ea.tools.Storage.Errorf(ea.loc, "the type "+ea.what.Id()+" is not ensurable")

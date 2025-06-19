@@ -24,7 +24,7 @@ func (pah *policyAllowCommandHandler) Handle(parent pluggable.AttachResult, toke
 	pa := &PolicyAllowAction{tools: pah.tools, loc: tokens[0].Loc(), allowActions: []pluggable.Expr{exprs[0]}, allowResources: []pluggable.Expr{exprs[1]}}
 	parent.Attach(pa)
 
-	return interpreters.NewVerbCommandInterpreter(&pah.tools.CoreTools, pa, "policy-inner", false)
+	return interpreters.NewVerbCommandInterpreter(pah.tools.CoreTools, pa, "policy-inner", false)
 }
 
 func NewPolicyAllowCommandHandler(tools *external.Tools) pluggable.VerbCommand {

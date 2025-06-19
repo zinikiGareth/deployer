@@ -19,7 +19,7 @@ func (pch *policyCommandHandler) Handle(parent pluggable.AttachResult, tokens []
 	pa := &PolicyAction{tools: pch.tools, loc: tokens[0].Loc()}
 	parent.Attach(pa)
 
-	return interpreters.NewVerbCommandInterpreter(&pch.tools.CoreTools, pa, "policy-statements", false)
+	return interpreters.NewVerbCommandInterpreter(pch.tools.CoreTools, pa, "policy-statements", false)
 }
 
 func NewPolicyCommandHandler(tools *external.Tools) pluggable.VerbCommand {

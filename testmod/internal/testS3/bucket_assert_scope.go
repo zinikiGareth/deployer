@@ -22,7 +22,7 @@ func (b *bucketContentsScope) HaveTokens(tokens []pluggable.Token) pluggable.Int
 		return interpreters.NewIgnoreInnerScope()
 	}
 	b.aba.files = append(b.aba.files, str.Text())
-	return interpreters.NewDisallowInnerScope(&b.tools.CoreTools)
+	return interpreters.NewDisallowInnerScope(b.tools.CoreTools)
 }
 
 func (b *bucketContentsScope) Completed() {

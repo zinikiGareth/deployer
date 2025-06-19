@@ -55,7 +55,7 @@ func (ea *AttachPolicyAction) AddAdverb(adv pluggable.Adverb, tokens []pluggable
 
 		}
 	*/
-	return interpreters.NewDisallowInnerScope(&ea.tools.CoreTools)
+	return interpreters.NewDisallowInnerScope(ea.tools.CoreTools)
 }
 
 func (ea *AttachPolicyAction) Completed() {

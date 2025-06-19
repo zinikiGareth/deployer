@@ -54,6 +54,8 @@ func (t *CoreTarget) Resolve(r pluggable.Resolver) {
 		binding := a.Resolve(r)
 		if binding == pluggable.MUST_BE_BOUND {
 			panic("assignTo is not specified") // should be an error
+		} else if binding == pluggable.ERROR_OCCURRED {
+			panic("an error occurred")
 		}
 	}
 }

@@ -24,7 +24,7 @@ func (apch *AttachPolicyCommandHandler) Handle(parent pluggable.AttachResult, to
 	ea := &AttachPolicyAction{tools: apch.tools, loc: tokens[0].Loc(), to: exprs[0], policy: exprs[1]}
 	parent.Attach(ea)
 
-	return interpreters.NewPropertiesInnerScope(&apch.tools.CoreTools, ea)
+	return interpreters.NewPropertiesInnerScope(apch.tools.CoreTools, ea)
 }
 
 func NewAttachPolicyCommandHandler(tools *external.Tools) pluggable.VerbCommand {

@@ -5,7 +5,7 @@ import (
 )
 
 type Tools struct {
-	pluggable.CoreTools
+	*pluggable.CoreTools
 	Options *Options
 }
 
@@ -14,5 +14,5 @@ type Options struct {
 }
 
 func NewTools(core *pluggable.CoreTools, options *Options) *Tools {
-	return &Tools{CoreTools: *core, Options: options}
+	return &Tools{CoreTools: core, Options: options}
 }

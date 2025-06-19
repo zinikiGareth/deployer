@@ -24,7 +24,7 @@ func (ech *envCommandHandler) Handle(parent pluggable.AttachResult, tokens []plu
 	ea := &EnvAction{tools: ech.tools, loc: tokens[0].Loc(), varname: expr}
 	parent.Attach(ea)
 
-	return interpreters.NewDisallowInnerScope(&ech.tools.CoreTools)
+	return interpreters.NewDisallowInnerScope(ech.tools.CoreTools)
 }
 
 func NewEnvCommandHandler(tools *external.Tools) pluggable.VerbCommand {

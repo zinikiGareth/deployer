@@ -28,7 +28,7 @@ func (sch *showCommandHandler) Handle(parent pluggable.AttachResult, tokens []pl
 	sa := &ShowAction{tools: sch.tools, loc: tokens[0].Loc(), exprs: exprs}
 	parent.Attach(sa)
 
-	return interpreters.NewDisallowInnerScope(&sch.tools.CoreTools)
+	return interpreters.NewDisallowInnerScope(sch.tools.CoreTools)
 }
 
 func NewShowCommandHandler(tools *external.Tools) pluggable.VerbCommand {

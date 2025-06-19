@@ -36,7 +36,7 @@ func (ech *EnsureCommandHandler) Handle(parent pluggable.AttachResult, tokens []
 	ea := &EnsureAction{tools: ech.tools, loc: tokens[0].Loc(), what: clz, named: name, props: make(map[pluggable.Identifier]pluggable.Expr)}
 	parent.Attach(ea)
 
-	return interpreters.NewPropertiesInnerScope(&ech.tools.CoreTools, ea)
+	return interpreters.NewPropertiesInnerScope(ech.tools.CoreTools, ea)
 }
 
 func NewEnsureCommandHandler(tools *external.Tools) pluggable.VerbCommand {

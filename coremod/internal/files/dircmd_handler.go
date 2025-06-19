@@ -28,7 +28,7 @@ func (dch *dirCommandHandler) Handle(parent pluggable.AttachResult, tokens []plu
 	da := &dirAction{tools: dch.tools, loc: tokens[0].Loc(), exprs: exprs}
 	parent.Attach(da)
 
-	return interpreters.NewDisallowInnerScope(&dch.tools.CoreTools)
+	return interpreters.NewDisallowInnerScope(dch.tools.CoreTools)
 }
 
 func NewDirCommandHandler(tools *external.Tools) pluggable.VerbCommand {

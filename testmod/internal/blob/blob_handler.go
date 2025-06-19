@@ -23,7 +23,7 @@ func (bch *blobCommandHandler) Handle(parent pluggable.AttachResult, tokens []pl
 
 	parent.Attach(&createBlobAction{Locatable: tokens[0], expr: expr})
 
-	return interpreters.NewDisallowInnerScope(&bch.tools.CoreTools)
+	return interpreters.NewDisallowInnerScope(bch.tools.CoreTools)
 }
 
 func NewBlobCommandHandler(tools *external.Tools) pluggable.VerbCommand {

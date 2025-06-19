@@ -36,7 +36,7 @@ func (ech *FindCommandHandler) Handle(parent pluggable.AttachResult, tokens []pl
 	ea := &FindAction{tools: ech.tools, loc: tokens[0].Loc(), what: clz, named: name, props: make(map[pluggable.Identifier]pluggable.Expr)}
 	parent.Attach(ea)
 
-	return interpreters.NewPropertiesInnerScope(&ech.tools.CoreTools, ea)
+	return interpreters.NewPropertiesInnerScope(ech.tools.CoreTools, ea)
 }
 
 func NewFindCommandHandler(tools *external.Tools) pluggable.VerbCommand {

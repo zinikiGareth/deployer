@@ -80,7 +80,7 @@ func (ea *FindAction) AddProperty(name pluggable.Identifier, value pluggable.Exp
 
 func (ea *FindAction) AddAdverb(adv pluggable.Adverb, tokens []pluggable.Token) pluggable.Interpreter {
 	ea.tools.Reporter.Reportf(adv.Loc().Offset, "find cannot handle %s\n", adv.Name())
-	return interpreters.NewDisallowInnerScope(&ea.tools.CoreTools)
+	return interpreters.NewDisallowInnerScope(ea.tools.CoreTools)
 }
 
 func (ea *FindAction) Completed() {
@@ -99,7 +99,7 @@ func (ea *FindAction) Resolve(r pluggable.Resolver) pluggable.BindingRequirement
 		return pluggable.ERROR_OCCURRED
 	}
 	ea.resolved = res
-	obj := ea.resolved.Find(&ea.tools.CoreTools, ea.Loc(), ea.named.Text())
+	obj := ea.resolved.Find(ea.tools.CoreTools, ea.Loc(), ea.named.Text())
 	ens, ok := obj.(findable.Findable)
 	if !ok {
 		ea.tools.Storage.Errorf(ea.loc, "the type "+ea.what.Id()+" is not findable")

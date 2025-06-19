@@ -29,7 +29,7 @@ func (cch *copyCommandHandler) Handle(parent pluggable.AttachResult, tokens []pl
 	ca := &copyAction{tools: cch.tools, loc: tokens[0].Loc(), exprs: exprs}
 	parent.Attach(ca)
 
-	return interpreters.NewDisallowInnerScope(&cch.tools.CoreTools) // for now, but we want to support it really
+	return interpreters.NewDisallowInnerScope(cch.tools.CoreTools) // for now, but we want to support it really
 }
 
 func NewCopyCommandHandler(tools *external.Tools) pluggable.VerbCommand {
