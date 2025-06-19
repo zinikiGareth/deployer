@@ -94,7 +94,7 @@ func NewDriver(sink errorsink.ErrorSink, userErrorsTo io.StringWriter) *DriverIm
 	reporter := errorsink.NewErrorReporter(sink)
 	repo := repo.NewRepository()
 	storage := runtime.NewRuntimeStorage(reg, repo, sink)
-	tools := &pluggable.CoreTools{Reporter: reporter, Register: reg, Recall: reg, Repository: repo, Storage: storage}
+	tools := pluggable.NewTools(reporter, reg, reg, repo, storage)
 	reg.BindTools(tools)
 	return &DriverImpl{tools: tools, userErrorsTo: userErrorsTo}
 }

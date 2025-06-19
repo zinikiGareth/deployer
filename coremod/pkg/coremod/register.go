@@ -19,17 +19,15 @@ func ProvideTestRunner(runner deployer.TestRunner) error {
 	return nil
 }
 
-func RegisterWithDriver(deployer deployer.Driver) error {
+func RegisterWithDriver(driver deployer.Driver) error {
 	if testRunner != nil {
 		eh := testRunner.ErrorHandlerFor("log")
 		eh.WriteMsg("Installing things from coremod\n")
 	}
 
-	toolsI := deployer.ObtainCoreTools().RetrieveOther("coremod")
-	if toolsI == nil {
-		panic("must load coremod first")
-	}
-	tools := toolsI.(*external.Tools)
+	ct := driver.ObtainCoreTools()
+	tools := external.NewTools(ct, &external.Options{})
+	tools.CoreTools.StoreOther("coremod", tools)
 
 	// Logically, I think, these three have to go in "deployer", not in a module.
 	tools.Register.ExtensionPoint("main-args")

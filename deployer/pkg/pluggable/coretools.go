@@ -16,6 +16,9 @@ type CoreTools struct {
 }
 
 func (ct *CoreTools) StoreOther(name string, tools any) {
+	if ct.others[name] != nil {
+		panic("duplicate " + name)
+	}
 	ct.others[name] = tools
 }
 
@@ -24,5 +27,5 @@ func (ct *CoreTools) RetrieveOther(name string) any {
 }
 
 func NewTools(reporter errorsink.ErrorRepI, register Register, recall Recall, repo Repository, storage RuntimeStorage) *CoreTools {
-	return &CoreTools{Reporter: reporter, Register: register, Recall: recall, Repository: repo, Storage: storage}
+	return &CoreTools{Reporter: reporter, Register: register, Recall: recall, Repository: repo, Storage: storage, others: make(map[string]any)}
 }

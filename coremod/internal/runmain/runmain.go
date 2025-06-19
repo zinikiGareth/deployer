@@ -13,7 +13,7 @@ type mainHandler struct {
 	tools *external.Tools
 }
 
-func (m *mainHandler) RunWithArgs(d deployer2.Driver, args []string) {
+func (m *mainHandler) RunWithArgs(driver deployer2.Driver, args []string) {
 	options := m.tools.Options
 	targets := []string{}
 
@@ -36,9 +36,9 @@ func (m *mainHandler) RunWithArgs(d deployer2.Driver, args []string) {
 		return
 	}
 
-	d2 := deployer.NewDeployer(m.tools)
+	depl := deployer.NewDeployer(driver, m.tools)
 	for _, s := range targets {
-		err := d2.Deploy(s)
+		err := depl.Deploy(s)
 		if err != nil {
 			fmt.Printf("%v\n", err)
 			return

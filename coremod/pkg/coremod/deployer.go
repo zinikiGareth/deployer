@@ -1,10 +1,11 @@
 package coremod
 
 import (
-	"ziniki.org/deployer/coremod/internal/deployer"
+	deployer2 "ziniki.org/deployer/coremod/internal/deployer"
 	"ziniki.org/deployer/coremod/pkg/external"
+	"ziniki.org/deployer/deployer/pkg/deployer"
 )
 
-func NewDeployer(tools *external.Tools) external.Deployer {
-	return deployer.NewDeployer(tools)
+func NewDeployer(driver deployer.Driver, tools *external.Tools) external.Deployer {
+	return deployer2.NewDeployer(driver, tools)
 }

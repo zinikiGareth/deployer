@@ -10,7 +10,9 @@ import (
 
 	"ziniki.org/deployer/coremod/pkg/coremod"
 	"ziniki.org/deployer/coremod/pkg/external"
+	"ziniki.org/deployer/deployer/pkg/creator"
 	"ziniki.org/deployer/deployer/pkg/deployer"
+	"ziniki.org/deployer/deployer/pkg/errorsink"
 	"ziniki.org/deployer/deployer/pkg/utils"
 	"ziniki.org/deployer/golden/internal/errors"
 	"ziniki.org/deployer/golden/internal/lsnrs"
@@ -140,13 +142,15 @@ func NewTestRunner(tracker *errors.CaseTracker, root, test string) (*TestRunner,
 	if err != nil {
 		panic(fmt.Sprintf("error creating error dir %s: %v", paths.errorsOut, err))
 	}
-	// ueTxt := filepath.Join(paths.errorsOut, "usererrors.txt")
-	// userErrorsTo := utils.NewLazyFileCreator(ueTxt)
-	// sink := sink.NewFileSink(paths.errorFile)
-	tools := &external.Tools{}
-	deployerInst := coremod.NewDeployer(tools)
+	ueTxt := filepath.Join(paths.errorsOut, "usererrors.txt")
+	userErrorsTo := utils.NewLazyFileCreator(ueTxt)
+	sink := errorsink.NewFileSink(paths.errorFile)
+
+	driverInst := creator.NewDriver(sink, userErrorsTo)
+	tools := external.NewTools(driverInst.ObtainCoreTools(), &external.Options{})
+	deployerInst := coremod.NewDeployer(driverInst, tools)
 
 	gc := newGoldenComparator(tracker, paths)
 
-	return &TestRunner{tracker: tracker, golden: gc, RunnerPaths: paths, deployer: deployerInst}, nil
+	return &TestRunner{tracker: tracker, golden: gc, RunnerPaths: paths, driver: driverInst, deployer: deployerInst}, nil
 }

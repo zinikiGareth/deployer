@@ -84,6 +84,6 @@ func (d *DeployerImpl) findTargets(names ...string) ([]pluggable.TargetThing, er
 	return targets, nil
 }
 
-func NewDeployer(tools *external.Tools) external.Deployer {
-	return &DeployerImpl{tools: tools}
+func NewDeployer(driver deployer.Driver, tools *external.Tools) external.Deployer {
+	return &DeployerImpl{driver: driver, tools: tools}
 }
