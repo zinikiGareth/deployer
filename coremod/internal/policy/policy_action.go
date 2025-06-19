@@ -2,13 +2,13 @@ package policy
 
 import (
 	"ziniki.org/deployer/coremod/pkg/external"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
-	"ziniki.org/deployer/driver/pkg/pluggable"
 )
 
 type PolicyRuleAction interface {
-	pluggable.Describable
-	Resolve(r pluggable.Resolver) pluggable.BindingRequirement
+	driverbottom.Describable
+	Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement
 	ApplyTo(doc external.PolicyDocument)
 }
 
@@ -30,7 +30,7 @@ func (pa *PolicyAction) Loc() *errorsink.Location {
 	return pa.loc
 }
 
-func (pa *PolicyAction) DumpTo(w pluggable.IndentWriter) {
+func (pa *PolicyAction) DumpTo(w driverbottom.IndentWriter) {
 	w.Intro("PolicyAction")
 	w.AttrsWhere(pa)
 	w.ListAttr("actions")
@@ -48,14 +48,14 @@ func (pa *PolicyAction) ShortDescription() string {
 func (pa *PolicyAction) Completed() {
 }
 
-func (pa *PolicyAction) Resolve(r pluggable.Resolver) pluggable.BindingRequirement {
+func (pa *PolicyAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
 	for _, a := range pa.actions {
 		a.Resolve(r)
 	}
-	return pluggable.MUST_BE_BOUND
+	return driverbottom.MUST_BE_BOUND
 }
 
-func (pa *PolicyAction) BuildModel(pres pluggable.ValuePresenter) {
+func (pa *PolicyAction) BuildModel(pres driverbottom.ValuePresenter) {
 	doc := NewPolicyDocument(pa.loc)
 
 	for _, a := range pa.actions {

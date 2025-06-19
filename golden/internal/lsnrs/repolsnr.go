@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"ziniki.org/deployer/driver/pkg/pluggable"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 )
 
 type RepoListener struct {
@@ -17,7 +17,7 @@ func (r *RepoListener) ReadingFile(file string) {
 	r.writeTo.WriteString(":\n")
 }
 
-func (r *RepoListener) Symbol(who pluggable.SymbolName, is pluggable.Describable) {
+func (r *RepoListener) Symbol(who driverbottom.SymbolName, is driverbottom.Describable) {
 	r.writeTo.WriteString(fmt.Sprintf("%s %s\n", is.Loc().InFile(), who))
 }
 

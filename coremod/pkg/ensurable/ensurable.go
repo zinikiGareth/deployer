@@ -1,10 +1,10 @@
 package ensurable
 
-import "ziniki.org/deployer/driver/pkg/pluggable"
+import "ziniki.org/deployer/driver/pkg/driverbottom"
 
 type Ensurable interface {
-	pluggable.Describable
-	BuildModel(pres pluggable.ValuePresenter)
+	driverbottom.Describable
+	BuildModel(pres driverbottom.ValuePresenter)
 	UpdateReality()
 	TearDown()
 }

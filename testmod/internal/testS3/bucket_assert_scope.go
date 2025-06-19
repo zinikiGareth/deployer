@@ -2,8 +2,8 @@ package testS3
 
 import (
 	"ziniki.org/deployer/coremod/pkg/external"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/interpreters"
-	"ziniki.org/deployer/driver/pkg/pluggable"
 )
 
 type bucketContentsScope struct {
@@ -11,12 +11,12 @@ type bucketContentsScope struct {
 	aba   *assertBucketAction
 }
 
-func (b *bucketContentsScope) HaveTokens(tokens []pluggable.Token) pluggable.Interpreter {
+func (b *bucketContentsScope) HaveTokens(tokens []driverbottom.Token) driverbottom.Interpreter {
 	if len(tokens) != 1 {
 		b.tools.Reporter.Reportf(0, "may only have one file per line")
 		return interpreters.NewIgnoreInnerScope()
 	}
-	str, ok := tokens[0].(pluggable.String)
+	str, ok := tokens[0].(driverbottom.String)
 	if !ok {
 		b.tools.Reporter.Reportf(0, "file name must be a string literal")
 		return interpreters.NewIgnoreInnerScope()
@@ -28,6 +28,6 @@ func (b *bucketContentsScope) HaveTokens(tokens []pluggable.Token) pluggable.Int
 func (b *bucketContentsScope) Completed() {
 }
 
-func BucketContentsScope(tools *external.Tools, aba *assertBucketAction) pluggable.Interpreter {
+func BucketContentsScope(tools *external.Tools, aba *assertBucketAction) driverbottom.Interpreter {
 	return &bucketContentsScope{tools: tools, aba: aba}
 }

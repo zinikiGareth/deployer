@@ -5,21 +5,21 @@ import (
 	"os"
 
 	"ziniki.org/deployer/coremod/pkg/external"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
-	"ziniki.org/deployer/driver/pkg/pluggable"
 )
 
 type EnvAction struct {
 	tools   *external.Tools
 	loc     *errorsink.Location
-	varname pluggable.Expr
+	varname driverbottom.Expr
 }
 
 func (ea *EnvAction) Loc() *errorsink.Location {
 	return ea.loc
 }
 
-func (ea *EnvAction) DumpTo(w pluggable.IndentWriter) {
+func (ea *EnvAction) DumpTo(w driverbottom.IndentWriter) {
 	w.Intro("EnvAction")
 	w.AttrsWhere(ea)
 	w.TextAttr("varname", ea.varname.String())
@@ -33,14 +33,14 @@ func (ea *EnvAction) ShortDescription() string {
 func (ea *EnvAction) Completed() {
 }
 
-func (sa *EnvAction) Resolve(r pluggable.Resolver) pluggable.BindingRequirement {
+func (sa *EnvAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
 	sa.varname.Resolve(r)
 	// b.MustBind(&EnvVar{varname: sa.varname})
 	// ea.resolved = r.Resolve(ea.what)
-	return pluggable.MUST_BE_BOUND
+	return driverbottom.MUST_BE_BOUND
 }
 
-func (ea *EnvAction) BuildModel(pres pluggable.ValuePresenter) {
+func (ea *EnvAction) BuildModel(pres driverbottom.ValuePresenter) {
 	// TODO: I think ALL this should really be something like e.Eval(runtime).ToString()
 	str := ea.tools.Storage.EvalAsString(ea.varname)
 	val := os.Getenv(str)
@@ -61,10 +61,10 @@ func (ea *EnvAction) TearDown() {
 }
 
 type EnvVar struct {
-	varname pluggable.Expr
+	varname driverbottom.Expr
 }
 
-func (e *EnvVar) DumpTo(to pluggable.IndentWriter) {
+func (e *EnvVar) DumpTo(to driverbottom.IndentWriter) {
 	to.Intro("EnvVar")
 	to.AttrsWhere(e.varname)
 	to.TextAttr("var", e.varname.String())

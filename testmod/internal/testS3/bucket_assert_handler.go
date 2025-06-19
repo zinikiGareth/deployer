@@ -2,15 +2,15 @@ package testS3
 
 import (
 	"ziniki.org/deployer/coremod/pkg/external"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/interpreters"
-	"ziniki.org/deployer/driver/pkg/pluggable"
 )
 
 type assertBucketHandler struct {
 	tools *external.Tools
 }
 
-func (abh *assertBucketHandler) Handle(parent pluggable.AttachResult, tokens []pluggable.Token) pluggable.Interpreter {
+func (abh *assertBucketHandler) Handle(parent driverbottom.AttachResult, tokens []driverbottom.Token) driverbottom.Interpreter {
 	if len(tokens) < 1 {
 		abh.tools.Reporter.Report(tokens[0].Loc().Offset, "test.assertBucketHas: <bucket>")
 		return interpreters.NewIgnoreInnerScope()
@@ -31,6 +31,6 @@ func (abh *assertBucketHandler) Handle(parent pluggable.AttachResult, tokens []p
 	return BucketContentsScope(abh.tools, ca)
 }
 
-func NewAssertBucketHandler(tools *external.Tools) pluggable.VerbCommand {
+func NewAssertBucketHandler(tools *external.Tools) driverbottom.VerbCommand {
 	return &assertBucketHandler{tools: tools}
 }

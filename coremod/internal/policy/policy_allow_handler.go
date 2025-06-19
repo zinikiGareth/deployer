@@ -2,15 +2,15 @@ package policy
 
 import (
 	"ziniki.org/deployer/coremod/pkg/external"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/interpreters"
-	"ziniki.org/deployer/driver/pkg/pluggable"
 )
 
 type policyAllowCommandHandler struct {
 	tools *external.Tools
 }
 
-func (pah *policyAllowCommandHandler) Handle(parent pluggable.AttachResult, tokens []pluggable.Token) pluggable.Interpreter {
+func (pah *policyAllowCommandHandler) Handle(parent driverbottom.AttachResult, tokens []driverbottom.Token) driverbottom.Interpreter {
 	exprs, ok := pah.tools.Parser.ParseMultiple(tokens[1:])
 	if !ok {
 		return interpreters.NewIgnoreInnerScope()
@@ -21,12 +21,12 @@ func (pah *policyAllowCommandHandler) Handle(parent pluggable.AttachResult, toke
 		return interpreters.NewIgnoreInnerScope()
 	}
 
-	pa := &PolicyAllowAction{tools: pah.tools, loc: tokens[0].Loc(), allowActions: []pluggable.Expr{exprs[0]}, allowResources: []pluggable.Expr{exprs[1]}}
+	pa := &PolicyAllowAction{tools: pah.tools, loc: tokens[0].Loc(), allowActions: []driverbottom.Expr{exprs[0]}, allowResources: []driverbottom.Expr{exprs[1]}}
 	parent.Attach(pa)
 
 	return interpreters.NewVerbCommandInterpreter(pah.tools.CoreTools, pa, "policy-inner", false)
 }
 
-func NewPolicyAllowCommandHandler(tools *external.Tools) pluggable.VerbCommand {
+func NewPolicyAllowCommandHandler(tools *external.Tools) driverbottom.VerbCommand {
 	return &policyAllowCommandHandler{tools: tools}
 }

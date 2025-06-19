@@ -1,13 +1,11 @@
 package repo
 
-import (
-	"ziniki.org/deployer/driver/pkg/pluggable"
-)
+import "ziniki.org/deployer/driver/pkg/driverbottom"
 
 type SimpleRepository struct {
-	symbolLsnrs []pluggable.SymbolListener
-	symbols     map[pluggable.SymbolName]pluggable.Describable
-	tops        []pluggable.TopLevelForm
+	symbolLsnrs []driverbottom.SymbolListener
+	symbols     map[driverbottom.SymbolName]driverbottom.Describable
+	tops        []driverbottom.TopLevelForm
 }
 
 func (d *SimpleRepository) ReadingFile(file string) {
@@ -16,7 +14,7 @@ func (d *SimpleRepository) ReadingFile(file string) {
 	}
 }
 
-func (d *SimpleRepository) IntroduceSymbol(who pluggable.SymbolName, is pluggable.Describable) {
+func (d *SimpleRepository) IntroduceSymbol(who driverbottom.SymbolName, is driverbottom.Describable) {
 	if d.symbols[who] != nil {
 		panic("duplicate definition of " + who)
 	}
@@ -26,21 +24,21 @@ func (d *SimpleRepository) IntroduceSymbol(who pluggable.SymbolName, is pluggabl
 	}
 }
 
-func (d *SimpleRepository) TopLevel(defn pluggable.TopLevelForm) {
+func (d *SimpleRepository) TopLevel(defn driverbottom.TopLevelForm) {
 	d.tops = append(d.tops, defn)
 }
 
-func (d *SimpleRepository) AddSymbolListener(lsnr pluggable.SymbolListener) {
+func (d *SimpleRepository) AddSymbolListener(lsnr driverbottom.SymbolListener) {
 	d.symbolLsnrs = append(d.symbolLsnrs, lsnr)
 }
 
-func (d *SimpleRepository) Traverse(lsnr pluggable.RepositoryTraverser) {
+func (d *SimpleRepository) Traverse(lsnr driverbottom.RepositoryTraverser) {
 	for who, what := range d.symbols {
 		lsnr.Visit(who, what)
 	}
 }
 
-func (d *SimpleRepository) FindTop(name pluggable.SymbolName) pluggable.TopLevelForm {
+func (d *SimpleRepository) FindTop(name driverbottom.SymbolName) driverbottom.TopLevelForm {
 	for _, top := range d.tops {
 		if top.Name() == name {
 			return top
@@ -49,6 +47,6 @@ func (d *SimpleRepository) FindTop(name pluggable.SymbolName) pluggable.TopLevel
 	return nil
 }
 
-func NewRepository() pluggable.Repository {
-	return &SimpleRepository{symbols: make(map[pluggable.SymbolName]pluggable.Describable)}
+func NewRepository() driverbottom.Repository {
+	return &SimpleRepository{symbols: make(map[driverbottom.SymbolName]driverbottom.Describable)}
 }

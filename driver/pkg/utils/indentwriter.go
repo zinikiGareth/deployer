@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"io"
 
-	"ziniki.org/deployer/driver/pkg/pluggable"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 )
 
 type indentingWriter struct {
@@ -17,7 +17,7 @@ func (iw *indentingWriter) Intro(format string, args ...any) {
 	iw.Printf(format, args...)
 }
 
-func (iw *indentingWriter) AttrsWhere(at pluggable.Locatable) {
+func (iw *indentingWriter) AttrsWhere(at driverbottom.Locatable) {
 	iw.Printf(" {\n")
 	iw.levels = append(iw.levels, "A")
 	iw.showIndent()
@@ -44,7 +44,7 @@ func (iw *indentingWriter) EndList() {
 	iw.Printf("]\n")
 }
 
-func (iw *indentingWriter) NestedAttr(field string, obj pluggable.Describable) {
+func (iw *indentingWriter) NestedAttr(field string, obj driverbottom.Describable) {
 	iw.showIndent()
 	iw.Printf("%s:\n", field)
 	iw.levels = append(iw.levels, "N")
@@ -90,6 +90,6 @@ func (iw *indentingWriter) Printf(format string, args ...any) {
 	fmt.Fprintf(iw.w, format, args...)
 }
 
-func NewIndentWriter(w io.Writer) pluggable.IndentWriter {
+func NewIndentWriter(w io.Writer) driverbottom.IndentWriter {
 	return &indentingWriter{w: w}
 }

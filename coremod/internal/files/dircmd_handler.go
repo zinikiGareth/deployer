@@ -2,15 +2,15 @@ package files
 
 import (
 	"ziniki.org/deployer/coremod/pkg/external"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/interpreters"
-	"ziniki.org/deployer/driver/pkg/pluggable"
 )
 
 type dirCommandHandler struct {
 	tools *external.Tools
 }
 
-func (dch *dirCommandHandler) Handle(parent pluggable.AttachResult, tokens []pluggable.Token) pluggable.Interpreter {
+func (dch *dirCommandHandler) Handle(parent driverbottom.AttachResult, tokens []driverbottom.Token) driverbottom.Interpreter {
 	if len(tokens) < 2 {
 		dch.tools.Reporter.Report(tokens[0].Loc().Offset, "files.dir: expr...")
 		return interpreters.NewIgnoreInnerScope()
@@ -31,6 +31,6 @@ func (dch *dirCommandHandler) Handle(parent pluggable.AttachResult, tokens []plu
 	return interpreters.NewDisallowInnerScope(dch.tools.CoreTools)
 }
 
-func NewDirCommandHandler(tools *external.Tools) pluggable.VerbCommand {
+func NewDirCommandHandler(tools *external.Tools) driverbottom.VerbCommand {
 	return &dirCommandHandler{tools: tools}
 }

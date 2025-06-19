@@ -3,8 +3,8 @@ package lexicator
 import (
 	"fmt"
 
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
-	"ziniki.org/deployer/driver/pkg/pluggable"
 )
 
 type BaseToken struct {
@@ -61,7 +61,7 @@ func (tok *IdentifierToken) ShortDescription() string {
 	panic("not implemented")
 }
 
-func (tok *IdentifierToken) DumpTo(iw pluggable.IndentWriter) {
+func (tok *IdentifierToken) DumpTo(iw driverbottom.IndentWriter) {
 	iw.Intro("Identifier")
 	iw.AttrsWhere(tok)
 	iw.IndPrintf("\"%s\"\n", tok.id)
@@ -72,10 +72,10 @@ func (tok *NumberToken) Value() float64 {
 	return tok.value
 }
 
-func (tok *NumberToken) Resolve(r pluggable.Resolver) {
+func (tok *NumberToken) Resolve(r driverbottom.Resolver) {
 }
 
-func (tok *NumberToken) Eval(s pluggable.RuntimeStorage) any {
+func (tok *NumberToken) Eval(s driverbottom.RuntimeStorage) any {
 	return tok.Value()
 }
 
@@ -83,7 +83,7 @@ func (t *NumberToken) ShortDescription() string {
 	panic("not implemented")
 }
 
-func (t *NumberToken) DumpTo(iw pluggable.IndentWriter) {
+func (t *NumberToken) DumpTo(iw driverbottom.IndentWriter) {
 	panic("not implemented")
 }
 
@@ -131,7 +131,7 @@ func (tok *StringToken) ShortDescription() string {
 	return fmt.Sprintf("%s %s", tok.BaseToken.String(), tok.text)
 }
 
-func (t *StringToken) DumpTo(iw pluggable.IndentWriter) {
+func (t *StringToken) DumpTo(iw driverbottom.IndentWriter) {
 	iw.Intro("String")
 	iw.AttrsWhere(t)
 	iw.IndPrintf("\"%s\"\n", t.text)
@@ -142,34 +142,34 @@ func (tok *StringToken) String() string {
 	return fmt.Sprintf("%s %s", tok.BaseToken.String(), tok.text)
 }
 
-func (tok *StringToken) Resolve(r pluggable.Resolver) {
+func (tok *StringToken) Resolve(r driverbottom.Resolver) {
 }
 
-func (tok *StringToken) Eval(s pluggable.RuntimeStorage) any {
+func (tok *StringToken) Eval(s driverbottom.RuntimeStorage) any {
 	// log.Printf("Eval(String) = %s\n", tok.Text())
 	return tok.text
 }
 
-func NewIdentifierToken(line *errorsink.LineLoc, offset int, text string) pluggable.Identifier {
+func NewIdentifierToken(line *errorsink.LineLoc, offset int, text string) driverbottom.Identifier {
 	return &IdentifierToken{BaseToken: BaseToken{loc: line.Location(offset)}, id: text}
 }
 
-func NewNumberToken(line *errorsink.LineLoc, offset int, value float64) pluggable.Number {
+func NewNumberToken(line *errorsink.LineLoc, offset int, value float64) driverbottom.Number {
 	return &NumberToken{BaseToken: BaseToken{loc: line.Location(offset)}, value: value}
 }
 
-func NewOperatorToken(line *errorsink.LineLoc, offset int, text string) pluggable.Operator {
+func NewOperatorToken(line *errorsink.LineLoc, offset int, text string) driverbottom.Operator {
 	return &OperatorToken{BaseToken: BaseToken{loc: line.Location(offset)}, op: text}
 }
 
-func NewPuncToken(line *errorsink.LineLoc, offset int, text rune) pluggable.Punc {
+func NewPuncToken(line *errorsink.LineLoc, offset int, text rune) driverbottom.Punc {
 	return &PuncToken{BaseToken: BaseToken{loc: line.Location(offset)}, punc: text}
 }
 
-func NewAdverbToken(line *errorsink.LineLoc, offset int, text string) pluggable.Adverb {
+func NewAdverbToken(line *errorsink.LineLoc, offset int, text string) driverbottom.Adverb {
 	return &AdverbToken{BaseToken: BaseToken{loc: line.Location(offset)}, name: text}
 }
 
-func NewStringToken(line *errorsink.LineLoc, offset int, text string) pluggable.String {
+func NewStringToken(line *errorsink.LineLoc, offset int, text string) driverbottom.String {
 	return &StringToken{BaseToken: BaseToken{loc: line.Location(offset)}, text: text}
 }

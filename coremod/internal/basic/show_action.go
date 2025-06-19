@@ -4,22 +4,22 @@ import (
 	"fmt"
 
 	"ziniki.org/deployer/coremod/pkg/external"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
-	"ziniki.org/deployer/driver/pkg/pluggable"
 	"ziniki.org/deployer/driver/pkg/testhelpers"
 )
 
 type ShowAction struct {
 	tools *external.Tools
 	loc   *errorsink.Location
-	exprs []pluggable.Expr
+	exprs []driverbottom.Expr
 }
 
 func (sa *ShowAction) Loc() *errorsink.Location {
 	return sa.loc
 }
 
-func (sa *ShowAction) DumpTo(w pluggable.IndentWriter) {
+func (sa *ShowAction) DumpTo(w driverbottom.IndentWriter) {
 	w.Intro("ShowAction")
 	w.AttrsWhere(sa)
 	w.ListAttr("exprs")
@@ -37,14 +37,14 @@ func (sa *ShowAction) ShortDescription() string {
 func (sa *ShowAction) Completed() {
 }
 
-func (sa *ShowAction) Resolve(r pluggable.Resolver) pluggable.BindingRequirement {
+func (sa *ShowAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
 	for _, e := range sa.exprs {
 		e.Resolve(r)
 	}
-	return pluggable.NO_VALUE
+	return driverbottom.NO_VALUE
 }
 
-func (sa *ShowAction) BuildModel(pres pluggable.ValuePresenter) {
+func (sa *ShowAction) BuildModel(pres driverbottom.ValuePresenter) {
 }
 
 func (sa *ShowAction) UpdateReality() {

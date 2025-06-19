@@ -2,14 +2,14 @@ package policy
 
 import (
 	"ziniki.org/deployer/coremod/pkg/external"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
-	"ziniki.org/deployer/driver/pkg/pluggable"
 )
 
 // Is probably more general than this, but who knows?
 type UpdatePolicyAllowAction interface {
-	pluggable.Describable
-	Resolve(r pluggable.Resolver) pluggable.BindingRequirement
+	driverbottom.Describable
+	Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement
 	ApplyTo(doc external.PolicyEffect)
 }
 
@@ -18,15 +18,15 @@ type PolicyAllowAction struct {
 	loc     *errorsink.Location
 	actions []UpdatePolicyAllowAction
 
-	allowActions   []pluggable.Expr
-	allowResources []pluggable.Expr
+	allowActions   []driverbottom.Expr
+	allowResources []driverbottom.Expr
 }
 
 func (paa *PolicyAllowAction) Loc() *errorsink.Location {
 	return paa.loc
 }
 
-func (paa *PolicyAllowAction) DumpTo(w pluggable.IndentWriter) {
+func (paa *PolicyAllowAction) DumpTo(w driverbottom.IndentWriter) {
 	w.Intro("PolicyAllowAction")
 	w.AttrsWhere(paa)
 	w.ListAttr("allowActions")
@@ -72,7 +72,7 @@ func (paa *PolicyAllowAction) ApplyTo(doc external.PolicyDocument) {
 	}
 }
 
-func (paa *PolicyAllowAction) Resolve(r pluggable.Resolver) pluggable.BindingRequirement {
+func (paa *PolicyAllowAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
 	for _, a := range paa.actions {
 		a.Resolve(r)
 	}
@@ -84,8 +84,8 @@ func (paa *PolicyAllowAction) Resolve(r pluggable.Resolver) pluggable.BindingReq
 		// log.Printf("need to resolve %T %v\n", ar, ar)
 		ar.Resolve(r)
 	}
-	return pluggable.MAY_BE_BOUND
+	return driverbottom.MAY_BE_BOUND
 }
 
-func (paa *PolicyAllowAction) BuildModel(pres pluggable.ValuePresenter) {
+func (paa *PolicyAllowAction) BuildModel(pres driverbottom.ValuePresenter) {
 }

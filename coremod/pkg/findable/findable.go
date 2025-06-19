@@ -1,9 +1,9 @@
 package findable
 
-import "ziniki.org/deployer/driver/pkg/pluggable"
+import "ziniki.org/deployer/driver/pkg/driverbottom"
 
 type Findable interface {
-	pluggable.Describable
-	BuildModel(pres pluggable.ValuePresenter)
+	driverbottom.Describable
+	BuildModel(pres driverbottom.ValuePresenter)
 	UpdateReality()
 }

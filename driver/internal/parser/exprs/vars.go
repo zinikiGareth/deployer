@@ -4,27 +4,27 @@ import (
 	"fmt"
 	"log"
 
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
-	"ziniki.org/deployer/driver/pkg/pluggable"
 )
 
 type VarReference struct {
-	id        pluggable.Identifier
-	actualVar pluggable.Describable
+	id        driverbottom.Identifier
+	actualVar driverbottom.Describable
 }
 
-func (a *VarReference) Resolve(r pluggable.Resolver) {
+func (a *VarReference) Resolve(r driverbottom.Resolver) {
 	v := r.Resolve(a.id)
 	a.actualVar = v
 }
 
-func (v *VarReference) Eval(s pluggable.RuntimeStorage) any {
+func (v *VarReference) Eval(s driverbottom.RuntimeStorage) any {
 	// log.Printf("Eval(vr) %s %v => %T %v\n", v.id, v, s.Get(v), s.Get(v))
 	out := s.Get(v)
 	if out != nil {
 		return out
 	}
-	out = s.Read(pluggable.SymbolName(v.id.Id()))
+	out = s.Read(driverbottom.SymbolName(v.id.Id()))
 	if out != nil {
 		return out
 	}
@@ -39,7 +39,7 @@ func (v *VarReference) ShortDescription() string {
 	return v.Loc().String() + " Var[" + v.id.Id() + "]"
 }
 
-func (v *VarReference) DumpTo(iw pluggable.IndentWriter) {
+func (v *VarReference) DumpTo(iw driverbottom.IndentWriter) {
 	iw.Intro("Var %s", v.id)
 	iw.AttrsWhere(v)
 	if v.actualVar != nil {
@@ -52,11 +52,11 @@ func (v *VarReference) String() string {
 	return "Var[" + v.id.Id() + "]"
 }
 
-func (v *VarReference) Named() pluggable.Identifier {
+func (v *VarReference) Named() driverbottom.Identifier {
 	return v.id
 }
 
-func (a *VarReference) Binding() pluggable.Describable {
+func (a *VarReference) Binding() driverbottom.Describable {
 	if a.actualVar == nil {
 		// panic("help!")
 		log.Fatalf("var was not resolved: %s %s\n", a.id.Id(), a.id.Loc().String())
@@ -64,11 +64,11 @@ func (a *VarReference) Binding() pluggable.Describable {
 	return a.actualVar
 }
 
-func VarRefer(id pluggable.Identifier) pluggable.Var {
+func VarRefer(id driverbottom.Identifier) driverbottom.Var {
 	return &VarReference{id: id}
 }
 
-func IsVar(e pluggable.Expr, id pluggable.Identifier) bool {
+func IsVar(e driverbottom.Expr, id driverbottom.Identifier) bool {
 	v, ok := e.(*VarReference)
 	if !ok {
 		return false

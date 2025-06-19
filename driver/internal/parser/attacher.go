@@ -1,13 +1,13 @@
 package parser
 
-import "ziniki.org/deployer/driver/pkg/pluggable"
+import "ziniki.org/deployer/driver/pkg/driverbottom"
 
 type TopLevelAttacher struct {
-	tools *pluggable.CoreTools
+	tools *driverbottom.CoreTools
 }
 
 func (a *TopLevelAttacher) Attach(tlf any) {
-	top, ok := tlf.(pluggable.TopLevelForm)
+	top, ok := tlf.(driverbottom.TopLevelForm)
 	if !ok {
 		panic("not a TLF")
 	}
@@ -15,6 +15,6 @@ func (a *TopLevelAttacher) Attach(tlf any) {
 	a.tools.Repository.IntroduceSymbol(top.Name(), top)
 
 }
-func NewTopLevelAttacher(tools *pluggable.CoreTools) pluggable.AttachResult {
+func NewTopLevelAttacher(tools *driverbottom.CoreTools) driverbottom.AttachResult {
 	return &TopLevelAttacher{tools: tools}
 }

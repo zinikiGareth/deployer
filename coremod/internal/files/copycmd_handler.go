@@ -2,15 +2,15 @@ package files
 
 import (
 	"ziniki.org/deployer/coremod/pkg/external"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/interpreters"
-	"ziniki.org/deployer/driver/pkg/pluggable"
 )
 
 type copyCommandHandler struct {
 	tools *external.Tools
 }
 
-func (cch *copyCommandHandler) Handle(parent pluggable.AttachResult, tokens []pluggable.Token) pluggable.Interpreter {
+func (cch *copyCommandHandler) Handle(parent driverbottom.AttachResult, tokens []driverbottom.Token) driverbottom.Interpreter {
 	if len(tokens) < 2 {
 		cch.tools.Reporter.Report(tokens[0].Loc().Offset, "files.dir: <from> <to>")
 		return interpreters.NewIgnoreInnerScope()
@@ -32,6 +32,6 @@ func (cch *copyCommandHandler) Handle(parent pluggable.AttachResult, tokens []pl
 	return interpreters.NewDisallowInnerScope(cch.tools.CoreTools) // for now, but we want to support it really
 }
 
-func NewCopyCommandHandler(tools *external.Tools) pluggable.VerbCommand {
+func NewCopyCommandHandler(tools *external.Tools) driverbottom.VerbCommand {
 	return &copyCommandHandler{tools: tools}
 }

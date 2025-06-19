@@ -4,13 +4,13 @@ import (
 	"testing"
 
 	"ziniki.org/deployer/driver/internal/parser/lexicator"
-	"ziniki.org/deployer/driver/pkg/pluggable"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/testhelpers"
 )
 
 func TestALineBeginningDoubleSlashSpaceIsIgnored(t *testing.T) {
 	reporter, _ := testhelpers.MockReporter(t)
-	tools := pluggable.NewTools(reporter, nil, nil, nil, nil)
+	tools := driverbottom.NewTools(reporter, nil, nil, nil, nil)
 	lex := lexicator.NewLineLexicator(tools, "test")
 	toks := lex.BlockedLine(lineOf("// hello, world"))
 	if len(toks) != 0 {
@@ -20,20 +20,20 @@ func TestALineBeginningDoubleSlashSpaceIsIgnored(t *testing.T) {
 
 func TestALineWithDoubleSlashSpaceIsTerminated(t *testing.T) {
 	reporter, _ := testhelpers.MockReporter(t)
-	tools := pluggable.NewTools(reporter, nil, nil, nil, nil)
+	tools := driverbottom.NewTools(reporter, nil, nil, nil, nil)
 	lex := lexicator.NewLineLexicator(tools, "test")
 	toks := lex.BlockedLine(lineOf("hello // , world"))
 	if len(toks) != 1 {
 		t.Fatalf("%d args returned, not 1", len(toks))
 	}
-	if toks[0].(pluggable.Identifier).Id() != "hello" {
+	if toks[0].(driverbottom.Identifier).Id() != "hello" {
 		t.Fatalf("token was not hello")
 	}
 }
 
 func TestALineBeginningTripleSlashIsIgnored(t *testing.T) {
 	reporter, _ := testhelpers.MockReporter(t)
-	tools := pluggable.NewTools(reporter, nil, nil, nil, nil)
+	tools := driverbottom.NewTools(reporter, nil, nil, nil, nil)
 	lex := lexicator.NewLineLexicator(tools, "test")
 	toks := lex.BlockedLine(lineOf("/// hello, world"))
 	if len(toks) != 0 {

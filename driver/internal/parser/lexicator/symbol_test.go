@@ -4,8 +4,8 @@ import (
 	"testing"
 
 	"ziniki.org/deployer/driver/internal/parser/lexicator"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
-	"ziniki.org/deployer/driver/pkg/pluggable"
 	"ziniki.org/deployer/driver/pkg/testhelpers"
 )
 
@@ -15,16 +15,16 @@ func lineOf(tx string) *errorsink.LineLoc {
 
 func TestForSingleSlashWithSpaces(t *testing.T) {
 	reporter, _ := testhelpers.MockReporter(t)
-	tools := pluggable.NewTools(reporter, nil, nil, nil, nil)
+	tools := driverbottom.NewTools(reporter, nil, nil, nil, nil)
 	lex := lexicator.NewLineLexicator(tools, "test")
 	toks := lex.BlockedLine(lineOf("hello / world"))
 	if len(toks) != 3 {
 		t.Fatalf("%d args returned, not 3", len(toks))
 	}
-	if !toks[1].(pluggable.Operator).Is("/") {
+	if !toks[1].(driverbottom.Operator).Is("/") {
 		t.Fatalf("!op.Is(/)")
 	}
-	if toks[1].(pluggable.Operator).Op() != "/" {
+	if toks[1].(driverbottom.Operator).Op() != "/" {
 		t.Fatalf("op was not /")
 	}
 
@@ -32,66 +32,66 @@ func TestForSingleSlashWithSpaces(t *testing.T) {
 
 func TestForSingleSlashWithoutSpaces(t *testing.T) {
 	reporter, _ := testhelpers.MockReporter(t)
-	tools := pluggable.NewTools(reporter, nil, nil, nil, nil)
+	tools := driverbottom.NewTools(reporter, nil, nil, nil, nil)
 	lex := lexicator.NewLineLexicator(tools, "test")
 	toks := lex.BlockedLine(lineOf("hello/world"))
 	if len(toks) != 3 {
 		t.Fatalf("%d args returned, not 3", len(toks))
 	}
-	if toks[0].(pluggable.Identifier).Id() != "hello" {
+	if toks[0].(driverbottom.Identifier).Id() != "hello" {
 		t.Fatalf("tok0 != hello")
 	}
-	if !toks[1].(pluggable.Operator).Is("/") {
+	if !toks[1].(driverbottom.Operator).Is("/") {
 		t.Fatalf("!op.Is(/)")
 	}
-	if toks[1].(pluggable.Operator).Op() != "/" {
+	if toks[1].(driverbottom.Operator).Op() != "/" {
 		t.Fatalf("op was not /")
 	}
-	if toks[2].(pluggable.Identifier).Id() != "world" {
+	if toks[2].(driverbottom.Identifier).Id() != "world" {
 		t.Fatalf("tok2 != world")
 	}
 }
 
 func TestForEqualRightArrowWithoutSpaces(t *testing.T) {
 	reporter, _ := testhelpers.MockReporter(t)
-	tools := pluggable.NewTools(reporter, nil, nil, nil, nil)
+	tools := driverbottom.NewTools(reporter, nil, nil, nil, nil)
 	lex := lexicator.NewLineLexicator(tools, "test")
 	toks := lex.BlockedLine(lineOf("hello=>world"))
 	if len(toks) != 3 {
 		t.Fatalf("%d args returned, not 3", len(toks))
 	}
-	if toks[0].(pluggable.Identifier).Id() != "hello" {
+	if toks[0].(driverbottom.Identifier).Id() != "hello" {
 		t.Fatalf("tok0 != hello")
 	}
-	if !toks[1].(pluggable.Operator).Is("=>") {
+	if !toks[1].(driverbottom.Operator).Is("=>") {
 		t.Fatalf("!op.Is(=>)")
 	}
-	if toks[1].(pluggable.Operator).Op() != "=>" {
+	if toks[1].(driverbottom.Operator).Op() != "=>" {
 		t.Fatalf("op was not =>")
 	}
-	if toks[2].(pluggable.Identifier).Id() != "world" {
+	if toks[2].(driverbottom.Identifier).Id() != "world" {
 		t.Fatalf("tok2 != world")
 	}
 }
 
 func TestForMinusLeftArrowWithoutSpaces(t *testing.T) {
 	reporter, _ := testhelpers.MockReporter(t)
-	tools := pluggable.NewTools(reporter, nil, nil, nil, nil)
+	tools := driverbottom.NewTools(reporter, nil, nil, nil, nil)
 	lex := lexicator.NewLineLexicator(tools, "test")
 	toks := lex.BlockedLine(lineOf("hello<-'world'"))
 	if len(toks) != 3 {
 		t.Fatalf("%d args returned, not 3", len(toks))
 	}
-	if toks[0].(pluggable.Identifier).Id() != "hello" {
+	if toks[0].(driverbottom.Identifier).Id() != "hello" {
 		t.Fatalf("tok0 != hello")
 	}
-	if !toks[1].(pluggable.Operator).Is("<-") {
+	if !toks[1].(driverbottom.Operator).Is("<-") {
 		t.Fatalf("!op.Is(<-)")
 	}
-	if toks[1].(pluggable.Operator).Op() != "<-" {
+	if toks[1].(driverbottom.Operator).Op() != "<-" {
 		t.Fatalf("op was not <-")
 	}
-	if toks[2].(pluggable.String).Text() != "world" {
+	if toks[2].(driverbottom.String).Text() != "world" {
 		t.Fatalf("tok2 != world")
 	}
 }

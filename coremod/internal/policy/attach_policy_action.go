@@ -5,9 +5,9 @@ import (
 	"log"
 
 	"ziniki.org/deployer/coremod/pkg/external"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
 	"ziniki.org/deployer/driver/pkg/interpreters"
-	"ziniki.org/deployer/driver/pkg/pluggable"
 )
 
 // The action is created by the handler.  It is added to a target.  It then takes on the rest of the work:
@@ -16,8 +16,8 @@ import (
 type AttachPolicyAction struct {
 	tools  *external.Tools
 	loc    *errorsink.Location
-	to     pluggable.Expr
-	policy pluggable.Expr
+	to     driverbottom.Expr
+	policy driverbottom.Expr
 
 	attachTo     external.PolicyAttacher
 	actualPolicy external.PolicyDocument
@@ -27,7 +27,7 @@ func (ea *AttachPolicyAction) Loc() *errorsink.Location {
 	return ea.loc
 }
 
-func (ea *AttachPolicyAction) DumpTo(w pluggable.IndentWriter) {
+func (ea *AttachPolicyAction) DumpTo(w driverbottom.IndentWriter) {
 	w.Intro("AttachPolicyAction")
 	w.AttrsWhere(ea)
 	w.NestedAttr("to", ea.to)
@@ -39,10 +39,10 @@ func (ea *AttachPolicyAction) ShortDescription() string {
 	return fmt.Sprintf("AttachPolicy[%s: %s]", ea.to.ShortDescription(), ea.policy.ShortDescription())
 }
 
-func (ea *AttachPolicyAction) AddProperty(name pluggable.Identifier, value pluggable.Expr) {
+func (ea *AttachPolicyAction) AddProperty(name driverbottom.Identifier, value driverbottom.Expr) {
 }
 
-func (ea *AttachPolicyAction) AddAdverb(adv pluggable.Adverb, tokens []pluggable.Token) pluggable.Interpreter {
+func (ea *AttachPolicyAction) AddAdverb(adv driverbottom.Adverb, tokens []driverbottom.Token) driverbottom.Interpreter {
 	/*
 		if adv.Name() == "teardown" {
 			if ea.teardown != nil {
@@ -51,7 +51,7 @@ func (ea *AttachPolicyAction) AddAdverb(adv pluggable.Adverb, tokens []pluggable
 			if len(tokens) != 1 {
 				panic("invalid tokens")
 			}
-			ea.teardown = &MyTearDown{mode: tokens[0].(pluggable.Identifier).Id()}
+			ea.teardown = &MyTearDown{mode: tokens[0].(driverbottom.Identifier).Id()}
 
 		}
 	*/
@@ -61,13 +61,13 @@ func (ea *AttachPolicyAction) AddAdverb(adv pluggable.Adverb, tokens []pluggable
 func (ea *AttachPolicyAction) Completed() {
 }
 
-func (ea *AttachPolicyAction) Resolve(r pluggable.Resolver) pluggable.BindingRequirement {
+func (ea *AttachPolicyAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
 	ea.to.Resolve(r)
 	ea.policy.Resolve(r)
-	return pluggable.NO_VALUE
+	return driverbottom.NO_VALUE
 }
 
-func (ea *AttachPolicyAction) BuildModel(pres pluggable.ValuePresenter) {
+func (ea *AttachPolicyAction) BuildModel(pres driverbottom.ValuePresenter) {
 	attachTo := ea.to.Eval(ea.tools.Storage)
 	policy := ea.policy.Eval(ea.tools.Storage)
 

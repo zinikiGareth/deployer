@@ -1,6 +1,6 @@
 #!/bin/bash -xe
 
-cd deployer
+cd driver
 go test ./...
 cd ../coremod
 go test ./...

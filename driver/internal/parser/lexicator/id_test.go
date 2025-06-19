@@ -4,32 +4,32 @@ import (
 	"testing"
 
 	"ziniki.org/deployer/driver/internal/parser/lexicator"
-	"ziniki.org/deployer/driver/pkg/pluggable"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/testhelpers"
 )
 
 func TestASingleIdIsJustThat(t *testing.T) {
 	reporter, _ := testhelpers.MockReporter(t)
-	tools := pluggable.NewTools(reporter, nil, nil, nil, nil)
+	tools := driverbottom.NewTools(reporter, nil, nil, nil, nil)
 	lex := lexicator.NewLineLexicator(tools, "test")
 	toks := lex.BlockedLine(lineOf("hello"))
 	if len(toks) != 1 {
 		t.Fatalf("not exactly one arg returned")
 	}
-	if toks[0].(pluggable.Identifier).Id() != "hello" {
+	if toks[0].(driverbottom.Identifier).Id() != "hello" {
 		t.Fatalf("token was not hello")
 	}
 }
 
 func TestAnIdCanHaveDots(t *testing.T) {
 	reporter, _ := testhelpers.MockReporter(t)
-	tools := pluggable.NewTools(reporter, nil, nil, nil, nil)
+	tools := driverbottom.NewTools(reporter, nil, nil, nil, nil)
 	lex := lexicator.NewLineLexicator(tools, "test")
 	toks := lex.BlockedLine(lineOf("hello.world"))
 	if len(toks) != 1 {
 		t.Fatalf("not exactly one arg returned")
 	}
-	if toks[0].(pluggable.Identifier).Id() != "hello.world" {
+	if toks[0].(driverbottom.Identifier).Id() != "hello.world" {
 		t.Fatalf("token was not hello.world")
 	}
 }
@@ -40,16 +40,16 @@ func TestAnIdCanHaveDots(t *testing.T) {
 
 func TestTwoIdsCanBeSeparatedByASpace(t *testing.T) {
 	reporter, _ := testhelpers.MockReporter(t)
-	tools := pluggable.NewTools(reporter, nil, nil, nil, nil)
+	tools := driverbottom.NewTools(reporter, nil, nil, nil, nil)
 	lex := lexicator.NewLineLexicator(tools, "test")
 	toks := lex.BlockedLine(lineOf("hello world"))
 	if len(toks) != 2 {
 		t.Fatalf("not two args returned")
 	}
-	if toks[0].(pluggable.Identifier).Id() != "hello" {
+	if toks[0].(driverbottom.Identifier).Id() != "hello" {
 		t.Fatalf("token 0 was not hello, but %s", toks[0])
 	}
-	if toks[1].(pluggable.Identifier).Id() != "world" {
+	if toks[1].(driverbottom.Identifier).Id() != "world" {
 		t.Fatalf("token 1 was not world, but %s", toks[1])
 	}
 }
@@ -60,7 +60,7 @@ func TestLeadingSpacesCauseAPanic(t *testing.T) {
 		}
 	}()
 	reporter, _ := testhelpers.MockReporter(t)
-	tools := pluggable.NewTools(reporter, nil, nil, nil, nil)
+	tools := driverbottom.NewTools(reporter, nil, nil, nil, nil)
 	lex := lexicator.NewLineLexicator(tools, "test")
 	lex.BlockedLine(lineOf(" hello"))
 	t.Fatalf("did not panic")

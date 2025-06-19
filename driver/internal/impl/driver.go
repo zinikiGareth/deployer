@@ -12,19 +12,19 @@ import (
 	"ziniki.org/deployer/driver/internal/repo"
 	"ziniki.org/deployer/driver/internal/runtime"
 	"ziniki.org/deployer/driver/pkg/deployer"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
-	"ziniki.org/deployer/driver/pkg/pluggable"
 	"ziniki.org/deployer/driver/pkg/utils"
 )
 
 type DriverImpl struct {
-	tools        *pluggable.CoreTools
+	tools        *driverbottom.CoreTools
 	userErrorsTo io.StringWriter
 	srcdir       string
 	input        []string
 }
 
-func (d *DriverImpl) ObtainCoreTools() *pluggable.CoreTools {
+func (d *DriverImpl) ObtainCoreTools() *driverbottom.CoreTools {
 	return d.tools
 }
 
@@ -81,11 +81,11 @@ func (d *DriverImpl) DoStuff() error {
 }
 
 // Mainly support for the test harness, but do with them as you will (not used in $cmd$)
-func (d *DriverImpl) AddSymbolListener(lsnr pluggable.SymbolListener) {
+func (d *DriverImpl) AddSymbolListener(lsnr driverbottom.SymbolListener) {
 	d.tools.Repository.AddSymbolListener(lsnr)
 }
 
-func (d *DriverImpl) Traverse(lsnr pluggable.RepositoryTraverser) {
+func (d *DriverImpl) Traverse(lsnr driverbottom.RepositoryTraverser) {
 	d.tools.Repository.Traverse(lsnr)
 }
 
@@ -98,7 +98,7 @@ func NewDriver(sink errorsink.ErrorSink, userErrorsTo io.StringWriter) *DriverIm
 	reporter := errorsink.NewErrorReporter(sink)
 	repo := repo.NewRepository()
 	storage := runtime.NewRuntimeStorage(reg, repo, sink)
-	tools := pluggable.NewTools(reporter, reg, reg, repo, storage)
+	tools := driverbottom.NewTools(reporter, reg, reg, repo, storage)
 	reg.BindTools(tools)
 	return &DriverImpl{tools: tools, userErrorsTo: userErrorsTo}
 }

@@ -1,17 +1,15 @@
 package interpreters
 
-import (
-	"ziniki.org/deployer/driver/pkg/pluggable"
-)
+import "ziniki.org/deployer/driver/pkg/driverbottom"
 
 type propertiesInterpreter struct {
-	tools  *pluggable.CoreTools
-	parent pluggable.PropertyParent
+	tools  *driverbottom.CoreTools
+	parent driverbottom.PropertyParent
 }
 
-func (pis *propertiesInterpreter) HaveTokens(tokens []pluggable.Token) pluggable.Interpreter {
+func (pis *propertiesInterpreter) HaveTokens(tokens []driverbottom.Token) driverbottom.Interpreter {
 	if len(tokens) >= 1 {
-		if adv, ok := tokens[0].(pluggable.Adverb); ok {
+		if adv, ok := tokens[0].(driverbottom.Adverb); ok {
 			return pis.parent.AddAdverb(adv, tokens[1:])
 		}
 	}
@@ -21,13 +19,13 @@ func (pis *propertiesInterpreter) HaveTokens(tokens []pluggable.Token) pluggable
 		return NewDisallowInnerScope(pis.tools)
 	}
 
-	prop, ok := tokens[0].(pluggable.Identifier)
+	prop, ok := tokens[0].(driverbottom.Identifier)
 	if !ok {
 		pis.tools.Reporter.Reportf(tokens[0].Loc().Offset, "property must be an identifier")
 		return NewIgnoreInnerScope()
 	}
 
-	op, ok := tokens[1].(pluggable.Operator)
+	op, ok := tokens[1].(driverbottom.Operator)
 	if !ok {
 		pis.tools.Reporter.Reportf(tokens[0].Loc().Offset, "property <- expr")
 		return NewIgnoreInnerScope()

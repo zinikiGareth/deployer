@@ -5,14 +5,14 @@ import (
 
 	"ziniki.org/deployer/coremod/pkg/external"
 	"ziniki.org/deployer/coremod/pkg/files"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
-	"ziniki.org/deployer/driver/pkg/pluggable"
 )
 
 type copyAction struct {
 	tools *external.Tools
 	loc   *errorsink.Location
-	exprs []pluggable.Expr
+	exprs []driverbottom.Expr
 
 	Src  files.FileSource
 	Dest files.DestHolder
@@ -22,7 +22,7 @@ func (ca *copyAction) Loc() *errorsink.Location {
 	return ca.loc
 }
 
-func (ca *copyAction) DumpTo(w pluggable.IndentWriter) {
+func (ca *copyAction) DumpTo(w driverbottom.IndentWriter) {
 	w.Intro("CopyAction")
 	w.AttrsWhere(ca)
 	for _, v := range ca.exprs {
@@ -38,14 +38,14 @@ func (ca *copyAction) ShortDescription() string {
 func (ca *copyAction) Completed() {
 }
 
-func (ca *copyAction) Resolve(r pluggable.Resolver) pluggable.BindingRequirement {
+func (ca *copyAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
 	for _, e := range ca.exprs {
 		e.Resolve(r)
 	}
-	return pluggable.NO_VALUE
+	return driverbottom.NO_VALUE
 }
 
-func (ca *copyAction) BuildModel(pres pluggable.ValuePresenter) {
+func (ca *copyAction) BuildModel(pres driverbottom.ValuePresenter) {
 	if ca.tools.Reporter.HasErrors() {
 		return
 	}

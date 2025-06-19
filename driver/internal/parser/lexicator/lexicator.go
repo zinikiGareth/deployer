@@ -6,16 +6,16 @@ import (
 	"strings"
 	"unicode"
 
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
-	"ziniki.org/deployer/driver/pkg/pluggable"
 )
 
 type Lexicator interface {
-	BlockedLine(line *errorsink.LineLoc) []pluggable.Token
+	BlockedLine(line *errorsink.LineLoc) []driverbottom.Token
 }
 
 type LineLexicator struct {
-	tools *pluggable.CoreTools
+	tools *driverbottom.CoreTools
 	file  string
 }
 
@@ -36,10 +36,10 @@ const (
 // Also : ; (prob punc)
 // Don't do anything with ``
 
-func (ll *LineLexicator) BlockedLine(line *errorsink.LineLoc) []pluggable.Token {
+func (ll *LineLexicator) BlockedLine(line *errorsink.LineLoc) []driverbottom.Token {
 	txt := line.Text
 	ll.tools.Reporter.At(line)
-	var toks []pluggable.Token
+	var toks []driverbottom.Token
 	from := 0
 	runes := []rune(txt)
 	var quoteRune rune
@@ -244,27 +244,27 @@ func isPuncChar(r rune) bool {
 	}
 }
 
-func (ll *LineLexicator) token(toks []pluggable.Token, line *errorsink.LineLoc, start int, text []rune) []pluggable.Token {
+func (ll *LineLexicator) token(toks []driverbottom.Token, line *errorsink.LineLoc, start int, text []rune) []driverbottom.Token {
 	tok := NewIdentifierToken(line, start, string(text))
 	return append(toks, tok)
 }
 
-func (ll *LineLexicator) symbol(toks []pluggable.Token, line *errorsink.LineLoc, start int, text []rune) []pluggable.Token {
+func (ll *LineLexicator) symbol(toks []driverbottom.Token, line *errorsink.LineLoc, start int, text []rune) []driverbottom.Token {
 	tok := NewOperatorToken(line, start, string(text))
 	return append(toks, tok)
 }
 
-func (ll *LineLexicator) strtok(toks []pluggable.Token, line *errorsink.LineLoc, start int, text []rune) []pluggable.Token {
+func (ll *LineLexicator) strtok(toks []driverbottom.Token, line *errorsink.LineLoc, start int, text []rune) []driverbottom.Token {
 	tok := NewStringToken(line, start, string(text))
 	return append(toks, tok)
 }
 
-func (ll *LineLexicator) punctok(toks []pluggable.Token, line *errorsink.LineLoc, start int, p rune) []pluggable.Token {
+func (ll *LineLexicator) punctok(toks []driverbottom.Token, line *errorsink.LineLoc, start int, p rune) []driverbottom.Token {
 	tok := NewPuncToken(line, start, p)
 	return append(toks, tok)
 }
 
-func (ll *LineLexicator) numtok(toks []pluggable.Token, line *errorsink.LineLoc, start int, text []rune) []pluggable.Token {
+func (ll *LineLexicator) numtok(toks []driverbottom.Token, line *errorsink.LineLoc, start int, text []rune) []driverbottom.Token {
 	tx := string(text)
 	var f64 float64
 	var err error
@@ -282,11 +282,11 @@ func (ll *LineLexicator) numtok(toks []pluggable.Token, line *errorsink.LineLoc,
 	return append(toks, tok)
 }
 
-func (ll *LineLexicator) adverb(toks []pluggable.Token, line *errorsink.LineLoc, start int, text []rune) []pluggable.Token {
+func (ll *LineLexicator) adverb(toks []driverbottom.Token, line *errorsink.LineLoc, start int, text []rune) []driverbottom.Token {
 	tok := NewAdverbToken(line, start, string(text))
 	return append(toks, tok)
 }
 
-func NewLineLexicator(tools *pluggable.CoreTools, file string) Lexicator {
+func NewLineLexicator(tools *driverbottom.CoreTools, file string) Lexicator {
 	return &LineLexicator{tools: tools, file: file}
 }

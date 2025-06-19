@@ -5,8 +5,8 @@ import (
 
 	"ziniki.org/deployer/coremod/pkg/external"
 	"ziniki.org/deployer/coremod/pkg/files"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
-	"ziniki.org/deployer/driver/pkg/pluggable"
 	"ziniki.org/deployer/driver/pkg/testhelpers"
 )
 
@@ -28,7 +28,7 @@ func (b *bucketFinder) ShortDescription() string {
 	return "test.S3.Bucket[" + b.name + "]"
 }
 
-func (b *bucketFinder) DumpTo(iw pluggable.IndentWriter) {
+func (b *bucketFinder) DumpTo(iw driverbottom.IndentWriter) {
 	iw.Intro("test.S3.Bucket[")
 	iw.AttrsWhere(b)
 	iw.TextAttr("named", b.name)
@@ -36,7 +36,7 @@ func (b *bucketFinder) DumpTo(iw pluggable.IndentWriter) {
 }
 
 // This is called during the "Prepare" phase
-func (fb *bucketFinder) BuildModel(pres pluggable.ValuePresenter) {
+func (fb *bucketFinder) BuildModel(pres driverbottom.ValuePresenter) {
 	tmp := fb.tools.Recall.ObtainDriver("testS3.TestAwsEnv")
 	testAwsEnv, ok := tmp.(*TestAwsEnv)
 	if !ok {

@@ -5,9 +5,9 @@ import (
 
 	"ziniki.org/deployer/coremod/pkg/ensurable"
 	"ziniki.org/deployer/coremod/pkg/external"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
 	"ziniki.org/deployer/driver/pkg/interpreters"
-	"ziniki.org/deployer/driver/pkg/pluggable"
 )
 
 // The action is created by the handler.  It is added to a target.  It then takes on the rest of the work:
@@ -16,14 +16,14 @@ import (
 type EnsureAction struct {
 	tools    *external.Tools
 	loc      *errorsink.Location
-	what     pluggable.Identifier
-	resolved pluggable.Blank
-	named    pluggable.String
+	what     driverbottom.Identifier
+	resolved driverbottom.Blank
+	named    driverbottom.String
 	teardown external.TearDown
 	// TODO: this really isn't a map here, because what we want is to index by string name
 	// Now, we possibly want the "identifier" to that we have the location of the symbol, but it can't be the key
 	// because the same "symbol" at two different locations will be different, and we can't index by it.
-	props map[pluggable.Identifier]pluggable.Expr
+	props map[driverbottom.Identifier]driverbottom.Expr
 	ens   ensurable.Ensurable
 }
 
@@ -31,11 +31,11 @@ func (ea *EnsureAction) Loc() *errorsink.Location {
 	return ea.loc
 }
 
-func (ea *EnsureAction) What() pluggable.SymbolType {
-	return pluggable.SymbolType(ea.what.Id())
+func (ea *EnsureAction) What() driverbottom.SymbolType {
+	return driverbottom.SymbolType(ea.what.Id())
 }
 
-func (ea *EnsureAction) DumpTo(w pluggable.IndentWriter) {
+func (ea *EnsureAction) DumpTo(w driverbottom.IndentWriter) {
 	w.Intro("EnsureAction")
 	w.AttrsWhere(ea)
 	w.TextAttr("what", ea.what.Id())
@@ -61,13 +61,13 @@ func (ea *EnsureAction) ShortDescription() string {
 	return fmt.Sprintf("Ensure[%s: %s]", ea.what.Id(), ea.named.Text())
 }
 
-func (ea *EnsureAction) AddProperty(name pluggable.Identifier, value pluggable.Expr) {
+func (ea *EnsureAction) AddProperty(name driverbottom.Identifier, value driverbottom.Expr) {
 	if name.Id() == "name" {
 		if ea.named != nil {
 			ea.tools.Reporter.Report(name.Loc().Offset, "duplicate definition of name")
 			return
 		}
-		str, ok := value.(pluggable.String)
+		str, ok := value.(driverbottom.String)
 		if !ok {
 			ea.tools.Reporter.Report(value.Loc().Offset, "name must be a string")
 			return
@@ -82,7 +82,7 @@ func (ea *EnsureAction) AddProperty(name pluggable.Identifier, value pluggable.E
 	}
 }
 
-func (ea *EnsureAction) AddAdverb(adv pluggable.Adverb, tokens []pluggable.Token) pluggable.Interpreter {
+func (ea *EnsureAction) AddAdverb(adv driverbottom.Adverb, tokens []driverbottom.Token) driverbottom.Interpreter {
 	if adv.Name() == "teardown" {
 		if ea.teardown != nil {
 			panic("duplicate teardown")
@@ -90,7 +90,7 @@ func (ea *EnsureAction) AddAdverb(adv pluggable.Adverb, tokens []pluggable.Token
 		if len(tokens) != 1 {
 			panic("invalid tokens")
 		}
-		ea.teardown = &MyTearDown{mode: tokens[0].(pluggable.Identifier).Id()}
+		ea.teardown = &MyTearDown{mode: tokens[0].(driverbottom.Identifier).Id()}
 
 	}
 	return interpreters.NewDisallowInnerScope(ea.tools.CoreTools)
@@ -110,11 +110,11 @@ func (ea *EnsureAction) Completed() {
 	}
 }
 
-func (ea *EnsureAction) Resolve(r pluggable.Resolver) pluggable.BindingRequirement {
+func (ea *EnsureAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
 	tmp := r.Resolve(ea.what)
-	res, ok := tmp.(pluggable.Blank)
+	res, ok := tmp.(driverbottom.Blank)
 	if !ok {
-		return pluggable.ERROR_OCCURRED
+		return driverbottom.ERROR_OCCURRED
 	}
 	for _, y := range ea.props {
 		y.Resolve(r)
@@ -124,13 +124,13 @@ func (ea *EnsureAction) Resolve(r pluggable.Resolver) pluggable.BindingRequireme
 	ens, ok := obj.(ensurable.Ensurable)
 	if !ok {
 		ea.tools.Storage.Errorf(ea.loc, "the type "+ea.what.Id()+" is not ensurable")
-		return pluggable.ERROR_OCCURRED
+		return driverbottom.ERROR_OCCURRED
 	}
 	ea.ens = ens
-	return pluggable.MAY_BE_BOUND
+	return driverbottom.MAY_BE_BOUND
 }
 
-func (ea *EnsureAction) BuildModel(pres pluggable.ValuePresenter) {
+func (ea *EnsureAction) BuildModel(pres driverbottom.ValuePresenter) {
 	ea.ens.BuildModel(pres)
 }
 

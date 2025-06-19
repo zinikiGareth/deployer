@@ -1,4 +1,4 @@
-package pluggable
+package driverbottom
 
 type RepositoryTraverser interface {
 	Visit(who SymbolName, what Describable)

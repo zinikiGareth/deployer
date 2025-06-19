@@ -1,14 +1,12 @@
 package interpreters
 
-import (
-	"ziniki.org/deployer/driver/pkg/pluggable"
-)
+import "ziniki.org/deployer/driver/pkg/driverbottom"
 
 type disallowInnerScope struct {
-	tools *pluggable.CoreTools
+	tools *driverbottom.CoreTools
 }
 
-func (b *disallowInnerScope) HaveTokens(tokens []pluggable.Token) pluggable.Interpreter {
+func (b *disallowInnerScope) HaveTokens(tokens []driverbottom.Token) driverbottom.Interpreter {
 	b.tools.Reporter.Report(0, "nested content is not allowed here")
 	return b
 }

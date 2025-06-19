@@ -7,18 +7,18 @@ import (
 	"path/filepath"
 	"slices"
 
-	"ziniki.org/deployer/driver/pkg/pluggable"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/utils"
 )
 
 type RepositoryStorer interface {
-	pluggable.RepositoryTraverser
+	driverbottom.RepositoryTraverser
 	DumpNamesTo(outdir string)
 	DumpDefnsTo(outdir string)
 }
 
 type goldenRepoStorer struct {
-	defns map[pluggable.SymbolName]pluggable.Describable
+	defns map[driverbottom.SymbolName]driverbottom.Describable
 }
 
 func (s *goldenRepoStorer) DumpNamesTo(outdir string) {
@@ -54,10 +54,10 @@ func (s *goldenRepoStorer) DumpDefnsTo(outdir string) {
 	writeTo.Close()
 }
 
-func (s *goldenRepoStorer) Visit(who pluggable.SymbolName, what pluggable.Describable) {
+func (s *goldenRepoStorer) Visit(who driverbottom.SymbolName, what driverbottom.Describable) {
 	s.defns[who] = what
 }
 
 func NewGoldenRepoStorer() RepositoryStorer {
-	return &goldenRepoStorer{defns: make(map[pluggable.SymbolName]pluggable.Describable)}
+	return &goldenRepoStorer{defns: make(map[driverbottom.SymbolName]driverbottom.Describable)}
 }

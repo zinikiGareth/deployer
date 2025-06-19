@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"ziniki.org/deployer/coremod/pkg/external"
-	"ziniki.org/deployer/driver/pkg/pluggable"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 )
 
 const (
@@ -12,15 +12,15 @@ const (
 )
 
 type TimeOf struct {
-	pluggable.Locatable
+	driverbottom.Locatable
 	Number int
 	Unit   string
 }
 
-func (t *TimeOf) Resolve(r pluggable.Resolver) {
+func (t *TimeOf) Resolve(r driverbottom.Resolver) {
 }
 
-func (t *TimeOf) Eval(s pluggable.RuntimeStorage) any {
+func (t *TimeOf) Eval(s driverbottom.RuntimeStorage) any {
 	return t
 }
 
@@ -28,7 +28,7 @@ func (t *TimeOf) ShortDescription() string {
 	panic("not implemented")
 }
 
-func (t *TimeOf) DumpTo(iw pluggable.IndentWriter) {
+func (t *TimeOf) DumpTo(iw driverbottom.IndentWriter) {
 	panic("not implemented")
 }
 
@@ -40,14 +40,14 @@ type HoursFunc struct {
 	tools *external.Tools
 }
 
-func (h *HoursFunc) ReduceExpr(me pluggable.Token, before []pluggable.Expr, after []pluggable.Expr) pluggable.Expr {
+func (h *HoursFunc) ReduceExpr(me driverbottom.Token, before []driverbottom.Expr, after []driverbottom.Expr) driverbottom.Expr {
 	rep := h.tools.Reporter
 	if len(before) != 1 || len(after) != 0 {
 		rep.Report(me.Loc().Offset, "<nn> hours")
 		return nil
 	}
 	value := before[0]
-	konst, ok := value.(pluggable.Number)
+	konst, ok := value.(driverbottom.Number)
 	if !ok {
 		panic("not implemented: not-const hours")
 	}

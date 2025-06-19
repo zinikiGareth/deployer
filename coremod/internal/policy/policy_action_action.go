@@ -4,22 +4,22 @@ import (
 	"fmt"
 
 	"ziniki.org/deployer/coremod/pkg/external"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
-	"ziniki.org/deployer/driver/pkg/pluggable"
 )
 
 type policyAction struct {
 	tools *external.Tools
 	loc   *errorsink.Location
 
-	exprs []pluggable.Expr
+	exprs []driverbottom.Expr
 }
 
 func (pca *policyAction) Loc() *errorsink.Location {
 	return pca.loc
 }
 
-func (pca *policyAction) DumpTo(w pluggable.IndentWriter) {
+func (pca *policyAction) DumpTo(w driverbottom.IndentWriter) {
 	w.Intro("policyAction")
 	w.AttrsWhere(pca)
 	w.ListAttr("exprs")
@@ -37,14 +37,14 @@ func (pca *policyAction) ShortDescription() string {
 func (pca *policyAction) Completed() {
 }
 
-func (pca *policyAction) Resolve(r pluggable.Resolver) pluggable.BindingRequirement {
+func (pca *policyAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
 	for _, a := range pca.exprs {
 		a.Resolve(r)
 	}
-	return pluggable.MAY_BE_BOUND
+	return driverbottom.MAY_BE_BOUND
 }
 
-func (pca *policyAction) BuildModel(pres pluggable.ValuePresenter) {
+func (pca *policyAction) BuildModel(pres driverbottom.ValuePresenter) {
 }
 
 func (pca *policyAction) ApplyTo(pi external.PolicyEffect) {

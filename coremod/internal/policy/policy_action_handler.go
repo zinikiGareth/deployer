@@ -2,15 +2,15 @@ package policy
 
 import (
 	"ziniki.org/deployer/coremod/pkg/external"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/interpreters"
-	"ziniki.org/deployer/driver/pkg/pluggable"
 )
 
 type policyActionCommandHandler struct {
 	tools *external.Tools
 }
 
-func (pah *policyActionCommandHandler) Handle(parent pluggable.AttachResult, tokens []pluggable.Token) pluggable.Interpreter {
+func (pah *policyActionCommandHandler) Handle(parent driverbottom.AttachResult, tokens []driverbottom.Token) driverbottom.Interpreter {
 	exprs, ok := pah.tools.Parser.ParseMultiple(tokens[1:])
 	if !ok {
 		return interpreters.NewIgnoreInnerScope()
@@ -27,6 +27,6 @@ func (pah *policyActionCommandHandler) Handle(parent pluggable.AttachResult, tok
 	return interpreters.NewDisallowInnerScope(pah.tools.CoreTools)
 }
 
-func NewPolicyActionCommandHandler(tools *external.Tools) pluggable.VerbCommand {
+func NewPolicyActionCommandHandler(tools *external.Tools) driverbottom.VerbCommand {
 	return &policyActionCommandHandler{tools: tools}
 }

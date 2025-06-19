@@ -4,16 +4,16 @@ import (
 	"fmt"
 	"strings"
 
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
-	"ziniki.org/deployer/driver/pkg/pluggable"
 )
 
 type ParenReduction interface {
-	ReduceParens(tokens []pluggable.Token) ([]pluggable.Token, bool)
+	ReduceParens(tokens []driverbottom.Token) ([]driverbottom.Token, bool)
 }
 
 type Bracketed struct {
-	Tokens []pluggable.Token
+	Tokens []driverbottom.Token
 }
 
 func (b Bracketed) Loc() *errorsink.Location {
@@ -29,10 +29,10 @@ func (b Bracketed) String() string {
 }
 
 type exprParser struct {
-	tools *pluggable.CoreTools
+	tools *driverbottom.CoreTools
 }
 
-func (p *exprParser) Parse(tokens []pluggable.Token) (pluggable.Expr, bool) {
+func (p *exprParser) Parse(tokens []driverbottom.Token) (driverbottom.Expr, bool) {
 	if len(tokens) == 0 {
 		p.tools.Reporter.Reportf(0, "no expression found")
 		return nil, false
@@ -49,18 +49,18 @@ func (p *exprParser) Parse(tokens []pluggable.Token) (pluggable.Expr, bool) {
 	}
 }
 
-func AsExpr(x pluggable.Token) pluggable.Expr {
+func AsExpr(x driverbottom.Token) driverbottom.Expr {
 	switch x := x.(type) {
-	case pluggable.Expr:
+	case driverbottom.Expr:
 		return x
-	case pluggable.Identifier:
+	case driverbottom.Identifier:
 		return VarRefer(x)
 	default:
 		panic(fmt.Sprintf("cannot handle type %T", x))
 	}
 }
 
-func (p *exprParser) ParseMultiple(tokens []pluggable.Token) ([]pluggable.Expr, bool) {
+func (p *exprParser) ParseMultiple(tokens []driverbottom.Token) ([]driverbottom.Expr, bool) {
 	if len(tokens) == 0 {
 		return nil, true
 	}
@@ -68,14 +68,14 @@ func (p *exprParser) ParseMultiple(tokens []pluggable.Token) ([]pluggable.Expr, 
 	if !ok {
 		return nil, false
 	}
-	var ret []pluggable.Expr
+	var ret []driverbottom.Expr
 	for _, b := range blocks {
-		var bs []pluggable.Token
+		var bs []driverbottom.Token
 		brack, ok := b.(Bracketed)
 		if ok {
 			bs = brack.Tokens
 		} else {
-			bs = []pluggable.Token{b}
+			bs = []driverbottom.Token{b}
 		}
 		expr, ok := p.Parse(bs)
 		if !ok {
@@ -86,9 +86,9 @@ func (p *exprParser) ParseMultiple(tokens []pluggable.Token) ([]pluggable.Expr, 
 	return ret, true
 }
 
-func (p *exprParser) ReduceParens(tokens []pluggable.Token) ([]pluggable.Token, bool) {
+func (p *exprParser) ReduceParens(tokens []driverbottom.Token) ([]driverbottom.Token, bool) {
 	i := 0
-	var ret []pluggable.Token
+	var ret []driverbottom.Token
 	ret, i = p.ScanLoop(tokens, ret, i, ' ')
 	if i != len(tokens) {
 		return nil, false
@@ -96,8 +96,8 @@ func (p *exprParser) ReduceParens(tokens []pluggable.Token) ([]pluggable.Token, 
 	return ret, true
 }
 
-func (p *exprParser) ScanFor(tokens []pluggable.Token, i int, end rune) ([]pluggable.Token, int) {
-	ret, j := p.ScanLoop(tokens, []pluggable.Token{tokens[i]}, i+1, end)
+func (p *exprParser) ScanFor(tokens []driverbottom.Token, i int, end rune) ([]driverbottom.Token, int) {
+	ret, j := p.ScanLoop(tokens, []driverbottom.Token{tokens[i]}, i+1, end)
 	if len(ret) < 1 || !IsPuncChar(ret[len(ret)-1], end) {
 		p.tools.Reporter.Reportf(tokens[i].Loc().Offset, "did not find matching %c", end)
 		return nil, -1
@@ -105,7 +105,7 @@ func (p *exprParser) ScanFor(tokens []pluggable.Token, i int, end rune) ([]plugg
 	return ret, j
 }
 
-func (p *exprParser) ScanLoop(tokens []pluggable.Token, ret []pluggable.Token, i int, end rune) ([]pluggable.Token, int) {
+func (p *exprParser) ScanLoop(tokens []driverbottom.Token, ret []driverbottom.Token, i int, end rune) ([]driverbottom.Token, int) {
 	for i < len(tokens) {
 		t := tokens[i]
 		if IsPunc(t) {
@@ -122,7 +122,7 @@ func (p *exprParser) ScanLoop(tokens []pluggable.Token, ret []pluggable.Token, i
 				ret = append(ret, Bracketed{Tokens: inner})
 				i = j
 			} else {
-				p.tools.Reporter.Reportf(tokens[i].Loc().Offset, "unexpected close paren: %c", t.(pluggable.Punc).Which())
+				p.tools.Reporter.Reportf(tokens[i].Loc().Offset, "unexpected close paren: %c", t.(driverbottom.Punc).Which())
 				return nil, -1
 			}
 		} else {
@@ -133,20 +133,20 @@ func (p *exprParser) ScanLoop(tokens []pluggable.Token, ret []pluggable.Token, i
 	return ret, i
 }
 
-func makeArgs(tokens []pluggable.Token) []pluggable.Expr {
-	args := make([]pluggable.Expr, len(tokens))
+func makeArgs(tokens []driverbottom.Token) []driverbottom.Expr {
+	args := make([]driverbottom.Expr, len(tokens))
 	for k, tok := range tokens {
 		args[k] = AsExpr(tok)
 	}
 	return args
 }
 
-func (p *exprParser) split(tokens []pluggable.Token) (pluggable.Token, pluggable.Function, []pluggable.Token, []pluggable.Token) {
+func (p *exprParser) split(tokens []driverbottom.Token) (driverbottom.Token, driverbottom.Function, []driverbottom.Token, []driverbottom.Token) {
 	for i, t := range tokens {
 		if f := p.matchFunc(t); f != nil {
 			k := 0
-			p1, ok1 := tokens[0].(pluggable.Punc)
-			p2, ok2 := tokens[len(tokens)-1].(pluggable.Punc)
+			p1, ok1 := tokens[0].(driverbottom.Punc)
+			p2, ok2 := tokens[len(tokens)-1].(driverbottom.Punc)
 			if ok1 && ok2 && p1.Is('(') && p2.Is(')') {
 				k = 1
 			}
@@ -156,17 +156,17 @@ func (p *exprParser) split(tokens []pluggable.Token) (pluggable.Token, pluggable
 	return nil, nil, tokens, nil
 }
 
-func (p *exprParser) matchFunc(tok pluggable.Token) pluggable.Function {
-	id, isId := tok.(pluggable.Identifier)
+func (p *exprParser) matchFunc(tok driverbottom.Token) driverbottom.Function {
+	id, isId := tok.(driverbottom.Identifier)
 	if isId {
-		v, ok := p.tools.Recall.Find("function-defn", id.Id()).(pluggable.Function)
+		v, ok := p.tools.Recall.Find("function-defn", id.Id()).(driverbottom.Function)
 		if ok && v != nil {
 			return v
 		}
 	}
-	op, isOp := tok.(pluggable.Operator)
+	op, isOp := tok.(driverbottom.Operator)
 	if isOp {
-		v, ok := p.tools.Recall.Find("function-defn", op.Op()).(pluggable.Function)
+		v, ok := p.tools.Recall.Find("function-defn", op.Op()).(driverbottom.Function)
 		if ok && v != nil {
 			return v
 		}
@@ -174,19 +174,19 @@ func (p *exprParser) matchFunc(tok pluggable.Token) pluggable.Function {
 	return nil
 }
 
-func IsPunc(tok pluggable.Token) bool {
-	_, ok := tok.(pluggable.Punc)
+func IsPunc(tok driverbottom.Token) bool {
+	_, ok := tok.(driverbottom.Punc)
 	return ok
 }
 
-func IsPuncChar(tok pluggable.Token, pc rune) bool {
-	punc, ok := tok.(pluggable.Punc)
+func IsPuncChar(tok driverbottom.Token, pc rune) bool {
+	punc, ok := tok.(driverbottom.Punc)
 	if !ok {
 		return false
 	}
 	return punc.Is(pc)
 }
 
-func NewExprParser(tools *pluggable.CoreTools) pluggable.ExprParser {
+func NewExprParser(tools *driverbottom.CoreTools) driverbottom.ExprParser {
 	return &exprParser{tools: tools}
 }

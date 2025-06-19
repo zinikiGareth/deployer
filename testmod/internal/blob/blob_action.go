@@ -3,13 +3,13 @@ package blob
 import (
 	"fmt"
 
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
-	"ziniki.org/deployer/driver/pkg/pluggable"
 )
 
 type Blobber struct {
-	pluggable.Locatable
-	expr pluggable.Expr
+	driverbottom.Locatable
+	expr driverbottom.Expr
 }
 
 func (a Blobber) Loc() *errorsink.Location {
@@ -20,7 +20,7 @@ func (a Blobber) ShortDescription() string {
 	return fmt.Sprintf("aBlobber %s\n", a.expr.ShortDescription())
 }
 
-func (a Blobber) DumpTo(iw pluggable.IndentWriter) {
+func (a Blobber) DumpTo(iw driverbottom.IndentWriter) {
 	iw.Intro("ABlobber")
 	iw.AttrsWhere(a)
 	iw.NestedAttr("expr", a.expr)
@@ -30,11 +30,11 @@ func (a Blobber) DumpTo(iw pluggable.IndentWriter) {
 type BlobberNameMethod struct {
 }
 
-func (b *BlobberNameMethod) Invoke(storage pluggable.RuntimeStorage, obj pluggable.Expr, args []pluggable.Expr) any {
+func (b *BlobberNameMethod) Invoke(storage driverbottom.RuntimeStorage, obj driverbottom.Expr, args []driverbottom.Expr) any {
 	if len(args) > 0 {
 		panic("should not have args")
 	}
-	asVar, ok := obj.(pluggable.Var)
+	asVar, ok := obj.(driverbottom.Var)
 	if !ok {
 		panic("not a var")
 	}
@@ -45,7 +45,7 @@ func (b *BlobberNameMethod) Invoke(storage pluggable.RuntimeStorage, obj pluggab
 	return blobber.expr.Eval(storage)
 }
 
-func (a *Blobber) ObtainMethod(name string) pluggable.Method {
+func (a *Blobber) ObtainMethod(name string) driverbottom.Method {
 	switch name {
 	case "name":
 		return &BlobberNameMethod{}
@@ -55,8 +55,8 @@ func (a *Blobber) ObtainMethod(name string) pluggable.Method {
 }
 
 type createBlobAction struct {
-	pluggable.Locatable
-	expr    pluggable.Expr
+	driverbottom.Locatable
+	expr    driverbottom.Expr
 	blobber *Blobber
 }
 
@@ -68,19 +68,19 @@ func (c *createBlobAction) ShortDescription() string {
 	return "create_blob[" + c.expr.ShortDescription() + "]"
 }
 
-func (c *createBlobAction) DumpTo(iw pluggable.IndentWriter) {
+func (c *createBlobAction) DumpTo(iw driverbottom.IndentWriter) {
 	iw.Intro("create_blob")
 	iw.AttrsWhere(c)
 	c.expr.DumpTo(iw)
 	iw.EndAttrs()
 }
 
-func (c *createBlobAction) Resolve(r pluggable.Resolver) pluggable.BindingRequirement {
+func (c *createBlobAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
 	c.blobber = &Blobber{Locatable: c.Locatable, expr: c.expr}
 	// b.MustBind(c.blobber)
-	return pluggable.MUST_BE_BOUND
+	return driverbottom.MUST_BE_BOUND
 }
 
-func (c *createBlobAction) BuildModel(pres pluggable.ValuePresenter) {
+func (c *createBlobAction) BuildModel(pres driverbottom.ValuePresenter) {
 	pres.Present(c.blobber)
 }

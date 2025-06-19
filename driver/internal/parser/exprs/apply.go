@@ -3,19 +3,19 @@ package exprs
 import (
 	"fmt"
 
-	"ziniki.org/deployer/driver/pkg/pluggable"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 )
 
 type Apply struct {
-	pluggable.Locatable
-	Func pluggable.Function
-	Args []pluggable.Expr
+	driverbottom.Locatable
+	Func driverbottom.Function
+	Args []driverbottom.Expr
 }
 
-func (a *Apply) Resolve(r pluggable.Resolver) {
+func (a *Apply) Resolve(r driverbottom.Resolver) {
 }
 
-func (a Apply) Eval(s pluggable.RuntimeStorage) any {
+func (a Apply) Eval(s driverbottom.RuntimeStorage) any {
 	panic("not implemented")
 }
 
@@ -23,7 +23,7 @@ func (t *Apply) ShortDescription() string {
 	panic("not implemented")
 }
 
-func (a Apply) DumpTo(iw pluggable.IndentWriter) {
+func (a Apply) DumpTo(iw driverbottom.IndentWriter) {
 	panic("not implemented")
 }
 

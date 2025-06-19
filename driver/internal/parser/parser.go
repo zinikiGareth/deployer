@@ -5,12 +5,12 @@ import (
 	"ziniki.org/deployer/driver/internal/parser/exprs"
 	"ziniki.org/deployer/driver/internal/parser/interpreters"
 	"ziniki.org/deployer/driver/internal/parser/lexicator"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
-	"ziniki.org/deployer/driver/pkg/pluggable"
 	"ziniki.org/deployer/driver/pkg/utils"
 )
 
-func Parse(tools *pluggable.CoreTools, fileName, file string) {
+func Parse(tools *driverbottom.CoreTools, fileName, file string) {
 	globalInterpreter := interpreters.NewVerbCommandInterpreter(tools, NewTopLevelAttacher(tools), "top-level", false)
 	lineLexicator := lexicator.NewLineLexicator(tools, fileName)
 	tools.Parser = exprs.NewExprParser(tools)
@@ -18,7 +18,7 @@ func Parse(tools *pluggable.CoreTools, fileName, file string) {
 	provideLines(tools.Reporter, file, blocker)
 }
 
-func provideLines(reporter errorsink.ErrorRepI, fromFile string, to pluggable.ProvideLine) {
+func provideLines(reporter errorsink.ErrorRepI, fromFile string, to driverbottom.ProvideLine) {
 	lines, err := utils.FileAsLines(fromFile)
 	if err != nil {
 		reporter.Reportf(0, "could not open file %s: %v", fromFile, err)

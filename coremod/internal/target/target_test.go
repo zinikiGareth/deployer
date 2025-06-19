@@ -4,9 +4,9 @@ import (
 	"testing"
 
 	"ziniki.org/deployer/coremod/internal/target"
-	"ziniki.org/deployer/driver/pkg/pluggable"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 )
 
 func TestBasicTypes(t *testing.T) {
-	var _ pluggable.TopLevelForm = &target.CoreTarget{}
+	var _ driverbottom.TopLevelForm = &target.CoreTarget{}
 }

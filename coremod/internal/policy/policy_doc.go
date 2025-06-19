@@ -2,8 +2,8 @@ package policy
 
 import (
 	"ziniki.org/deployer/coremod/pkg/external"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
-	"ziniki.org/deployer/driver/pkg/pluggable"
 )
 
 type policyDocument struct {
@@ -12,19 +12,19 @@ type policyDocument struct {
 	items []external.PolicyEffect
 }
 
-// DumpTo implements pluggable.Describable.
-func (p *policyDocument) DumpTo(w pluggable.IndentWriter) {
+// DumpTo implements driverbottom.Describable.
+func (p *policyDocument) DumpTo(w driverbottom.IndentWriter) {
 	w.Intro("PolicyDocument[]")
 	w.AttrsWhere(p)
 	w.EndAttrs()
 }
 
-// Loc implements pluggable.Describable.
+// Loc implements driverbottom.Describable.
 func (p *policyDocument) Loc() *errorsink.Location {
 	return p.loc
 }
 
-// ShortDescription implements pluggable.Describable.
+// ShortDescription implements driverbottom.Describable.
 func (p *policyDocument) ShortDescription() string {
 	return "PolicyDocument[]"
 }

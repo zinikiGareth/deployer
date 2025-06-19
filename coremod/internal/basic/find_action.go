@@ -5,9 +5,9 @@ import (
 
 	"ziniki.org/deployer/coremod/pkg/external"
 	"ziniki.org/deployer/coremod/pkg/findable"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
 	"ziniki.org/deployer/driver/pkg/interpreters"
-	"ziniki.org/deployer/driver/pkg/pluggable"
 )
 
 // The action is created by the handler.  It is added to a target.  It then takes on the rest of the work:
@@ -16,10 +16,10 @@ import (
 type FindAction struct {
 	tools    *external.Tools
 	loc      *errorsink.Location
-	what     pluggable.Identifier
-	resolved pluggable.Blank
-	named    pluggable.String
-	props    map[pluggable.Identifier]pluggable.Expr
+	what     driverbottom.Identifier
+	resolved driverbottom.Blank
+	named    driverbottom.String
+	props    map[driverbottom.Identifier]driverbottom.Expr
 	ens      findable.Findable
 }
 
@@ -27,11 +27,11 @@ func (ea *FindAction) Loc() *errorsink.Location {
 	return ea.loc
 }
 
-func (ea *FindAction) What() pluggable.SymbolType {
-	return pluggable.SymbolType(ea.what.Id())
+func (ea *FindAction) What() driverbottom.SymbolType {
+	return driverbottom.SymbolType(ea.what.Id())
 }
 
-func (ea *FindAction) DumpTo(w pluggable.IndentWriter) {
+func (ea *FindAction) DumpTo(w driverbottom.IndentWriter) {
 	w.Intro("FindAction")
 	w.AttrsWhere(ea)
 	w.TextAttr("what", ea.what.Id())
@@ -57,13 +57,13 @@ func (ea *FindAction) ShortDescription() string {
 	return fmt.Sprintf("Find[%s: %s]", ea.what.Id(), ea.named.Text())
 }
 
-func (ea *FindAction) AddProperty(name pluggable.Identifier, value pluggable.Expr) {
+func (ea *FindAction) AddProperty(name driverbottom.Identifier, value driverbottom.Expr) {
 	if name.Id() == "name" {
 		if ea.named != nil {
 			ea.tools.Reporter.Report(name.Loc().Offset, "duplicate definition of name")
 			return
 		}
-		str, ok := value.(pluggable.String)
+		str, ok := value.(driverbottom.String)
 		if !ok {
 			ea.tools.Reporter.Report(value.Loc().Offset, "name must be a string")
 			return
@@ -78,7 +78,7 @@ func (ea *FindAction) AddProperty(name pluggable.Identifier, value pluggable.Exp
 	}
 }
 
-func (ea *FindAction) AddAdverb(adv pluggable.Adverb, tokens []pluggable.Token) pluggable.Interpreter {
+func (ea *FindAction) AddAdverb(adv driverbottom.Adverb, tokens []driverbottom.Token) driverbottom.Interpreter {
 	ea.tools.Reporter.Reportf(adv.Loc().Offset, "find cannot handle %s\n", adv.Name())
 	return interpreters.NewDisallowInnerScope(ea.tools.CoreTools)
 }
@@ -93,23 +93,23 @@ func (ea *FindAction) Completed() {
 	}
 }
 
-func (ea *FindAction) Resolve(r pluggable.Resolver) pluggable.BindingRequirement {
-	res, ok := r.Resolve(ea.what).(pluggable.Blank)
+func (ea *FindAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
+	res, ok := r.Resolve(ea.what).(driverbottom.Blank)
 	if !ok {
-		return pluggable.ERROR_OCCURRED
+		return driverbottom.ERROR_OCCURRED
 	}
 	ea.resolved = res
 	obj := ea.resolved.Find(ea.tools.CoreTools, ea.Loc(), ea.named.Text())
 	ens, ok := obj.(findable.Findable)
 	if !ok {
 		ea.tools.Storage.Errorf(ea.loc, "the type "+ea.what.Id()+" is not findable")
-		return pluggable.ERROR_OCCURRED
+		return driverbottom.ERROR_OCCURRED
 	}
 	ea.ens = ens
-	return pluggable.MAY_BE_BOUND
+	return driverbottom.MAY_BE_BOUND
 }
 
-func (ea *FindAction) BuildModel(pres pluggable.ValuePresenter) {
+func (ea *FindAction) BuildModel(pres driverbottom.ValuePresenter) {
 	ea.ens.BuildModel(pres)
 }
 

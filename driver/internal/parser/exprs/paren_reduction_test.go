@@ -5,14 +5,14 @@ import (
 
 	"ziniki.org/deployer/driver/internal/parser/exprs"
 	"ziniki.org/deployer/driver/internal/parser/lexicator"
-	"ziniki.org/deployer/driver/pkg/pluggable"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 )
 
 func TestATokenCanBeWrappedInParens(t *testing.T) {
 	p, _ := makeParser(t)
 	pr := p.(exprs.ParenReduction)
 	world := lexicator.NewStringToken(lineloc, 6, "world")
-	blocks, ok := pr.ReduceParens([]pluggable.Token{orb, world, crb})
+	blocks, ok := pr.ReduceParens([]driverbottom.Token{orb, world, crb})
 	if !ok {
 		t.Fatalf("Parsing failed")
 	}
@@ -33,7 +33,7 @@ func TestAnORBMustBeClosed(t *testing.T) {
 	h.Sink.Expect(1, 1, 26, "", "did not find matching )")
 	pr := p.(exprs.ParenReduction)
 	world := lexicator.NewStringToken(lineloc, 6, "world")
-	_, ok := pr.ReduceParens([]pluggable.Token{orb, world})
+	_, ok := pr.ReduceParens([]driverbottom.Token{orb, world})
 	if ok {
 		t.Fatalf("Parsing should have failed")
 	}
@@ -44,7 +44,7 @@ func TestACRBMustHaveBeenOpened(t *testing.T) {
 	h.Sink.Expect(1, 1, 26, "", "unexpected close paren: )")
 	pr := p.(exprs.ParenReduction)
 	world := lexicator.NewStringToken(lineloc, 6, "world")
-	_, ok := pr.ReduceParens([]pluggable.Token{world, crb})
+	_, ok := pr.ReduceParens([]driverbottom.Token{world, crb})
 	if ok {
 		t.Fatalf("Parsing should have failed")
 	}

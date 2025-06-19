@@ -3,18 +3,18 @@ package target
 import (
 	"slices"
 
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
-	"ziniki.org/deployer/driver/pkg/pluggable"
 )
 
 type CoreTarget struct {
 	loc  *errorsink.Location
-	name pluggable.SymbolName
+	name driverbottom.SymbolName
 
-	actions []pluggable.ModelBuilder
+	actions []driverbottom.ModelBuilder
 }
 
-func (cc *CoreTarget) Name() pluggable.SymbolName {
+func (cc *CoreTarget) Name() driverbottom.SymbolName {
 	return cc.name
 }
 
@@ -23,7 +23,7 @@ func (cc *CoreTarget) String() string {
 }
 
 func (cc *CoreTarget) Attach(entry any) {
-	action, ok := entry.(pluggable.ModelBuilder)
+	action, ok := entry.(driverbottom.ModelBuilder)
 	if !ok {
 		panic("not an action")
 	}
@@ -38,7 +38,7 @@ func (t *CoreTarget) ShortDescription() string {
 	return "Target[" + string(t.name) + "]"
 }
 
-func (t *CoreTarget) DumpTo(w pluggable.IndentWriter) {
+func (t *CoreTarget) DumpTo(w driverbottom.IndentWriter) {
 	w.Intro("target %s", t.name)
 	w.AttrsWhere(t)
 	w.ListAttr("actions")
@@ -49,12 +49,12 @@ func (t *CoreTarget) DumpTo(w pluggable.IndentWriter) {
 	w.EndAttrs()
 }
 
-func (t *CoreTarget) Resolve(r pluggable.Resolver) {
+func (t *CoreTarget) Resolve(r driverbottom.Resolver) {
 	for _, a := range t.actions {
 		binding := a.Resolve(r)
-		if binding == pluggable.MUST_BE_BOUND {
+		if binding == driverbottom.MUST_BE_BOUND {
 			panic("assignTo is not specified") // should be an error
-		} else if binding == pluggable.ERROR_OCCURRED {
+		} else if binding == driverbottom.ERROR_OCCURRED {
 			panic("an error occurred")
 		}
 	}
@@ -68,7 +68,7 @@ func (t *CoreTarget) BuildModel() {
 
 func (t *CoreTarget) UpdateReality() {
 	for _, a := range t.actions {
-		amis, ok := a.(pluggable.RealityShifter)
+		amis, ok := a.(driverbottom.RealityShifter)
 		if ok {
 			amis.UpdateReality()
 		}
@@ -77,7 +77,7 @@ func (t *CoreTarget) UpdateReality() {
 
 func (t *CoreTarget) TearDown() {
 	for _, a := range slices.Backward(t.actions) {
-		amis, ok := a.(pluggable.RealityShifter)
+		amis, ok := a.(driverbottom.RealityShifter)
 		if ok {
 			amis.TearDown()
 		}

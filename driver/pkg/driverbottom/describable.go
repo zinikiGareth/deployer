@@ -1,4 +1,4 @@
-package pluggable
+package driverbottom
 
 import "ziniki.org/deployer/driver/pkg/errorsink"
 

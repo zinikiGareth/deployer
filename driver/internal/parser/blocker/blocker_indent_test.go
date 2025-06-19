@@ -5,9 +5,9 @@ import (
 	"testing"
 
 	"ziniki.org/deployer/driver/internal/parser/blocker"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
 	"ziniki.org/deployer/driver/pkg/interpreters"
-	"ziniki.org/deployer/driver/pkg/pluggable"
 )
 
 func TestCommentLinesAreDiscarded(t *testing.T) {
@@ -50,7 +50,7 @@ type line struct {
 }
 
 type tmp struct {
-	tools *pluggable.CoreTools
+	tools *driverbottom.CoreTools
 	sink  errorsink.ErrorSink
 	lines []line
 }
@@ -64,7 +64,7 @@ func (t *tmp) applySink(sink errorsink.ErrorSink) {
 	}
 }
 
-func (t *tmp) HaveTokens(toks []pluggable.Token) pluggable.Interpreter {
+func (t *tmp) HaveTokens(toks []driverbottom.Token) driverbottom.Interpreter {
 	tok := toks[0].(*LineToken)
 	lineNo := tok.Loc().Line.Line
 	lenIndent := tok.Loc().Line.Indent
@@ -109,9 +109,9 @@ func (t LineToken) String() string {
 type testLex struct {
 }
 
-func (l *testLex) BlockedLine(line *errorsink.LineLoc) []pluggable.Token {
+func (l *testLex) BlockedLine(line *errorsink.LineLoc) []driverbottom.Token {
 	loc := line.Location(0)
-	return []pluggable.Token{&LineToken{loc: loc, tx: line.Text}}
+	return []driverbottom.Token{&LineToken{loc: loc, tx: line.Text}}
 }
 
 type testSink struct {
@@ -136,7 +136,7 @@ func blockerTest(lines []line) {
 	mock := innerBlock(lines)
 	mock.applySink(sink)
 	reporter := errorsink.NewErrorReporter(sink)
-	tools := pluggable.NewTools(reporter, nil, nil, nil, nil)
+	tools := driverbottom.NewTools(reporter, nil, nil, nil, nil)
 	blocker := blocker.NewBlocker(tools, mocklex, mock)
 	for _, b := range mock.lines {
 		blocker.HaveLine(b.lineNo, b.indent+b.text)

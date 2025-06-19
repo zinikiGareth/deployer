@@ -1,14 +1,12 @@
 package registry
 
-import (
-	"ziniki.org/deployer/driver/pkg/pluggable"
-)
+import "ziniki.org/deployer/driver/pkg/driverbottom"
 
 type Registry struct {
 	points      map[string]map[string]any
 	drivers     map[string]any
 	initDrivers map[string]any
-	tools       *pluggable.CoreTools
+	tools       *driverbottom.CoreTools
 }
 
 func (r *Registry) ExtensionPoint(name string) {
@@ -50,7 +48,7 @@ func (r *Registry) ObtainDriver(forType string) any {
 	if c == nil {
 		panic("there is no driver for " + forType)
 	}
-	im, ok := c.(pluggable.InitMe)
+	im, ok := c.(driverbottom.InitMe)
 	if ok {
 		ret = im.InitMe(r.tools.Storage)
 	} else {
@@ -60,7 +58,7 @@ func (r *Registry) ObtainDriver(forType string) any {
 	return ret
 }
 
-func (reg *Registry) BindTools(tools *pluggable.CoreTools) {
+func (reg *Registry) BindTools(tools *driverbottom.CoreTools) {
 	reg.tools = tools
 }
 

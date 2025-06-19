@@ -5,15 +5,15 @@ import (
 	"strings"
 
 	"ziniki.org/deployer/coremod/pkg/external"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
-	"ziniki.org/deployer/driver/pkg/pluggable"
 )
 
 type InvokeExpr struct {
-	pluggable.Locatable
-	on   pluggable.Expr
-	call pluggable.Identifier
-	args []pluggable.Expr
+	driverbottom.Locatable
+	on   driverbottom.Expr
+	call driverbottom.Identifier
+	args []driverbottom.Expr
 }
 
 func (i *InvokeExpr) Loc() *errorsink.Location {
@@ -41,7 +41,7 @@ func (i *InvokeExpr) String() string {
 	panic("unimplemented")
 }
 
-func (i *InvokeExpr) DumpTo(iw pluggable.IndentWriter) {
+func (i *InvokeExpr) DumpTo(iw driverbottom.IndentWriter) {
 	iw.Intro("Invoke")
 	iw.AttrsWhere(i)
 	iw.NestedAttr("on", i.on)
@@ -54,16 +54,16 @@ func (i *InvokeExpr) DumpTo(iw pluggable.IndentWriter) {
 	iw.EndAttrs()
 }
 
-func (i *InvokeExpr) Resolve(r pluggable.Resolver) {
+func (i *InvokeExpr) Resolve(r driverbottom.Resolver) {
 	i.on.Resolve(r)
 	for _, e := range i.args {
 		e.Resolve(r)
 	}
 }
 
-func (i *InvokeExpr) Eval(s pluggable.RuntimeStorage) any {
+func (i *InvokeExpr) Eval(s driverbottom.RuntimeStorage) any {
 	obj := i.on.Eval(s)
-	hm, ok := obj.(pluggable.HasMethods)
+	hm, ok := obj.(driverbottom.HasMethods)
 	if !ok {
 		log.Fatalf("Value for %v was of type %T which was not a HasMethods\n", i.on, obj)
 	}
@@ -78,14 +78,14 @@ type InvokeFunc struct {
 	tools *external.Tools
 }
 
-func (i *InvokeFunc) ReduceExpr(me pluggable.Token, before []pluggable.Expr, after []pluggable.Expr) pluggable.Expr {
+func (i *InvokeFunc) ReduceExpr(me driverbottom.Token, before []driverbottom.Expr, after []driverbottom.Expr) driverbottom.Expr {
 	if len(before) != 1 {
 		panic("should be an error")
 	}
 	if len(after) < 1 {
 		panic("should be an error")
 	}
-	meth, ok := after[0].(pluggable.Var)
+	meth, ok := after[0].(driverbottom.Var)
 	if !ok {
 		panic("should be an error")
 	}

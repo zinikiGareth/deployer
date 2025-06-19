@@ -4,14 +4,14 @@ import (
 	"fmt"
 
 	"ziniki.org/deployer/coremod/pkg/external"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
-	"ziniki.org/deployer/driver/pkg/pluggable"
 )
 
 type assertBucketAction struct {
 	tools  *external.Tools
 	loc    *errorsink.Location
-	bucket pluggable.Expr
+	bucket driverbottom.Expr
 	files  []string
 }
 
@@ -19,7 +19,7 @@ func (ca *assertBucketAction) Loc() *errorsink.Location {
 	return ca.loc
 }
 
-func (ca *assertBucketAction) DumpTo(w pluggable.IndentWriter) {
+func (ca *assertBucketAction) DumpTo(w driverbottom.IndentWriter) {
 	w.Intro("AssertBucketAction")
 	w.AttrsWhere(ca)
 	w.IndPrintf("bucket: %s\n", ca.bucket.ShortDescription())
@@ -36,12 +36,12 @@ func (ca *assertBucketAction) ShortDescription() string {
 func (ca *assertBucketAction) Completed() {
 }
 
-func (ca *assertBucketAction) Resolve(r pluggable.Resolver) pluggable.BindingRequirement {
+func (ca *assertBucketAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
 	ca.bucket.Resolve(r)
-	return pluggable.NO_VALUE
+	return driverbottom.NO_VALUE
 }
 
-func (ca *assertBucketAction) BuildModel(pres pluggable.ValuePresenter) {
+func (ca *assertBucketAction) BuildModel(pres driverbottom.ValuePresenter) {
 }
 
 func (ca *assertBucketAction) UpdateReality() {

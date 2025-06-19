@@ -4,19 +4,19 @@ import (
 	"testing"
 
 	"ziniki.org/deployer/driver/internal/parser/lexicator"
-	"ziniki.org/deployer/driver/pkg/pluggable"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/testhelpers"
 )
 
 func TestAStringCanBeFoundBetweenDoubleQuotes(t *testing.T) {
 	reporter, _ := testhelpers.MockReporter(t)
-	tools := pluggable.NewTools(reporter, nil, nil, nil, nil)
+	tools := driverbottom.NewTools(reporter, nil, nil, nil, nil)
 	lex := lexicator.NewLineLexicator(tools, "test")
 	toks := lex.BlockedLine(lineOf("\"hello, world\""))
 	if len(toks) != 1 {
 		t.Fatalf("not one arg returned")
 	}
-	str, ok := toks[0].(pluggable.String)
+	str, ok := toks[0].(driverbottom.String)
 	if !ok {
 		t.Fatalf("token 0 was not a string")
 	}
@@ -27,13 +27,13 @@ func TestAStringCanBeFoundBetweenDoubleQuotes(t *testing.T) {
 
 func TestAStringCanIncludeANestedDQPairBetweenDoubleQuotes(t *testing.T) {
 	reporter, _ := testhelpers.MockReporter(t)
-	tools := pluggable.NewTools(reporter, nil, nil, nil, nil)
+	tools := driverbottom.NewTools(reporter, nil, nil, nil, nil)
 	lex := lexicator.NewLineLexicator(tools, "test")
 	toks := lex.BlockedLine(lineOf("\"hello, \"\"world\"\"\""))
 	if len(toks) != 1 {
 		t.Fatalf("not one arg returned but %v", toks)
 	}
-	str, ok := toks[0].(pluggable.String)
+	str, ok := toks[0].(driverbottom.String)
 	if !ok {
 		t.Fatalf("token 0 was not a string")
 	}
@@ -44,13 +44,13 @@ func TestAStringCanIncludeANestedDQPairBetweenDoubleQuotes(t *testing.T) {
 
 func TestAStringCanBeFoundBetweenSingleQuotes(t *testing.T) {
 	reporter, _ := testhelpers.MockReporter(t)
-	tools := pluggable.NewTools(reporter, nil, nil, nil, nil)
+	tools := driverbottom.NewTools(reporter, nil, nil, nil, nil)
 	lex := lexicator.NewLineLexicator(tools, "test")
 	toks := lex.BlockedLine(lineOf("'hello, world'"))
 	if len(toks) != 1 {
 		t.Fatalf("not one arg returned")
 	}
-	str, ok := toks[0].(pluggable.String)
+	str, ok := toks[0].(driverbottom.String)
 	if !ok {
 		t.Fatalf("token 0 was not a string")
 	}
@@ -61,13 +61,13 @@ func TestAStringCanBeFoundBetweenSingleQuotes(t *testing.T) {
 
 func TestAStringCanIncludeANestedSQPairBetweenSingleQuotes(t *testing.T) {
 	reporter, _ := testhelpers.MockReporter(t)
-	tools := pluggable.NewTools(reporter, nil, nil, nil, nil)
+	tools := driverbottom.NewTools(reporter, nil, nil, nil, nil)
 	lex := lexicator.NewLineLexicator(tools, "test")
 	toks := lex.BlockedLine(lineOf("'hello, ''world'''"))
 	if len(toks) != 1 {
 		t.Fatalf("not one arg returned but %v", toks)
 	}
-	str, ok := toks[0].(pluggable.String)
+	str, ok := toks[0].(driverbottom.String)
 	if !ok {
 		t.Fatalf("token 0 was not a string")
 	}
@@ -80,7 +80,7 @@ func TestAStringMustBeTerminated(t *testing.T) {
 	reporter, sink := testhelpers.MockReporter(t)
 	tx := "\"hello, world"
 	sink.Expect(1, 1, 0, tx, "unterminated string")
-	tools := pluggable.NewTools(reporter, nil, nil, nil, nil)
+	tools := driverbottom.NewTools(reporter, nil, nil, nil, nil)
 	lex := lexicator.NewLineLexicator(tools, "test")
 	toks := lex.BlockedLine(lineOf(tx))
 	if toks != nil {
@@ -92,7 +92,7 @@ func TestAStringMustNotEndWithNetedQuote(t *testing.T) {
 	reporter, sink := testhelpers.MockReporter(t)
 	tx := "\"hello, world\"\""
 	sink.Expect(1, 1, 0, tx, "unterminated string")
-	tools := pluggable.NewTools(reporter, nil, nil, nil, nil)
+	tools := driverbottom.NewTools(reporter, nil, nil, nil, nil)
 	lex := lexicator.NewLineLexicator(tools, "test")
 	toks := lex.BlockedLine(lineOf(tx))
 	if toks != nil {
@@ -103,7 +103,7 @@ func TestAStringMustNotEndWithNetedQuote(t *testing.T) {
 func TestThereMustBeASpaceBetweenIDAndAString(t *testing.T) {
 	reporter, sink := testhelpers.MockReporter(t)
 	tx := "system'hello'"
-	tools := pluggable.NewTools(reporter, nil, nil, nil, nil)
+	tools := driverbottom.NewTools(reporter, nil, nil, nil, nil)
 	lex := lexicator.NewLineLexicator(tools, "test")
 	sink.Expect(1, 1, 6, tx, "space required after identifier before string")
 	toks := lex.BlockedLine(lineOf(tx))
@@ -115,7 +115,7 @@ func TestThereMustBeASpaceBetweenIDAndAString(t *testing.T) {
 func TestThereMustBeASpaceBetweenAStringAndAnID(t *testing.T) {
 	reporter, sink := testhelpers.MockReporter(t)
 	tx := "'hello'system"
-	tools := pluggable.NewTools(reporter, nil, nil, nil, nil)
+	tools := driverbottom.NewTools(reporter, nil, nil, nil, nil)
 	lex := lexicator.NewLineLexicator(tools, "test")
 	sink.Expect(1, 1, 7, tx, "space required after string before identifier")
 	toks := lex.BlockedLine(lineOf(tx))
@@ -126,19 +126,19 @@ func TestThereMustBeASpaceBetweenAStringAndAnID(t *testing.T) {
 
 func TestTwoIdsAndASimpleStringCanBeSeparatedBySpaces(t *testing.T) {
 	reporter, _ := testhelpers.MockReporter(t)
-	tools := pluggable.NewTools(reporter, nil, nil, nil, nil)
+	tools := driverbottom.NewTools(reporter, nil, nil, nil, nil)
 	lex := lexicator.NewLineLexicator(tools, "test")
 	toks := lex.BlockedLine(lineOf("ensure test.S3.Bucket \"org.ziniki.launch_bucket\""))
 	if len(toks) != 3 {
 		t.Fatalf("not three args returned")
 	}
-	if toks[0].(pluggable.Identifier).Id() != "ensure" {
+	if toks[0].(driverbottom.Identifier).Id() != "ensure" {
 		t.Fatalf("token 0 was not ensure")
 	}
-	if toks[1].(pluggable.Identifier).Id() != "test.S3.Bucket" {
+	if toks[1].(driverbottom.Identifier).Id() != "test.S3.Bucket" {
 		t.Fatalf("token 1 was not test.S3.Bucket")
 	}
-	if toks[2].(pluggable.String).Text() != "org.ziniki.launch_bucket" {
+	if toks[2].(driverbottom.String).Text() != "org.ziniki.launch_bucket" {
 		t.Fatalf("token 2 was not org.ziniki.launch_bucket")
 	}
 }

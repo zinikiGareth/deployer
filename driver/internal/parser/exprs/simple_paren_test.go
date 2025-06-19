@@ -5,14 +5,14 @@ import (
 
 	"ziniki.org/deployer/driver/internal/parser/exprs"
 	"ziniki.org/deployer/driver/internal/parser/lexicator"
-	"ziniki.org/deployer/driver/pkg/pluggable"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 )
 
 func TestAnExpressionWithParensRemovesThem(t *testing.T) {
 	p, _ := makeParser(t)
 	recall.things["x"] = konstFunc
 	x := lexicator.NewIdentifierToken(lineloc, 0, "x")
-	expr, ok := p.Parse([]pluggable.Token{orb, x, crb})
+	expr, ok := p.Parse([]driverbottom.Token{orb, x, crb})
 	if !ok {
 		t.Fatalf("could not parse (x)")
 	}

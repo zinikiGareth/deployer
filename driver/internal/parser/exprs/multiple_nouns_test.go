@@ -5,13 +5,13 @@ import (
 
 	"ziniki.org/deployer/driver/internal/parser/exprs"
 	"ziniki.org/deployer/driver/internal/parser/lexicator"
-	"ziniki.org/deployer/driver/pkg/pluggable"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 )
 
 func TestZeroTokensMakeZeroExprs(t *testing.T) {
 	p, _ := makeParser(t)
 	lineloc.Text = ""
-	exprs, ok := p.ParseMultiple([]pluggable.Token{})
+	exprs, ok := p.ParseMultiple([]driverbottom.Token{})
 	if !ok {
 		t.Fatalf("Parsing failed")
 	}
@@ -26,7 +26,7 @@ func TestTwoNounsComeBackSeparately(t *testing.T) {
 	defer cleanup()
 	hello := lexicator.NewIdentifierToken(lineloc, 0, "hello")
 	world := lexicator.NewStringToken(lineloc, 6, "world")
-	es, ok := p.ParseMultiple([]pluggable.Token{hello, world})
+	es, ok := p.ParseMultiple([]driverbottom.Token{hello, world})
 	if !ok {
 		t.Fatalf("Parsing failed")
 	}

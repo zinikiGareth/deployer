@@ -2,23 +2,23 @@ package policy
 
 import (
 	"ziniki.org/deployer/coremod/pkg/external"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
-	"ziniki.org/deployer/driver/pkg/pluggable"
 )
 
 type policyPrincipalAction struct {
 	tools *external.Tools
 	loc   *errorsink.Location
 
-	ofType pluggable.Expr
-	id     pluggable.Expr
+	ofType driverbottom.Expr
+	id     driverbottom.Expr
 }
 
 func (pca *policyPrincipalAction) Loc() *errorsink.Location {
 	return pca.loc
 }
 
-func (pca *policyPrincipalAction) DumpTo(w pluggable.IndentWriter) {
+func (pca *policyPrincipalAction) DumpTo(w driverbottom.IndentWriter) {
 	w.Intro("policyPrincipalAction")
 	w.AttrsWhere(pca)
 	w.NestedAttr("type", pca.ofType)
@@ -33,13 +33,13 @@ func (pca *policyPrincipalAction) ShortDescription() string {
 func (pca *policyPrincipalAction) Completed() {
 }
 
-func (pca *policyPrincipalAction) Resolve(r pluggable.Resolver) pluggable.BindingRequirement {
+func (pca *policyPrincipalAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
 	pca.ofType.Resolve(r)
 	pca.id.Resolve(r)
-	return pluggable.MAY_BE_BOUND
+	return driverbottom.MAY_BE_BOUND
 }
 
-func (pca *policyPrincipalAction) BuildModel(pres pluggable.ValuePresenter) {
+func (pca *policyPrincipalAction) BuildModel(pres driverbottom.ValuePresenter) {
 }
 
 func (pca *policyPrincipalAction) ApplyTo(pi external.PolicyEffect) {

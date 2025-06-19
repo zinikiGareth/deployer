@@ -1,13 +1,13 @@
 package testS3
 
-import "ziniki.org/deployer/driver/pkg/pluggable"
+import "ziniki.org/deployer/driver/pkg/driverbottom"
 
 type TestAwsEnv struct {
 	Region  string
 	Buckets map[string]*BucketCloud
 }
 
-func (me *TestAwsEnv) InitMe(storage pluggable.RuntimeStorage) any {
+func (me *TestAwsEnv) InitMe(storage driverbottom.RuntimeStorage) any {
 	me.Region = "us-east-1"
 	me.Buckets = make(map[string]*BucketCloud)
 	return me

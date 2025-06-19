@@ -6,8 +6,8 @@ import (
 
 	"ziniki.org/deployer/driver/internal/parser/exprs"
 	"ziniki.org/deployer/driver/internal/parser/lexicator"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
-	"ziniki.org/deployer/driver/pkg/pluggable"
 	"ziniki.org/deployer/driver/pkg/testhelpers"
 )
 
@@ -16,26 +16,26 @@ type myRecall struct {
 }
 
 type returnDataValue struct {
-	value pluggable.Expr
+	value driverbottom.Expr
 }
 
-func (rdv returnDataValue) ReduceExpr(me pluggable.Token, before []pluggable.Expr, after []pluggable.Expr) pluggable.Expr {
+func (rdv returnDataValue) ReduceExpr(me driverbottom.Token, before []driverbottom.Expr, after []driverbottom.Expr) driverbottom.Expr {
 	return rdv.value
 }
 
 type konstantFunc struct {
 }
 
-func (rdv konstantFunc) ReduceExpr(me pluggable.Token, before []pluggable.Expr, after []pluggable.Expr) pluggable.Expr {
+func (rdv konstantFunc) ReduceExpr(me driverbottom.Token, before []driverbottom.Expr, after []driverbottom.Expr) driverbottom.Expr {
 	return &exprs.Apply{Func: rdv, Args: slices.Concat(before, after)}
 }
 
 var recall myRecall
-var idFunc pluggable.Function
-var konstFunc pluggable.Function
-var oneString pluggable.String
+var idFunc driverbottom.Function
+var konstFunc driverbottom.Function
+var oneString driverbottom.String
 var lineloc *errorsink.LineLoc
-var orb, crb pluggable.Punc
+var orb, crb driverbottom.Punc
 
 func init() {
 	lineloc = &errorsink.LineLoc{Line: 1, Indent: 1, Text: "", File: &errorsink.FileLoc{File: "test"}}
@@ -58,10 +58,10 @@ type Helpers struct {
 	Sink *testhelpers.MockSink
 }
 
-func makeParser(t *testing.T) (pluggable.ExprParser, Helpers) {
+func makeParser(t *testing.T) (driverbottom.ExprParser, Helpers) {
 	reporter, sink := testhelpers.MockReporter(t)
 	recall = myRecall{things: make(map[string]any)}
-	tools := &pluggable.CoreTools{Reporter: reporter, Recall: recall}
+	tools := &driverbottom.CoreTools{Reporter: reporter, Recall: recall}
 	reporter.At(lineloc)
 	return exprs.NewExprParser(tools), Helpers{Sink: sink}
 }

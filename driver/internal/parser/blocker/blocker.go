@@ -4,15 +4,15 @@ import (
 	"unicode"
 
 	"ziniki.org/deployer/driver/internal/parser/lexicator"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
-	"ziniki.org/deployer/driver/pkg/pluggable"
 )
 
 type Blocker struct {
-	tools    *pluggable.CoreTools
+	tools    *driverbottom.CoreTools
 	indents  []string
 	lex      lexicator.Lexicator
-	handlers []pluggable.Interpreter
+	handlers []driverbottom.Interpreter
 	file     *errorsink.FileLoc
 }
 
@@ -90,6 +90,6 @@ func mapSpace(ch rune) rune {
 	}
 }
 
-func NewBlocker(tools *pluggable.CoreTools, lex lexicator.Lexicator, topLevel pluggable.Interpreter) *Blocker {
-	return &Blocker{tools: tools, lex: lex, handlers: []pluggable.Interpreter{topLevel}}
+func NewBlocker(tools *driverbottom.CoreTools, lex lexicator.Lexicator, topLevel driverbottom.Interpreter) *Blocker {
+	return &Blocker{tools: tools, lex: lex, handlers: []driverbottom.Interpreter{topLevel}}
 }

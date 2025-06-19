@@ -6,14 +6,14 @@ import (
 
 	"ziniki.org/deployer/coremod/pkg/external"
 	"ziniki.org/deployer/coremod/pkg/files"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
-	"ziniki.org/deployer/driver/pkg/pluggable"
 )
 
 type dirAction struct {
 	tools *external.Tools
 	loc   *errorsink.Location
-	exprs []pluggable.Expr
+	exprs []driverbottom.Expr
 	res   *PathHolder
 }
 
@@ -21,7 +21,7 @@ func (da *dirAction) Loc() *errorsink.Location {
 	return da.loc
 }
 
-func (da *dirAction) DumpTo(w pluggable.IndentWriter) {
+func (da *dirAction) DumpTo(w driverbottom.IndentWriter) {
 	w.Intro("DirAction")
 	w.AttrsWhere(da)
 	for _, v := range da.exprs {
@@ -37,17 +37,17 @@ func (da *dirAction) ShortDescription() string {
 func (da *dirAction) Completed() {
 }
 
-func (da *dirAction) Resolve(r pluggable.Resolver) pluggable.BindingRequirement {
-	// da.resolved = make([]pluggable.Expr, len(da.exprs))
+func (da *dirAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
+	// da.resolved = make([]driverbottom.Expr, len(da.exprs))
 	for _, e := range da.exprs {
 		/*da.resolved[i] = */ e.Resolve(r)
 	}
 	da.res = &PathHolder{loc: da.loc}
 	// b.MustBind(da.res)
-	return pluggable.MUST_BE_BOUND
+	return driverbottom.MUST_BE_BOUND
 }
 
-func (da *dirAction) BuildModel(pres pluggable.ValuePresenter) {
+func (da *dirAction) BuildModel(pres driverbottom.ValuePresenter) {
 	if da.tools.Reporter.HasErrors() {
 		return
 	}
@@ -114,7 +114,7 @@ func (p *PathHolder) ShortDescription() string {
 	return fmt.Sprintf("PathHolder[%v]", p.path)
 }
 
-func (p *PathHolder) DumpTo(iw pluggable.IndentWriter) {
+func (p *PathHolder) DumpTo(iw driverbottom.IndentWriter) {
 	iw.Intro("PathHolder")
 	iw.AttrsWhere(p)
 	// if p.path != nil {

@@ -2,21 +2,21 @@ package interpreters
 
 import (
 	"ziniki.org/deployer/driver/internal/parser/interpreters"
-	"ziniki.org/deployer/driver/pkg/pluggable"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
 )
 
-func NewIgnoreInnerScope() pluggable.Interpreter {
+func NewIgnoreInnerScope() driverbottom.Interpreter {
 	return interpreters.NewIgnoreInnerScope()
 }
 
-func NewDisallowInnerScope(tools *pluggable.CoreTools) pluggable.Interpreter {
+func NewDisallowInnerScope(tools *driverbottom.CoreTools) driverbottom.Interpreter {
 	return interpreters.NewDisallowInnerScope(tools)
 }
 
-func NewVerbCommandInterpreter(tools *pluggable.CoreTools, parent pluggable.AttachResult, forExtensionPoint string, allowAssign bool) pluggable.Interpreter {
+func NewVerbCommandInterpreter(tools *driverbottom.CoreTools, parent driverbottom.AttachResult, forExtensionPoint string, allowAssign bool) driverbottom.Interpreter {
 	return interpreters.NewVerbCommandInterpreter(tools, parent, forExtensionPoint, allowAssign)
 }
 
-func NewPropertiesInnerScope(tools *pluggable.CoreTools, parent pluggable.PropertyParent) pluggable.Interpreter {
+func NewPropertiesInnerScope(tools *driverbottom.CoreTools, parent driverbottom.PropertyParent) driverbottom.Interpreter {
 	return interpreters.NewPropertiesInnerScope(tools, parent)
 }
