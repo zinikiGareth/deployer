@@ -4,10 +4,10 @@
 >This is very general and case be used in any expression
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
 >
->	target fred
+>	target sumlist
 #^ source.deployer-dply
 # ^^^^^^ source.deployer-dply keyword.target
-#       ^^^^^^ source.deployer-dply
+#       ^^^^^^^^^ source.deployer-dply
 >		show (sum [1,2,3])
 #^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
 >

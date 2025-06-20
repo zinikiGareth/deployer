@@ -1,6 +1,12 @@
-symbol fred is bound to:
-target fred {
+symbol sumlist is bound to:
+target sumlist {
 	_where_: simplelist.dply:5.7
 	actions: [
+		ShowAction {
+			_where_: simplelist.dply:6.0
+			exprs: [
+				
+			]
+		}
 	]
 }

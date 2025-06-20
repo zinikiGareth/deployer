@@ -59,17 +59,17 @@ func (p *exprParser) Parse(tokens []driverbottom.Token) (driverbottom.Expr, bool
 	}
 	tok, fn, before, after := p.split(tokens)
 	if fn != nil {
-		return fn.ReduceExpr(tok, makeArgs(before), makeArgs(after)), true
+		return fn.ReduceExpr(tok, p.makeArgs(before), p.makeArgs(after)), true
 	} else {
 		if len(before) > 1 {
 			p.tools.Reporter.Reportf(before[0].Loc().Offset, "no function symbol found in this expression")
 			return nil, false
 		}
-		return AsExpr(before[0]), true
+		return p.AsExpr(before[0]), true
 	}
 }
 
-func AsExpr(x driverbottom.Token) driverbottom.Expr {
+func (p *exprParser) AsExpr(x driverbottom.Token) driverbottom.Expr {
 	switch x := x.(type) {
 	case driverbottom.Expr:
 		return x
@@ -81,10 +81,44 @@ func AsExpr(x driverbottom.Token) driverbottom.Expr {
 		// And we need to recursively call Parse() on those, splitting up based on the position of the commas.
 		// There may not be adjacent commas, or a comma after the OSB or before the CSB
 		// But OSB CSB is valid - an empty list
-		panic("to do")
+		return p.ReduceListExpr(x)
 	default:
 		panic(fmt.Sprintf("cannot interpret type %T as Expr", x))
 	}
+}
+
+func (p *exprParser) ReduceListExpr(le AsList) driverbottom.Expr {
+	toks := le.Tokens
+	exprs := []driverbottom.Expr{}
+	if len(toks) == 2 {
+		return &ListExpr{exprs: exprs}
+	}
+	inner := toks[1 : len(toks)-1]
+	for len(inner) > 0 {
+		before, after := p.splitComma(inner)
+		e, ok := p.Parse(before)
+		if !ok {
+			return nil
+		}
+		exprs = append(exprs, e)
+		inner = after
+	}
+	return &ListExpr{exprs: exprs}
+}
+
+func (p *exprParser) splitComma(tokens []driverbottom.Token) ([]driverbottom.Token, []driverbottom.Token) {
+	for k := 0; k < len(tokens); k++ {
+		if IsPuncChar(tokens[k], ',') {
+			if k == 0 {
+				panic("at start")
+			} else if k == len(tokens)-1 {
+				panic("at end")
+			} else {
+				return tokens[0:k], tokens[k+1:]
+			}
+		}
+	}
+	return tokens, nil
 }
 
 func (p *exprParser) ParseMultiple(tokens []driverbottom.Token) ([]driverbottom.Expr, bool) {
@@ -170,10 +204,10 @@ func (p *exprParser) ScanLoop(tokens []driverbottom.Token, ret []driverbottom.To
 	return ret, i
 }
 
-func makeArgs(tokens []driverbottom.Token) []driverbottom.Expr {
+func (p *exprParser) makeArgs(tokens []driverbottom.Token) []driverbottom.Expr {
 	args := make([]driverbottom.Expr, len(tokens))
 	for k, tok := range tokens {
-		args[k] = AsExpr(tok)
+		args[k] = p.AsExpr(tok)
 	}
 	return args
 }
