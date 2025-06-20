@@ -42,7 +42,7 @@ func (sa *EnvAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequir
 
 func (ea *EnvAction) BuildModel(pres driverbottom.ValuePresenter) {
 	// TODO: I think ALL this should really be something like e.Eval(runtime).ToString()
-	str := ea.tools.Storage.EvalAsString(ea.varname)
+	str := ea.tools.Storage.EvalAsStringer(ea.varname).String()
 	val := os.Getenv(str)
 	if val == "" {
 		ea.tools.Reporter.At(ea.varname.Loc().Line)

@@ -45,6 +45,7 @@ type Number interface {
 type String interface {
 	Token
 	Expr
+	fmt.Stringer
 	Text() string
 }
 

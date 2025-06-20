@@ -6,6 +6,7 @@ import (
 
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
+	"ziniki.org/deployer/driver/pkg/utils"
 )
 
 type Storage struct {
@@ -50,21 +51,21 @@ func (s *Storage) Eval(e driverbottom.Expr) any {
 	return e.Eval(s)
 }
 
-func (s *Storage) EvalAsString(e driverbottom.Expr) string {
+func (s *Storage) EvalAsStringer(e driverbottom.Expr) fmt.Stringer {
 	val := s.Eval(e)
 	str, ok := val.(string)
 	if ok {
-		return str
+		return utils.AsStringer(str)
 	}
 	stok, ok := val.(driverbottom.String)
 	if ok {
-		return stok.Text()
+		return stok
 	}
 	stringer, ok := val.(fmt.Stringer)
 	if ok {
-		return stringer.String()
+		return stringer
 	}
-	return fmt.Sprintf("%v", val)
+	return utils.AsStringer(fmt.Sprintf("%v", val))
 }
 
 func (s *Storage) DumpTo(w io.Writer) {

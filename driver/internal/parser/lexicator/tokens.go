@@ -139,7 +139,7 @@ func (t *StringToken) DumpTo(iw driverbottom.IndentWriter) {
 }
 
 func (tok *StringToken) String() string {
-	return fmt.Sprintf("%s %s", tok.BaseToken.String(), tok.text)
+	return tok.text
 }
 
 func (tok *StringToken) Resolve(r driverbottom.Resolver) {

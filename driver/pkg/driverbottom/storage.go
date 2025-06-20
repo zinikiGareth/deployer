@@ -1,6 +1,7 @@
 package driverbottom
 
 import (
+	"fmt"
 	"io"
 
 	"ziniki.org/deployer/driver/pkg/errorsink"
@@ -14,7 +15,7 @@ type RuntimeStorage interface {
 	SetMode(mode int)
 	IsMode(mode int) bool
 	Eval(e Expr) any
-	EvalAsString(e Expr) string
+	EvalAsStringer(e Expr) fmt.Stringer
 	DumpTo(w io.Writer)
 }
 

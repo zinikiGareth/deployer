@@ -22,7 +22,7 @@ target copyFilesToBucket {
 			assignTo: root
 			EnvAction {
 				_where_: copy.dply:7.0
-				varname: copy.dply:7.5 GOLDEN_ROOT
+				varname: GOLDEN_ROOT
 			}
 		}
 		AssignTo {

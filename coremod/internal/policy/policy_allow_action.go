@@ -67,10 +67,10 @@ func (paa *PolicyAllowAction) Attach(entry any) {
 func (paa *PolicyAllowAction) ApplyTo(doc corebottom.PolicyDocument) {
 	item := doc.Item("Allow")
 	for _, a := range paa.allowActions {
-		item.Action(paa.tools.Storage.EvalAsString(a))
+		item.Action(paa.tools.Storage.EvalAsStringer(a).String())
 	}
 	for _, r := range paa.allowResources {
-		item.Resource(paa.tools.Storage.EvalAsString(r))
+		item.Resource(paa.tools.Storage.EvalAsStringer(r).String())
 	}
 
 	for _, aa := range paa.actions {

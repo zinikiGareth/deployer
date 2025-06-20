@@ -46,8 +46,8 @@ func (pca *PolicyCondAction) BuildModel(pres driverbottom.ValuePresenter) {
 }
 
 func (pca *PolicyCondAction) ApplyTo(pi corebottom.PolicyEffect) {
-	test := pca.tools.Storage.EvalAsString(pca.test)
-	left := pca.tools.Storage.EvalAsString(pca.left)
+	test := pca.tools.Storage.EvalAsStringer(pca.test).String()
+	left := pca.tools.Storage.EvalAsStringer(pca.left).String()
 	right := pca.tools.Storage.Eval(pca.right)
 	expr := map[string]any{}
 	expr[left] = right

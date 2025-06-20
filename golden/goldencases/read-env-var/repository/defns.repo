@@ -7,7 +7,7 @@ target readAndShowEnvVar {
 			assignTo: var
 			EnvAction {
 				_where_: readenv.dply:6.0
-				varname: readenv.dply:6.5 SETME
+				varname: SETME
 			}
 		}
 		ShowAction {

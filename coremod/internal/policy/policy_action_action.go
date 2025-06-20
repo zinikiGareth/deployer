@@ -49,7 +49,7 @@ func (pca *policyAction) BuildModel(pres driverbottom.ValuePresenter) {
 
 func (pca *policyAction) ApplyTo(pi corebottom.PolicyEffect) {
 	for _, a := range pca.exprs {
-		pi.Action(pca.tools.Storage.EvalAsString(a))
+		pi.Action(pca.tools.Storage.EvalAsStringer(a).String())
 	}
 }
 

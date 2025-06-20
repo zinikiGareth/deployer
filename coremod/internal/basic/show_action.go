@@ -64,7 +64,7 @@ func (sa *ShowAction) UpdateReality() {
 		if i > 0 {
 			logger.Log(" ")
 		}
-		str := sa.tools.Storage.EvalAsString(e)
+		str := sa.tools.Storage.EvalAsStringer(e)
 		logger.Log("%s", str)
 	}
 	logger.Log("\n")

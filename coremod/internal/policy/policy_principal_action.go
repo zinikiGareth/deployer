@@ -43,7 +43,7 @@ func (pca *policyPrincipalAction) BuildModel(pres driverbottom.ValuePresenter) {
 }
 
 func (pca *policyPrincipalAction) ApplyTo(pi corebottom.PolicyEffect) {
-	pi.Principal(NewPrincipal(pca.tools.Storage.EvalAsString(pca.ofType), pca.tools.Storage.EvalAsString(pca.id)))
+	pi.Principal(NewPrincipal(pca.tools.Storage.EvalAsStringer(pca.ofType).String(), pca.tools.Storage.EvalAsStringer(pca.id).String()))
 }
 
 var _ UpdatePolicyAllowAction = &policyPrincipalAction{}
