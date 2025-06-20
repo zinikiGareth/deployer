@@ -6,11 +6,6 @@ import (
 	"ziniki.org/deployer/driver/pkg/errorsink"
 )
 
-const (
-	BUILD_MODEL_MODE int = iota
-	UPDATE_REALITY_MODE
-)
-
 type RuntimeStorage interface {
 	Bind(name Describable, value any)
 	Get(name Var) any

@@ -5,7 +5,6 @@ import (
 	"os"
 
 	"ziniki.org/deployer/coremod/pkg/corebottom"
-	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/testhelpers"
 )
 
@@ -17,7 +16,7 @@ type TestStepLoggerFile struct {
 
 func (logger *TestStepLoggerFile) Log(format string, args ...any) {
 	var toFile *os.File
-	if logger.tools.Storage.IsMode(driverbottom.BUILD_MODEL_MODE) {
+	if logger.tools.Storage.IsMode(corebottom.BUILD_MODEL_MODE) {
 		toFile = logger.prepFile
 	} else {
 		toFile = logger.execFile

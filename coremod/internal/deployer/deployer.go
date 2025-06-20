@@ -27,7 +27,7 @@ func (d *DeployerImpl) Deploy(targetNames ...string) error {
 		return err
 	}
 
-	d.tools.Storage.SetMode(driverbottom.BUILD_MODEL_MODE)
+	d.tools.Storage.SetMode(corebottom.BUILD_MODEL_MODE)
 	for _, t := range targets {
 		// fmt.Printf("preparing %s:\n", t.String())
 		t.BuildModel()
@@ -38,13 +38,13 @@ func (d *DeployerImpl) Deploy(targetNames ...string) error {
 	}
 
 	if d.tools.Options.TearDown {
-		d.tools.Storage.SetMode(driverbottom.UPDATE_REALITY_MODE)
+		d.tools.Storage.SetMode(corebottom.UPDATE_REALITY_MODE)
 		for _, t := range targets {
 			// fmt.Printf("tearing down %s:\n", t)
 			t.TearDown()
 		}
 	} else {
-		d.tools.Storage.SetMode(driverbottom.UPDATE_REALITY_MODE)
+		d.tools.Storage.SetMode(corebottom.UPDATE_REALITY_MODE)
 		for _, t := range targets {
 			// fmt.Printf("executing %s:\n", t)
 			t.UpdateReality()
@@ -54,15 +54,15 @@ func (d *DeployerImpl) Deploy(targetNames ...string) error {
 	return nil
 }
 
-func (d *DeployerImpl) findTargets(names ...string) ([]driverbottom.TargetThing, error) {
-	var targets []driverbottom.TargetThing
+func (d *DeployerImpl) findTargets(names ...string) ([]corebottom.Target, error) {
+	var targets []corebottom.Target
 	var ue error
 	for _, n := range names {
 		t := d.tools.Repository.FindTop(driverbottom.SymbolName(n))
-		var target driverbottom.TargetThing
+		var target corebottom.Target
 		var ok bool
 		if t != nil {
-			target, ok = t.(driverbottom.TargetThing)
+			target, ok = t.(corebottom.Target)
 		}
 		if t == nil || !ok {
 			msg := fmt.Sprintf("there is no target %s\n", n)
