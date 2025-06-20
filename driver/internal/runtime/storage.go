@@ -3,6 +3,7 @@ package runtime
 import (
 	"fmt"
 	"io"
+	"log"
 
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
@@ -66,6 +67,24 @@ func (s *Storage) EvalAsStringer(e driverbottom.Expr) fmt.Stringer {
 		return stringer
 	}
 	return utils.AsStringer(fmt.Sprintf("%v", val))
+}
+
+func (s *Storage) EvalAsNumber(e driverbottom.Expr) driverbottom.AsNumber {
+	val := s.Eval(e)
+	str, ok := val.(float64)
+	if ok {
+		return utils.F64AsNumber(str)
+	}
+	ntok, ok := val.(driverbottom.Number)
+	if ok {
+		return ntok
+	}
+	conv, ok := val.(driverbottom.AsNumber)
+	if ok {
+		return conv
+	}
+	log.Fatalf("cannot convert to AsNumber: %T", val)
+	return nil
 }
 
 func (s *Storage) DumpTo(w io.Writer) {

@@ -39,7 +39,7 @@ type Identifier interface {
 type Number interface {
 	Token
 	Expr
-	Value() float64
+	F64() float64
 }
 
 type String interface {

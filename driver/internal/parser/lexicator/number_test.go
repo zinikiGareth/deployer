@@ -16,7 +16,7 @@ func Test0IsANumber(t *testing.T) {
 	if len(toks) != 1 {
 		t.Fatalf("%d args returned, not 1", len(toks))
 	}
-	if toks[0].(driverbottom.Number).Value() != 0 {
+	if toks[0].(driverbottom.Number).F64() != 0 {
 		t.Fatalf("val != 0")
 	}
 }
@@ -29,7 +29,7 @@ func TestPiIsANumber(t *testing.T) {
 	if len(toks) != 1 {
 		t.Fatalf("%d args returned, not 1", len(toks))
 	}
-	if toks[0].(driverbottom.Number).Value() != 3.14 {
+	if toks[0].(driverbottom.Number).F64() != 3.14 {
 		t.Fatalf("val != π")
 	}
 }
@@ -42,7 +42,7 @@ func TestASimpleHexNumber(t *testing.T) {
 	if len(toks) != 1 {
 		t.Fatalf("%d args returned, not 1", len(toks))
 	}
-	if toks[0].(driverbottom.Number).Value() != 255 {
+	if toks[0].(driverbottom.Number).F64() != 255 {
 		t.Fatalf("val != 255")
 	}
 }
@@ -55,7 +55,7 @@ func TestExponentNumber(t *testing.T) {
 	if len(toks) != 1 {
 		t.Fatalf("%d args returned, not 1", len(toks))
 	}
-	if toks[0].(driverbottom.Number).Value() != 0.0027 {
+	if toks[0].(driverbottom.Number).F64() != 0.0027 {
 		t.Fatalf("val != 0.0027")
 	}
 }
@@ -68,7 +68,7 @@ func TestWeCanParse24hours(t *testing.T) {
 	if len(toks) != 2 {
 		t.Fatalf("%d args returned, not 2", len(toks))
 	}
-	if toks[0].(driverbottom.Number).Value() != 24 {
+	if toks[0].(driverbottom.Number).F64() != 24 {
 		t.Fatalf("val != 24")
 	}
 }

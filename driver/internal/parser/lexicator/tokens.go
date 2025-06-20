@@ -68,7 +68,7 @@ func (tok *IdentifierToken) DumpTo(iw driverbottom.IndentWriter) {
 	iw.EndAttrs()
 }
 
-func (tok *NumberToken) Value() float64 {
+func (tok *NumberToken) F64() float64 {
 	return tok.value
 }
 
@@ -76,7 +76,7 @@ func (tok *NumberToken) Resolve(r driverbottom.Resolver) {
 }
 
 func (tok *NumberToken) Eval(s driverbottom.RuntimeStorage) any {
-	return tok.Value()
+	return tok.F64()
 }
 
 func (t *NumberToken) ShortDescription() string {

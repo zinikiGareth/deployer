@@ -51,7 +51,7 @@ func (h *HoursFunc) ReduceExpr(me driverbottom.Token, before []driverbottom.Expr
 	if !ok {
 		panic("not implemented: not-const hours")
 	}
-	return &TimeOf{Locatable: konst, Number: int(konst.Value()), Unit: HOURS}
+	return &TimeOf{Locatable: konst, Number: int(konst.F64()), Unit: HOURS}
 }
 
 func MakeHoursFunc(tools *corebottom.Tools) *HoursFunc {

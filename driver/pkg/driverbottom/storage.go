@@ -16,9 +16,13 @@ type RuntimeStorage interface {
 	IsMode(mode int) bool
 	Eval(e Expr) any
 	EvalAsStringer(e Expr) fmt.Stringer
+	EvalAsNumber(e Expr) AsNumber
 	DumpTo(w io.Writer)
 }
 
+type AsNumber interface {
+	F64() float64
+}
 type InitMe interface {
 	InitMe(storage RuntimeStorage) any
 }
