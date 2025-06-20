@@ -1,6 +1,7 @@
 package policy
 
 import (
+	"ziniki.org/deployer/coremod/internal/target"
 	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
@@ -16,6 +17,11 @@ type PolicyAction struct {
 	tools   *corebottom.Tools
 	loc     *errorsink.Location
 	actions []PolicyRuleAction
+}
+
+func (pa *PolicyAction) MakeAssign(holder driverbottom.Describable, assignTo driverbottom.Identifier, action driverbottom.ModelBuilder) any {
+	ret := target.MakeDoAssign(pa.tools, holder, assignTo, action)
+	return ret
 }
 
 func (pa *PolicyAction) Attach(entry any) {

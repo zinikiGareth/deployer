@@ -66,6 +66,7 @@ type Punc interface {
 }
 
 type AttachResult interface {
+	MakeAssign(holder Describable, assignTo Identifier, action ModelBuilder) any
 	Attach(item any)
 }
 

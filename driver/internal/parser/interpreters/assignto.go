@@ -27,10 +27,15 @@ func (wat *WithAssignTo) Attach(d any) {
 	if !ok {
 		panic("not an action")
 	}
-	wat.container.Attach(MakeDoAssign(wat.tools, wat.holder, wat.assignTo, action))
+	assign := wat.container.MakeAssign(wat.holder, wat.assignTo, action)
+	wat.container.Attach(assign)
 }
 
-func MakeDoAssign(tools *driverbottom.CoreTools, holder *VarHolder, assignTo driverbottom.Identifier, action driverbottom.ModelBuilder) *DoAssign {
+func (wat *WithAssignTo) MakeAssign(holder driverbottom.Describable, assignTo driverbottom.Identifier, action driverbottom.ModelBuilder) any {
+	panic("I *am* the variable")
+}
+
+func MakeDoAssign(tools *driverbottom.CoreTools, holder driverbottom.Describable, assignTo driverbottom.Identifier, action driverbottom.ModelBuilder) *DoAssign {
 	ret := DoAssign{tools: tools, assignTo: assignTo, holder: holder, action: action}
 	return &ret
 }
