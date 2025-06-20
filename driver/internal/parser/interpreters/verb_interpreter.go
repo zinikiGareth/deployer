@@ -36,7 +36,8 @@ func (si *verbCommandInterpreter) HaveTokens(tokens []driverbottom.Token) driver
 
 	a := si.attacher
 	if assignTo != nil {
-		a = &WithAssignTo{tools: si.tools, container: a, assignTo: assignTo}
+		a = WillAssignTo(si.tools, a, assignTo)
+		// a = &WithAssignTo{tools: si.tools, container: a, assignTo: assignTo}
 	}
 	return action.Handle(a, toks)
 }

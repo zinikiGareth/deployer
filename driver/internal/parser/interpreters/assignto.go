@@ -7,24 +7,31 @@ import (
 	"ziniki.org/deployer/driver/pkg/errorsink"
 )
 
+func WillAssignTo(tools *driverbottom.CoreTools, container driverbottom.AttachResult, assignTo driverbottom.Identifier) *WithAssignTo {
+	holder := &VarHolder{storeFor: assignTo}
+	ret := WithAssignTo{tools: tools, assignTo: assignTo, container: container, holder: holder}
+	tools.Repository.IntroduceSymbol(driverbottom.SymbolName(assignTo.Id()), holder)
+
+	return &ret
+}
+
 type WithAssignTo struct {
 	tools     *driverbottom.CoreTools
+	holder    *VarHolder
 	assignTo  driverbottom.Identifier
 	container driverbottom.AttachResult
 }
 
 func (wat *WithAssignTo) Attach(d any) {
-	container, ok := d.(driverbottom.ModelBuilder)
+	action, ok := d.(driverbottom.ModelBuilder)
 	if !ok {
 		panic("not an action")
 	}
-	wat.container.Attach(MakeDoAssign(wat.tools, wat.assignTo, container))
+	wat.container.Attach(MakeDoAssign(wat.tools, wat.holder, wat.assignTo, action))
 }
 
-func MakeDoAssign(tools *driverbottom.CoreTools, assignTo driverbottom.Identifier, action driverbottom.ModelBuilder) *DoAssign {
-	holder := &VarHolder{storeFor: assignTo}
+func MakeDoAssign(tools *driverbottom.CoreTools, holder *VarHolder, assignTo driverbottom.Identifier, action driverbottom.ModelBuilder) *DoAssign {
 	ret := DoAssign{tools: tools, assignTo: assignTo, holder: holder, action: action}
-	tools.Repository.IntroduceSymbol(driverbottom.SymbolName(assignTo.Id()), holder)
 	return &ret
 }
 
