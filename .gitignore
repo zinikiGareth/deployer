@@ -1,4 +1,4 @@
 golden/cmd/golden/golden
-deployer/cmd/deployer/deployer
+driver/cmd/deployer/deployer
 *.so
 __debug_bin*
