@@ -1,6 +1,9 @@
 package utils
 
-import "fmt"
+import (
+	"fmt"
+	"log"
+)
 
 type StringerString struct {
 	val string
@@ -8,6 +11,19 @@ type StringerString struct {
 
 func AsStringer(val string) StringerString {
 	return StringerString{val: val}
+}
+
+func AsString(obj any) string {
+	k, isString := obj.(string)
+	if isString {
+		return k
+	}
+	l, isStringer := obj.(fmt.Stringer)
+	if isStringer {
+		return l.String()
+	}
+	log.Fatalf("Cannot convert to string: %T", obj)
+	return ""
 }
 
 func (stringer StringerString) String() string {
@@ -22,6 +38,6 @@ func (dr deferredReading) String() string {
 	return dr.f()
 }
 
-func DeferReading(reader func() string) fmt.Stringer {
+func DeferString(reader func() string) fmt.Stringer {
 	return deferredReading{f: reader}
 }
