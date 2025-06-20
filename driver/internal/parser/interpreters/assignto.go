@@ -22,16 +22,12 @@ type WithAssignTo struct {
 	container driverbottom.AttachResult
 }
 
-func (wat *WithAssignTo) Attach(d any) {
-	action, ok := d.(driverbottom.ModelBuilder)
-	if !ok {
-		panic("not an action")
-	}
+func (wat *WithAssignTo) Attach(action any) {
 	assign := wat.container.MakeAssign(wat.holder, wat.assignTo, action)
 	wat.container.Attach(assign)
 }
 
-func (wat *WithAssignTo) MakeAssign(holder driverbottom.Describable, assignTo driverbottom.Identifier, action driverbottom.ModelBuilder) any {
+func (wat *WithAssignTo) MakeAssign(holder driverbottom.Describable, assignTo driverbottom.Identifier, action any) any {
 	panic("I *am* the variable")
 }
 

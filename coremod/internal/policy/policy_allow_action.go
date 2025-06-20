@@ -1,7 +1,7 @@
 package policy
 
 import (
-	"ziniki.org/deployer/coremod/internal/target"
+	"ziniki.org/deployer/coremod/internal/vars"
 	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
@@ -55,8 +55,8 @@ func (paa *PolicyAllowAction) ShortDescription() string {
 func (paa *PolicyAllowAction) Completed() {
 }
 
-func (paa *PolicyAllowAction) MakeAssign(holder driverbottom.Describable, assignTo driverbottom.Identifier, action driverbottom.ModelBuilder) any {
-	ret := target.MakeDoAssign(paa.tools, holder, assignTo, action)
+func (paa *PolicyAllowAction) MakeAssign(holder driverbottom.Describable, assignTo driverbottom.Identifier, action any) any {
+	ret := vars.MakeDoAssign(paa.tools, holder, assignTo, action)
 	return ret
 }
 

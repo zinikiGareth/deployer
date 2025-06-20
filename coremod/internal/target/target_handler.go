@@ -17,7 +17,7 @@ func (t *CoreTargetHandler) Handle(attacher driverbottom.AttachResult, tokens []
 	}
 	t1 := tokens[1].(driverbottom.Identifier)
 	name := driverbottom.SymbolName(t1.Id())
-	target := &CoreTarget{tools: t.tools, loc: t1.Loc(), name: name, actions: []driverbottom.ModelBuilder{}}
+	target := &CoreTarget{tools: t.tools, loc: t1.Loc(), name: name, actions: []corebottom.ModelBuilder{}}
 
 	attacher.Attach(target)
 	return drivertop.NewVerbCommandInterpreter(t.tools.CoreTools, target, "target", true)

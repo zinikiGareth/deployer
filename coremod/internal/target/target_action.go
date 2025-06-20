@@ -4,6 +4,7 @@ import (
 	"log"
 	"slices"
 
+	"ziniki.org/deployer/coremod/internal/vars"
 	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
@@ -14,7 +15,7 @@ type CoreTarget struct {
 	loc   *errorsink.Location
 	name  driverbottom.SymbolName
 
-	actions []driverbottom.ModelBuilder
+	actions []corebottom.ModelBuilder
 }
 
 func (cc *CoreTarget) Name() driverbottom.SymbolName {
@@ -25,13 +26,13 @@ func (cc *CoreTarget) String() string {
 	return string(cc.name)
 }
 
-func (a *CoreTarget) MakeAssign(holder driverbottom.Describable, assignTo driverbottom.Identifier, action driverbottom.ModelBuilder) any {
-	ret := MakeDoAssign(a.tools, holder, assignTo, action)
+func (a *CoreTarget) MakeAssign(holder driverbottom.Describable, assignTo driverbottom.Identifier, action any) any {
+	ret := vars.MakeDoAssign(a.tools, holder, assignTo, action)
 	return ret
 }
 
 func (cc *CoreTarget) Attach(entry any) {
-	action, ok := entry.(driverbottom.ModelBuilder)
+	action, ok := entry.(corebottom.ModelBuilder)
 	if !ok {
 		log.Fatalf("not a ModelBuilder: %T", entry)
 	}
@@ -57,7 +58,7 @@ func (t *CoreTarget) DumpTo(w driverbottom.IndentWriter) {
 	w.EndAttrs()
 }
 
-func (t *CoreTarget) Resolve(r driverbottom.Resolver) {
+func (t *CoreTarget) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
 	for _, a := range t.actions {
 		binding := a.Resolve(r)
 		if binding == driverbottom.MUST_BE_BOUND {
@@ -66,6 +67,7 @@ func (t *CoreTarget) Resolve(r driverbottom.Resolver) {
 			panic("an error occurred")
 		}
 	}
+	return driverbottom.NO_VALUE
 }
 
 func (t *CoreTarget) BuildModel() {
@@ -76,7 +78,7 @@ func (t *CoreTarget) BuildModel() {
 
 func (t *CoreTarget) UpdateReality() {
 	for _, a := range t.actions {
-		amis, ok := a.(driverbottom.RealityShifter)
+		amis, ok := a.(corebottom.RealityShifter)
 		if ok {
 			amis.UpdateReality()
 		}
@@ -85,7 +87,7 @@ func (t *CoreTarget) UpdateReality() {
 
 func (t *CoreTarget) TearDown() {
 	for _, a := range slices.Backward(t.actions) {
-		amis, ok := a.(driverbottom.RealityShifter)
+		amis, ok := a.(corebottom.RealityShifter)
 		if ok {
 			amis.TearDown()
 		}

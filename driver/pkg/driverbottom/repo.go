@@ -22,5 +22,5 @@ type Resolver interface {
 }
 
 type Resolvable interface {
-	Resolve(r Resolver)
+	Resolve(r Resolver) BindingRequirement
 }

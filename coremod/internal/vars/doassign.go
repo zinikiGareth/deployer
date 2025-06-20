@@ -1,12 +1,18 @@
 package vars
 
 import (
+	"log"
+
 	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
 )
 
-func MakeDoAssign(tools *corebottom.Tools, holder driverbottom.Describable, assignTo driverbottom.Identifier, action driverbottom.ModelBuilder) *DoAssign {
+func MakeDoAssign(tools *corebottom.Tools, holder driverbottom.Describable, assignTo driverbottom.Identifier, asAny any) *DoAssign {
+	action, ok := asAny.(corebottom.ModelBuilder)
+	if !ok {
+		log.Fatalf("is not a model builder: %T", asAny)
+	}
 	ret := DoAssign{tools: tools, assignTo: assignTo, holder: holder, action: action}
 	return &ret
 }
@@ -15,7 +21,7 @@ type DoAssign struct {
 	tools    *corebottom.Tools
 	assignTo driverbottom.Identifier
 	holder   driverbottom.Describable
-	action   driverbottom.ModelBuilder
+	action   corebottom.ModelBuilder
 }
 
 func (d *DoAssign) Loc() *errorsink.Location {
@@ -47,14 +53,14 @@ func (d *DoAssign) BuildModel(pres driverbottom.ValuePresenter) {
 }
 
 func (d *DoAssign) UpdateReality() {
-	amis, ok := d.action.(driverbottom.RealityShifter)
+	amis, ok := d.action.(corebottom.RealityShifter)
 	if ok {
 		amis.UpdateReality()
 	}
 }
 
 func (d *DoAssign) TearDown() {
-	amis, ok := d.action.(driverbottom.RealityShifter)
+	amis, ok := d.action.(corebottom.RealityShifter)
 	if ok {
 		amis.TearDown()
 	}

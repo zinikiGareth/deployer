@@ -148,3 +148,5 @@ type MyTearDown struct {
 func (m *MyTearDown) Mode() string {
 	return m.mode
 }
+
+var _ corebottom.ModelBuilder = &EnsureAction{}

@@ -78,3 +78,5 @@ func (e *EnvVar) Loc() *errorsink.Location {
 func (e *EnvVar) ShortDescription() string {
 	return "EnvVar[" + e.varname.String() + "]"
 }
+
+var _ corebottom.ModelBuilder = &EnvAction{}

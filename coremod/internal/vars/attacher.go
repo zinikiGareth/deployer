@@ -9,7 +9,7 @@ type TopLevelAttacher struct {
 	tools *corebottom.Tools
 }
 
-func (a *TopLevelAttacher) MakeAssign(holder driverbottom.Describable, assignTo driverbottom.Identifier, action driverbottom.ModelBuilder) any {
+func (a *TopLevelAttacher) MakeAssign(holder driverbottom.Describable, assignTo driverbottom.Identifier, action any) any {
 	ret := MakeDoAssign(a.tools, holder, assignTo, action)
 	return ret
 }
