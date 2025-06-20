@@ -12,6 +12,7 @@ errorcases/ensure-only-one-name
 errorcases/find-no-such-class
 errorcases/find-cannot-have-teardown
 invoke-method/simple
+lists/simple
 ensure-bucket
 teardown-bucket
 find-bucket

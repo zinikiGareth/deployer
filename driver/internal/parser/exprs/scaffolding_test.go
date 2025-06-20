@@ -36,6 +36,8 @@ var konstFunc driverbottom.Function
 var oneString driverbottom.String
 var lineloc *errorsink.LineLoc
 var orb, crb driverbottom.Punc
+var osb, csb driverbottom.Punc
+var comma driverbottom.Punc
 
 func init() {
 	lineloc = &errorsink.LineLoc{Line: 1, Indent: 1, Text: "", File: &errorsink.FileLoc{File: "test"}}
@@ -44,6 +46,9 @@ func init() {
 	konstFunc = konstantFunc{}
 	orb = lexicator.NewPuncToken(lineloc, 0, '(')
 	crb = lexicator.NewPuncToken(lineloc, 12, ')')
+	osb = lexicator.NewPuncToken(lineloc, 2, '[')
+	csb = lexicator.NewPuncToken(lineloc, 10, ']')
+	comma = lexicator.NewPuncToken(lineloc, 10, ',')
 }
 
 func (m myRecall) Find(_ string, noun string) any {

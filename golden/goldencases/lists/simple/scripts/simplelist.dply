@@ -1,0 +1,6 @@
+The idea here is to support a list as an expression using the syntax [x,y].
+
+This is very general and case be used in any expression
+
+	target sumlist
+		show (sum [1,2,3])

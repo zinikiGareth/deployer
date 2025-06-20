@@ -28,6 +28,22 @@ func (b Bracketed) String() string {
 	return strings.Join(strs, " ")
 }
 
+type AsList struct {
+	Tokens []driverbottom.Token
+}
+
+func (b AsList) Loc() *errorsink.Location {
+	return b.Tokens[0].Loc()
+}
+
+func (b AsList) String() string {
+	strs := make([]string, len(b.Tokens))
+	for i := 0; i < len(b.Tokens); i++ {
+		strs[i] = b.Tokens[i].String()
+	}
+	return strings.Join(strs, " ")
+}
+
 type exprParser struct {
 	tools *driverbottom.CoreTools
 }
@@ -36,6 +52,10 @@ func (p *exprParser) Parse(tokens []driverbottom.Token) (driverbottom.Expr, bool
 	if len(tokens) == 0 {
 		p.tools.Reporter.Reportf(0, "no expression found")
 		return nil, false
+	}
+	// remove all encircling parens
+	for len(tokens) >= 2 && IsPuncChar(tokens[0], '(') && IsPuncChar(tokens[len(tokens)-1], ')') {
+		tokens = tokens[1 : len(tokens)-1]
 	}
 	tok, fn, before, after := p.split(tokens)
 	if fn != nil {
@@ -55,8 +75,15 @@ func AsExpr(x driverbottom.Token) driverbottom.Expr {
 		return x
 	case driverbottom.Identifier:
 		return VarRefer(x)
+	case AsList:
+		// I think this is correct - here we have a "list" and want to convert it into an expression.
+		// Yes, that makes sense.  We need to do that by having something that can build an expression from all the subexpressions.
+		// And we need to recursively call Parse() on those, splitting up based on the position of the commas.
+		// There may not be adjacent commas, or a comma after the OSB or before the CSB
+		// But OSB CSB is valid - an empty list
+		panic("to do")
 	default:
-		panic(fmt.Sprintf("cannot handle type %T", x))
+		panic(fmt.Sprintf("cannot interpret type %T as Expr", x))
 	}
 }
 
@@ -121,8 +148,18 @@ func (p *exprParser) ScanLoop(tokens []driverbottom.Token, ret []driverbottom.To
 				}
 				ret = append(ret, Bracketed{Tokens: inner})
 				i = j
+			} else if IsPuncChar(t, '[') {
+				inner, j := p.ScanFor(tokens, i, ']')
+				if j == -1 {
+					return nil, -1
+				}
+				ret = append(ret, AsList{Tokens: inner})
+				i = j
+			} else if IsPuncChar(t, ',') {
+				ret = append(ret, t)
+				i++
 			} else {
-				p.tools.Reporter.Reportf(tokens[i].Loc().Offset, "unexpected close paren: %c", t.(driverbottom.Punc).Which())
+				p.tools.Reporter.Reportf(tokens[i].Loc().Offset, "unexpected punc char: %c", t.(driverbottom.Punc).Which())
 				return nil, -1
 			}
 		} else {
@@ -144,13 +181,7 @@ func makeArgs(tokens []driverbottom.Token) []driverbottom.Expr {
 func (p *exprParser) split(tokens []driverbottom.Token) (driverbottom.Token, driverbottom.Function, []driverbottom.Token, []driverbottom.Token) {
 	for i, t := range tokens {
 		if f := p.matchFunc(t); f != nil {
-			k := 0
-			p1, ok1 := tokens[0].(driverbottom.Punc)
-			p2, ok2 := tokens[len(tokens)-1].(driverbottom.Punc)
-			if ok1 && ok2 && p1.Is('(') && p2.Is(')') {
-				k = 1
-			}
-			return t, f, tokens[k:i], tokens[i+1 : len(tokens)-k]
+			return t, f, tokens[:i], tokens[i+1:]
 		}
 	}
 	return nil, nil, tokens, nil

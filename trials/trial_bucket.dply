@@ -100,8 +100,10 @@ Finally, we can put all these parts together to build up the entire picture of t
 			OriginAccessControl <- oac->id
 			Certificate <- cert->arn
 			CachePolicy <- cp->id
-			Domain <- "www.consolidator.news" // this should be a list
-			CacheBehaviors <- cb // this should be a list
+			Domain <- []
+				"www.consolidator.news"
+				"consolidator.news"
+			CacheBehaviors <- [cb]
 			TargetOriginId <- "s3-bucket-target"
 
 In order to use the bucket with cloudfront, we need to say that we have a policy in place on the bucket

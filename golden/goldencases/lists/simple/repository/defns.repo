@@ -1,0 +1,6 @@
+symbol fred is bound to:
+target fred {
+	_where_: simplelist.dply:5.7
+	actions: [
+	]
+}

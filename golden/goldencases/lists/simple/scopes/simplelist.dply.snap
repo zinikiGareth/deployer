@@ -1,0 +1,13 @@
+>The idea here is to support a list as an expression using the syntax [x,y].
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
+>
+>This is very general and case be used in any expression
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
+>
+>	target fred
+#^ source.deployer-dply
+# ^^^^^^ source.deployer-dply keyword.target
+#       ^^^^^^ source.deployer-dply
+>		show (sum [1,2,3])
+#^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>
