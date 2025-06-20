@@ -8,6 +8,7 @@ import (
 	"ziniki.org/deployer/coremod/internal/runmain"
 	"ziniki.org/deployer/coremod/internal/target"
 	"ziniki.org/deployer/coremod/internal/time"
+	"ziniki.org/deployer/coremod/internal/vars"
 	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 )
@@ -31,6 +32,7 @@ func RegisterWithDriver(driver driverbottom.Driver) error {
 
 	// Logically, I think, these three have to go in "deployer", not in a module.
 	tools.Register.ExtensionPoint("main-args")
+	tools.Register.ExtensionPoint("attacher")
 	tools.Register.ExtensionPoint("top-level")
 	tools.Register.ExtensionPoint("function-defn")
 
@@ -44,6 +46,9 @@ func RegisterWithDriver(driver driverbottom.Driver) error {
 
 	// we need to register something that handles the main arguments, in our case targets to execute
 	tools.Register.Register("main-args", "main", runmain.MakeMainHandler(tools))
+
+	// for variables, we need something that can attach these to the top level scope (do we, in fact?)
+	tools.Register.Register("attacher", "top-level", vars.NewMakeTopLevelAttacher(tools))
 
 	// top commands
 	tools.Register.Register("top-level", "target", target.MakeCoreTargetVerb(tools))

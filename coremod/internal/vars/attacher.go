@@ -1,16 +1,16 @@
-package parser
+package vars
 
 import (
-	"ziniki.org/deployer/driver/internal/parser/interpreters"
+	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 )
 
 type TopLevelAttacher struct {
-	tools *driverbottom.CoreTools
+	tools *corebottom.Tools
 }
 
 func (a *TopLevelAttacher) MakeAssign(holder driverbottom.Describable, assignTo driverbottom.Identifier, action driverbottom.ModelBuilder) any {
-	ret := interpreters.MakeDoAssign(a.tools, holder, assignTo, action)
+	ret := MakeDoAssign(a.tools, holder, assignTo, action)
 	return ret
 }
 
@@ -24,6 +24,16 @@ func (a *TopLevelAttacher) Attach(tlf any) {
 
 }
 
-func NewTopLevelAttacher(tools *driverbottom.CoreTools) driverbottom.AttachResult {
-	return &TopLevelAttacher{tools: tools}
+type TLACreator struct {
+	tools *corebottom.Tools
 }
+
+func (c *TLACreator) Create() driverbottom.AttachResult {
+	return &TopLevelAttacher{tools: c.tools}
+}
+
+func NewMakeTopLevelAttacher(tools *corebottom.Tools) *TLACreator {
+	return &TLACreator{tools: tools}
+}
+
+var _ driverbottom.AttacherCreator = &TLACreator{}

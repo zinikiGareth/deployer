@@ -9,3 +9,7 @@ type Var interface {
 type Holder interface {
 	Describable
 }
+
+type AttacherCreator interface {
+	Create() AttachResult
+}
