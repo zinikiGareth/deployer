@@ -12,12 +12,9 @@ import (
 
 func TestAnEmptyListIsParsed(t *testing.T) {
 	reporter, _ := testhelpers.MockReporter(t)
-	recall = myRecall{things: make(map[string]any)}
-	tools := &driverbottom.CoreTools{Reporter: reporter, Recall: recall}
+	tools := &driverbottom.CoreTools{Reporter: reporter}
 	lx := lexicator.NewLineLexicator(tools, "test")
 	p := exprs.NewExprParser(tools)
-
-	recall.things["sum"] = konstFunc
 
 	f := errorsink.InFile("test")
 	l := f.AtLine(1, 0, "[]")
@@ -38,14 +35,12 @@ func TestAnEmptyListIsParsed(t *testing.T) {
 	}
 
 }
+
 func TestAnEmptyListIsParsedInParens(t *testing.T) {
 	reporter, _ := testhelpers.MockReporter(t)
-	recall = myRecall{things: make(map[string]any)}
-	tools := &driverbottom.CoreTools{Reporter: reporter, Recall: recall}
+	tools := &driverbottom.CoreTools{Reporter: reporter}
 	lx := lexicator.NewLineLexicator(tools, "test")
 	p := exprs.NewExprParser(tools)
-
-	recall.things["sum"] = konstFunc
 
 	f := errorsink.InFile("test")
 	l := f.AtLine(1, 0, "([])")
@@ -101,4 +96,56 @@ func TestAnEmptyListIsParsedAsAnArgument(t *testing.T) {
 	if le.Length() != 0 {
 		t.Fatalf("Expected list of length 0, not %d", le.Length())
 	}
+}
+
+func TestAnSingletonListIsParsed(t *testing.T) {
+	reporter, _ := testhelpers.MockReporter(t)
+	tools := &driverbottom.CoreTools{Reporter: reporter}
+	lx := lexicator.NewLineLexicator(tools, "test")
+	p := exprs.NewExprParser(tools)
+
+	f := errorsink.InFile("test")
+	l := f.AtLine(1, 0, "[3]")
+
+	tokens := lx.BlockedLine(l)
+	expr, ok := p.Parse(tokens)
+	if !ok {
+		t.Fatalf("parsing failed")
+	}
+
+	le, ok := expr.(*exprs.ListExpr)
+	if !ok {
+		t.Fatalf("Expr was not a list: %T", expr)
+	}
+
+	if le.Length() != 1 {
+		t.Fatalf("Expected list of length 1, not %d", le.Length())
+	}
+
+}
+
+func TestADoubleListIsParsed(t *testing.T) {
+	reporter, _ := testhelpers.MockReporter(t)
+	tools := &driverbottom.CoreTools{Reporter: reporter}
+	lx := lexicator.NewLineLexicator(tools, "test")
+	p := exprs.NewExprParser(tools)
+
+	f := errorsink.InFile("test")
+	l := f.AtLine(1, 0, "[3, 8]")
+
+	tokens := lx.BlockedLine(l)
+	expr, ok := p.Parse(tokens)
+	if !ok {
+		t.Fatalf("parsing failed")
+	}
+
+	le, ok := expr.(*exprs.ListExpr)
+	if !ok {
+		t.Fatalf("Expr was not a list: %T", expr)
+	}
+
+	if le.Length() != 2 {
+		t.Fatalf("Expected list of length 2, not %d", le.Length())
+	}
+
 }
