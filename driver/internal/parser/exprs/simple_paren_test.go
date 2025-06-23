@@ -8,7 +8,7 @@ import (
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 )
 
-func TestAnExpressionWithParensRemovesThem(t *testing.T) {
+func TestParseRemovesParensFromAnExpression(t *testing.T) {
 	p, _ := makeParser(t)
 	recall.things["x"] = konstFunc
 	x := lexicator.NewIdentifierToken(lineloc, 0, "x")
@@ -28,7 +28,7 @@ func TestAnExpressionWithParensRemovesThem(t *testing.T) {
 	}
 }
 
-func TestAnExpressionWithDoubleParensRemovesThem(t *testing.T) {
+func TestParseRemovesDoubleParensFromAnExpression(t *testing.T) {
 	p, _ := makeParser(t)
 	recall.things["x"] = konstFunc
 	x := lexicator.NewIdentifierToken(lineloc, 0, "x")
@@ -37,6 +37,29 @@ func TestAnExpressionWithDoubleParensRemovesThem(t *testing.T) {
 		t.Fatalf("could not parse (x)")
 	}
 	e2, ok := expr.(*exprs.Apply)
+	if !ok {
+		t.Fatalf("was not an apply")
+	}
+	if e2.Func != konstFunc {
+		t.Fatalf("function was not konstFunc")
+	}
+	if len(e2.Args) != 0 {
+		t.Fatalf("args != 0")
+	}
+}
+
+func TestParseMultipleRemovesParensFromAnExpression(t *testing.T) {
+	p, _ := makeParser(t)
+	recall.things["x"] = konstFunc
+	x := lexicator.NewIdentifierToken(lineloc, 0, "x")
+	es, ok := p.ParseMultiple([]driverbottom.Token{orb, x, crb})
+	if !ok {
+		t.Fatalf("could not parse (x)")
+	}
+	if len(es) != 1 {
+		t.Fatalf("expected 1 expr not %d", len(es))
+	}
+	e2, ok := es[0].(*exprs.Apply)
 	if !ok {
 		t.Fatalf("was not an apply")
 	}

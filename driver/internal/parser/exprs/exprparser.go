@@ -23,7 +23,7 @@ func (p *exprParser) ParseMultiple(tokens []driverbottom.Token) ([]driverbottom.
 		var bs []driverbottom.Token
 		brack, ok := b.(Bracketed)
 		if ok {
-			bs = brack.Tokens
+			bs = brack.Tokens[1 : len(brack.Tokens)-1]
 		} else {
 			bs = []driverbottom.Token{b}
 		}
