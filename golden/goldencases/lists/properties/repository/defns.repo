@@ -1,0 +1,14 @@
+symbol proplist is bound to:
+target proplist {
+	_where_: proplist.dply:16.7
+	actions: [
+		EnsureAction {
+			_where_: proplist.dply:17.0
+			what: test.S3.Bucket
+			resolved: test.S3.Bucket[]
+			named: org.ziniki.launch_bucket
+			additional properties:
+				contents <- [<2>]
+		}
+	]
+}

@@ -47,9 +47,10 @@ func (ea *EnsureAction) DumpTo(w driverbottom.IndentWriter) {
 		w.TextAttr("named", ea.named.Text())
 	}
 	if len(ea.props) > 0 {
+		w.IndPrintf("additional properties:\n")
 		w.Indent()
 		for k, v := range ea.props {
-			w.IndPrintf("%s <- %s\n", k, v.String())
+			w.IndPrintf("%s <- %s\n", k.Id(), v.String())
 		}
 		w.UnIndent()
 	}

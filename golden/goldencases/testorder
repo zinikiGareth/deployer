@@ -26,3 +26,4 @@ policies/allow-one
 policies/allow-condition
 policies/with-principal
 policies/additional-actions
+lists/properties

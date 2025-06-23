@@ -1,6 +1,9 @@
 package interpreters
 
-import "ziniki.org/deployer/driver/pkg/driverbottom"
+import (
+	"ziniki.org/deployer/driver/internal/parser/exprs"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
+)
 
 type propertiesInterpreter struct {
 	tools  *driverbottom.CoreTools
@@ -38,8 +41,14 @@ func (pis *propertiesInterpreter) HaveTokens(tokens []driverbottom.Token) driver
 	if !ok {
 		return NewIgnoreInnerScope()
 	}
-	pis.parent.AddProperty(prop, expr)
-	return NewDisallowInnerScope(pis.tools)
+
+	listExpr, ok := expr.(*exprs.ListExpr)
+	if ok && listExpr.IsEmpty() {
+		return NewCollectListInnerScope(pis.tools, pis.parent, prop)
+	} else {
+		pis.parent.AddProperty(prop, expr)
+		return NewDisallowInnerScope(pis.tools)
+	}
 }
 
 func (pis *propertiesInterpreter) Completed() {

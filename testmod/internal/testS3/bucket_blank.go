@@ -13,7 +13,7 @@ func (b *BucketBlank) Find(ct *corebottom.Tools, loc *errorsink.Location, named 
 }
 
 func (b *BucketBlank) Mint(ct *corebottom.Tools, loc *errorsink.Location, named string, props map[driverbottom.Identifier]driverbottom.Expr, teardown corebottom.TearDown) any {
-	return &bucketCreator{tools: ct, loc: loc, name: named}
+	return &bucketCreator{tools: ct, loc: loc, name: named, props: props}
 }
 
 func (b *BucketBlank) Loc() *errorsink.Location {

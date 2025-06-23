@@ -12,15 +12,3 @@ func (b *ignoreInnerScope) HaveTokens(tokens []driverbottom.Token) driverbottom.
 
 func (b *ignoreInnerScope) Completed() {
 }
-
-func NewIgnoreInnerScope() driverbottom.Interpreter {
-	return &ignoreInnerScope{}
-}
-
-func NewDisallowInnerScope(tools *driverbottom.CoreTools) driverbottom.Interpreter {
-	return &disallowInnerScope{tools: tools}
-}
-
-func NewPropertiesInnerScope(tools *driverbottom.CoreTools, parent driverbottom.PropertyParent) driverbottom.Interpreter {
-	return &propertiesInterpreter{tools: tools, parent: parent}
-}

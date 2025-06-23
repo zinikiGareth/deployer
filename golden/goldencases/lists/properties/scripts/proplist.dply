@@ -1,0 +1,21 @@
+We want to be able to specify a list in a more lucid form when we are assigning it in a property.
+
+For example, we want to be able to write:
+
+.   x <- []
+.      1
+.      2
+.      3
+
+And this is then equivalent to:
+
+.   x <- [1,2,3]
+
+(Yes, I know that the latter is clearer when we are using small numbers, but the idea is to handle complex expressions well).
+
+	target proplist
+		ensure test.S3.Bucket "org.ziniki.launch_bucket"
+			@teardown preserve
+			contents <- []
+				"this is a file"
+				"this is something else"

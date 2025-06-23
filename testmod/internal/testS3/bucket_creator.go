@@ -12,9 +12,9 @@ import (
 type bucketCreator struct {
 	tools *corebottom.Tools
 
-	loc  *errorsink.Location
-	name string
-
+	loc   *errorsink.Location
+	name  string
+	props map[driverbottom.Identifier]driverbottom.Expr
 	env   *TestAwsEnv
 	cloud *BucketCloud
 }
@@ -31,6 +31,9 @@ func (b *bucketCreator) DumpTo(iw driverbottom.IndentWriter) {
 	iw.Intro("test.S3.Bucket[")
 	iw.AttrsWhere(b)
 	iw.TextAttr("named", b.name)
+	for i, e := range b.props {
+		iw.NestedAttr(i.Id(), e)
+	}
 	iw.EndAttrs()
 }
 

@@ -24,7 +24,9 @@ func (l *ListExpr) DumpTo(to driverbottom.IndentWriter) {
 }
 
 func (l *ListExpr) Resolve(r driverbottom.Resolver) {
-	panic("unimplemented")
+	for _, e := range l.exprs {
+		e.Resolve(r)
+	}
 }
 
 func (l *ListExpr) Eval(s driverbottom.RuntimeStorage) any {
@@ -35,12 +37,20 @@ func (l *ListExpr) Eval(s driverbottom.RuntimeStorage) any {
 	return ret
 }
 
+func (l *ListExpr) IsEmpty() bool {
+	return len(l.exprs) == 0
+}
+
 func (l *ListExpr) Length() int {
 	return len(l.exprs)
 }
 
 func (l *ListExpr) String() string {
 	return fmt.Sprintf("[<%d>]", len(l.exprs))
+}
+
+func NewListExpr(exprs []driverbottom.Expr) *ListExpr {
+	return &ListExpr{exprs: exprs}
 }
 
 var _ driverbottom.Expr = &ListExpr{}
