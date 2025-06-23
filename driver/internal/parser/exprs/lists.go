@@ -1,6 +1,8 @@
 package exprs
 
 import (
+	"fmt"
+
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
 )
@@ -33,8 +35,12 @@ func (l *ListExpr) Eval(s driverbottom.RuntimeStorage) any {
 	return ret
 }
 
+func (l *ListExpr) Length() int {
+	return len(l.exprs)
+}
+
 func (l *ListExpr) String() string {
-	panic("unimplemented")
+	return fmt.Sprintf("[<%d>]", len(l.exprs))
 }
 
 var _ driverbottom.Expr = &ListExpr{}

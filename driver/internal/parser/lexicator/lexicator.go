@@ -213,33 +213,35 @@ func isNumberChar(r rune) bool {
 	if unicode.IsLetter(r) {
 		return true
 	}
-	if r == 'e' || r == '+' || r == '-' || r == '.' { // floating point things
+	switch r {
+	case 'e', '+', '-', '.': // floating point things
 		return true
-	}
-	if r == 'x' { // radix things
+	case 'x': // radix things
 		return true
 	}
 	return false
 }
 
 func isSymbol(r rune) bool {
-	if r == '/' || r == '*' || r == '+' || r == '-' {
+	switch r {
+	case '/', '*', '+', '-':
 		return true
-	} else if r == '!' || r == '$' || r == '%' {
+	case '!', '$', '%':
 		return true
-	} else if r == '<' || r == '=' || r == '>' {
+	case '<', '=', '>':
 		return true
-	} else {
+	default:
 		return false
 	}
 }
 
 func isPuncChar(r rune) bool {
-	if r == '(' || r == ')' || r == '[' || r == ']' || r == '{' || r == '}' {
+	switch r {
+	case '(', ')', '[', ']', '{', '}':
 		return true
-	} else if r == ',' || r == ';' || r == ':' {
+	case ',', ';', ':':
 		return true
-	} else {
+	default:
 		return false
 	}
 }
