@@ -140,3 +140,12 @@ Then we need to bind the CNAME(s) and/or aliases that we want to use to the clou
 			@teardown delete
 			PointsTo <- (cloudfront->domainName)
 			Zone <- domain->zoneId
+
+
+For the Apex node, we can't use a CNAME so we have to use an ALIAS instead
+
+		ensure aws.Route53.ALIAS "consolidator.news"
+			@teardown delete
+			PointsTo <- (cloudfront->domainName)
+			AliasZone <- "Z2FDTNDATAQYW2" // this is lifted from the documentation
+			UpdateZone <- domain->zoneId
