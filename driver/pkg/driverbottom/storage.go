@@ -15,7 +15,7 @@ type RuntimeStorage interface {
 	SetMode(mode int)
 	IsMode(mode int) bool
 	Eval(e Expr) any
-	EvalAsStringer(e Expr) fmt.Stringer
+	EvalAsStringer(e Expr) (fmt.Stringer, bool)
 	EvalAsNumber(e Expr) AsNumber
 	DumpTo(w io.Writer)
 }

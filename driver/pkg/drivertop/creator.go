@@ -4,6 +4,7 @@ import (
 	"io"
 
 	"ziniki.org/deployer/driver/internal/impl"
+	"ziniki.org/deployer/driver/internal/parser/exprs"
 	"ziniki.org/deployer/driver/internal/parser/interpreters"
 	"ziniki.org/deployer/driver/internal/parser/lexicator"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
@@ -21,4 +22,8 @@ func MakeVar(name string) driverbottom.Holder {
 
 func MakeString(str string) driverbottom.String {
 	return lexicator.NewStringToken(nil, 0, str)
+}
+
+func NewListExpr(es []driverbottom.Expr) driverbottom.List {
+	return exprs.NewListExpr(es)
 }

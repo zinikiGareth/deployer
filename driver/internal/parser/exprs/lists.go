@@ -49,8 +49,12 @@ func (l *ListExpr) String() string {
 	return fmt.Sprintf("[<%d>]", len(l.exprs))
 }
 
-func NewListExpr(exprs []driverbottom.Expr) *ListExpr {
+func (l *ListExpr) Members() []driverbottom.Expr {
+	return l.exprs
+}
+
+func NewListExpr(exprs []driverbottom.Expr) driverbottom.List {
 	return &ListExpr{exprs: exprs}
 }
 
-var _ driverbottom.Expr = &ListExpr{}
+var _ driverbottom.List = &ListExpr{}

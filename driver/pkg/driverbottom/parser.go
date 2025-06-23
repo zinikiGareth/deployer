@@ -86,6 +86,13 @@ type Expr interface {
 	Eval(s RuntimeStorage) any
 }
 
+type List interface {
+	Expr
+	IsEmpty() bool
+	Length() int
+	Members() []Expr
+}
+
 type ExprParser interface {
 	Parse(tokens []Token) (Expr, bool)
 	ParseMultiple(tokens []Token) ([]Expr, bool)

@@ -43,7 +43,12 @@ func (pca *policyPrincipalAction) BuildModel(pres driverbottom.ValuePresenter) {
 }
 
 func (pca *policyPrincipalAction) ApplyTo(pi corebottom.PolicyEffect) {
-	pi.Principal(NewPrincipal(pca.tools.Storage.EvalAsStringer(pca.ofType).String(), pca.tools.Storage.EvalAsStringer(pca.id).String()))
+	o, ok1 := pca.tools.Storage.EvalAsStringer(pca.ofType)
+	i, ok2 := pca.tools.Storage.EvalAsStringer(pca.id)
+	if !ok1 || !ok2 {
+		panic("not ok")
+	}
+	pi.Principal(NewPrincipal(o.String(), i.String()))
 }
 
 var _ UpdatePolicyAllowAction = &policyPrincipalAction{}

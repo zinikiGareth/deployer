@@ -52,19 +52,15 @@ func (s *Storage) Eval(e driverbottom.Expr) any {
 	return e.Eval(s)
 }
 
-func (s *Storage) EvalAsStringer(e driverbottom.Expr) fmt.Stringer {
+func (s *Storage) EvalAsStringer(e driverbottom.Expr) (fmt.Stringer, bool) {
 	val := s.Eval(e)
 	str, ok := val.(string)
 	if ok {
 		return utils.AsStringer(str)
 	}
-	stok, ok := val.(driverbottom.String)
-	if ok {
-		return stok
-	}
 	stringer, ok := val.(fmt.Stringer)
 	if ok {
-		return stringer
+		return stringer, true
 	}
 	return utils.AsStringer(fmt.Sprintf("%v", val))
 }

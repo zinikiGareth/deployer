@@ -46,13 +46,16 @@ func (pca *PolicyCondAction) BuildModel(pres driverbottom.ValuePresenter) {
 }
 
 func (pca *PolicyCondAction) ApplyTo(pi corebottom.PolicyEffect) {
-	test := pca.tools.Storage.EvalAsStringer(pca.test).String()
-	left := pca.tools.Storage.EvalAsStringer(pca.left).String()
+	test, ok1 := pca.tools.Storage.EvalAsStringer(pca.test)
+	left, ok2 := pca.tools.Storage.EvalAsStringer(pca.left)
+	if !ok1 || !ok2 {
+		panic("you lose")
+	}
 	right := pca.tools.Storage.Eval(pca.right)
 	expr := map[string]any{}
-	expr[left] = right
+	expr[left.String()] = right
 	cond := map[string]any{}
-	cond[test] = expr
+	cond[test.String()] = expr
 	pi.AMore("Condition", cond)
 }
 

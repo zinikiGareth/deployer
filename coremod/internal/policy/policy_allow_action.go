@@ -67,10 +67,18 @@ func (paa *PolicyAllowAction) Attach(entry any) {
 func (paa *PolicyAllowAction) ApplyTo(doc corebottom.PolicyDocument) {
 	item := doc.Item("Allow")
 	for _, a := range paa.allowActions {
-		item.Action(paa.tools.Storage.EvalAsStringer(a).String())
+		a1, ok := paa.tools.Storage.EvalAsStringer(a)
+		if !ok {
+			panic("not a stringer")
+		}
+		item.Action(a1.String())
 	}
 	for _, r := range paa.allowResources {
-		item.Resource(paa.tools.Storage.EvalAsStringer(r).String())
+		r1, ok := paa.tools.Storage.EvalAsStringer(r)
+		if !ok {
+			panic("not a stringer")
+		}
+		item.Resource(r1.String())
 	}
 
 	for _, aa := range paa.actions {

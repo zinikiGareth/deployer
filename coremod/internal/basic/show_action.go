@@ -64,7 +64,10 @@ func (sa *ShowAction) UpdateReality() {
 		if i > 0 {
 			logger.Log(" ")
 		}
-		str := sa.tools.Storage.EvalAsStringer(e)
+		str, ok := sa.tools.Storage.EvalAsStringer(e)
+		if !ok {
+			panic("not a stringer")
+		}
 		logger.Log("%s", str)
 	}
 	logger.Log("\n")
