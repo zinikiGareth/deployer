@@ -45,6 +45,9 @@ func (ca *copyAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequi
 	return driverbottom.NO_VALUE
 }
 
+func (ca *copyAction) DetermineInitialState(pres driverbottom.ValuePresenter) {
+}
+
 func (ca *copyAction) DetermineDesiredState(pres driverbottom.ValuePresenter) {
 	if ca.tools.Reporter.HasErrors() {
 		return
@@ -77,3 +80,5 @@ func (ca *copyAction) TearDown() {
 	// should we delete or leave alone?
 	// need user to tell us
 }
+
+var _ corebottom.ModelBuilder = &copyAction{}

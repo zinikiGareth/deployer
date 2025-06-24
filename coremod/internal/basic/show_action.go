@@ -44,6 +44,9 @@ func (sa *ShowAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequi
 	return driverbottom.NO_VALUE
 }
 
+func (sa *ShowAction) DetermineInitialState(pres driverbottom.ValuePresenter) {
+}
+
 func (sa *ShowAction) DetermineDesiredState(pres driverbottom.ValuePresenter) {
 }
 
@@ -77,3 +80,5 @@ func (sa *ShowAction) TearDown() {
 	// This seems one option among several
 	sa.UpdateReality()
 }
+
+var _ corebottom.ModelBuilder = &ShowAction{}

@@ -2,6 +2,7 @@ package basic
 
 import (
 	"fmt"
+	"log"
 
 	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
@@ -114,6 +115,7 @@ func (ea *EnsureAction) Resolve(r driverbottom.Resolver) driverbottom.BindingReq
 	tmp := r.Resolve(ea.what)
 	res, ok := tmp.(corebottom.Blank)
 	if !ok {
+		log.Printf("could not make %T a Blank", tmp)
 		return driverbottom.ERROR_OCCURRED
 	}
 	for _, y := range ea.props {
@@ -123,6 +125,7 @@ func (ea *EnsureAction) Resolve(r driverbottom.Resolver) driverbottom.BindingReq
 	obj := ea.resolved.Mint(ea.tools, ea.Loc(), ea.named.Text(), ea.props, ea.teardown)
 	ens, ok := obj.(corebottom.Ensurable)
 	if !ok {
+		log.Printf("could not make %T an ensurable", obj)
 		ea.tools.Storage.Errorf(ea.loc, "the type "+ea.what.Id()+" is not ensurable")
 		return driverbottom.ERROR_OCCURRED
 	}

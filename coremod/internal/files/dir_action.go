@@ -43,6 +43,9 @@ func (da *dirAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequir
 	return driverbottom.MUST_BE_BOUND
 }
 
+func (da *dirAction) DetermineInitialState(pres driverbottom.ValuePresenter) {
+}
+
 func (da *dirAction) DetermineDesiredState(pres driverbottom.ValuePresenter) {
 	if da.tools.Reporter.HasErrors() {
 		return
@@ -88,3 +91,5 @@ func (p *PathHolder) DumpTo(iw driverbottom.IndentWriter) {
 	iw.EndAttrs()
 }
 */
+
+var _ corebottom.ModelBuilder = &dirAction{}

@@ -34,7 +34,9 @@ func (b *bucketFinder) DumpTo(iw driverbottom.IndentWriter) {
 	iw.EndAttrs()
 }
 
-// This is called during the "Prepare" phase
+func (fb *bucketFinder) DetermineInitialState(pres driverbottom.ValuePresenter) {
+}
+
 func (fb *bucketFinder) DetermineDesiredState(pres driverbottom.ValuePresenter) {
 	tmp := fb.tools.Recall.ObtainDriver("testS3.TestAwsEnv")
 	testAwsEnv, ok := tmp.(*TestAwsEnv)
@@ -70,3 +72,5 @@ func (eb *bucketFinder) ObtainDest() corebottom.FileDest {
 func (eb *bucketFinder) String() string {
 	return fmt.Sprintf("FindBucket[%s:%s]", eb.env.Region, eb.name)
 }
+
+var _ corebottom.Findable = &bucketFinder{}

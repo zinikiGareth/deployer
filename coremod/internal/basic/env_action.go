@@ -48,6 +48,8 @@ func (ea *EnvAction) DetermineInitialState(pres driverbottom.ValuePresenter) {
 }
 
 func (ea *EnvAction) DetermineDesiredState(pres driverbottom.ValuePresenter) {
+	// WRONG! UNDO!!
+	ea.DetermineInitialState(pres)
 	pres.Unchanged()
 }
 

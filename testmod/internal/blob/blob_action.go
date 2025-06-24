@@ -3,6 +3,7 @@ package blob
 import (
 	"fmt"
 
+	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
 )
@@ -81,6 +82,12 @@ func (c *createBlobAction) Resolve(r driverbottom.Resolver) driverbottom.Binding
 	return driverbottom.MUST_BE_BOUND
 }
 
+func (c *createBlobAction) DetermineInitialState(pres driverbottom.ValuePresenter) {
+	pres.NotFound()
+}
+
 func (c *createBlobAction) DetermineDesiredState(pres driverbottom.ValuePresenter) {
 	pres.Present(c.blobber)
 }
+
+var _ corebottom.ModelBuilder = &createBlobAction{}

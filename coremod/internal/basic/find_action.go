@@ -2,6 +2,7 @@ package basic
 
 import (
 	"fmt"
+	"log"
 
 	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
@@ -19,7 +20,7 @@ type FindAction struct {
 	resolved corebottom.Blank
 	named    driverbottom.String
 	props    map[driverbottom.Identifier]driverbottom.Expr
-	ens      corebottom.Findable
+	coin     corebottom.Findable
 }
 
 func (ea *FindAction) Loc() *errorsink.Location {
@@ -93,23 +94,30 @@ func (ea *FindAction) Completed() {
 }
 
 func (ea *FindAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
-	res, ok := r.Resolve(ea.what).(corebottom.Blank)
+	tmp := r.Resolve(ea.what)
+	res, ok := tmp.(corebottom.Blank)
 	if !ok {
+		log.Printf("could not make %T a Blank", tmp)
 		return driverbottom.ERROR_OCCURRED
 	}
 	ea.resolved = res
 	obj := ea.resolved.Find(ea.tools, ea.Loc(), ea.named.Text())
 	ens, ok := obj.(corebottom.Findable)
 	if !ok {
+		log.Printf("could not make %T a findable", obj)
 		ea.tools.Storage.Errorf(ea.loc, "the type "+ea.what.Id()+" is not findable")
 		return driverbottom.ERROR_OCCURRED
 	}
-	ea.ens = ens
+	ea.coin = ens
 	return driverbottom.MAY_BE_BOUND
 }
 
+func (ea *FindAction) DetermineInitialState(pres driverbottom.ValuePresenter) {
+	ea.coin.DetermineInitialState(pres)
+}
+
 func (ea *FindAction) DetermineDesiredState(pres driverbottom.ValuePresenter) {
-	ea.ens.DetermineDesiredState(pres)
+	ea.coin.DetermineDesiredState(pres)
 }
 
 func (ea *FindAction) UpdateReality() {
@@ -117,3 +125,5 @@ func (ea *FindAction) UpdateReality() {
 
 func (ea *FindAction) TearDown() {
 }
+
+var _ corebottom.ModelBuilder = &FindAction{}

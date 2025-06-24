@@ -101,6 +101,11 @@ func (t *CoreTarget) TearDown() {
 	}
 }
 
+func (d *CoreTarget) NotFound() {
+	// If I have understood the flow correctly, if you arrive here,
+	// it must be the case that binding is optional and no variable has been provided.
+}
+
 func (d *CoreTarget) Present(value any) {
 	// If I have understood the flow correctly, if you arrive here,
 	// it must be the case that binding is optional and no variable has been provided.

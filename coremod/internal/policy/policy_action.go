@@ -61,6 +61,9 @@ func (pa *PolicyAction) Resolve(r driverbottom.Resolver) driverbottom.BindingReq
 	return driverbottom.MUST_BE_BOUND
 }
 
+func (pa *PolicyAction) DetermineInitialState(pres driverbottom.ValuePresenter) {
+}
+
 func (pa *PolicyAction) DetermineDesiredState(pres driverbottom.ValuePresenter) {
 	doc := NewPolicyDocument(pa.loc)
 
@@ -70,3 +73,5 @@ func (pa *PolicyAction) DetermineDesiredState(pres driverbottom.ValuePresenter) 
 
 	pres.Present(doc)
 }
+
+var _ corebottom.ModelBuilder = &PolicyAction{}

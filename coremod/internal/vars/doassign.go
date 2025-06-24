@@ -48,6 +48,10 @@ func (d *DoAssign) ShortDescription() string {
 	return "DoAssign[" + d.assignTo.Id() + "<-" + d.action.ShortDescription() + "]"
 }
 
+func (d *DoAssign) DetermineInitialState(pres driverbottom.ValuePresenter) {
+	d.action.DetermineInitialState(d)
+}
+
 func (d *DoAssign) DetermineDesiredState(pres driverbottom.ValuePresenter) {
 	d.action.DetermineDesiredState(d)
 }
@@ -66,6 +70,9 @@ func (d *DoAssign) TearDown() {
 	}
 }
 
+func (d *DoAssign) NotFound() {
+}
+
 func (d *DoAssign) Present(value any) {
 	if d.holder == nil { // can't do anything if we didn't resolve it
 		return
@@ -81,3 +88,5 @@ func (d *DoAssign) Unchanged() {
 		d.tools.Storage.Bind(d.holder, value)
 	*/
 }
+
+var _ corebottom.ModelBuilder = &DoAssign{}

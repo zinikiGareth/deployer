@@ -37,7 +37,9 @@ func (b *bucketCreator) DumpTo(iw driverbottom.IndentWriter) {
 	iw.EndAttrs()
 }
 
-// This is called during the "Prepare" phase
+func (b *bucketCreator) DetermineInitialState(pres driverbottom.ValuePresenter) {
+}
+
 func (b *bucketCreator) DetermineDesiredState(pres driverbottom.ValuePresenter) {
 	tmp := b.tools.Recall.ObtainDriver("testS3.TestAwsEnv")
 	testAwsEnv, ok := tmp.(*TestAwsEnv)
@@ -92,3 +94,5 @@ func (eb *bucketCreator) ObtainDest() corebottom.FileDest {
 func (eb *bucketCreator) String() string {
 	return fmt.Sprintf("EnsureBucket[%s:%s]", eb.env.Region, eb.name)
 }
+
+var _ corebottom.Ensurable = &bucketCreator{}
