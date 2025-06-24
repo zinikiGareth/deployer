@@ -67,6 +67,9 @@ func (ea *AttachPolicyAction) Resolve(r driverbottom.Resolver) driverbottom.Bind
 	return driverbottom.NO_VALUE
 }
 
+func (ea *AttachPolicyAction) DetermineInitialState(pres driverbottom.ValuePresenter) {
+}
+
 func (ea *AttachPolicyAction) DetermineDesiredState(pres driverbottom.ValuePresenter) {
 	attachTo := ea.to.Eval(ea.tools.Storage)
 	policy := ea.policy.Eval(ea.tools.Storage)
@@ -90,3 +93,5 @@ func (ea *AttachPolicyAction) UpdateReality() {
 func (ea *AttachPolicyAction) TearDown() {
 	// ea.ens.TearDown()
 }
+
+var _ corebottom.ModelBuilder = &AttachPolicyAction{}
