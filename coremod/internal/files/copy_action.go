@@ -2,6 +2,7 @@ package files
 
 import (
 	"fmt"
+	"log"
 
 	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
@@ -53,6 +54,7 @@ func (ca *copyAction) BuildModel(pres driverbottom.ValuePresenter) {
 	copyFrom := ca.tools.Storage.Eval(from)
 	copyFS, ok := copyFrom.(corebottom.FileSource)
 	if !ok {
+		log.Printf("copyFrom was %T\n", copyFrom)
 		ca.tools.Reporter.At(from.Loc().Line)
 		ca.tools.Reporter.Report(from.Loc().Offset, "was not a file source")
 		return

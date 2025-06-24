@@ -2,7 +2,6 @@ package basic
 
 import (
 	"fmt"
-	"os"
 
 	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
@@ -41,18 +40,11 @@ func (sa *EnvAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequir
 }
 
 func (ea *EnvAction) BuildModel(pres driverbottom.ValuePresenter) {
-	fred, ok := ea.tools.Storage.EvalAsStringer(ea.varname)
+	fromVar, ok := ea.tools.Storage.EvalAsStringer(ea.varname)
 	if !ok {
 		panic("not a stringer")
 	}
-	str := fred.String()
-	val := os.Getenv(str)
-	if val == "" {
-		ea.tools.Reporter.At(ea.varname.Loc().Line)
-		ea.tools.Reporter.Reportf(ea.varname.Loc().Offset, "the env var %s is not set", str)
-		return
-	}
-	pres.Present(val)
+	pres.Present(NewEnvModel(ea.tools.Reporter, *ea.varname.Loc(), fromVar))
 }
 
 func (ea *EnvAction) UpdateReality() {

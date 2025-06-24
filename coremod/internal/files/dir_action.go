@@ -2,7 +2,6 @@ package files
 
 import (
 	"fmt"
-	"path/filepath"
 
 	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
@@ -13,7 +12,7 @@ type dirAction struct {
 	tools *corebottom.Tools
 	loc   *errorsink.Location
 	exprs []driverbottom.Expr
-	res   *PathHolder
+	// res   *PathHolder
 }
 
 func (da *dirAction) Loc() *errorsink.Location {
@@ -37,12 +36,10 @@ func (da *dirAction) Completed() {
 }
 
 func (da *dirAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
-	// da.resolved = make([]driverbottom.Expr, len(da.exprs))
 	for _, e := range da.exprs {
-		/*da.resolved[i] = */ e.Resolve(r)
+		e.Resolve(r)
 	}
-	da.res = &PathHolder{loc: da.loc}
-	// b.MustBind(da.res)
+	// da.res = &PathHolder{loc: da.loc}
 	return driverbottom.MUST_BE_BOUND
 }
 
@@ -50,46 +47,14 @@ func (da *dirAction) BuildModel(pres driverbottom.ValuePresenter) {
 	if da.tools.Reporter.HasErrors() {
 		return
 	}
-	var val *DirectoryPourer
-	var err error
+
+	var paths = []any{}
 	for _, e := range da.exprs {
 		v := da.tools.Storage.Eval(e)
-		if val == nil {
-			p, ok := v.(*DirectoryPourer)
-			if ok {
-				val = p
-			} else {
-				s, ok := v.(string)
-				if ok {
-					if filepath.IsAbs(s) {
-						val, err = NewDirectoryPourer(s)
-						if err != nil {
-							panic(err)
-						}
-					} else {
-						panic(fmt.Sprintf("cannot use non-abs path here: %v\n", v))
-					}
-				} else {
-					panic(fmt.Sprintf("cannot handle base path %T\n", v))
-				}
-			}
-		} else {
-			s, ok := v.(string)
-			if ok {
-				if !filepath.IsAbs(s) {
-					val, err = val.Relative(s)
-					if err != nil {
-						panic(err)
-					}
-				} else {
-					panic(fmt.Sprintf("cannot use abs path here: %v\n", v))
-				}
-			} else {
-				panic(fmt.Sprintf("cannot handle nested path %T\n", v))
-			}
-		}
+		paths = append(paths, v)
 	}
-	pres.Present(val)
+	dir := NewDirModel(paths)
+	pres.Present(dir)
 }
 
 func (ea *dirAction) UpdateReality() {
@@ -100,6 +65,7 @@ func (ea *dirAction) TearDown() {
 
 }
 
+/*
 type PathHolder struct {
 	loc  *errorsink.Location
 	path corebottom.FileSource
@@ -121,3 +87,4 @@ func (p *PathHolder) DumpTo(iw driverbottom.IndentWriter) {
 	// }
 	iw.EndAttrs()
 }
+*/
