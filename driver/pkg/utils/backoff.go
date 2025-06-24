@@ -13,6 +13,9 @@ func ExponentialBackoff(check func() bool) {
 			return
 		}
 		waitFor = min(2*waitFor, 60)
+		if waitFor == 16 {
+			waitFor = 15
+		}
 		log.Printf("waiting another %ds\n", waitFor)
 	}
 }
