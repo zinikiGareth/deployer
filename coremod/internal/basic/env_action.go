@@ -39,12 +39,16 @@ func (sa *EnvAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequir
 	return driverbottom.MUST_BE_BOUND
 }
 
-func (ea *EnvAction) DetermineDesiredState(pres driverbottom.ValuePresenter) {
+func (ea *EnvAction) DetermineInitialState(pres driverbottom.ValuePresenter) {
 	fromVar, ok := ea.tools.Storage.EvalAsStringer(ea.varname)
 	if !ok {
 		panic("not a stringer")
 	}
 	pres.Present(NewEnvModel(ea.tools.Reporter, *ea.varname.Loc(), fromVar))
+}
+
+func (ea *EnvAction) DetermineDesiredState(pres driverbottom.ValuePresenter) {
+	pres.Unchanged()
 }
 
 func (ea *EnvAction) UpdateReality() {

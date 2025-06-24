@@ -72,3 +72,12 @@ func (d *DoAssign) Present(value any) {
 	}
 	d.tools.Storage.Bind(d.holder, value)
 }
+
+func (d *DoAssign) Unchanged() {
+	/*
+		if d.holder == nil { // can't do anything if we didn't resolve it
+			return
+		}
+		d.tools.Storage.Bind(d.holder, value)
+	*/
+}

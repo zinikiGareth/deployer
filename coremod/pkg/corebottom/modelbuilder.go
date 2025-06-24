@@ -6,5 +6,6 @@ type ModelBuilder interface {
 	driverbottom.Describable
 	driverbottom.Resolvable
 
+	DetermineInitialState(pres driverbottom.ValuePresenter)
 	DetermineDesiredState(pres driverbottom.ValuePresenter)
 }

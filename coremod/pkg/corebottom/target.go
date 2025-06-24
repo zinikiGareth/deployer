@@ -10,6 +10,7 @@ type Target interface {
 	fmt.Stringer
 	driverbottom.Describable
 	driverbottom.Resolvable
+	DetermineInitialState()
 	DetermineDesiredState()
 	UpdateReality()
 	TearDown()

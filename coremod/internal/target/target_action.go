@@ -61,13 +61,20 @@ func (t *CoreTarget) DumpTo(w driverbottom.IndentWriter) {
 func (t *CoreTarget) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
 	for _, a := range t.actions {
 		binding := a.Resolve(r)
-		if binding == driverbottom.MUST_BE_BOUND {
+		switch binding {
+		case driverbottom.MUST_BE_BOUND:
 			panic("assignTo is not specified") // should be an error
-		} else if binding == driverbottom.ERROR_OCCURRED {
+		case driverbottom.ERROR_OCCURRED:
 			panic("an error occurred")
 		}
 	}
 	return driverbottom.NO_VALUE
+}
+
+func (t *CoreTarget) DetermineInitialState() {
+	for _, a := range t.actions {
+		a.DetermineInitialState(t)
+	}
 }
 
 func (t *CoreTarget) DetermineDesiredState() {
@@ -99,5 +106,11 @@ func (d *CoreTarget) Present(value any) {
 	// it must be the case that binding is optional and no variable has been provided.
 }
 
+func (d *CoreTarget) Unchanged() {
+	// If I have understood the flow correctly, if you arrive here,
+	// it must be the case that binding is optional and no variable has been provided.
+}
+
+var _ corebottom.Target = &CoreTarget{}
 var _ driverbottom.TopLevelForm = &CoreTarget{}
 var _ driverbottom.AttachResult = &CoreTarget{}
