@@ -41,7 +41,7 @@ func (ca *assertBucketAction) Resolve(r driverbottom.Resolver) driverbottom.Bind
 	return driverbottom.NO_VALUE
 }
 
-func (ca *assertBucketAction) BuildModel(pres driverbottom.ValuePresenter) {
+func (ca *assertBucketAction) DetermineDesiredState(pres driverbottom.ValuePresenter) {
 }
 
 func (ca *assertBucketAction) UpdateReality() {

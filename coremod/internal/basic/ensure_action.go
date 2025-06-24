@@ -130,8 +130,8 @@ func (ea *EnsureAction) Resolve(r driverbottom.Resolver) driverbottom.BindingReq
 	return driverbottom.MAY_BE_BOUND
 }
 
-func (ea *EnsureAction) BuildModel(pres driverbottom.ValuePresenter) {
-	ea.ens.BuildModel(pres)
+func (ea *EnsureAction) DetermineDesiredState(pres driverbottom.ValuePresenter) {
+	ea.ens.DetermineDesiredState(pres)
 }
 
 func (ea *EnsureAction) UpdateReality() {

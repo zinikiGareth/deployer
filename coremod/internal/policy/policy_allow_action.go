@@ -101,5 +101,5 @@ func (paa *PolicyAllowAction) Resolve(r driverbottom.Resolver) driverbottom.Bind
 	return driverbottom.MAY_BE_BOUND
 }
 
-func (paa *PolicyAllowAction) BuildModel(pres driverbottom.ValuePresenter) {
+func (paa *PolicyAllowAction) DetermineDesiredState(pres driverbottom.ValuePresenter) {
 }

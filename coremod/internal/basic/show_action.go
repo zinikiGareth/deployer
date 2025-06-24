@@ -44,7 +44,7 @@ func (sa *ShowAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequi
 	return driverbottom.NO_VALUE
 }
 
-func (sa *ShowAction) BuildModel(pres driverbottom.ValuePresenter) {
+func (sa *ShowAction) DetermineDesiredState(pres driverbottom.ValuePresenter) {
 }
 
 func (sa *ShowAction) UpdateReality() {

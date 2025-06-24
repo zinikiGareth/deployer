@@ -48,8 +48,8 @@ func (d *DoAssign) ShortDescription() string {
 	return "DoAssign[" + d.assignTo.Id() + "<-" + d.action.ShortDescription() + "]"
 }
 
-func (d *DoAssign) BuildModel(pres driverbottom.ValuePresenter) {
-	d.action.BuildModel(d)
+func (d *DoAssign) DetermineDesiredState(pres driverbottom.ValuePresenter) {
+	d.action.DetermineDesiredState(d)
 }
 
 func (d *DoAssign) UpdateReality() {

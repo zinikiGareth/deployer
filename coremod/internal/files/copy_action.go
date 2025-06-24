@@ -45,7 +45,7 @@ func (ca *copyAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequi
 	return driverbottom.NO_VALUE
 }
 
-func (ca *copyAction) BuildModel(pres driverbottom.ValuePresenter) {
+func (ca *copyAction) DetermineDesiredState(pres driverbottom.ValuePresenter) {
 	if ca.tools.Reporter.HasErrors() {
 		return
 	}

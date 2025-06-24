@@ -43,7 +43,7 @@ func (da *dirAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequir
 	return driverbottom.MUST_BE_BOUND
 }
 
-func (da *dirAction) BuildModel(pres driverbottom.ValuePresenter) {
+func (da *dirAction) DetermineDesiredState(pres driverbottom.ValuePresenter) {
 	if da.tools.Reporter.HasErrors() {
 		return
 	}

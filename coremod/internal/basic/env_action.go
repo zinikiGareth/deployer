@@ -39,7 +39,7 @@ func (sa *EnvAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequir
 	return driverbottom.MUST_BE_BOUND
 }
 
-func (ea *EnvAction) BuildModel(pres driverbottom.ValuePresenter) {
+func (ea *EnvAction) DetermineDesiredState(pres driverbottom.ValuePresenter) {
 	fromVar, ok := ea.tools.Storage.EvalAsStringer(ea.varname)
 	if !ok {
 		panic("not a stringer")

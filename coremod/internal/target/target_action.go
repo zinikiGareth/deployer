@@ -70,9 +70,9 @@ func (t *CoreTarget) Resolve(r driverbottom.Resolver) driverbottom.BindingRequir
 	return driverbottom.NO_VALUE
 }
 
-func (t *CoreTarget) BuildModel() {
+func (t *CoreTarget) DetermineDesiredState() {
 	for _, a := range t.actions {
-		a.BuildModel(t)
+		a.DetermineDesiredState(t)
 	}
 }
 

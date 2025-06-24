@@ -38,7 +38,7 @@ func (b *bucketCreator) DumpTo(iw driverbottom.IndentWriter) {
 }
 
 // This is called during the "Prepare" phase
-func (b *bucketCreator) BuildModel(pres driverbottom.ValuePresenter) {
+func (b *bucketCreator) DetermineDesiredState(pres driverbottom.ValuePresenter) {
 	tmp := b.tools.Recall.ObtainDriver("testS3.TestAwsEnv")
 	testAwsEnv, ok := tmp.(*TestAwsEnv)
 	if !ok {

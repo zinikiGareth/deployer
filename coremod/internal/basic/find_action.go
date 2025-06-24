@@ -108,8 +108,8 @@ func (ea *FindAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequi
 	return driverbottom.MAY_BE_BOUND
 }
 
-func (ea *FindAction) BuildModel(pres driverbottom.ValuePresenter) {
-	ea.ens.BuildModel(pres)
+func (ea *FindAction) DetermineDesiredState(pres driverbottom.ValuePresenter) {
+	ea.ens.DetermineDesiredState(pres)
 }
 
 func (ea *FindAction) UpdateReality() {

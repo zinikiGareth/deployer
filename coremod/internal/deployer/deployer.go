@@ -30,7 +30,7 @@ func (d *DeployerImpl) Deploy(targetNames ...string) error {
 	d.tools.Storage.SetMode(corebottom.BUILD_MODEL_MODE)
 	for _, t := range targets {
 		// fmt.Printf("preparing %s:\n", t.String())
-		t.BuildModel()
+		t.DetermineDesiredState()
 	}
 
 	if d.tools.Reporter.HasErrors() {

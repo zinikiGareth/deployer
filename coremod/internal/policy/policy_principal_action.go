@@ -39,7 +39,7 @@ func (pca *policyPrincipalAction) Resolve(r driverbottom.Resolver) driverbottom.
 	return driverbottom.MAY_BE_BOUND
 }
 
-func (pca *policyPrincipalAction) BuildModel(pres driverbottom.ValuePresenter) {
+func (pca *policyPrincipalAction) DetermineDesiredState(pres driverbottom.ValuePresenter) {
 }
 
 func (pca *policyPrincipalAction) ApplyTo(pi corebottom.PolicyEffect) {
