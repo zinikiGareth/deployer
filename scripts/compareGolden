@@ -18,7 +18,7 @@ if [ ! -d "$CASEDIR" ] ; then
   exit 1
 fi
 
-for i in errors repository prepare execute ; do
+for i in errors repository resolve find prepare execute ; do
   golden="$CASEDIR/$i"
   for k in `ls -1 $golden-gen` ; do 
     if [ ! -f $golden/$k ] ; then

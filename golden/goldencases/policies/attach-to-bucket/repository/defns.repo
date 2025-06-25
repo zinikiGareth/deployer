@@ -1,0 +1,86 @@
+symbol attachable_policy is bound to:
+VarHolder {
+	_where_: bucket-with-policy.dply:26.10
+	storeFor: attachable_policy
+}
+symbol bucketPolicy is bound to:
+target bucketPolicy {
+	_where_: bucket-with-policy.dply:13.7
+	actions: [
+		AssignTo {
+			_where_: bucket-with-policy.dply:17.33
+			assignTo: my_bucket
+			EnsureAction {
+				_where_: bucket-with-policy.dply:17.0
+				what: test.S3.Bucket
+				resolved: test.S3.Bucket[]
+				named: hello
+			}
+		}
+		AssignTo {
+			_where_: bucket-with-policy.dply:26.10
+			assignTo: attachable_policy
+			PolicyAction {
+				_where_: bucket-with-policy.dply:26.0
+				actions: [
+					PolicyAllowAction {
+						_where_: bucket-with-policy.dply:27.0
+						allowActions: [
+							String {
+								_where_: bucket-with-policy.dply:27.7
+								"action"
+							}
+						]
+						allowResources: [
+							String {
+								_where_: bucket-with-policy.dply:27.16
+								"resource"
+							}
+						]
+						actions: [
+							policyPrincipalAction {
+								_where_: bucket-with-policy.dply:28.0
+								type:
+									String {
+										_where_: bucket-with-policy.dply:28.11
+										"Service"
+									}
+								id:
+									String {
+										_where_: bucket-with-policy.dply:28.21
+										"cloudfront"
+									}
+							}
+						]
+					}
+				]
+			}
+		}
+		AttachPolicyAction {
+			_where_: bucket-with-policy.dply:32.0
+			to:
+				Var bucket-with-policy.dply:32.13 my_bucket {
+					_where_: bucket-with-policy.dply:32.13
+					actualVar:
+						VarHolder {
+							_where_: bucket-with-policy.dply:17.33
+							storeFor: my_bucket
+						}
+				}
+			policy:
+				Var bucket-with-policy.dply:32.23 attachable_policy {
+					_where_: bucket-with-policy.dply:32.23
+					actualVar:
+						VarHolder {
+							_where_: bucket-with-policy.dply:26.10
+							storeFor: attachable_policy
+						}
+				}
+		}
+	]
+}
+symbol my_bucket is bound to:
+VarHolder {
+	_where_: bucket-with-policy.dply:17.33
+	storeFor: my_bucket
+}

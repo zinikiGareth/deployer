@@ -1,0 +1,32 @@
+When we want to set the policy for accessing a bucket, we need to create
+the bucket, and the policy, and then "attach" the two together.
+
+(Note: I think it *may* be possible to provide a policy when creating a bucket,
+but it is also possible, as with cloudfront, that there is a cyclical dependency,
+where, cloudfront depends on the bucket, the bucket on the policy and the policy
+on the cloudfront distribution, so in practice you need to attach it later.)
+
+It's interesting that when doing this, attachPolicy internally updates the bucket
+object, which means that the bucket "value" (i.e. model) changes.  We need to make
+sure that the right thing happens at the right time.
+
+	target bucketPolicy
+
+Make sure there is a test bucket
+
+		ensure test.S3.Bucket "hello" => my_bucket
+			@teardown delete
+
+Create a policy which refers to the principal "cloudfront".
+
+In the real world, there is an intermediate step where we create a specific
+cloudfront distribution and the policy depends on that ARN.
+For completeness as a test, we should duplicate that.
+
+		policy => attachable_policy
+			allow "action" "resource"
+				principal "Service" "cloudfront"
+
+And then attach it.
+
+		attachPolicy my_bucket attachable_policy

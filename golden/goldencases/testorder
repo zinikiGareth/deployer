@@ -21,9 +21,10 @@ bucket-named-in-props
 show-string-literal
 read-env-var
 copy-files
+lists/properties
 policies/empty
 policies/allow-one
 policies/allow-condition
 policies/with-principal
 policies/additional-actions
-lists/properties
+policies/attach-to-bucket

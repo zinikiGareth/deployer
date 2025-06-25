@@ -1,0 +1,2 @@
+we need to create a bucket called hello in region us-east-1
+we need to attach policy with 1 items to bucket hello
