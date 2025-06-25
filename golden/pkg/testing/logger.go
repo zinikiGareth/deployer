@@ -9,15 +9,18 @@ import (
 )
 
 type TestStepLoggerFile struct {
-	tools        *corebottom.Tools
-	findLogFile  *os.File
-	buildLogFile *os.File
-	execLogFile  *os.File
+	tools          *corebottom.Tools
+	resolveLogFile *os.File
+	findLogFile    *os.File
+	buildLogFile   *os.File
+	execLogFile    *os.File
 }
 
 func (logger *TestStepLoggerFile) Log(format string, args ...any) {
 	var toFile *os.File
-	if logger.tools.Storage.IsMode(corebottom.DETERMINE_INITIAL_MODE) {
+	if logger.tools.Storage.IsMode(corebottom.RESOLVE_MODE) {
+		toFile = logger.resolveLogFile
+	} else if logger.tools.Storage.IsMode(corebottom.DETERMINE_INITIAL_MODE) {
 		toFile = logger.findLogFile
 	} else if logger.tools.Storage.IsMode(corebottom.DETERMINE_DESIRED_MODE) {
 		toFile = logger.buildLogFile
@@ -27,7 +30,11 @@ func (logger *TestStepLoggerFile) Log(format string, args ...any) {
 	fmt.Fprintf(toFile, format, args...)
 }
 
-func NewTestStepLogger(tools *corebottom.Tools, findFile string, prepFile string, execFile string) (testhelpers.TestStepLogger, error) {
+func NewTestStepLogger(tools *corebottom.Tools, resolveFile string, findFile string, prepFile string, execFile string) (testhelpers.TestStepLogger, error) {
+	resolve, err := os.Create(resolveFile)
+	if err != nil {
+		return nil, err
+	}
 	find, err := os.Create(findFile)
 	if err != nil {
 		return nil, err
@@ -40,5 +47,5 @@ func NewTestStepLogger(tools *corebottom.Tools, findFile string, prepFile string
 	if err != nil {
 		return nil, err
 	}
-	return &TestStepLoggerFile{tools: tools, findLogFile: find, buildLogFile: prep, execLogFile: exec}, nil
+	return &TestStepLoggerFile{tools: tools, resolveLogFile: resolve, findLogFile: find, buildLogFile: prep, execLogFile: exec}, nil
 }

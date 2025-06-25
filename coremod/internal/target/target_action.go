@@ -1,6 +1,7 @@
 package target
 
 import (
+	"fmt"
 	"log"
 	"slices"
 
@@ -59,7 +60,8 @@ func (t *CoreTarget) DumpTo(w driverbottom.IndentWriter) {
 }
 
 func (t *CoreTarget) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
-	for _, a := range t.actions {
+	for k, a := range t.actions {
+		t.tools.Storage.SetStepName(fmt.Sprintf("%s-%d", t.name, k))
 		binding := a.Resolve(r)
 		switch binding {
 		case driverbottom.MUST_BE_BOUND:
@@ -72,19 +74,22 @@ func (t *CoreTarget) Resolve(r driverbottom.Resolver) driverbottom.BindingRequir
 }
 
 func (t *CoreTarget) DetermineInitialState() {
-	for _, a := range t.actions {
+	for k, a := range t.actions {
+		t.tools.Storage.SetStepName(fmt.Sprintf("%s-%d", t.name, k))
 		a.DetermineInitialState(t)
 	}
 }
 
 func (t *CoreTarget) DetermineDesiredState() {
-	for _, a := range t.actions {
+	for k, a := range t.actions {
+		t.tools.Storage.SetStepName(fmt.Sprintf("%s-%d", t.name, k))
 		a.DetermineDesiredState(t)
 	}
 }
 
 func (t *CoreTarget) UpdateReality() {
-	for _, a := range t.actions {
+	for k, a := range t.actions {
+		t.tools.Storage.SetStepName(fmt.Sprintf("%s-%d", t.name, k))
 		amis, ok := a.(corebottom.RealityShifter)
 		if ok {
 			amis.UpdateReality()
@@ -93,7 +98,9 @@ func (t *CoreTarget) UpdateReality() {
 }
 
 func (t *CoreTarget) TearDown() {
-	for _, a := range slices.Backward(t.actions) {
+	max := len(t.actions) - 1
+	for k, a := range slices.Backward(t.actions) {
+		t.tools.Storage.SetStepName(fmt.Sprintf("%s-%d", t.name, max-k))
 		amis, ok := a.(corebottom.RealityShifter)
 		if ok {
 			amis.TearDown()

@@ -46,7 +46,7 @@ func (r *Registry) ObtainDriver(forType string) any {
 	}
 	c := r.drivers[forType]
 	if c == nil {
-		panic("there is no driver for " + forType)
+		return nil
 	}
 	im, ok := c.(driverbottom.InitMe)
 	if ok {

@@ -17,6 +17,7 @@ func EnsureDir(path string) error {
 	}
 	err = os.MkdirAll(path, 0777)
 	if err != nil {
+		log.Printf("could not create %s\n", path)
 		return err
 	}
 	return nil
@@ -32,6 +33,7 @@ func EnsureCleanDir(path string) error {
 	}
 	err = os.MkdirAll(path, 0777)
 	if err != nil {
+		log.Printf("could not create %s\n", path)
 		return err
 	}
 	return nil

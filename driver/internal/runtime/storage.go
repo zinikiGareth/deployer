@@ -4,19 +4,31 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"maps"
+	"slices"
 
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
 	"ziniki.org/deployer/driver/pkg/utils"
 )
 
+type SymbolProvenance struct {
+	to driverbottom.Identifier
+}
+
+func NewProvenance(to driverbottom.Identifier) *SymbolProvenance {
+	return &SymbolProvenance{to: to}
+}
+
 type Storage struct {
-	registry driverbottom.Recall
-	repo     driverbottom.Repository
-	sink     errorsink.ErrorSink
-	mode     int
-	drivers  map[string]any
-	runtime  map[driverbottom.Describable]any
+	registry    driverbottom.Recall
+	repo        driverbottom.Repository
+	sink        errorsink.ErrorSink
+	mode        int
+	currentStep string
+	drivers     map[string]any
+	runtime     map[driverbottom.Describable]any
+	symbols     map[string][]*SymbolProvenance
 }
 
 func (s *Storage) Bind(v driverbottom.Describable, value any) {
@@ -90,7 +102,26 @@ func (s *Storage) DumpTo(w io.Writer) {
 	}
 }
 
+func (s *Storage) SetStepName(stepName string) {
+	s.currentStep = stepName
+	log.Printf("mode %d: set step name to %s\n", s.mode, s.currentStep)
+}
+
+func (s *Storage) EnableSymbol(to driverbottom.Identifier) {
+	log.Printf("adding %s to %s\n", to.Id(), s.currentStep)
+	s.symbols[s.currentStep] = append(s.symbols[s.currentStep], NewProvenance(to))
+}
+
+func (s *Storage) ExportSymbolsTo(iw driverbottom.IndentWriter) {
+	keys := slices.Collect(maps.Keys(s.symbols))
+	slices.Sort(keys)
+	for _, k := range keys {
+		iw.Intro("Step %s", k)
+		// iw.EndAttrs()
+	}
+}
+
 func NewRuntimeStorage(registry driverbottom.Recall, repo driverbottom.Repository, sink errorsink.ErrorSink) driverbottom.RuntimeStorage {
-	ret := &Storage{sink: sink, registry: registry, repo: repo, drivers: make(map[string]any), runtime: make(map[driverbottom.Describable]any)}
+	ret := &Storage{sink: sink, registry: registry, repo: repo, drivers: make(map[string]any), runtime: make(map[driverbottom.Describable]any), symbols: make(map[string][]*SymbolProvenance)}
 	return ret
 }

@@ -18,11 +18,15 @@ type RuntimeStorage interface {
 	EvalAsStringer(e Expr) (fmt.Stringer, bool)
 	EvalAsNumber(e Expr) AsNumber
 	DumpTo(w io.Writer)
+	SetStepName(s string)
+	EnableSymbol(to Identifier)
+	ExportSymbolsTo(iw IndentWriter)
 }
 
 type AsNumber interface {
 	F64() float64
 }
+
 type InitMe interface {
 	InitMe(storage RuntimeStorage) any
 }

@@ -56,6 +56,9 @@ func (iw *indentingWriter) NestedAttr(field string, obj driverbottom.Describable
 }
 
 func (iw *indentingWriter) EndAttrs() {
+	if len(iw.levels) == 0 {
+		panic("EndAttrs called but nothing on stack")
+	}
 	if iw.levels[len(iw.levels)-1] != "A" {
 		panic("EndAttrs but top of stack was not A")
 	}

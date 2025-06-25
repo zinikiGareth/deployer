@@ -19,6 +19,7 @@ func newGoldenComparator(tracker *errors.CaseTracker, paths RunnerPaths) *golden
 
 func (gc *goldenComparator) compareAll() {
 	gc.compareDirectory(gc.errorsIn, gc.errorsOut, false)
+	gc.compareDirectory(gc.resolveIn, gc.resolveOut, true)
 	gc.compareDirectory(gc.repoIn, gc.repoOut, true)
 	gc.compareDirectory(gc.findIn, gc.findOut, true)
 	gc.compareDirectory(gc.prepIn, gc.prepOut, true)

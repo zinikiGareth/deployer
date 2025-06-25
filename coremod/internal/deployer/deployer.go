@@ -5,6 +5,7 @@ import (
 
 	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
+	"ziniki.org/deployer/driver/pkg/testhelpers"
 )
 
 type DeployerImpl struct {
@@ -17,11 +18,25 @@ func (d *DeployerImpl) ObtainTools() *corebottom.Tools {
 }
 
 func (d *DeployerImpl) Deploy(targetNames ...string) error {
+	var storer testhelpers.TestStorer
+	tmp := d.tools.Recall.ObtainDriver("testhelpers.TestStorer")
+	if tmp != nil {
+		var ok bool
+		storer, ok = tmp.(testhelpers.TestStorer)
+		if !ok {
+			panic("if present, TestStorer must be a TestStorer")
+		}
+	}
+
+	d.tools.Storage.SetMode(corebottom.RESOLVE_MODE)
 	err := d.driver.DoStuff()
 	if err != nil {
 		return err
 	}
 
+	if storer != nil {
+		d.tools.Storage.ExportSymbolsTo(storer.GetWriter(corebottom.RESOLVE_MODE))
+	}
 	targets, err := d.findTargets(targetNames...)
 	if err != nil {
 		return err

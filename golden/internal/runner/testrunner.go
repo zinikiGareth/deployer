@@ -55,6 +55,10 @@ func (r *TestRunner) Setup(modules []string) error {
 	if err != nil {
 		return err
 	}
+	err = utils.EnsureCleanDir(r.resolveOut)
+	if err != nil {
+		return err
+	}
 	err = utils.EnsureCleanDir(r.findOut)
 	if err != nil {
 		return err
@@ -79,11 +83,19 @@ func (r *TestRunner) Setup(modules []string) error {
 	}
 	r.driver.AddSymbolListener(r.symbolLsnr)
 
-	tsl, err := testing.NewTestStepLogger(r.deployer.ObtainTools(), filepath.Join(r.findOut, "steps.txt"), filepath.Join(r.prepOut, "steps.txt"), filepath.Join(r.execOut, "steps.txt"))
+	tools := r.deployer.ObtainTools()
+	tsl, err := testing.NewTestStepLogger(tools, filepath.Join(r.resolveOut, "steps.txt"), filepath.Join(r.findOut, "steps.txt"), filepath.Join(r.prepOut, "steps.txt"), filepath.Join(r.execOut, "steps.txt"))
 	if err != nil {
 		return err
 	}
-	r.deployer.ObtainTools().Register.ProvideDriver("testhelpers.TestStepLogger", tsl)
+	tools.Register.ProvideDriver("testhelpers.TestStepLogger", tsl)
+
+	ts, err := testing.NewTestStorer(tools, filepath.Join(r.resolveOut, "vars.txt"), filepath.Join(r.findOut, "vars.txt"), filepath.Join(r.prepOut, "vars.txt"), filepath.Join(r.execOut, "vars.txt"))
+	if err != nil {
+		return err
+	}
+
+	tools.Register.ProvideDriver("testhelpers.TestStorer", ts)
 
 	return r.LoadModules(modules)
 }
