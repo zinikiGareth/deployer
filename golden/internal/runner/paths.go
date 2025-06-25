@@ -15,6 +15,8 @@ type RunnerPaths struct {
 
 	repoIn    string
 	repoOut   string
+	findIn    string
+	findOut   string
 	prepIn    string
 	prepOut   string
 	execIn    string
@@ -37,6 +39,8 @@ func ConfigurePaths(root, test string) RunnerPaths {
 	outdir := filepath.Join(base, "out")
 	repoin := filepath.Join(base, "repository")
 	repoout := filepath.Join(base, "repository-gen")
+	findin := filepath.Join(base, "find")
+	findout := filepath.Join(base, "find-gen")
 	prepin := filepath.Join(base, "prepare")
 	prepout := filepath.Join(base, "prepare-gen")
 	execin := filepath.Join(base, "execute")
@@ -47,6 +51,6 @@ func ConfigurePaths(root, test string) RunnerPaths {
 	return RunnerPaths{
 		root: root, base: base, out: outdir, test: test, scripts: scripts, scopes: scopes,
 		errorsOut: errdir, errorsIn: errin, errorFile: errfile, repoIn: repoin, repoOut: repoout,
-		prepIn: prepin, prepOut: prepout, execIn: execin, execOut: execout,
+		findIn: findin, findOut: findout, prepIn: prepin, prepOut: prepout, execIn: execin, execOut: execout,
 	}
 }

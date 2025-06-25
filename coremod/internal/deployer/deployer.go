@@ -27,9 +27,13 @@ func (d *DeployerImpl) Deploy(targetNames ...string) error {
 		return err
 	}
 
-	d.tools.Storage.SetMode(corebottom.BUILD_MODEL_MODE)
+	d.tools.Storage.SetMode(corebottom.DETERMINE_INITIAL_MODE)
 	for _, t := range targets {
-		// fmt.Printf("preparing %s:\n", t.String())
+		t.DetermineInitialState()
+	}
+
+	d.tools.Storage.SetMode(corebottom.DETERMINE_DESIRED_MODE)
+	for _, t := range targets {
 		t.DetermineDesiredState()
 	}
 
@@ -38,7 +42,7 @@ func (d *DeployerImpl) Deploy(targetNames ...string) error {
 	}
 
 	if d.tools.Options.TearDown {
-		d.tools.Storage.SetMode(corebottom.UPDATE_REALITY_MODE)
+		d.tools.Storage.SetMode(corebottom.TEARDOWN_MODE)
 		for _, t := range targets {
 			// fmt.Printf("tearing down %s:\n", t)
 			t.TearDown()

@@ -9,22 +9,29 @@ import (
 )
 
 type TestStepLoggerFile struct {
-	tools    *corebottom.Tools
-	prepFile *os.File
-	execFile *os.File
+	tools        *corebottom.Tools
+	findLogFile  *os.File
+	buildLogFile *os.File
+	execLogFile  *os.File
 }
 
 func (logger *TestStepLoggerFile) Log(format string, args ...any) {
 	var toFile *os.File
-	if logger.tools.Storage.IsMode(corebottom.BUILD_MODEL_MODE) {
-		toFile = logger.prepFile
+	if logger.tools.Storage.IsMode(corebottom.DETERMINE_INITIAL_MODE) {
+		toFile = logger.findLogFile
+	} else if logger.tools.Storage.IsMode(corebottom.DETERMINE_DESIRED_MODE) {
+		toFile = logger.buildLogFile
 	} else {
-		toFile = logger.execFile
+		toFile = logger.execLogFile
 	}
 	fmt.Fprintf(toFile, format, args...)
 }
 
-func NewTestStepLogger(tools *corebottom.Tools, prepFile string, execFile string) (testhelpers.TestStepLogger, error) {
+func NewTestStepLogger(tools *corebottom.Tools, findFile string, prepFile string, execFile string) (testhelpers.TestStepLogger, error) {
+	find, err := os.Create(findFile)
+	if err != nil {
+		return nil, err
+	}
 	prep, err := os.Create(prepFile)
 	if err != nil {
 		return nil, err
@@ -33,5 +40,5 @@ func NewTestStepLogger(tools *corebottom.Tools, prepFile string, execFile string
 	if err != nil {
 		return nil, err
 	}
-	return &TestStepLoggerFile{tools: tools, prepFile: prep, execFile: exec}, nil
+	return &TestStepLoggerFile{tools: tools, findLogFile: find, buildLogFile: prep, execLogFile: exec}, nil
 }

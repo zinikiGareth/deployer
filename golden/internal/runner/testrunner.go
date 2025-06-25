@@ -55,6 +55,10 @@ func (r *TestRunner) Setup(modules []string) error {
 	if err != nil {
 		return err
 	}
+	err = utils.EnsureCleanDir(r.findOut)
+	if err != nil {
+		return err
+	}
 	err = utils.EnsureCleanDir(r.repoOut)
 	if err != nil {
 		return err
@@ -75,7 +79,7 @@ func (r *TestRunner) Setup(modules []string) error {
 	}
 	r.driver.AddSymbolListener(r.symbolLsnr)
 
-	tsl, err := testing.NewTestStepLogger(r.deployer.ObtainTools(), filepath.Join(r.prepOut, "steps.txt"), filepath.Join(r.execOut, "steps.txt"))
+	tsl, err := testing.NewTestStepLogger(r.deployer.ObtainTools(), filepath.Join(r.findOut, "steps.txt"), filepath.Join(r.prepOut, "steps.txt"), filepath.Join(r.execOut, "steps.txt"))
 	if err != nil {
 		return err
 	}

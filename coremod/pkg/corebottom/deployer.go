@@ -1,8 +1,10 @@
 package corebottom
 
 const (
-	BUILD_MODEL_MODE int = iota
+	DETERMINE_INITIAL_MODE int = iota
+	DETERMINE_DESIRED_MODE
 	UPDATE_REALITY_MODE
+	TEARDOWN_MODE
 )
 
 type Deployer interface {
