@@ -49,7 +49,7 @@ func (ca *assertBucketAction) DetermineDesiredState(pres driverbottom.ValuePrese
 
 func (ca *assertBucketAction) UpdateReality() {
 	bucketVar := ca.tools.Storage.Eval(ca.bucket)
-	bucket, ok := bucketVar.(*bucketCreator)
+	bucket, ok := bucketVar.(*bucketModel)
 	if !ok {
 		ca.tools.Reporter.At(ca.bucket.Loc().Line)
 		ca.tools.Reporter.Reportf(ca.bucket.Loc().Offset, "was not a bucket: %T", bucketVar)

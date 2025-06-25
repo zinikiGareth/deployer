@@ -10,14 +10,14 @@ import (
 )
 
 type bucketCreator struct {
-	tools *corebottom.Tools
+	tools      *corebottom.Tools
+	env        *TestAwsEnv
+	testLogger testhelpers.TestStepLogger
 
-	loc    *errorsink.Location
-	name   string
-	props  map[driverbottom.Identifier]driverbottom.Expr
-	env    *TestAwsEnv
-	cloud  *BucketCloud
-	policy corebottom.PolicyDocument
+	loc   *errorsink.Location
+	name  string
+	props map[driverbottom.Identifier]driverbottom.Expr
+	model *bucketModel
 }
 
 func (b *bucketCreator) Loc() *errorsink.Location {
@@ -39,24 +39,29 @@ func (b *bucketCreator) DumpTo(iw driverbottom.IndentWriter) {
 }
 
 func (b *bucketCreator) DetermineInitialState(pres driverbottom.ValuePresenter) {
-}
-
-func (b *bucketCreator) DetermineDesiredState(pres driverbottom.ValuePresenter) {
 	tmp := b.tools.Recall.ObtainDriver("testS3.TestAwsEnv")
 	testAwsEnv, ok := tmp.(*TestAwsEnv)
 	if !ok {
 		panic("could not cast env to TestAwsEnv")
 	}
+	b.env = testAwsEnv
 
 	tmp = b.tools.Recall.ObtainDriver("testhelpers.TestStepLogger")
 	testLogger, ok := tmp.(testhelpers.TestStepLogger)
 	if !ok {
 		panic("could not cast logger to TestStepLogger")
 	}
+	b.testLogger = testLogger
 
-	b.env = testAwsEnv
-	testLogger.Log("ensuring bucket exists action %s\n", b.String())
-	pres.Present(b)
+	testLogger.Log("looking for bucket %s\n", b.String())
+	// TODO: the test infrastructure should have the ability to have these in place
+	pres.NotFound()
+}
+
+func (b *bucketCreator) DetermineDesiredState(pres driverbottom.ValuePresenter) {
+	b.testLogger.Log("creating model for bucket %s\n", b.String())
+	b.model = &bucketModel{name: b.name, testLogger: b.testLogger}
+	pres.Present(b.model)
 }
 
 func (eb *bucketCreator) UpdateReality() {
@@ -75,7 +80,7 @@ func (eb *bucketCreator) UpdateReality() {
 		b = eb.env.CreateBucket(eb.name)
 	}
 
-	eb.cloud = b
+	eb.model.cloud = b
 }
 
 func (eb *bucketCreator) TearDown() {
@@ -88,26 +93,8 @@ func (eb *bucketCreator) TearDown() {
 	testLogger.Log("we need to delete a bucket called %s in region %s\n", eb.name, eb.env.Region)
 }
 
-func (eb *bucketCreator) ObtainDest() corebottom.FileDest {
-	return eb.cloud
-}
-
 func (eb *bucketCreator) String() string {
 	return fmt.Sprintf("EnsureBucket[%s:%s]", eb.env.Region, eb.name)
 }
 
-// TODO: this should be on the model
-func (eb *bucketCreator) Attach(doc corebottom.PolicyDocument) {
-	// TODO: this should copy the model
-	eb.policy = doc
-	tmp := eb.tools.Recall.ObtainDriver("testhelpers.TestStepLogger")
-	testLogger, ok := tmp.(testhelpers.TestStepLogger)
-	if !ok {
-		panic("could not cast logger to TestStepLogger")
-	}
-
-	testLogger.Log("we need to attach policy with %d items to bucket %s\n", len(doc.Items()), eb.name)
-}
-
 var _ corebottom.Ensurable = &bucketCreator{}
-var _ corebottom.PolicyAttacher = &bucketCreator{} // should be model

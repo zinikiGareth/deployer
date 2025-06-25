@@ -1,1 +1,1 @@
-ensuring bucket exists action EnsureBucket[us-east-1:hello]
+creating model for bucket EnsureBucket[us-east-1:hello]
