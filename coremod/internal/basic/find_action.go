@@ -101,7 +101,7 @@ func (ea *FindAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequi
 		return driverbottom.ERROR_OCCURRED
 	}
 	ea.resolved = res
-	obj := ea.resolved.Find(ea.tools, ea.Loc(), ea.named.Text())
+	obj := ea.resolved.Find(ea.tools, ea.Loc(), corebottom.CoinId(ea.tools.Storage.NewObjId(ea.named.Loc())), ea.named.Text())
 	ens, ok := obj.(corebottom.Findable)
 	if !ok {
 		log.Printf("could not make %T a findable", obj)

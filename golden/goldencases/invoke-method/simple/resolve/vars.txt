@@ -1,1 +1,2 @@
 Step showBlob-0
+	a_blob

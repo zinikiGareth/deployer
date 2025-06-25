@@ -1,1 +1,2 @@
 Step readAndShowEnvVar-0
+	var

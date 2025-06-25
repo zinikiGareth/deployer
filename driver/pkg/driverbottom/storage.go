@@ -21,6 +21,7 @@ type RuntimeStorage interface {
 	SetStepName(s string)
 	EnableSymbol(to Identifier)
 	ExportSymbolsTo(iw IndentWriter)
+	NewObjId(loc *errorsink.Location) Identifier
 }
 
 type AsNumber interface {

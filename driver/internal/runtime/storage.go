@@ -7,6 +7,7 @@ import (
 	"maps"
 	"slices"
 
+	"ziniki.org/deployer/driver/internal/parser/lexicator"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
 	"ziniki.org/deployer/driver/pkg/utils"
@@ -104,11 +105,11 @@ func (s *Storage) DumpTo(w io.Writer) {
 
 func (s *Storage) SetStepName(stepName string) {
 	s.currentStep = stepName
-	log.Printf("mode %d: set step name to %s\n", s.mode, s.currentStep)
+	// log.Printf("mode %d: set step name to %s\n", s.mode, s.currentStep)
 }
 
 func (s *Storage) EnableSymbol(to driverbottom.Identifier) {
-	log.Printf("adding %s to %s\n", to.Id(), s.currentStep)
+	// log.Printf("adding %s to %s\n", to.Id(), s.currentStep)
 	s.symbols[s.currentStep] = append(s.symbols[s.currentStep], NewProvenance(to))
 }
 
@@ -116,9 +117,22 @@ func (s *Storage) ExportSymbolsTo(iw driverbottom.IndentWriter) {
 	keys := slices.Collect(maps.Keys(s.symbols))
 	slices.Sort(keys)
 	for _, k := range keys {
-		iw.Intro("Step %s", k)
-		// iw.EndAttrs()
+		iw.Intro("Step %s\n", k)
+		iw.Indent()
+		syms := s.symbols[k]
+		for _, p := range syms {
+			iw.IndPrintf("%s\n", p.to.Id())
+		}
+		iw.UnIndent()
 	}
+}
+
+func (s *Storage) NewObjId(loc *errorsink.Location) driverbottom.Identifier {
+	l := len(s.symbols[s.currentStep])
+	kk := fmt.Sprintf("mode%d-%s-%d", s.mode, s.currentStep, l)
+	id := lexicator.NewIdentifierToken(loc.Line, loc.Offset, kk)
+	s.symbols[s.currentStep] = append(s.symbols[s.currentStep], NewProvenance(id))
+	return id
 }
 
 func NewRuntimeStorage(registry driverbottom.Recall, repo driverbottom.Repository, sink errorsink.ErrorSink) driverbottom.RuntimeStorage {

@@ -1,1 +1,5 @@
-Step bucketPolicy-0Step bucketPolicy-1
+Step bucketPolicy-0
+	mode0-bucketPolicy-0-0
+	my_bucket
+Step bucketPolicy-1
+	attachable_policy

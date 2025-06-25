@@ -1,1 +1,2 @@
 Step createAPolicyAllowingOneThing-0
+	allow_one_policy

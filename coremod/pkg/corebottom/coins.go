@@ -5,8 +5,10 @@ import (
 	"ziniki.org/deployer/driver/pkg/errorsink"
 )
 
+type CoinId driverbottom.Identifier
+
 type Blank interface {
 	ShortDescription() string
-	Find(tools *Tools, loc *errorsink.Location, named string) any
-	Mint(tools *Tools, loc *errorsink.Location, named string, props map[driverbottom.Identifier]driverbottom.Expr, teardown TearDown) any
+	Find(tools *Tools, loc *errorsink.Location, id CoinId, named string) any
+	Mint(tools *Tools, loc *errorsink.Location, id CoinId, named string, props map[driverbottom.Identifier]driverbottom.Expr, teardown TearDown) any
 }
