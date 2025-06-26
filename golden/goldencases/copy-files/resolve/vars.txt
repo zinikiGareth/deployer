@@ -1,7 +1,9 @@
 Step copyFilesToBucket-0
-	mode0-copyFilesToBucket-0-0
 	bucket
+	*copyFilesToBucket-0-0
 Step copyFilesToBucket-1
 	root
 Step copyFilesToBucket-2
 	src_dir
+Step copyFilesToBucket-3
+Step copyFilesToBucket-4

@@ -78,7 +78,6 @@ func (c *createBlobAction) DumpTo(iw driverbottom.IndentWriter) {
 
 func (c *createBlobAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
 	c.blobber = &Blobber{Locatable: c.Locatable, expr: c.expr}
-	// b.MustBind(c.blobber)
 	return driverbottom.MUST_BE_BOUND
 }
 

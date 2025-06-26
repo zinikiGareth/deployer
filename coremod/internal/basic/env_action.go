@@ -34,8 +34,6 @@ func (ea *EnvAction) Completed() {
 
 func (sa *EnvAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
 	sa.varname.Resolve(r)
-	// b.MustBind(&EnvVar{varname: sa.varname})
-	// ea.resolved = r.Resolve(ea.what)
 	return driverbottom.MUST_BE_BOUND
 }
 

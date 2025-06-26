@@ -1,2 +1,2 @@
 Step ensureABucketExists-0
-	mode0-ensureABucketExists-0-0
+	*ensureABucketExists-0-0
