@@ -132,9 +132,11 @@ func (s *Storage) ExportSymbolsTo(iw driverbottom.IndentWriter) {
 	for _, k := range keys {
 		iw.Intro("Step %s\n", k)
 		iw.Indent()
-		syms := s.symbols[k]
-		for _, p := range syms {
-			iw.IndPrintf("%s\n", p.to.Id())
+		syms := slices.Collect(maps.Keys(s.symbols[k]))
+		slices.Sort(syms)
+		for _, y := range syms {
+			// p := s.symbols[k][y]
+			iw.IndPrintf("%s\n", y)
 		}
 		iw.UnIndent()
 	}

@@ -20,7 +20,7 @@ type FindAction struct {
 	resolved corebottom.Blank
 	named    driverbottom.String
 	props    map[driverbottom.Identifier]driverbottom.Expr
-	coin     corebottom.Findable
+	coin     corebottom.FindCoin
 }
 
 func (ea *FindAction) Loc() *errorsink.Location {
@@ -102,9 +102,9 @@ func (ea *FindAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequi
 	}
 	ea.resolved = res
 	obj := ea.resolved.Find(ea.tools, ea.Loc(), corebottom.CoinId(ea.tools.Storage.NewObjId(ea.named.Loc())), ea.named.Text())
-	ens, ok := obj.(corebottom.Findable)
+	ens, ok := obj.(corebottom.FindCoin)
 	if !ok {
-		log.Printf("could not make %T a findable", obj)
+		log.Printf("could not make %T a FindCoin", obj)
 		ea.tools.Storage.Errorf(ea.loc, "the type "+ea.what.Id()+" is not findable")
 		return driverbottom.ERROR_OCCURRED
 	}
@@ -116,14 +116,4 @@ func (ea *FindAction) DetermineInitialState(pres driverbottom.ValuePresenter) {
 	ea.coin.DetermineInitialState(pres)
 }
 
-func (ea *FindAction) DetermineDesiredState(pres driverbottom.ValuePresenter) {
-	ea.coin.DetermineDesiredState(pres)
-}
-
-func (ea *FindAction) UpdateReality() {
-}
-
-func (ea *FindAction) TearDown() {
-}
-
-var _ corebottom.ModelBuilder = &FindAction{}
+var _ corebottom.Findable = &FindAction{}

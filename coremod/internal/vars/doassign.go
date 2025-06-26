@@ -9,9 +9,9 @@ import (
 )
 
 func MakeDoAssign(tools *corebottom.Tools, holder driverbottom.Describable, assignTo driverbottom.Identifier, asAny any) *DoAssign {
-	action, ok := asAny.(corebottom.ModelBuilder)
+	action, ok := asAny.(corebottom.Findable)
 	if !ok {
-		log.Fatalf("is not a model builder: %T", asAny)
+		log.Fatalf("is not a findable: %T", asAny)
 	}
 	ret := DoAssign{tools: tools, assignTo: assignTo, holder: holder, action: action}
 	return &ret
@@ -21,7 +21,7 @@ type DoAssign struct {
 	tools    *corebottom.Tools
 	assignTo driverbottom.Identifier
 	holder   driverbottom.Describable
-	action   corebottom.ModelBuilder
+	action   corebottom.Findable
 }
 
 func (d *DoAssign) Loc() *errorsink.Location {
@@ -54,7 +54,12 @@ func (d *DoAssign) DetermineInitialState(pres driverbottom.ValuePresenter) {
 }
 
 func (d *DoAssign) DetermineDesiredState(pres driverbottom.ValuePresenter) {
-	d.action.DetermineDesiredState(d)
+	mb, ok := d.action.(corebottom.ModelBuilder)
+	if !ok {
+		// should we call something on pres? such as "onlyFinder"?
+		return
+	}
+	mb.DetermineDesiredState(d)
 }
 
 func (d *DoAssign) UpdateReality() {

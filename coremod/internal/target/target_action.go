@@ -16,7 +16,7 @@ type CoreTarget struct {
 	loc   *errorsink.Location
 	name  driverbottom.SymbolName
 
-	actions []corebottom.ModelBuilder
+	actions []corebottom.Findable
 }
 
 func (cc *CoreTarget) Name() driverbottom.SymbolName {
@@ -33,9 +33,9 @@ func (a *CoreTarget) MakeAssign(holder driverbottom.Describable, assignTo driver
 }
 
 func (cc *CoreTarget) Attach(entry any) {
-	action, ok := entry.(corebottom.ModelBuilder)
+	action, ok := entry.(corebottom.Findable)
 	if !ok {
-		log.Fatalf("not a ModelBuilder: %T", entry)
+		log.Fatalf("not a Findable: %T", entry)
 	}
 	cc.actions = append(cc.actions, action)
 }
@@ -83,7 +83,10 @@ func (t *CoreTarget) DetermineInitialState() {
 func (t *CoreTarget) DetermineDesiredState() {
 	for k, a := range t.actions {
 		t.tools.Storage.SetStepName(fmt.Sprintf("%s-%d", t.name, k))
-		a.DetermineDesiredState(t)
+		mb, ok := a.(corebottom.ModelBuilder)
+		if ok {
+			mb.DetermineDesiredState(t)
+		}
 	}
 }
 

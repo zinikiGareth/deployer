@@ -15,6 +15,7 @@ type bucketCreator struct {
 	testLogger testhelpers.TestStepLogger
 
 	loc   *errorsink.Location
+	coin  driverbottom.Identifier
 	name  string
 	props map[driverbottom.Identifier]driverbottom.Expr
 	model *bucketModel
@@ -97,4 +98,5 @@ func (eb *bucketCreator) String() string {
 	return fmt.Sprintf("EnsureBucket[%s:%s]", eb.env.Region, eb.name)
 }
 
+var _ corebottom.FindCoin = &bucketCreator{}
 var _ corebottom.Ensurable = &bucketCreator{}

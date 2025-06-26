@@ -9,11 +9,11 @@ import (
 type BucketBlank struct{}
 
 func (b *BucketBlank) Find(ct *corebottom.Tools, loc *errorsink.Location, id corebottom.CoinId, named string) any {
-	return &bucketFinder{tools: ct, loc: loc, name: named}
+	return &bucketCreator{tools: ct, loc: loc, coin: id, name: named}
 }
 
 func (b *BucketBlank) Mint(ct *corebottom.Tools, loc *errorsink.Location, id corebottom.CoinId, named string, props map[driverbottom.Identifier]driverbottom.Expr, teardown corebottom.TearDown) any {
-	return &bucketCreator{tools: ct, loc: loc, name: named, props: props}
+	return &bucketCreator{tools: ct, loc: loc, coin: id, name: named, props: props}
 }
 
 func (b *BucketBlank) Loc() *errorsink.Location {
