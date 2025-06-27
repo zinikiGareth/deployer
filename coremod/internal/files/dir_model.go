@@ -5,11 +5,40 @@ import (
 	"path/filepath"
 
 	"ziniki.org/deployer/coremod/pkg/corebottom"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
+	"ziniki.org/deployer/driver/pkg/errorsink"
 )
 
 type DirModel struct {
+	loc    *errorsink.Location
 	paths  []any
 	pourer *DirectoryPourer
+}
+
+func (d *DirModel) Loc() *errorsink.Location {
+	return d.loc
+}
+
+func (d *DirModel) ShortDescription() string {
+	return "DirModel[]"
+}
+
+func (d *DirModel) DumpTo(iw driverbottom.IndentWriter) {
+	iw.Intro("DirModel")
+	iw.AttrsWhere(d)
+	for _, p := range d.paths {
+		switch p := p.(type) {
+		case string:
+			iw.TextAttr("path", p)
+		case driverbottom.Describable:
+			iw.TextAttr("path", p.ShortDescription())
+		case fmt.Stringer:
+			iw.TextAttr("path", p.String())
+		default:
+			iw.TextAttr("path", fmt.Sprintf("%T", p))
+		}
+	}
+	iw.EndAttrs()
 }
 
 func (d *DirModel) ObtainPourer() {
@@ -66,8 +95,9 @@ func (dp *DirModel) PourOut(name string, into corebottom.FileDest) {
 	dp.pourer.PourOut(name, into)
 }
 
-func NewDirModel(paths []any) *DirModel {
-	return &DirModel{paths: paths}
+func NewDirModel(loc *errorsink.Location, paths []any) *DirModel {
+	return &DirModel{loc: loc, paths: paths}
 }
 
+var _ driverbottom.Describable = &DirModel{}
 var _ corebottom.FileSource = &DirModel{}

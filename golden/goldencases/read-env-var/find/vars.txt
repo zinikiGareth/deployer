@@ -1,3 +1,5 @@
-Step readAndShowEnvVar-0
-	var
-Step readAndShowEnvVar-1
+Step readAndShowEnvVar-0:
+	var:
+		@readAndShowEnvVar-0
+			*basic.EnvModel hello world
+Step readAndShowEnvVar-1:

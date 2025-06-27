@@ -1,2 +1,2 @@
-Step createAPolicyWithANestedAction-0
-	allow_one_policy
+Step createAPolicyWithANestedAction-0:
+	allow_one_policy:
