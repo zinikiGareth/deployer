@@ -1,6 +1,2 @@
 Step createAnEmptyPolicy-0:
 	hello_world_policy:
-		@createAnEmptyPolicy-0
-			PolicyDocument[] {
-				_where_: empty-policy.dply:11.0
-			}

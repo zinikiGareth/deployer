@@ -1,12 +1,3 @@
 Step showBlob-0:
 	a_blob:
-		@showBlob-0
-			ABlobber {
-				_where_: invoke.dply:13.0
-				expr:
-					String {
-						_where_: invoke.dply:13.6
-						"hello"
-					}
-			}
 Step showBlob-1:

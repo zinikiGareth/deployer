@@ -1,6 +1,2 @@
 Step createAPolicyAllowingOneThing-0:
 	allow_one_policy:
-		@createAPolicyAllowingOneThing-0
-			PolicyDocument[] {
-				_where_: allow-one.dply:11.0
-			}

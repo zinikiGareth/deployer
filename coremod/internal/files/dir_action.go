@@ -44,9 +44,6 @@ func (da *dirAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequir
 }
 
 func (da *dirAction) DetermineInitialState(pres driverbottom.ValuePresenter) {
-}
-
-func (da *dirAction) DetermineDesiredState(pres driverbottom.ValuePresenter) {
 	if da.tools.Reporter.HasErrors() {
 		return
 	}
@@ -60,12 +57,14 @@ func (da *dirAction) DetermineDesiredState(pres driverbottom.ValuePresenter) {
 	pres.Present(dir)
 }
 
-func (ea *dirAction) UpdateReality() {
+func (da *dirAction) DetermineDesiredState(pres driverbottom.ValuePresenter) {
+	da.DetermineInitialState(pres)
+}
 
+func (ea *dirAction) UpdateReality() {
 }
 
 func (ea *dirAction) TearDown() {
-
 }
 
 var _ corebottom.ModelBuilder = &dirAction{}

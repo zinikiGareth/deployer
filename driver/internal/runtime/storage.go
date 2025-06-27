@@ -186,24 +186,23 @@ func (s *Storage) ExportSymbolsTo(iw driverbottom.IndentWriter) {
 			p := s.symbols[k][y]
 			iw.IndPrintf("%s:\n", y)
 			iw.Indent()
-			for _, v := range p.values {
-				for _, sn := range s.stepNames {
-					ps := v[sn]
-					if ps != nil {
-						iw.IndPrintf("@%s\n", sn)
-						iw.Indent()
-						switch v := ps.(type) {
-						case driverbottom.Describable:
-							v.DumpTo(iw)
-						case string:
-							iw.IndPrintf("%s\n", v)
-						case int:
-							iw.IndPrintf("%d\n", v)
-						default:
-							iw.IndPrintf("%T %v\n", v, v)
-						}
-						iw.UnIndent()
+			modeValues := p.values[s.mode]
+			for _, sn := range s.stepNames {
+				ps := modeValues[sn]
+				if ps != nil {
+					iw.IndPrintf("@%s\n", sn)
+					iw.Indent()
+					switch v := ps.(type) {
+					case driverbottom.Describable:
+						v.DumpTo(iw)
+					case string:
+						iw.IndPrintf("%s\n", v)
+					case int:
+						iw.IndPrintf("%d\n", v)
+					default:
+						iw.IndPrintf("%T %v\n", v, v)
 					}
+					iw.UnIndent()
 				}
 			}
 			iw.UnIndent()

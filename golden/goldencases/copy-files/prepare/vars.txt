@@ -11,8 +11,6 @@ Step copyFilesToBucket-1:
 	root:
 		@copyFilesToBucket-1
 			*basic.EnvModel /Users/gareth/Ziniki/Over/deployer/golden/goldencases/copy-files
-		@copyFilesToBucket-1
-			*basic.EnvModel /Users/gareth/Ziniki/Over/deployer/golden/goldencases/copy-files
 Step copyFilesToBucket-2:
 	src_dir:
 		@copyFilesToBucket-2
