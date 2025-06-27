@@ -84,7 +84,7 @@ func (ca *copyAction) basicModel() *CopyModel {
 			panic(fmt.Sprintf("dest was %T not a DestHolder", destVar))
 		}
 	}
-	return &CopyModel{Src: copyFS, Dest: dest}
+	return &CopyModel{loc: ca.loc, Src: copyFS, Dest: dest}
 }
 
 func (ca *copyAction) UpdateReality() {
