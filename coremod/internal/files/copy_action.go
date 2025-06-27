@@ -72,8 +72,7 @@ func (ca *copyAction) basicModel() *CopyModel {
 	copyFS, ok := copyFrom.(corebottom.FileSource)
 	if !ok {
 		log.Printf("copyFrom was %T\n", copyFrom)
-		ca.tools.Reporter.At(from.Loc().Line)
-		ca.tools.Reporter.Report(from.Loc().Offset, "was not a file source")
+		ca.tools.Reporter.ReportAtf(from.Loc(), "was not a file source")
 		return nil
 	}
 	destVar := ca.tools.Storage.Eval(ca.exprs[1])

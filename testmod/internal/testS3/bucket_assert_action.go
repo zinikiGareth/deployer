@@ -51,8 +51,7 @@ func (ca *assertBucketAction) UpdateReality() {
 	bucketVar := ca.tools.Storage.Eval(ca.bucket)
 	bucket, ok := bucketVar.(*bucketModel)
 	if !ok {
-		ca.tools.Reporter.At(ca.bucket.Loc().Line)
-		ca.tools.Reporter.Reportf(ca.bucket.Loc().Offset, "was not a bucket: %T", bucketVar)
+		ca.tools.Reporter.ReportAtf(ca.bucket.Loc(), "was not a bucket: %T", bucketVar)
 	}
 	// TODO: our test environment needs to create a bucket "in memory"
 	// This then needs to be able to be the destination for copy
@@ -61,8 +60,7 @@ func (ca *assertBucketAction) UpdateReality() {
 
 	for _, f := range ca.files {
 		if !bucket.cloud.HasFile(f) {
-			ca.tools.Reporter.At(ca.bucket.Loc().Line)
-			ca.tools.Reporter.Reportf(ca.bucket.Loc().Offset, "do not have the file %s", f)
+			ca.tools.Reporter.ReportAtf(ca.bucket.Loc(), "do not have the file %s", f)
 		}
 	}
 }

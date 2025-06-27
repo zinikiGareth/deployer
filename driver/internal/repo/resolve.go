@@ -36,8 +36,7 @@ func (s *Searcher) Resolve(name driverbottom.Identifier) driverbottom.Describabl
 		return ret
 	}
 	log.Printf("failed to resolve %s\n", name)
-	s.reporter.At(name.Loc().Line)
-	s.reporter.Reportf(name.Loc().Offset, "could not resolve symbol %s", name.Id())
+	s.reporter.ReportAtf(name.Loc(), "could not resolve symbol %s", name.Id())
 
 	// for k,v := range s.repo.symbols {
 	// 	log.Printf("do have %s => %v\n", k, v)

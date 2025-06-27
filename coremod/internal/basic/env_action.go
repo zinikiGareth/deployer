@@ -42,7 +42,7 @@ func (ea *EnvAction) DetermineInitialState(pres driverbottom.ValuePresenter) {
 	if !ok {
 		panic("not a stringer")
 	}
-	pres.Present(NewEnvModel(ea.tools.Reporter, *ea.varname.Loc(), fromVar))
+	pres.Present(NewEnvModel(ea.tools.Reporter, ea.varname.Loc(), fromVar))
 }
 
 func (ea *EnvAction) DetermineDesiredState(pres driverbottom.ValuePresenter) {

@@ -88,8 +88,7 @@ func (ea *FindAction) Completed() {
 		return
 	}
 	if ea.named == nil {
-		ea.tools.Reporter.At(ea.loc.Line)
-		ea.tools.Reporter.Report(ea.loc.Offset, "Find requires a name to be defined")
+		ea.tools.Reporter.ReportAtf(ea.loc, "Find requires a name to be defined")
 	}
 }
 

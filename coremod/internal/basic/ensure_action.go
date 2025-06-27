@@ -102,12 +102,10 @@ func (ea *EnsureAction) Completed() {
 		return
 	}
 	if ea.named == nil {
-		ea.tools.Reporter.At(ea.loc.Line)
-		ea.tools.Reporter.Report(ea.loc.Offset, "ensure requires a name to be defined")
+		ea.tools.Reporter.ReportAtf(ea.loc, "ensure requires a name to be defined")
 	}
 	if ea.teardown == nil {
-		ea.tools.Reporter.At(ea.loc.Line)
-		ea.tools.Reporter.Report(ea.loc.Offset, "ensure requires a teardown strategy to be declared")
+		ea.tools.Reporter.ReportAtf(ea.loc, "ensure requires a teardown strategy to be declared")
 	}
 }
 

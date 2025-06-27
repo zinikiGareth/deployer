@@ -19,6 +19,10 @@ func (r *ErrorReporter) Reportf(offset int, format string, args ...any) {
 	r.sink.Report(r.line.Location(offset), fmt.Sprintf(format, args...))
 }
 
+func (r *ErrorReporter) ReportAtf(loc *Location, format string, args ...any) {
+	r.sink.Report(loc, fmt.Sprintf(format, args...))
+}
+
 func (r *ErrorReporter) Sink() ErrorSink {
 	return r.sink
 }
