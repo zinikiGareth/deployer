@@ -10,7 +10,7 @@ Step copyFilesToBucket-2:
 		@copyFilesToBucket-2
 			DirModel {
 				_where_: copy.dply:8.0
-				path: /home/gareth/Ziniki/Over/deployer/golden/goldencases/copy-files
+				path: <HOME>/goldencases/copy-files
 				path: filesrc
 			}
 Step copyFilesToBucket-3:
