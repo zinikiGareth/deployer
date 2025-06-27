@@ -30,14 +30,25 @@ type Storage struct {
 	mode        int
 	currentStep string
 	drivers     map[string]any
-	runtime     map[driverbottom.Holder]any
-	stepNames   []string
-	symbols     map[string]map[string]*SymbolProvenance
+	// TODO: I think I want to replace this with some version from "symbols", but I'm not entirely sure I know how yet ...
+	runtime   map[driverbottom.Holder]any
+	stepNames []string
+	symbols   map[string]map[string]*SymbolProvenance
+
+	// Track the values we bind to be sure it doesn't get bound more than once
+	unique map[driverbottom.Describable]any
 }
 
 func (s *Storage) Bind(v driverbottom.Holder, value any) {
 	if v == nil || v.VarName() == nil {
 		panic("need a var")
+	}
+	desc, ok := value.(driverbottom.Describable)
+	if ok {
+		if s.unique[desc] != nil {
+			panic("duplicate")
+		}
+		s.unique[desc] = true
 	}
 	// log.Printf("binding var %s in mode %d, step %s\n", v.VarName().Id(), s.mode, s.currentStep)
 	// So I think the steps here are:
@@ -210,6 +221,6 @@ func (s *Storage) NewObjId(loc *errorsink.Location) driverbottom.Holder {
 }
 
 func NewRuntimeStorage(registry driverbottom.Recall, repo driverbottom.Repository, sink errorsink.ErrorSink) driverbottom.RuntimeStorage {
-	ret := &Storage{sink: sink, registry: registry, repo: repo, drivers: make(map[string]any), runtime: make(map[driverbottom.Holder]any), symbols: make(map[string]map[string]*SymbolProvenance)}
+	ret := &Storage{sink: sink, registry: registry, repo: repo, drivers: make(map[string]any), runtime: make(map[driverbottom.Holder]any), symbols: make(map[string]map[string]*SymbolProvenance), unique: make(map[driverbottom.Describable]any)}
 	return ret
 }
