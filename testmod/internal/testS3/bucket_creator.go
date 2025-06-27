@@ -64,7 +64,7 @@ func (b *bucketCreator) DetermineDesiredState(pres driverbottom.ValuePresenter) 
 		panic("need a coin id")
 	}
 	b.testLogger.Log("creating model for bucket %s\n", b.String())
-	b.model = &bucketModel{storage: b.tools.Storage, id: b.coin, name: b.name, testLogger: b.testLogger}
+	b.model = &bucketModel{loc: b.loc, storage: b.tools.Storage, id: b.coin, name: b.name, testLogger: b.testLogger}
 	pres.Present(b.model)
 }
 

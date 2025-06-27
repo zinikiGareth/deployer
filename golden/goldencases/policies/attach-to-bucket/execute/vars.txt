@@ -1,6 +1,15 @@
-Step bucketPolicy-0
-	*bucketPolicy-0-0
-	my_bucket
-Step bucketPolicy-1
-	attachable_policy
-Step bucketPolicy-2
+Step bucketPolicy-0:
+	*bucketPolicy-0-0:
+		@bucketPolicy-2
+			bucket {
+				_where_: bucket-with-policy.dply:17.0
+				name: hello
+				policy:
+					PolicyDocument[] {
+						_where_: bucket-with-policy.dply:26.0
+					}
+			}
+	my_bucket:
+Step bucketPolicy-1:
+	attachable_policy:
+Step bucketPolicy-2:

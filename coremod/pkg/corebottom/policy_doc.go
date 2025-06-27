@@ -1,6 +1,9 @@
 package corebottom
 
+import "ziniki.org/deployer/driver/pkg/driverbottom"
+
 type PolicyDocument interface {
+	driverbottom.Describable
 	Item(s string) PolicyEffect
 	Items() []PolicyEffect
 }

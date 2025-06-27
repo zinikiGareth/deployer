@@ -1,2 +1,2 @@
-Step createAnEmptyPolicy-0
-	hello_world_policy
+Step createAnEmptyPolicy-0:
+	hello_world_policy:

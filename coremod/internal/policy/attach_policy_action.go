@@ -43,18 +43,6 @@ func (ea *AttachPolicyAction) AddProperty(name driverbottom.Identifier, value dr
 }
 
 func (ea *AttachPolicyAction) AddAdverb(adv driverbottom.Adverb, tokens []driverbottom.Token) driverbottom.Interpreter {
-	/*
-		if adv.Name() == "teardown" {
-			if ea.teardown != nil {
-				panic("duplicate teardown")
-			}
-			if len(tokens) != 1 {
-				panic("invalid tokens")
-			}
-			ea.teardown = &MyTearDown{mode: tokens[0].(driverbottom.Identifier).Id()}
-
-		}
-	*/
 	return drivertop.NewDisallowInnerScope(ea.tools.CoreTools)
 }
 

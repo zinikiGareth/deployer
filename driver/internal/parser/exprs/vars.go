@@ -37,7 +37,12 @@ func (v *VarReference) Eval(s driverbottom.RuntimeStorage) any {
 	}
 	out = s.Read(driverbottom.SymbolName(v.id.Id()))
 	if out != nil {
-		return out
+		e, isExpr := out.(driverbottom.Expr)
+		if isExpr {
+			return e.Eval(s)
+		} else {
+			return out
+		}
 	}
 	panic(fmt.Sprintf("cannot find %v\n", v))
 }

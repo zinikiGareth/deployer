@@ -1,2 +1,2 @@
-Step proplist-0
-	*proplist-0-0
+Step proplist-0:
+	*proplist-0-0:

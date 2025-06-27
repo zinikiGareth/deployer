@@ -5,57 +5,95 @@ import (
 	"path/filepath"
 
 	"ziniki.org/deployer/coremod/pkg/corebottom"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
+	"ziniki.org/deployer/driver/pkg/errorsink"
 )
 
 type DirModel struct {
+	loc    *errorsink.Location
 	paths  []any
 	pourer *DirectoryPourer
 }
 
+func (d *DirModel) Loc() *errorsink.Location {
+	return d.loc
+}
+
+func (d *DirModel) ShortDescription() string {
+	return "DirModel[]"
+}
+
+func (d *DirModel) DumpTo(iw driverbottom.IndentWriter) {
+	iw.Intro("DirModel")
+	iw.AttrsWhere(d)
+	for _, p := range d.paths {
+		switch p := p.(type) {
+		case string:
+			iw.TextAttr("path", p)
+		case driverbottom.Describable:
+			iw.TextAttr("path", p.ShortDescription())
+		case fmt.Stringer:
+			iw.TextAttr("path", p.String())
+		default:
+			iw.TextAttr("path", fmt.Sprintf("%T", p))
+		}
+	}
+	iw.EndAttrs()
+}
+
 func (d *DirModel) ObtainPourer() {
-	var err error
+	if d.pourer != nil {
+		return
+	}
 	for _, v := range d.paths {
 		if d.pourer == nil {
-			p, ok := v.(*DirectoryPourer)
-			if ok {
+			switch p := v.(type) {
+			case *DirectoryPourer:
 				d.pourer = p
-			} else {
-				tmp, ok := v.(fmt.Stringer)
-				if ok {
-					v = tmp.String()
-				}
-				s, ok := v.(string)
-				if ok {
-					if filepath.IsAbs(s) {
-						d.pourer, err = NewDirectoryPourer(s)
-						if err != nil {
-							panic(err)
-						}
-					} else {
-						panic(fmt.Sprintf("cannot use non-abs path here: %v\n", v))
-					}
-				} else {
-					panic(fmt.Sprintf("cannot handle base path %T\n", v))
-				}
+			case fmt.Stringer:
+				d.pourer = handleBaseString(p.String())
+			case string:
+				d.pourer = handleBaseString(p)
+			default:
+				panic(fmt.Sprintf("cannot handle base path %T\n", v))
 			}
 		} else {
-			s, ok := v.(string)
-			if ok {
-				if !filepath.IsAbs(s) {
-					d.pourer, err = d.pourer.Relative(s)
-					if err != nil {
-						panic(err)
-					}
-				} else {
-					panic(fmt.Sprintf("cannot use abs path here: %v\n", v))
-				}
-			} else {
+			switch p := v.(type) {
+			case fmt.Stringer:
+				d.pourer = handleNestedString(d.pourer, p.String())
+			case string:
+				d.pourer = handleNestedString(d.pourer, p)
+			default:
 				panic(fmt.Sprintf("cannot handle nested path %T\n", v))
 			}
 		}
 	}
 }
 
+func handleBaseString(s string) *DirectoryPourer {
+	if filepath.IsAbs(s) {
+		pourer, err := NewDirectoryPourer(s)
+		if err != nil {
+			panic(err)
+		}
+		return pourer
+	} else {
+		panic(fmt.Sprintf("cannot use non-abs path here: %s\n", s))
+	}
+}
+
+func handleNestedString(dp *DirectoryPourer, s string) *DirectoryPourer {
+	if !filepath.IsAbs(s) {
+		pourer, err := dp.Relative(s)
+		if err != nil {
+			panic(err)
+		}
+		return pourer
+	} else {
+		panic(fmt.Sprintf("cannot use abs path here: %s\n", s))
+	}
+
+}
 func (dp *DirModel) PourAll(into corebottom.FileDest) {
 	dp.ObtainPourer()
 	dp.pourer.PourAll(into)
@@ -66,8 +104,13 @@ func (dp *DirModel) PourOut(name string, into corebottom.FileDest) {
 	dp.pourer.PourOut(name, into)
 }
 
-func NewDirModel(paths []any) *DirModel {
-	return &DirModel{paths: paths}
+func NewDirModel(loc *errorsink.Location, paths []any) *DirModel {
+	ret := &DirModel{loc: loc, paths: paths}
+	// TODO: this needs a little bit of care, because there could be issues with things not being resolved yet
+	// We need to trap those
+	ret.ObtainPourer() // check that the paths exist as early as possible
+	return ret
 }
 
+var _ driverbottom.Describable = &DirModel{}
 var _ corebottom.FileSource = &DirModel{}

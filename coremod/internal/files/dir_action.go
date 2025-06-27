@@ -44,9 +44,6 @@ func (da *dirAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequir
 }
 
 func (da *dirAction) DetermineInitialState(pres driverbottom.ValuePresenter) {
-}
-
-func (da *dirAction) DetermineDesiredState(pres driverbottom.ValuePresenter) {
 	if da.tools.Reporter.HasErrors() {
 		return
 	}
@@ -56,40 +53,18 @@ func (da *dirAction) DetermineDesiredState(pres driverbottom.ValuePresenter) {
 		v := da.tools.Storage.Eval(e)
 		paths = append(paths, v)
 	}
-	dir := NewDirModel(paths)
+	dir := NewDirModel(da.loc, paths)
 	pres.Present(dir)
 }
 
-func (ea *dirAction) UpdateReality() {
+func (da *dirAction) DetermineDesiredState(pres driverbottom.ValuePresenter) {
+	da.DetermineInitialState(pres)
+}
 
+func (ea *dirAction) UpdateReality() {
 }
 
 func (ea *dirAction) TearDown() {
-
 }
-
-/*
-type PathHolder struct {
-	loc  *errorsink.Location
-	path corebottom.FileSource
-}
-
-func (p *PathHolder) Loc() *errorsink.Location {
-	return p.loc
-}
-
-func (p *PathHolder) ShortDescription() string {
-	return fmt.Sprintf("PathHolder[%v]", p.path)
-}
-
-func (p *PathHolder) DumpTo(iw driverbottom.IndentWriter) {
-	iw.Intro("PathHolder")
-	iw.AttrsWhere(p)
-	// if p.path != nil {
-	// 	iw.TextAttr("path", p.path)
-	// }
-	iw.EndAttrs()
-}
-*/
 
 var _ corebottom.ModelBuilder = &dirAction{}

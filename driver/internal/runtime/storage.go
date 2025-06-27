@@ -16,11 +16,11 @@ import (
 
 type SymbolProvenance struct {
 	to     driverbottom.Identifier
-	values map[int]any
+	values map[int]map[string]any
 }
 
 func NewProvenance(to driverbottom.Identifier) *SymbolProvenance {
-	return &SymbolProvenance{to: to, values: make(map[int]any)}
+	return &SymbolProvenance{to: to, values: make(map[int]map[string]any)}
 }
 
 type Storage struct {
@@ -30,17 +30,29 @@ type Storage struct {
 	mode        int
 	currentStep string
 	drivers     map[string]any
-	runtime     map[driverbottom.Holder]any
-	stepNames   []string
-	symbols     map[string]map[string]*SymbolProvenance
+	// TODO: I think I want to replace this with some version from "symbols", but I'm not entirely sure I know how yet ...
+	runtime   map[driverbottom.Holder]any
+	stepNames []string
+	symbols   map[string]map[string]*SymbolProvenance
+
+	// Track the values we bind to be sure it doesn't get bound more than once
+	unique map[driverbottom.Describable]any
 }
 
 func (s *Storage) Bind(v driverbottom.Holder, value any) {
 	if v == nil || v.VarName() == nil {
 		panic("need a var")
 	}
+	desc, ok := value.(driverbottom.Describable)
+	if ok {
+		if s.unique[desc] != nil {
+			panic("duplicate")
+		}
+		s.unique[desc] = true
+	}
+	// log.Printf("binding var %s in mode %d, step %s\n", v.VarName().Id(), s.mode, s.currentStep)
 	// So I think the steps here are:
-	// 1. For the describable, convert it into a provenance
+	// 1. For the var, figure out the associated provenance
 	proveni := s.symbols[s.currentStep]
 	curr := proveni[v.VarName().Id()]
 	if curr == nil {
@@ -53,7 +65,10 @@ func (s *Storage) Bind(v driverbottom.Holder, value any) {
 			log.Fatalf("could not find symbol %s defined before step %s (%d)\n", v.VarName().Id(), s.currentStep, s.stepIndex())
 		}
 	}
-	curr.values[s.mode] = value
+	if curr.values[s.mode] == nil {
+		curr.values[s.mode] = make(map[string]any)
+	}
+	curr.values[s.mode][s.currentStep] = value
 	// 2. That should have some version that exists for this step in resolve or something
 	// 3. The value (in %p form) should not be anywhere in our memory, because that would be an update
 	// 4. Keep track of it ...
@@ -163,13 +178,34 @@ func (s *Storage) EnableSymbol(to driverbottom.Identifier) {
 
 func (s *Storage) ExportSymbolsTo(iw driverbottom.IndentWriter) {
 	for _, k := range s.stepNames {
-		iw.Intro("Step %s\n", k)
+		iw.Intro("Step %s:\n", k)
 		iw.Indent()
 		syms := slices.Collect(maps.Keys(s.symbols[k]))
 		slices.Sort(syms)
 		for _, y := range syms {
-			// p := s.symbols[k][y]
-			iw.IndPrintf("%s\n", y)
+			p := s.symbols[k][y]
+			iw.IndPrintf("%s:\n", y)
+			iw.Indent()
+			modeValues := p.values[s.mode]
+			for _, sn := range s.stepNames {
+				ps := modeValues[sn]
+				if ps != nil {
+					iw.IndPrintf("@%s\n", sn)
+					iw.Indent()
+					switch v := ps.(type) {
+					case driverbottom.Describable:
+						v.DumpTo(iw)
+					case string:
+						iw.IndPrintf("%s\n", v)
+					case int:
+						iw.IndPrintf("%d\n", v)
+					default:
+						iw.IndPrintf("%T %v\n", v, v)
+					}
+					iw.UnIndent()
+				}
+			}
+			iw.UnIndent()
 		}
 		iw.UnIndent()
 	}
@@ -184,6 +220,6 @@ func (s *Storage) NewObjId(loc *errorsink.Location) driverbottom.Holder {
 }
 
 func NewRuntimeStorage(registry driverbottom.Recall, repo driverbottom.Repository, sink errorsink.ErrorSink) driverbottom.RuntimeStorage {
-	ret := &Storage{sink: sink, registry: registry, repo: repo, drivers: make(map[string]any), runtime: make(map[driverbottom.Holder]any), symbols: make(map[string]map[string]*SymbolProvenance)}
+	ret := &Storage{sink: sink, registry: registry, repo: repo, drivers: make(map[string]any), runtime: make(map[driverbottom.Holder]any), symbols: make(map[string]map[string]*SymbolProvenance), unique: make(map[driverbottom.Describable]any)}
 	return ret
 }

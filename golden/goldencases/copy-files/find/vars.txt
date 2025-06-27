@@ -1,9 +1,17 @@
-Step copyFilesToBucket-0
-	*copyFilesToBucket-0-0
-	bucket
-Step copyFilesToBucket-1
-	root
-Step copyFilesToBucket-2
-	src_dir
-Step copyFilesToBucket-3
-Step copyFilesToBucket-4
+Step copyFilesToBucket-0:
+	*copyFilesToBucket-0-0:
+	bucket:
+Step copyFilesToBucket-1:
+	root:
+		@copyFilesToBucket-1
+			*basic.EnvModel /Users/gareth/Ziniki/Over/deployer/golden/goldencases/copy-files
+Step copyFilesToBucket-2:
+	src_dir:
+		@copyFilesToBucket-2
+			DirModel {
+				_where_: copy.dply:8.0
+				path: /Users/gareth/Ziniki/Over/deployer/golden/goldencases/copy-files
+				path: filesrc
+			}
+Step copyFilesToBucket-3:
+Step copyFilesToBucket-4:
