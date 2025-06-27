@@ -20,4 +20,7 @@ Step copyFilesToBucket-2:
 				path: filesrc
 			}
 Step copyFilesToBucket-3:
+	*copyFilesToBucket-3-0:
+		@copyFilesToBucket-3
+			*files.CopyModel &{0xc0000aae40 0xc0005181e0}
 Step copyFilesToBucket-4:

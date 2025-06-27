@@ -13,8 +13,7 @@ type copyAction struct {
 	tools *corebottom.Tools
 	loc   *errorsink.Location
 	exprs []driverbottom.Expr
-
-	model *CopyModel
+	coin  corebottom.CoinId
 }
 
 func (ca *copyAction) Loc() *errorsink.Location {
@@ -41,6 +40,7 @@ func (ca *copyAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequi
 	for _, e := range ca.exprs {
 		e.Resolve(r)
 	}
+	ca.coin = corebottom.CoinId(ca.tools.Storage.NewObjId(ca.loc))
 	return driverbottom.NO_VALUE
 }
 
@@ -51,13 +51,15 @@ func (ca *copyAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequi
 func (ca *copyAction) DetermineInitialState(pres driverbottom.ValuePresenter) {
 	model := ca.basicModel()
 	// TODO: add in files already in Dest
+	ca.tools.Storage.Bind(ca.coin, model)
 	pres.Present(model)
 }
 
 func (ca *copyAction) DetermineDesiredState(pres driverbottom.ValuePresenter) {
-	ca.model = ca.basicModel()
+	model := ca.basicModel()
+	ca.tools.Storage.Bind(ca.coin, model)
 	// TODO: add in files already in Src
-	pres.Present(ca.model)
+	pres.Present(model)
 }
 
 func (ca *copyAction) basicModel() *CopyModel {
@@ -86,8 +88,9 @@ func (ca *copyAction) basicModel() *CopyModel {
 }
 
 func (ca *copyAction) UpdateReality() {
-	d := ca.model.Dest.ObtainDest()
-	ca.model.Src.PourAll(d)
+	model := ca.tools.Storage.GetCoin(ca.coin, corebottom.DETERMINE_DESIRED_MODE).(*CopyModel)
+	d := model.Dest.ObtainDest()
+	model.Src.PourAll(d)
 }
 
 func (ca *copyAction) TearDown() {

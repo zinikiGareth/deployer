@@ -53,6 +53,18 @@ func (s *Storage) Bind(v driverbottom.Holder, value any) {
 	// log.Printf("binding var %s in mode %d, step %s\n", v.VarName().Id(), s.mode, s.currentStep)
 	// So I think the steps here are:
 	// 1. For the var, figure out the associated provenance
+	curr := s.findCoin(v)
+	if curr.values[s.mode] == nil {
+		curr.values[s.mode] = make(map[string]any)
+	}
+	curr.values[s.mode][s.currentStep] = value
+	// 2. That should have some version that exists for this step in resolve or something
+	// 3. The value (in %p form) should not be anywhere in our memory, because that would be an update
+	// 4. Keep track of it ...
+	s.runtime[v] = value
+}
+
+func (s *Storage) findCoin(v driverbottom.Holder) *SymbolProvenance {
 	proveni := s.symbols[s.currentStep]
 	curr := proveni[v.VarName().Id()]
 	if curr == nil {
@@ -65,14 +77,7 @@ func (s *Storage) Bind(v driverbottom.Holder, value any) {
 			log.Fatalf("could not find symbol %s defined before step %s (%d)\n", v.VarName().Id(), s.currentStep, s.stepIndex())
 		}
 	}
-	if curr.values[s.mode] == nil {
-		curr.values[s.mode] = make(map[string]any)
-	}
-	curr.values[s.mode][s.currentStep] = value
-	// 2. That should have some version that exists for this step in resolve or something
-	// 3. The value (in %p form) should not be anywhere in our memory, because that would be an update
-	// 4. Keep track of it ...
-	s.runtime[v] = value
+	return curr
 }
 
 func (s *Storage) stepIndex() int {
@@ -93,6 +98,23 @@ func (s *Storage) Get(v driverbottom.Holder) any {
 
 func (s *Storage) Read(name driverbottom.SymbolName) any {
 	return s.repo.GetDefinition(name)
+}
+
+func (s *Storage) GetCoin(coin driverbottom.Holder, mode int) any {
+	prov := s.findCoin(coin)
+	if prov == nil {
+		log.Fatalf("no coin %s\n", coin.VarName().Id())
+	}
+	val := prov.values[mode]
+	if val == nil {
+		log.Fatalf("no coin for: %s in %d\n", coin.VarName().Id(), mode)
+	}
+	for k := s.stepIndex(); k >= 0; k-- {
+		if val[s.stepNames[k]] != nil {
+			return val[s.stepNames[k]]
+		}
+	}
+	panic("no val found")
 }
 
 func (s *Storage) Errorf(loc *errorsink.Location, msg string, args ...any) {

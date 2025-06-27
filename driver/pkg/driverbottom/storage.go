@@ -11,6 +11,7 @@ type RuntimeStorage interface {
 	Bind(name Holder, value any)
 	Get(name Holder) any
 	Read(name SymbolName) any
+	GetCoin(coin Holder, mode int) any
 	Errorf(loc *errorsink.Location, msg string, args ...any)
 	SetMode(mode int)
 	IsMode(mode int) bool

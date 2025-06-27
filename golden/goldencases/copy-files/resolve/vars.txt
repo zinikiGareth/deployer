@@ -6,4 +6,5 @@ Step copyFilesToBucket-1:
 Step copyFilesToBucket-2:
 	src_dir:
 Step copyFilesToBucket-3:
+	*copyFilesToBucket-3-0:
 Step copyFilesToBucket-4:
