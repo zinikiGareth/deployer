@@ -2,7 +2,9 @@ package files
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
+	"strings"
 
 	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
@@ -24,19 +26,28 @@ func (d *DirModel) ShortDescription() string {
 }
 
 func (d *DirModel) DumpTo(iw driverbottom.IndentWriter) {
+	cwd, err := os.Getwd()
+	if err != nil {
+		cwd = ""
+	}
 	iw.Intro("DirModel")
 	iw.AttrsWhere(d)
 	for _, p := range d.paths {
+		str := ""
 		switch p := p.(type) {
 		case string:
-			iw.TextAttr("path", p)
+			str = p
 		case driverbottom.Describable:
-			iw.TextAttr("path", p.ShortDescription())
+			str = p.ShortDescription()
 		case fmt.Stringer:
-			iw.TextAttr("path", p.String())
+			str = p.String()
 		default:
-			iw.TextAttr("path", fmt.Sprintf("%T", p))
+			str = fmt.Sprintf("%T", p)
 		}
+		if cwd != "" {
+			str = strings.Replace(str, cwd, "<HOME>", -1)
+		}
+		iw.TextAttr("path", str)
 	}
 	iw.EndAttrs()
 }
