@@ -27,7 +27,7 @@ func (wat *WithAssignTo) Attach(action any) {
 	wat.container.Attach(assign)
 }
 
-func (wat *WithAssignTo) MakeAssign(holder driverbottom.Describable, assignTo driverbottom.Identifier, action any) any {
+func (wat *WithAssignTo) MakeAssign(holder driverbottom.Holder, assignTo driverbottom.Identifier, action any) any {
 	panic("I *am* the variable")
 }
 
@@ -49,3 +49,13 @@ func (v *VarHolder) DumpTo(iw driverbottom.IndentWriter) {
 func (v *VarHolder) ShortDescription() string {
 	return fmt.Sprintf("VarExpr[%s]", v.storeFor.Id())
 }
+
+func (v *VarHolder) VarName() driverbottom.Identifier {
+	return v.storeFor
+}
+
+func NewVarHolder(name driverbottom.Identifier) driverbottom.Holder {
+	return &VarHolder{storeFor: name}
+}
+
+var _ driverbottom.Holder = &VarHolder{}

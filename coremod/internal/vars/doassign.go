@@ -8,7 +8,7 @@ import (
 	"ziniki.org/deployer/driver/pkg/errorsink"
 )
 
-func MakeDoAssign(tools *corebottom.Tools, holder driverbottom.Describable, assignTo driverbottom.Identifier, asAny any) *DoAssign {
+func MakeDoAssign(tools *corebottom.Tools, holder driverbottom.Holder, assignTo driverbottom.Identifier, asAny any) *DoAssign {
 	action, ok := asAny.(corebottom.Findable)
 	if !ok {
 		log.Fatalf("is not a findable: %T", asAny)
@@ -20,7 +20,7 @@ func MakeDoAssign(tools *corebottom.Tools, holder driverbottom.Describable, assi
 type DoAssign struct {
 	tools    *corebottom.Tools
 	assignTo driverbottom.Identifier
-	holder   driverbottom.Describable
+	holder   driverbottom.Holder
 	action   corebottom.Findable
 }
 
@@ -84,15 +84,6 @@ func (d *DoAssign) Present(value any) {
 		return
 	}
 	d.tools.Storage.Bind(d.holder, value)
-}
-
-func (d *DoAssign) Unchanged() {
-	/*
-		if d.holder == nil { // can't do anything if we didn't resolve it
-			return
-		}
-		d.tools.Storage.Bind(d.holder, value)
-	*/
 }
 
 var _ corebottom.ModelBuilder = &DoAssign{}

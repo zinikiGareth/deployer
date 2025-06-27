@@ -10,17 +10,28 @@ import (
 
 type VarReference struct {
 	id        driverbottom.Identifier
-	actualVar driverbottom.Describable
+	value     driverbottom.Describable
+	actualVar driverbottom.Holder
 }
 
-func (a *VarReference) Resolve(r driverbottom.Resolver) {
-	v := r.Resolve(a.id)
-	a.actualVar = v
+func (v *VarReference) Resolve(r driverbottom.Resolver) {
+	val := r.Resolve(v.id)
+	h, ok := val.(driverbottom.Holder)
+	if ok { // it is a "real var"
+		v.actualVar = h
+	} else {
+		// it resolved to some other value, such as a constant number or string
+		v.value = h
+	}
 }
 
 func (v *VarReference) Eval(s driverbottom.RuntimeStorage) any {
+	if v.actualVar == nil {
+		// it didn't resolve to a variable but a value
+		return v.value
+	}
 	// log.Printf("Eval(vr) %s %v => %T %v\n", v.id, v, s.Get(v), s.Get(v))
-	out := s.Get(v)
+	out := s.Get(v.actualVar)
 	if out != nil {
 		return out
 	}
@@ -56,12 +67,12 @@ func (v *VarReference) Named() driverbottom.Identifier {
 	return v.id
 }
 
-func (a *VarReference) Binding() driverbottom.Describable {
-	if a.actualVar == nil {
+func (v *VarReference) Binding() driverbottom.Holder {
+	if v.actualVar == nil {
 		// panic("help!")
-		log.Fatalf("var was not resolved: %s %s\n", a.id.Id(), a.id.Loc().String())
+		log.Fatalf("var was not resolved: %s %s\n", v.id.Id(), v.id.Loc().String())
 	}
-	return a.actualVar
+	return v.actualVar
 }
 
 func VarRefer(id driverbottom.Identifier) driverbottom.Var {

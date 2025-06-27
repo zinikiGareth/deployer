@@ -7,6 +7,7 @@ import (
 	"maps"
 	"slices"
 
+	"ziniki.org/deployer/driver/internal/parser/interpreters"
 	"ziniki.org/deployer/driver/internal/parser/lexicator"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
@@ -14,11 +15,12 @@ import (
 )
 
 type SymbolProvenance struct {
-	to driverbottom.Identifier
+	to     driverbottom.Identifier
+	values map[int]any
 }
 
 func NewProvenance(to driverbottom.Identifier) *SymbolProvenance {
-	return &SymbolProvenance{to: to}
+	return &SymbolProvenance{to: to, values: make(map[int]any)}
 }
 
 type Storage struct {
@@ -28,24 +30,50 @@ type Storage struct {
 	mode        int
 	currentStep string
 	drivers     map[string]any
-	runtime     map[driverbottom.Describable]any
+	runtime     map[driverbottom.Holder]any
+	stepNames   []string
 	symbols     map[string]map[string]*SymbolProvenance
 }
 
-func (s *Storage) Bind(v driverbottom.Describable, value any) {
+func (s *Storage) Bind(v driverbottom.Holder, value any) {
+	if v == nil || v.VarName() == nil {
+		panic("need a var")
+	}
 	// So I think the steps here are:
 	// 1. For the describable, convert it into a provenance
+	proveni := s.symbols[s.currentStep]
+	curr := proveni[v.VarName().Id()]
+	if curr == nil {
+		// we need to back up the list and find it BEFORE here
+		for k := s.stepIndex(); curr == nil && k >= 0; k-- {
+			proveni = s.symbols[s.stepNames[k]]
+			curr = proveni[v.VarName().Id()]
+		}
+		if curr == nil {
+			log.Fatalf("could not find symbol %s defined before step %s (%d)\n", v.VarName().Id(), s.currentStep, s.stepIndex())
+		}
+	}
+	curr.values[s.mode] = value
 	// 2. That should have some version that exists for this step in resolve or something
 	// 3. The value (in %p form) should not be anywhere in our memory, because that would be an update
 	// 4. Keep track of it ...
 	s.runtime[v] = value
 }
 
-func (s *Storage) Get(v driverbottom.Var) any {
+func (s *Storage) stepIndex() int {
+	for k, step := range s.stepNames {
+		if step == s.currentStep {
+			return k
+		}
+	}
+	panic("did not find current step")
+}
+
+func (s *Storage) Get(v driverbottom.Holder) any {
 	// TODO: here we are looking for the "correct" version of the VAR, which must be the one that was in operation at the time in this mode
 	// I think that may be quite complicated.
 	// We also need to think about what it means to "find" and "desire" two different things.
-	return s.runtime[v.Binding()]
+	return s.runtime[v]
 }
 
 func (s *Storage) Read(name driverbottom.SymbolName) any {
@@ -62,6 +90,10 @@ func (s *Storage) SetMode(mode int) {
 
 func (s *Storage) IsMode(mode int) bool {
 	return s.mode == mode
+}
+
+func (s *Storage) CurrentMode() int {
+	return s.mode
 }
 
 func (s *Storage) Eval(e driverbottom.Expr) any {
@@ -112,7 +144,10 @@ func (s *Storage) DumpTo(w io.Writer) {
 func (s *Storage) SetStepName(stepName string) {
 	s.currentStep = stepName
 	// log.Printf("mode %d: set step name to %s\n", s.mode, s.currentStep)
-	s.symbols[s.currentStep] = make(map[string]*SymbolProvenance)
+	if s.mode == 0 {
+		s.stepNames = append(s.stepNames, s.currentStep)
+		s.symbols[s.currentStep] = make(map[string]*SymbolProvenance)
+	}
 }
 
 func (s *Storage) EnableSymbol(to driverbottom.Identifier) {
@@ -127,9 +162,7 @@ func (s *Storage) EnableSymbol(to driverbottom.Identifier) {
 }
 
 func (s *Storage) ExportSymbolsTo(iw driverbottom.IndentWriter) {
-	keys := slices.Collect(maps.Keys(s.symbols))
-	slices.Sort(keys)
-	for _, k := range keys {
+	for _, k := range s.stepNames {
 		iw.Intro("Step %s\n", k)
 		iw.Indent()
 		syms := slices.Collect(maps.Keys(s.symbols[k]))
@@ -142,15 +175,15 @@ func (s *Storage) ExportSymbolsTo(iw driverbottom.IndentWriter) {
 	}
 }
 
-func (s *Storage) NewObjId(loc *errorsink.Location) driverbottom.Identifier {
+func (s *Storage) NewObjId(loc *errorsink.Location) driverbottom.Holder {
 	l := len(s.symbols[s.currentStep])
 	kk := fmt.Sprintf("*%s-%d", s.currentStep, l)
 	id := lexicator.NewIdentifierToken(loc.Line, loc.Offset, kk)
 	s.symbols[s.currentStep][kk] = NewProvenance(id)
-	return id
+	return interpreters.NewVarHolder(id)
 }
 
 func NewRuntimeStorage(registry driverbottom.Recall, repo driverbottom.Repository, sink errorsink.ErrorSink) driverbottom.RuntimeStorage {
-	ret := &Storage{sink: sink, registry: registry, repo: repo, drivers: make(map[string]any), runtime: make(map[driverbottom.Describable]any), symbols: make(map[string]map[string]*SymbolProvenance)}
+	ret := &Storage{sink: sink, registry: registry, repo: repo, drivers: make(map[string]any), runtime: make(map[driverbottom.Holder]any), symbols: make(map[string]map[string]*SymbolProvenance)}
 	return ret
 }

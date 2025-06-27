@@ -1,0 +1,2 @@
+Step createAPolicyWithAPrincipal-0
+	allow_one_policy

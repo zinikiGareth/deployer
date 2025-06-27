@@ -35,14 +35,12 @@ func (b *BlobberNameMethod) Invoke(storage driverbottom.RuntimeStorage, obj driv
 	if len(args) > 0 {
 		panic("should not have args")
 	}
-	asVar, ok := obj.(driverbottom.Var)
-	if !ok {
-		panic("not a var")
-	}
-	blobber, ok := storage.Get(asVar).(*Blobber)
+	be := storage.Eval(obj)
+	blobber, ok := be.(*Blobber)
 	if !ok {
 		panic("not a blobber")
 	}
+
 	return blobber.expr.Eval(storage)
 }
 
@@ -89,4 +87,6 @@ func (c *createBlobAction) DetermineDesiredState(pres driverbottom.ValuePresente
 	pres.Present(c.blobber)
 }
 
+var _ driverbottom.Describable = &Blobber{}
 var _ corebottom.ModelBuilder = &createBlobAction{}
+var _ driverbottom.Method = &BlobberNameMethod{}

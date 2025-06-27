@@ -8,12 +8,13 @@ import (
 )
 
 type RuntimeStorage interface {
-	Bind(name Describable, value any)
-	Get(name Var) any
+	Bind(name Holder, value any)
+	Get(name Holder) any
 	Read(name SymbolName) any
 	Errorf(loc *errorsink.Location, msg string, args ...any)
 	SetMode(mode int)
 	IsMode(mode int) bool
+	CurrentMode() int
 	Eval(e Expr) any
 	EvalAsStringer(e Expr) (fmt.Stringer, bool)
 	EvalAsNumber(e Expr) AsNumber
@@ -21,7 +22,7 @@ type RuntimeStorage interface {
 	SetStepName(s string)
 	EnableSymbol(to Identifier)
 	ExportSymbolsTo(iw IndentWriter)
-	NewObjId(loc *errorsink.Location) Identifier
+	NewObjId(loc *errorsink.Location) Holder
 }
 
 type AsNumber interface {

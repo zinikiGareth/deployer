@@ -18,25 +18,13 @@ func (d *DeployerImpl) ObtainTools() *corebottom.Tools {
 }
 
 func (d *DeployerImpl) Deploy(targetNames ...string) error {
-	var storer testhelpers.TestStorer
-	tmp := d.tools.Recall.ObtainDriver("testhelpers.TestStorer")
-	if tmp != nil {
-		var ok bool
-		storer, ok = tmp.(testhelpers.TestStorer)
-		if !ok {
-			panic("if present, TestStorer must be a TestStorer")
-		}
-	}
-
 	d.tools.Storage.SetMode(corebottom.RESOLVE_MODE)
 	err := d.driver.DoStuff()
 	if err != nil {
 		return err
 	}
+	d.dumpCurrentSymbols()
 
-	if storer != nil {
-		d.tools.Storage.ExportSymbolsTo(storer.GetWriter(corebottom.RESOLVE_MODE))
-	}
 	targets, err := d.findTargets(targetNames...)
 	if err != nil {
 		return err
@@ -46,11 +34,13 @@ func (d *DeployerImpl) Deploy(targetNames ...string) error {
 	for _, t := range targets {
 		t.DetermineInitialState()
 	}
+	d.dumpCurrentSymbols()
 
 	d.tools.Storage.SetMode(corebottom.DETERMINE_DESIRED_MODE)
 	for _, t := range targets {
 		t.DetermineDesiredState()
 	}
+	d.dumpCurrentSymbols()
 
 	if d.tools.Reporter.HasErrors() {
 		return fmt.Errorf("errors building model ... NOT UPDATING REALITY")
@@ -62,15 +52,34 @@ func (d *DeployerImpl) Deploy(targetNames ...string) error {
 			// fmt.Printf("tearing down %s:\n", t)
 			t.TearDown()
 		}
+		d.dumpCurrentSymbols()
 	} else {
 		d.tools.Storage.SetMode(corebottom.UPDATE_REALITY_MODE)
 		for _, t := range targets {
 			// fmt.Printf("executing %s:\n", t)
 			t.UpdateReality()
 		}
+		d.dumpCurrentSymbols()
 	}
 
 	return nil
+}
+
+func (d *DeployerImpl) dumpCurrentSymbols() {
+	var storer testhelpers.TestStorer
+	tmp := d.tools.Recall.ObtainDriver("testhelpers.TestStorer")
+	if tmp != nil {
+		var ok bool
+		storer, ok = tmp.(testhelpers.TestStorer)
+		if !ok {
+			panic("if present, TestStorer must be a TestStorer")
+		}
+	}
+
+	mode := d.tools.Storage.CurrentMode()
+	if storer != nil {
+		d.tools.Storage.ExportSymbolsTo(storer.GetWriter(mode))
+	}
 }
 
 func (d *DeployerImpl) findTargets(names ...string) ([]corebottom.Target, error) {

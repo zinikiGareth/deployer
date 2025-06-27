@@ -15,7 +15,7 @@ type bucketCreator struct {
 	testLogger testhelpers.TestStepLogger
 
 	loc   *errorsink.Location
-	coin  driverbottom.Identifier
+	coin  driverbottom.Holder
 	name  string
 	props map[driverbottom.Identifier]driverbottom.Expr
 	model *bucketModel
@@ -60,8 +60,11 @@ func (b *bucketCreator) DetermineInitialState(pres driverbottom.ValuePresenter) 
 }
 
 func (b *bucketCreator) DetermineDesiredState(pres driverbottom.ValuePresenter) {
+	if b.coin == nil {
+		panic("need a coin id")
+	}
 	b.testLogger.Log("creating model for bucket %s\n", b.String())
-	b.model = &bucketModel{name: b.name, testLogger: b.testLogger}
+	b.model = &bucketModel{storage: b.tools.Storage, id: b.coin, name: b.name, testLogger: b.testLogger}
 	pres.Present(b.model)
 }
 

@@ -3,11 +3,12 @@ package driverbottom
 type Var interface {
 	Expr
 	Named() Identifier
-	Binding() Describable
+	Binding() Holder
 }
 
 type Holder interface {
 	Describable
+	VarName() Identifier
 }
 
 type AttacherCreator interface {

@@ -27,7 +27,7 @@ func (cc *CoreTarget) String() string {
 	return string(cc.name)
 }
 
-func (a *CoreTarget) MakeAssign(holder driverbottom.Describable, assignTo driverbottom.Identifier, action any) any {
+func (a *CoreTarget) MakeAssign(holder driverbottom.Holder, assignTo driverbottom.Identifier, action any) any {
 	ret := vars.MakeDoAssign(a.tools, holder, assignTo, action)
 	return ret
 }

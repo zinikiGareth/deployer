@@ -46,7 +46,9 @@ func (ea *EnvAction) DetermineInitialState(pres driverbottom.ValuePresenter) {
 }
 
 func (ea *EnvAction) DetermineDesiredState(pres driverbottom.ValuePresenter) {
-	pres.Unchanged()
+	// For this specific case, we want the desired model to be *exactly the same* as the discovered model
+	// but our presenter doesn't want to have the same pointer, so generate it again.
+	ea.DetermineInitialState(pres)
 }
 
 func (ea *EnvAction) UpdateReality() {

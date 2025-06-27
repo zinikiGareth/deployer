@@ -55,7 +55,7 @@ func (paa *PolicyAllowAction) ShortDescription() string {
 func (paa *PolicyAllowAction) Completed() {
 }
 
-func (paa *PolicyAllowAction) MakeAssign(holder driverbottom.Describable, assignTo driverbottom.Identifier, action any) any {
+func (paa *PolicyAllowAction) MakeAssign(holder driverbottom.Holder, assignTo driverbottom.Identifier, action any) any {
 	ret := vars.MakeDoAssign(paa.tools, holder, assignTo, action)
 	return ret
 }

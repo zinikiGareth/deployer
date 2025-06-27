@@ -19,7 +19,7 @@ type PolicyAction struct {
 	actions []PolicyRuleAction
 }
 
-func (pa *PolicyAction) MakeAssign(holder driverbottom.Describable, assignTo driverbottom.Identifier, action any) any {
+func (pa *PolicyAction) MakeAssign(holder driverbottom.Holder, assignTo driverbottom.Identifier, action any) any {
 	ret := vars.MakeDoAssign(pa.tools, holder, assignTo, action)
 	return ret
 }

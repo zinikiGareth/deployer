@@ -1,6 +1,8 @@
 package testS3
 
 import (
+	"log"
+
 	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
@@ -9,10 +11,15 @@ import (
 type BucketBlank struct{}
 
 func (b *BucketBlank) Find(ct *corebottom.Tools, loc *errorsink.Location, id corebottom.CoinId, named string) any {
+	log.Printf("find coin id = %s\n", id)
 	return &bucketCreator{tools: ct, loc: loc, coin: id, name: named}
 }
 
 func (b *BucketBlank) Mint(ct *corebottom.Tools, loc *errorsink.Location, id corebottom.CoinId, named string, props map[driverbottom.Identifier]driverbottom.Expr, teardown corebottom.TearDown) any {
+	log.Printf("mint coin id = %s\n", id.VarName().Id())
+	if id == nil || id.VarName() == nil {
+		panic("nil coin id")
+	}
 	return &bucketCreator{tools: ct, loc: loc, coin: id, name: named, props: props}
 }
 
