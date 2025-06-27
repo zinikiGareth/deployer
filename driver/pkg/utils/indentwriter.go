@@ -46,13 +46,17 @@ func (iw *indentingWriter) EndList() {
 
 func (iw *indentingWriter) NestedAttr(field string, obj driverbottom.Describable) {
 	iw.showIndent()
-	iw.Printf("%s:\n", field)
-	iw.levels = append(iw.levels, "N")
-	obj.DumpTo(iw)
-	if iw.levels[len(iw.levels)-1] != "N" {
-		panic("EndNested but top of stack was not L")
+	if obj == nil {
+		iw.Printf("%s: <nil>\n", field)
+	} else {
+		iw.Printf("%s:\n", field)
+		iw.levels = append(iw.levels, "N")
+		obj.DumpTo(iw)
+		if iw.levels[len(iw.levels)-1] != "N" {
+			panic("EndNested but top of stack was not L")
+		}
+		iw.levels = iw.levels[0 : len(iw.levels)-1]
 	}
-	iw.levels = iw.levels[0 : len(iw.levels)-1]
 }
 
 func (iw *indentingWriter) EndAttrs() {

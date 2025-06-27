@@ -39,8 +39,9 @@ func (s *Storage) Bind(v driverbottom.Holder, value any) {
 	if v == nil || v.VarName() == nil {
 		panic("need a var")
 	}
+	// log.Printf("binding var %s in mode %d, step %s\n", v.VarName().Id(), s.mode, s.currentStep)
 	// So I think the steps here are:
-	// 1. For the describable, convert it into a provenance
+	// 1. For the var, figure out the associated provenance
 	proveni := s.symbols[s.currentStep]
 	curr := proveni[v.VarName().Id()]
 	if curr == nil {

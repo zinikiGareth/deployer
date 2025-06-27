@@ -5,6 +5,7 @@ Step bucketPolicy-0:
 			bucket {
 				_where_: bucket-with-policy.dply:17.0
 				name: hello
+				policy: <nil>
 			}
 Step bucketPolicy-1:
 	attachable_policy:

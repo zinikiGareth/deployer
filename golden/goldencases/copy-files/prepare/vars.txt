@@ -5,6 +5,7 @@ Step copyFilesToBucket-0:
 			bucket {
 				_where_: copy.dply:5.0
 				name: org.ziniki.launch_bucket
+				policy: <nil>
 			}
 Step copyFilesToBucket-1:
 	root:
