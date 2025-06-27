@@ -14,8 +14,7 @@ type copyAction struct {
 	loc   *errorsink.Location
 	exprs []driverbottom.Expr
 
-	Src  corebottom.FileSource
-	Dest corebottom.DestHolder
+	model *CopyModel
 }
 
 func (ca *copyAction) Loc() *errorsink.Location {
@@ -45,12 +44,25 @@ func (ca *copyAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequi
 	return driverbottom.NO_VALUE
 }
 
+// TODO: I think the intent here should be that there IS a model, and that the model reflects the destination contents.
+// THUS, initial state should go and find what is there (name, date, length)
+// AND desired state should be what is in the source location (name, date, length)
+
 func (ca *copyAction) DetermineInitialState(pres driverbottom.ValuePresenter) {
+	model := ca.basicModel()
+	// TODO: add in files already in Dest
+	pres.Present(model)
 }
 
 func (ca *copyAction) DetermineDesiredState(pres driverbottom.ValuePresenter) {
+	ca.model = ca.basicModel()
+	// TODO: add in files already in Src
+	pres.Present(ca.model)
+}
+
+func (ca *copyAction) basicModel() *CopyModel {
 	if ca.tools.Reporter.HasErrors() {
-		return
+		return nil
 	}
 
 	from := ca.exprs[0]
@@ -60,20 +72,22 @@ func (ca *copyAction) DetermineDesiredState(pres driverbottom.ValuePresenter) {
 		log.Printf("copyFrom was %T\n", copyFrom)
 		ca.tools.Reporter.At(from.Loc().Line)
 		ca.tools.Reporter.Report(from.Loc().Offset, "was not a file source")
-		return
+		return nil
 	}
-	ca.Src = copyFS
 	destVar := ca.tools.Storage.Eval(ca.exprs[1])
-	dest, ok := destVar.(corebottom.DestHolder)
-	if !ok {
-		panic(fmt.Sprintf("dest was %T not a DestHolder", destVar))
+	var dest corebottom.DestHolder
+	if destVar != nil {
+		dest, ok = destVar.(corebottom.DestHolder)
+		if !ok {
+			panic(fmt.Sprintf("dest was %T not a DestHolder", destVar))
+		}
 	}
-	ca.Dest = dest
+	return &CopyModel{Src: copyFS, Dest: dest}
 }
 
 func (ca *copyAction) UpdateReality() {
-	d := ca.Dest.ObtainDest()
-	ca.Src.PourAll(d)
+	d := ca.model.Dest.ObtainDest()
+	ca.model.Src.PourAll(d)
 }
 
 func (ca *copyAction) TearDown() {

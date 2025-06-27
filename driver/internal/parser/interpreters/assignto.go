@@ -54,8 +54,20 @@ func (v *VarHolder) VarName() driverbottom.Identifier {
 	return v.storeFor
 }
 
+func (v *VarHolder) Resolve(r driverbottom.Resolver) {
+}
+
+func (v *VarHolder) Eval(s driverbottom.RuntimeStorage) any {
+	return s.Get(v)
+}
+
+func (v *VarHolder) String() string {
+	return v.ShortDescription()
+}
+
 func NewVarHolder(name driverbottom.Identifier) driverbottom.Holder {
 	return &VarHolder{storeFor: name}
 }
 
 var _ driverbottom.Holder = &VarHolder{}
+var _ driverbottom.Expr = &VarHolder{}
