@@ -45,7 +45,7 @@ func (s *Storage) Bind(v driverbottom.Holder, value any) {
 	}
 	desc, ok := value.(driverbottom.Describable)
 	if ok {
-		if s.unique[desc] != nil {
+		if s.unique[desc] == true {
 			panic("duplicate")
 		}
 		s.unique[desc] = true
@@ -62,6 +62,13 @@ func (s *Storage) Bind(v driverbottom.Holder, value any) {
 	// 3. The value (in %p form) should not be anywhere in our memory, because that would be an update
 	// 4. Keep track of it ...
 	s.runtime[v] = value
+}
+
+func (s *Storage) IgnoreDuplicate(value any) {
+	desc, ok := value.(driverbottom.Describable)
+	if ok {
+		s.unique[desc] = false
+	}
 }
 
 func (s *Storage) findCoin(v driverbottom.Holder) *SymbolProvenance {
@@ -107,7 +114,8 @@ func (s *Storage) GetCoin(coin driverbottom.Holder, mode int) any {
 	}
 	val := prov.values[mode]
 	if val == nil {
-		log.Fatalf("no coin for: %s in %d\n", coin.VarName().Id(), mode)
+		log.Printf("no coin for: %s in mode %d\n", coin.VarName().Id(), mode)
+		return nil
 	}
 	for k := s.stepIndex(); k >= 0; k-- {
 		if val[s.stepNames[k]] != nil {

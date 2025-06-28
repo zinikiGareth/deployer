@@ -48,14 +48,14 @@ func (ca *copyAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequi
 // THUS, initial state should go and find what is there (name, date, length)
 // AND desired state should be what is in the source location (name, date, length)
 
-func (ca *copyAction) DetermineInitialState(pres driverbottom.ValuePresenter) {
+func (ca *copyAction) DetermineInitialState(pres corebottom.ValuePresenter) {
 	model := ca.basicModel()
 	// TODO: add in files already in Dest
 	ca.tools.Storage.Bind(ca.coin, model)
 	pres.Present(model)
 }
 
-func (ca *copyAction) DetermineDesiredState(pres driverbottom.ValuePresenter) {
+func (ca *copyAction) DetermineDesiredState(pres corebottom.ValuePresenter) {
 	model := ca.basicModel()
 	ca.tools.Storage.Bind(ca.coin, model)
 	// TODO: add in files already in Src

@@ -131,12 +131,12 @@ func (ea *EnsureAction) Resolve(r driverbottom.Resolver) driverbottom.BindingReq
 	return driverbottom.MAY_BE_BOUND
 }
 
-func (ea *EnsureAction) DetermineInitialState(pres driverbottom.ValuePresenter) {
-	ea.ens.DetermineInitialState(pres)
+func (ea *EnsureAction) DetermineInitialState(pres corebottom.ValuePresenter) {
+	ea.ens.DetermineInitialState(NewCoinPresenter(ea.tools.Storage, ea.ens.CoinId(), pres))
 }
 
-func (ea *EnsureAction) DetermineDesiredState(pres driverbottom.ValuePresenter) {
-	ea.ens.DetermineDesiredState(pres)
+func (ea *EnsureAction) DetermineDesiredState(pres corebottom.ValuePresenter) {
+	ea.ens.DetermineDesiredState(NewCoinPresenter(ea.tools.Storage, ea.ens.CoinId(), pres))
 }
 
 func (ea *EnsureAction) UpdateReality() {

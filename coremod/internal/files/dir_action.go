@@ -43,7 +43,7 @@ func (da *dirAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequir
 	return driverbottom.MUST_BE_BOUND
 }
 
-func (da *dirAction) DetermineInitialState(pres driverbottom.ValuePresenter) {
+func (da *dirAction) DetermineInitialState(pres corebottom.ValuePresenter) {
 	if da.tools.Reporter.HasErrors() {
 		return
 	}
@@ -57,7 +57,7 @@ func (da *dirAction) DetermineInitialState(pres driverbottom.ValuePresenter) {
 	pres.Present(dir)
 }
 
-func (da *dirAction) DetermineDesiredState(pres driverbottom.ValuePresenter) {
+func (da *dirAction) DetermineDesiredState(pres corebottom.ValuePresenter) {
 	da.DetermineInitialState(pres)
 }
 

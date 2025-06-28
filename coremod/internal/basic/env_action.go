@@ -37,7 +37,7 @@ func (sa *EnvAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequir
 	return driverbottom.MUST_BE_BOUND
 }
 
-func (ea *EnvAction) DetermineInitialState(pres driverbottom.ValuePresenter) {
+func (ea *EnvAction) DetermineInitialState(pres corebottom.ValuePresenter) {
 	fromVar, ok := ea.tools.Storage.EvalAsStringer(ea.varname)
 	if !ok {
 		panic("not a stringer")
@@ -45,7 +45,7 @@ func (ea *EnvAction) DetermineInitialState(pres driverbottom.ValuePresenter) {
 	pres.Present(NewEnvModel(ea.tools.Reporter, ea.varname.Loc(), fromVar))
 }
 
-func (ea *EnvAction) DetermineDesiredState(pres driverbottom.ValuePresenter) {
+func (ea *EnvAction) DetermineDesiredState(pres corebottom.ValuePresenter) {
 	// For this specific case, we want the desired model to be *exactly the same* as the discovered model
 	// but our presenter doesn't want to have the same pointer, so generate it again.
 	ea.DetermineInitialState(pres)

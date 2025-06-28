@@ -1,5 +1,11 @@
 Step ensureABucketExists-0:
 	*ensureABucketExists-0-0:
+		@ensureABucketExists-0
+			bucket {
+				_where_: bucket.dply:4.0
+				name: org.ziniki.launch_bucket
+				policy: <nil>
+			}
 	launch_bucket:
 		@ensureABucketExists-0
 			bucket {

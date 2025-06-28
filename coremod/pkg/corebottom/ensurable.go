@@ -2,14 +2,19 @@ package corebottom
 
 import "ziniki.org/deployer/driver/pkg/driverbottom"
 
-type FindCoin interface {
+type HasCoin interface {
 	driverbottom.Describable
-	DetermineInitialState(pres driverbottom.ValuePresenter)
+	CoinId() CoinId
+}
+
+type FindCoin interface {
+	HasCoin
+	DetermineInitialState(pres ValuePresenter)
 }
 
 type Ensurable interface {
 	FindCoin
-	DetermineDesiredState(pres driverbottom.ValuePresenter)
+	DetermineDesiredState(pres ValuePresenter)
 	UpdateReality()
 	TearDown()
 }

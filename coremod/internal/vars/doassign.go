@@ -49,11 +49,11 @@ func (d *DoAssign) ShortDescription() string {
 	return "DoAssign[" + d.assignTo.Id() + "<-" + d.action.ShortDescription() + "]"
 }
 
-func (d *DoAssign) DetermineInitialState(pres driverbottom.ValuePresenter) {
+func (d *DoAssign) DetermineInitialState(pres corebottom.ValuePresenter) {
 	d.action.DetermineInitialState(d)
 }
 
-func (d *DoAssign) DetermineDesiredState(pres driverbottom.ValuePresenter) {
+func (d *DoAssign) DetermineDesiredState(pres corebottom.ValuePresenter) {
 	mb, ok := d.action.(corebottom.ModelBuilder)
 	if !ok {
 		// should we call something on pres? such as "onlyFinder"?

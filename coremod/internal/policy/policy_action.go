@@ -61,10 +61,10 @@ func (pa *PolicyAction) Resolve(r driverbottom.Resolver) driverbottom.BindingReq
 	return driverbottom.MUST_BE_BOUND
 }
 
-func (pa *PolicyAction) DetermineInitialState(pres driverbottom.ValuePresenter) {
+func (pa *PolicyAction) DetermineInitialState(pres corebottom.ValuePresenter) {
 }
 
-func (pa *PolicyAction) DetermineDesiredState(pres driverbottom.ValuePresenter) {
+func (pa *PolicyAction) DetermineDesiredState(pres corebottom.ValuePresenter) {
 	doc := NewPolicyDocument(pa.loc)
 
 	for _, a := range pa.actions {

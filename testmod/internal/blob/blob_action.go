@@ -79,11 +79,11 @@ func (c *createBlobAction) Resolve(r driverbottom.Resolver) driverbottom.Binding
 	return driverbottom.MUST_BE_BOUND
 }
 
-func (c *createBlobAction) DetermineInitialState(pres driverbottom.ValuePresenter) {
+func (c *createBlobAction) DetermineInitialState(pres corebottom.ValuePresenter) {
 	pres.NotFound()
 }
 
-func (c *createBlobAction) DetermineDesiredState(pres driverbottom.ValuePresenter) {
+func (c *createBlobAction) DetermineDesiredState(pres corebottom.ValuePresenter) {
 	pres.Present(c.blobber)
 }
 

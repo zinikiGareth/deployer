@@ -6,5 +6,5 @@ type ModelBuilder interface {
 	driverbottom.Describable
 	Findable
 
-	DetermineDesiredState(pres driverbottom.ValuePresenter)
+	DetermineDesiredState(pres ValuePresenter)
 }

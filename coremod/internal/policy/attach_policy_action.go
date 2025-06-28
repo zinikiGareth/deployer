@@ -55,10 +55,10 @@ func (ea *AttachPolicyAction) Resolve(r driverbottom.Resolver) driverbottom.Bind
 	return driverbottom.NO_VALUE
 }
 
-func (ea *AttachPolicyAction) DetermineInitialState(pres driverbottom.ValuePresenter) {
+func (ea *AttachPolicyAction) DetermineInitialState(pres corebottom.ValuePresenter) {
 }
 
-func (ea *AttachPolicyAction) DetermineDesiredState(pres driverbottom.ValuePresenter) {
+func (ea *AttachPolicyAction) DetermineDesiredState(pres corebottom.ValuePresenter) {
 	attachTo := ea.to.Eval(ea.tools.Storage)
 	policy := ea.policy.Eval(ea.tools.Storage)
 

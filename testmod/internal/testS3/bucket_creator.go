@@ -39,7 +39,11 @@ func (b *bucketCreator) DumpTo(iw driverbottom.IndentWriter) {
 	iw.EndAttrs()
 }
 
-func (b *bucketCreator) DetermineInitialState(pres driverbottom.ValuePresenter) {
+func (b *bucketCreator) CoinId() corebottom.CoinId {
+	return b.coin
+}
+
+func (b *bucketCreator) DetermineInitialState(pres corebottom.ValuePresenter) {
 	tmp := b.tools.Recall.ObtainDriver("testS3.TestAwsEnv")
 	testAwsEnv, ok := tmp.(*TestAwsEnv)
 	if !ok {
@@ -59,7 +63,7 @@ func (b *bucketCreator) DetermineInitialState(pres driverbottom.ValuePresenter) 
 	pres.NotFound()
 }
 
-func (b *bucketCreator) DetermineDesiredState(pres driverbottom.ValuePresenter) {
+func (b *bucketCreator) DetermineDesiredState(pres corebottom.ValuePresenter) {
 	if b.coin == nil {
 		panic("need a coin id")
 	}

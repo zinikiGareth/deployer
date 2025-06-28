@@ -10,6 +10,7 @@ import (
 type RuntimeStorage interface {
 	Bind(name Holder, value any)
 	Get(name Holder) any
+	IgnoreDuplicate(value any)
 	Read(name SymbolName) any
 	GetCoin(coin Holder, mode int) any
 	Errorf(loc *errorsink.Location, msg string, args ...any)

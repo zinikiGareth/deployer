@@ -6,5 +6,5 @@ type Findable interface {
 	driverbottom.Describable
 	driverbottom.Resolvable
 
-	DetermineInitialState(pres driverbottom.ValuePresenter)
+	DetermineInitialState(pres ValuePresenter)
 }

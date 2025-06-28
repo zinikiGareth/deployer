@@ -111,7 +111,7 @@ func (ea *FindAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequi
 	return driverbottom.MAY_BE_BOUND
 }
 
-func (ea *FindAction) DetermineInitialState(pres driverbottom.ValuePresenter) {
+func (ea *FindAction) DetermineInitialState(pres corebottom.ValuePresenter) {
 	ea.coin.DetermineInitialState(pres)
 }
 

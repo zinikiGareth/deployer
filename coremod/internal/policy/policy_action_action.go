@@ -44,10 +44,10 @@ func (pca *policyAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRe
 	return driverbottom.MAY_BE_BOUND
 }
 
-func (pca *policyAction) DetermineInitialState(pres driverbottom.ValuePresenter) {
+func (pca *policyAction) DetermineInitialState(pres corebottom.ValuePresenter) {
 }
 
-func (pca *policyAction) DetermineDesiredState(pres driverbottom.ValuePresenter) {
+func (pca *policyAction) DetermineDesiredState(pres corebottom.ValuePresenter) {
 }
 
 func (pca *policyAction) ApplyTo(pi corebottom.PolicyEffect) {

@@ -44,10 +44,10 @@ func (sa *ShowAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequi
 	return driverbottom.NO_VALUE
 }
 
-func (sa *ShowAction) DetermineInitialState(pres driverbottom.ValuePresenter) {
+func (sa *ShowAction) DetermineInitialState(pres corebottom.ValuePresenter) {
 }
 
-func (sa *ShowAction) DetermineDesiredState(pres driverbottom.ValuePresenter) {
+func (sa *ShowAction) DetermineDesiredState(pres corebottom.ValuePresenter) {
 }
 
 func (sa *ShowAction) UpdateReality() {
