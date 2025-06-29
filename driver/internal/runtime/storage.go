@@ -116,18 +116,18 @@ func (s *Storage) Read(name driverbottom.SymbolName) any {
 }
 
 func (s *Storage) GetCoin(coin driverbottom.Holder, mode int) any {
-	recent := false
+	// recent := false
 	if mode == driverbottom.CURRENT_MODE {
 		mode = s.CurrentMode()
-		recent = true
+		// recent = true
 	}
 	prov := s.findCoin(coin)
 	if prov == nil {
 		log.Fatalf("no coin %s\n", coin.VarName().Id())
 	}
-	if recent {
-		log.Printf("found provenance %v\n", prov)
-	}
+	// if recent {
+	// 	log.Printf("found provenance %v\n", prov)
+	// }
 	val := prov.values[mode]
 	if val == nil {
 		log.Printf("no coin found for: %s in mode %d; returning nil\n", coin.VarName().Id(), mode)
@@ -146,7 +146,7 @@ func (s *Storage) GetCoinFrom(coin driverbottom.Holder, modes []int) any {
 	if prov == nil {
 		log.Fatalf("no coin %s\n", coin.VarName().Id())
 	}
-	log.Printf("found provenance %v\n", prov)
+	// log.Printf("found provenance %v\n", prov)
 	for _, mode := range modes {
 		val := prov.values[mode]
 		if val == nil {
