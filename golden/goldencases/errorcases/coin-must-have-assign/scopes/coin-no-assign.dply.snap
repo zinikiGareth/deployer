@@ -1,0 +1,12 @@
+>Coins exist in memory only.  As such, they must be assigned to a variable so they can be used later.
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
+>
+>Thus it is an error to just created one
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
+>
+>    target mustAssignCoin
+#^^^^ source.deployer-dply
+#    ^^^^^^ source.deployer-dply keyword.target
+#          ^^^^^^^^^^^^^^^^ source.deployer-dply
+>        coin test.S3.Configuration "fred"
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply

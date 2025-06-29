@@ -1,0 +1,2 @@
+  6.0   a value expression must be bound to a variable
+  ==> coin test.S3.Configuration "fred"

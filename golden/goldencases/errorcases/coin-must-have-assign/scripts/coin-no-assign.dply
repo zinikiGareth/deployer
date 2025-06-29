@@ -1,0 +1,6 @@
+Coins exist in memory only.  As such, they must be assigned to a variable so they can be used later.
+
+Thus it is an error to just created one
+
+    target mustAssignCoin
+        coin test.S3.Configuration "fred"

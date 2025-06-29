@@ -1,0 +1,18 @@
+It is possible to have coins that (for one reason or another) aren't directly associated with infrastructure.
+
+Policies and roles are possible examples of this, but they have their own mechanisms (qv)
+
+Other things are connectors and configurations which exist in memory for a little while before being attached to something else.
+
+They cannot be found on their own initiative, although there is a sense in which you can "find" them when you find something they are attached to.
+
+In the AWS world, they do NOT have identity; but we need that here, so we insist on them being reliably named.
+
+We use the verb "coin" to introduce these, as opposed to find or ensure.
+
+Because they are "just" values, they must be assigned to variables.
+
+    target makeCoin
+        coin test.S3.Configuration "my-config" => s3_config
+            Pattern <- "*.cfg"
+            Access <- "None"

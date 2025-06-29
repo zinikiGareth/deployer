@@ -1,0 +1,12 @@
+symbol mustAssignCoin is bound to:
+target mustAssignCoin {
+	_where_: coin-no-assign.dply:5.7
+	actions: [
+		MemoryCoinAction {
+			_where_: coin-no-assign.dply:6.0
+			what: test.S3.Configuration
+			resolved: test.S3.Configuration[]
+			named: fred
+		}
+	]
+}

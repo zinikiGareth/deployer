@@ -11,6 +11,7 @@ errorcases/ensure-needs-teardown
 errorcases/ensure-only-one-name
 errorcases/find-no-such-class
 errorcases/find-cannot-have-teardown
+errorcases/coin-must-have-assign
 invoke-method/simple
 lists/simple
 ensure-bucket
@@ -18,6 +19,7 @@ teardown-bucket
 find-bucket
 saved-bucket
 bucket-named-in-props
+memorycoin
 show-string-literal
 read-env-var
 copy-files

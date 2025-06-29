@@ -84,7 +84,7 @@ this is in fact a much more powerful and general mechanism.
 And to make it clear that we are only doing this for HTML files, this RHP is associated with a custom cache policy
 for files ending in "*.html"
 
-		ensure aws.CloudFront.CacheBehavior "customize-html-headers" => cb
+		coin aws.CloudFront.CacheBehavior "customize-html-headers" => cb
 			@teardown delete
 			CachePolicy <- cp->id
 			PathPattern <- "*.html"

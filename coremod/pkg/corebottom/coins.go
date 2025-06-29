@@ -12,3 +12,8 @@ type Blank interface {
 	Find(tools *Tools, loc *errorsink.Location, id CoinId, named string) any
 	Mint(tools *Tools, loc *errorsink.Location, id CoinId, named string, props map[driverbottom.Identifier]driverbottom.Expr, teardown TearDown) any
 }
+
+type MemoryCoin interface {
+	ShortDescription() string
+	Mint(tools *Tools, loc *errorsink.Location, id CoinId, named string, props map[driverbottom.Identifier]driverbottom.Expr) any
+}

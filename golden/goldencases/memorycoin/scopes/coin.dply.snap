@@ -1,0 +1,31 @@
+>It is possible to have coins that (for one reason or another) aren't directly associated with infrastructure.
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
+>
+>Policies and roles are possible examples of this, but they have their own mechanisms (qv)
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
+>
+>Other things are connectors and configurations which exist in memory for a little while before being attached to something else.
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
+>
+>They cannot be found on their own initiative, although there is a sense in which you can "find" them when you find something they are attached to.
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
+>
+>In the AWS world, they do NOT have identity; but we need that here, so we insist on them being reliably named.
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
+>
+>We use the verb "coin" to introduce these, as opposed to find or ensure.
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
+>
+>Because they are "just" values, they must be assigned to variables.
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
+>
+>    target makeCoin
+#^^^^ source.deployer-dply
+#    ^^^^^^ source.deployer-dply keyword.target
+#          ^^^^^^^^^^ source.deployer-dply
+>        coin test.S3.Configuration "my-config" => s3_config
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>            Pattern <- "*.cfg"
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>            Access <- "None"
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply

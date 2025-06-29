@@ -57,6 +57,7 @@ func RegisterWithDriver(driver driverbottom.Driver) error {
 	// target commands
 	tools.Register.Register("target", "ensure", basic.NewEnsureCommandHandler(tools))
 	tools.Register.Register("target", "find", basic.NewFindCommandHandler(tools))
+	tools.Register.Register("target", "coin", basic.NewMemoryCoinCommandHandler(tools))
 	tools.Register.Register("target", "env", basic.NewEnvCommandHandler(tools))
 	tools.Register.Register("target", "show", basic.NewShowCommandHandler(tools))
 

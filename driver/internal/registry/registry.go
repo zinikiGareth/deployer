@@ -24,6 +24,9 @@ func (r *Registry) Register(point string, called string, impl any) {
 	if m == nil {
 		panic("there is no extension point " + point)
 	}
+	if m[called] != nil {
+		panic("duplicate registration of " + point + ": " + called)
+	}
 	m[called] = impl
 }
 

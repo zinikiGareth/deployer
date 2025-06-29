@@ -18,3 +18,8 @@ type Ensurable interface {
 	UpdateReality()
 	TearDown()
 }
+
+type MemoryCoinCreator interface {
+	HasCoin
+	Create(pres ValuePresenter)
+}

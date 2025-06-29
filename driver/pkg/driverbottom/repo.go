@@ -27,7 +27,7 @@ type Repository interface {
 }
 
 type Resolver interface {
-	Resolve(name Identifier) Describable
+	Resolve(name Identifier) any
 }
 
 type Resolvable interface {

@@ -9,9 +9,10 @@ import (
 )
 
 func MakeDoAssign(tools *corebottom.Tools, holder driverbottom.Holder, assignTo driverbottom.Identifier, asAny any) *DoAssign {
-	action, ok := asAny.(corebottom.Findable)
+	action, ok := asAny.(driverbottom.Describable)
 	if !ok {
-		log.Fatalf("is not a findable: %T", asAny)
+		log.Printf("is not a describable: %T", asAny)
+		panic("not a describable")
 	}
 	ret := DoAssign{tools: tools, assignTo: assignTo, holder: holder, action: action}
 	return &ret
@@ -21,7 +22,7 @@ type DoAssign struct {
 	tools    *corebottom.Tools
 	assignTo driverbottom.Identifier
 	holder   driverbottom.Holder
-	action   corebottom.Findable
+	action   driverbottom.Describable
 }
 
 func (d *DoAssign) Loc() *errorsink.Location {
@@ -37,11 +38,15 @@ func (d *DoAssign) DumpTo(w driverbottom.IndentWriter) {
 }
 
 func (d *DoAssign) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
-	status := d.action.Resolve(r)
-	if status == driverbottom.NO_VALUE {
-		panic("assignTo specified but expr does not produce a value") // should be an error
+	res, ok := d.action.(driverbottom.Resolvable)
+	if ok {
+		status := res.Resolve(r)
+		if status == driverbottom.NO_VALUE {
+			panic("assignTo specified but expr does not produce a value") // should be an error
+		}
+		d.tools.Storage.EnableSymbol(d.assignTo)
 	}
-	d.tools.Storage.EnableSymbol(d.assignTo)
+
 	return driverbottom.NO_VALUE
 }
 
@@ -50,7 +55,12 @@ func (d *DoAssign) ShortDescription() string {
 }
 
 func (d *DoAssign) DetermineInitialState(pres corebottom.ValuePresenter) {
-	d.action.DetermineInitialState(d)
+	fnd, ok := d.action.(corebottom.Findable)
+	if !ok {
+		// should we call something on pres? such as "notFinder"?
+		return
+	}
+	fnd.DetermineInitialState(d)
 }
 
 func (d *DoAssign) DetermineDesiredState(pres corebottom.ValuePresenter) {

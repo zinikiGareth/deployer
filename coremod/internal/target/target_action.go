@@ -16,7 +16,7 @@ type CoreTarget struct {
 	loc   *errorsink.Location
 	name  driverbottom.SymbolName
 
-	actions []corebottom.Findable
+	actions []corebottom.Action
 }
 
 func (cc *CoreTarget) Name() driverbottom.SymbolName {
@@ -33,9 +33,9 @@ func (a *CoreTarget) MakeAssign(holder driverbottom.Holder, assignTo driverbotto
 }
 
 func (cc *CoreTarget) Attach(entry any) {
-	action, ok := entry.(corebottom.Findable)
+	action, ok := entry.(corebottom.Action)
 	if !ok {
-		log.Fatalf("not a Findable: %T", entry)
+		log.Fatalf("not an Action: %T", entry)
 	}
 	cc.actions = append(cc.actions, action)
 }
@@ -65,9 +65,10 @@ func (t *CoreTarget) Resolve(r driverbottom.Resolver) driverbottom.BindingRequir
 		binding := a.Resolve(r)
 		switch binding {
 		case driverbottom.MUST_BE_BOUND:
-			panic("assignTo is not specified") // should be an error
+			t.tools.Reporter.ReportAtf(a.Loc(), "a value expression must be bound to a variable")
+			return driverbottom.ERROR_OCCURRED
 		case driverbottom.ERROR_OCCURRED:
-			panic("an error occurred")
+			return driverbottom.ERROR_OCCURRED
 		}
 	}
 	return driverbottom.NO_VALUE
@@ -76,7 +77,10 @@ func (t *CoreTarget) Resolve(r driverbottom.Resolver) driverbottom.BindingRequir
 func (t *CoreTarget) DetermineInitialState() {
 	for k, a := range t.actions {
 		t.tools.Storage.SetStepName(fmt.Sprintf("%s-%d", t.name, k))
-		a.DetermineInitialState(t)
+		fnd, ok := a.(corebottom.Findable)
+		if ok {
+			fnd.DetermineInitialState(t)
+		}
 	}
 }
 

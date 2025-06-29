@@ -1,0 +1,24 @@
+symbol makeCoin is bound to:
+target makeCoin {
+	_where_: coin.dply:15.7
+	actions: [
+		AssignTo {
+			_where_: coin.dply:16.42
+			assignTo: s3_config
+			MemoryCoinAction {
+				_where_: coin.dply:16.0
+				what: test.S3.Configuration
+				resolved: test.S3.Configuration[]
+				named: my-config
+				additional properties:
+					Access <- None
+					Pattern <- *.cfg
+			}
+		}
+	]
+}
+symbol s3_config is bound to:
+VarHolder {
+	_where_: coin.dply:16.42
+	storeFor: s3_config
+}

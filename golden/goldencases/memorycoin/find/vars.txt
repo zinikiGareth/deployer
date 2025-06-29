@@ -1,0 +1,3 @@
+Step makeCoin-0:
+	*makeCoin-0-0:
+	s3_config:

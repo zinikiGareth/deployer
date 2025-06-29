@@ -31,5 +31,6 @@ func RegisterWithDriver(driver driverbottom.Driver) error {
 	tools.Register.Register("target", "blob", blob.NewBlobCommandHandler(tools))
 
 	tools.Register.Register("blank", "test.S3.Bucket", &testS3.BucketBlank{})
+	tools.Register.Register("blank", "test.S3.Configuration", &testS3.ConfigurationCoin{})
 	return nil
 }
