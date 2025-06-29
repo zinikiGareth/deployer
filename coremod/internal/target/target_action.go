@@ -101,9 +101,8 @@ func (t *CoreTarget) UpdateReality() {
 }
 
 func (t *CoreTarget) TearDown() {
-	max := len(t.actions) - 1
 	for k, a := range slices.Backward(t.actions) {
-		t.tools.Storage.SetStepName(fmt.Sprintf("%s-%d", t.name, max-k))
+		t.tools.Storage.SetStepName(fmt.Sprintf("%s-%d", t.name, k))
 		amis, ok := a.(corebottom.RealityShifter)
 		if ok {
 			amis.TearDown()

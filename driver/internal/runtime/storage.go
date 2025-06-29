@@ -81,7 +81,8 @@ func (s *Storage) findCoin(v driverbottom.Holder) *SymbolProvenance {
 			curr = proveni[v.VarName().Id()]
 		}
 		if curr == nil {
-			log.Fatalf("could not find symbol %s defined before step %s (%d)\n", v.VarName().Id(), s.currentStep, s.stepIndex())
+			log.Printf("could not find symbol %s defined before step %s (%d)\n", v.VarName().Id(), s.currentStep, s.stepIndex())
+			panic("symbol not found")
 		}
 	}
 	return curr
@@ -187,8 +188,8 @@ func (s *Storage) DumpTo(w io.Writer) {
 }
 
 func (s *Storage) SetStepName(stepName string) {
-	s.currentStep = stepName
 	// log.Printf("mode %d: set step name to %s\n", s.mode, s.currentStep)
+	s.currentStep = stepName
 	if s.mode == 0 {
 		s.stepNames = append(s.stepNames, s.currentStep)
 		s.symbols[s.currentStep] = make(map[string]*SymbolProvenance)
