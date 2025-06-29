@@ -114,7 +114,7 @@ func (s *Storage) GetCoin(coin driverbottom.Holder, mode int) any {
 	}
 	val := prov.values[mode]
 	if val == nil {
-		log.Printf("no coin for: %s in mode %d\n", coin.VarName().Id(), mode)
+		log.Printf("no coin found for: %s in mode %d; returning nil\n", coin.VarName().Id(), mode)
 		return nil
 	}
 	for k := s.stepIndex(); k >= 0; k-- {
