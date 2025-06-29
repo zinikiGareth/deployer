@@ -101,6 +101,13 @@ func (s *Storage) Get(v driverbottom.Holder) any {
 	// TODO: here we are looking for the "correct" version of the VAR, which must be the one that was in operation at the time in this mode
 	// I think that may be quite complicated.
 	// We also need to think about what it means to "find" and "desire" two different things.
+	if s.runtime[v] == nil { // TODO: want to be very sure it's not just value "nil", which is difficult in Go
+		// I would have thought this was serious, but apparently copy_files needs to cope with "no bucket" in the initial phase
+		log.Printf("no value has been set for %v in mode %d", v, s.CurrentMode())
+		if s.CurrentMode() == 2 || s.CurrentMode() == 3 {
+			panic("and this cannot be right in this mode")
+		}
+	}
 	return s.runtime[v]
 }
 
@@ -109,9 +116,17 @@ func (s *Storage) Read(name driverbottom.SymbolName) any {
 }
 
 func (s *Storage) GetCoin(coin driverbottom.Holder, mode int) any {
+	recent := false
+	if mode == driverbottom.CURRENT_MODE {
+		mode = s.CurrentMode()
+		recent = true
+	}
 	prov := s.findCoin(coin)
 	if prov == nil {
 		log.Fatalf("no coin %s\n", coin.VarName().Id())
+	}
+	if recent {
+		log.Printf("found provenance %v\n", prov)
 	}
 	val := prov.values[mode]
 	if val == nil {
@@ -121,6 +136,26 @@ func (s *Storage) GetCoin(coin driverbottom.Holder, mode int) any {
 	for k := s.stepIndex(); k >= 0; k-- {
 		if val[s.stepNames[k]] != nil {
 			return val[s.stepNames[k]]
+		}
+	}
+	panic("no val found")
+}
+
+func (s *Storage) GetCoinFrom(coin driverbottom.Holder, modes []int) any {
+	prov := s.findCoin(coin)
+	if prov == nil {
+		log.Fatalf("no coin %s\n", coin.VarName().Id())
+	}
+	log.Printf("found provenance %v\n", prov)
+	for _, mode := range modes {
+		val := prov.values[mode]
+		if val == nil {
+			continue
+		}
+		for k := s.stepIndex(); k >= 0; k-- {
+			if val[s.stepNames[k]] != nil {
+				return val[s.stepNames[k]]
+			}
 		}
 	}
 	panic("no val found")

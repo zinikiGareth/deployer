@@ -9,7 +9,6 @@ import (
 type ConfigurationCoin struct{}
 
 func (b *ConfigurationCoin) Mint(ct *corebottom.Tools, loc *errorsink.Location, id corebottom.CoinId, named string, props map[driverbottom.Identifier]driverbottom.Expr) any {
-	// log.Printf("mint coin id = %s\n", id.VarName().Id())
 	return &configCreator{tools: ct, loc: loc, coin: id, name: named, props: props}
 }
 

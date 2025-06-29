@@ -42,6 +42,13 @@ func (cc *configCreator) CoinId() corebottom.CoinId {
 }
 
 func (cc *configCreator) Create(pres corebottom.ValuePresenter) {
+	tmp := cc.tools.Recall.ObtainDriver("testhelpers.TestStepLogger")
+	testLogger, ok := tmp.(testhelpers.TestStepLogger)
+	if !ok {
+		panic("could not cast logger to TestStepLogger")
+	}
+	cc.testLogger = testLogger
+
 	if cc.coin == nil {
 		panic("need a coin id")
 	}
@@ -49,57 +56,6 @@ func (cc *configCreator) Create(pres corebottom.ValuePresenter) {
 	model := &configModel{loc: cc.loc, storage: cc.tools.Storage, id: cc.coin, name: cc.name, testLogger: cc.testLogger}
 	pres.Present(model)
 }
-
-/*
-func (b *configCreator) DetermineInitialState(pres corebottom.ValuePresenter) {
-	tmp := b.tools.Recall.ObtainDriver("testS3.TestAwsEnv")
-	testAwsEnv, ok := tmp.(*TestAwsEnv)
-	if !ok {
-		panic("could not cast env to TestAwsEnv")
-	}
-	b.env = testAwsEnv
-
-	tmp = b.tools.Recall.ObtainDriver("testhelpers.TestStepLogger")
-	testLogger, ok := tmp.(testhelpers.TestStepLogger)
-	if !ok {
-		panic("could not cast logger to TestStepLogger")
-	}
-	b.testLogger = testLogger
-
-	testLogger.Log("looking for bucket %s\n", b.String())
-	// TODO: the test infrastructure should have the ability to have these in place
-	pres.NotFound()
-}
-
-func (eb *configCreator) UpdateReality() {
-	tmp := eb.tools.Recall.ObtainDriver("testhelpers.TestStepLogger")
-	testLogger, ok := tmp.(testhelpers.TestStepLogger)
-	if !ok {
-		panic("could not cast logger to TestStepLogger")
-	}
-
-	b := eb.env.FindBucket(eb.name)
-	if b != nil {
-		testLogger.Log("the bucket %s in region %s already exists\n", eb.name, eb.env.Region)
-	} else {
-		testLogger.Log("we need to create a bucket called %s in region %s\n", eb.name, eb.env.Region)
-		// TODO: we should also handle all the properties we have stored somewhere ...
-		b = eb.env.CreateBucket(eb.name)
-	}
-
-	eb.model.cloud = b
-}
-
-func (eb *configCreator) TearDown() {
-	tmp := eb.tools.Recall.ObtainDriver("testhelpers.TestStepLogger")
-	testLogger, ok := tmp.(testhelpers.TestStepLogger)
-	if !ok {
-		panic("could not cast logger to TestStepLogger")
-	}
-
-	testLogger.Log("we need to delete a bucket called %s in region %s\n", eb.name, eb.env.Region)
-}
-*/
 
 func (cc *configCreator) String() string {
 	return fmt.Sprintf("CreateConfig[%s]", cc.name)

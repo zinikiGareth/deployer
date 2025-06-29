@@ -24,6 +24,7 @@ type WithAssignTo struct {
 
 func (wat *WithAssignTo) Attach(action any) {
 	assign := wat.container.MakeAssign(wat.holder, wat.assignTo, action)
+	// log.Printf("actually attaching %p with %p to %p\n", assign, action, wat.container)
 	wat.container.Attach(assign)
 }
 

@@ -1,0 +1,1 @@
+creating model for bucket CreateConfig[my-config]

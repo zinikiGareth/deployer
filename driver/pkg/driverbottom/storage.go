@@ -13,6 +13,7 @@ type RuntimeStorage interface {
 	IgnoreDuplicate(value any)
 	Read(name SymbolName) any
 	GetCoin(coin Holder, mode int) any
+	GetCoinFrom(coin Holder, modes []int) any
 	Errorf(loc *errorsink.Location, msg string, args ...any)
 	SetMode(mode int)
 	IsMode(mode int) bool

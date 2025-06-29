@@ -65,11 +65,16 @@ func (d *DoAssign) DetermineInitialState(pres corebottom.ValuePresenter) {
 
 func (d *DoAssign) DetermineDesiredState(pres corebottom.ValuePresenter) {
 	mb, ok := d.action.(corebottom.ModelBuilder)
-	if !ok {
-		// should we call something on pres? such as "onlyFinder"?
+	if ok {
+		mb.DetermineDesiredState(d)
 		return
 	}
-	mb.DetermineDesiredState(d)
+	mc, ok := d.action.(corebottom.MemoryBuilder)
+	if ok {
+		mc.Create(d)
+		return
+	}
+	// should we call something on pres? such as "onlyFinder"?
 }
 
 func (d *DoAssign) UpdateReality() {

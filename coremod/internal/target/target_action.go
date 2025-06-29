@@ -33,6 +33,7 @@ func (a *CoreTarget) MakeAssign(holder driverbottom.Holder, assignTo driverbotto
 }
 
 func (cc *CoreTarget) Attach(entry any) {
+	// log.Printf("%p: attaching %p\n", cc, entry)
 	action, ok := entry.(corebottom.Action)
 	if !ok {
 		log.Fatalf("not an Action: %T", entry)
@@ -87,9 +88,14 @@ func (t *CoreTarget) DetermineInitialState() {
 func (t *CoreTarget) DetermineDesiredState() {
 	for k, a := range t.actions {
 		t.tools.Storage.SetStepName(fmt.Sprintf("%s-%d", t.name, k))
+		// log.Printf("%p: a is of type %T %p\n", t, a, a)
 		mb, ok := a.(corebottom.ModelBuilder)
 		if ok {
 			mb.DetermineDesiredState(t)
+		}
+		_, ok = a.(corebottom.MemoryBuilder)
+		if ok {
+			panic("should have a var attached")
 		}
 	}
 }

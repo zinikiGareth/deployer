@@ -4,6 +4,10 @@ import (
 	"io"
 )
 
+const (
+	CURRENT_MODE int = -1
+)
+
 type Driver interface {
 	AddSymbolListener(lsnr SymbolListener)
 	UseModule(mod string) error
