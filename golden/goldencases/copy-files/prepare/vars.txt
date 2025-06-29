@@ -16,13 +16,16 @@ Step copyFilesToBucket-0:
 Step copyFilesToBucket-1:
 	root:
 		@copyFilesToBucket-1
-			*basic.EnvModel /home/gareth/Ziniki/Over/deployer/golden/goldencases/copy-files
+			EnvModel {
+				_where_: copy.dply:7.5
+				from: GOLDEN_ROOT
+			}
 Step copyFilesToBucket-2:
 	src_dir:
 		@copyFilesToBucket-2
 			DirModel {
 				_where_: copy.dply:8.0
-				path: <HOME>/goldencases/copy-files
+				path: EnvModel[GOLDEN_ROOT]
 				path: filesrc
 			}
 Step copyFilesToBucket-3:

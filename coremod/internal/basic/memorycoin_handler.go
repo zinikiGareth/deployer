@@ -1,8 +1,6 @@
 package basic
 
 import (
-	"log"
-
 	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/drivertop"
@@ -36,7 +34,6 @@ func (mcch *MemoryCoinCommandHandler) Handle(parent driverbottom.AttachResult, t
 	}
 
 	mca := &MemoryCoinAction{tools: mcch.tools, loc: tokens[0].Loc(), what: clz, named: name, props: make(map[driverbottom.Identifier]driverbottom.Expr)}
-	log.Printf("mcch handle attaching %p to %p", mca, parent)
 	parent.Attach(mca)
 
 	return drivertop.NewPropertiesInnerScope(mcch.tools.CoreTools, mca)
