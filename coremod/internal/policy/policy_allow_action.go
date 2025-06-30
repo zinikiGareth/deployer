@@ -60,8 +60,9 @@ func (paa *PolicyAllowAction) MakeAssign(holder driverbottom.Holder, assignTo dr
 	return ret
 }
 
-func (paa *PolicyAllowAction) Attach(entry any) {
+func (paa *PolicyAllowAction) Attach(entry any) error {
 	paa.actions = append(paa.actions, entry.(UpdatePolicyAllowAction))
+	return nil
 }
 
 func (paa *PolicyAllowAction) ApplyTo(doc corebottom.PolicyDocument) {

@@ -1,0 +1,14 @@
+>We can't have duplicate target names in the same directory
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
+>
+>	target no_duplicates
+#^ source.deployer-dply
+# ^^^^^^ source.deployer-dply keyword.target
+#       ^^^^^^^^^^^^^^^ source.deployer-dply
+>
+>
+>	target no_duplicates
+#^ source.deployer-dply
+# ^^^^^^ source.deployer-dply keyword.target
+#       ^^^^^^^^^^^^^^^ source.deployer-dply
+>	

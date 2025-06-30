@@ -22,10 +22,11 @@ type WithAssignTo struct {
 	container driverbottom.AttachResult
 }
 
-func (wat *WithAssignTo) Attach(action any) {
+func (wat *WithAssignTo) Attach(action any) error {
 	assign := wat.container.MakeAssign(wat.holder, wat.assignTo, action)
 	// log.Printf("actually attaching %p with %p to %p\n", assign, action, wat.container)
 	wat.container.Attach(assign)
+	return nil
 }
 
 func (wat *WithAssignTo) MakeAssign(holder driverbottom.Holder, assignTo driverbottom.Identifier, action any) any {

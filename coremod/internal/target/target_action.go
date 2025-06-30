@@ -2,7 +2,6 @@ package target
 
 import (
 	"fmt"
-	"log"
 	"slices"
 
 	"ziniki.org/deployer/coremod/internal/vars"
@@ -32,13 +31,14 @@ func (a *CoreTarget) MakeAssign(holder driverbottom.Holder, assignTo driverbotto
 	return ret
 }
 
-func (cc *CoreTarget) Attach(entry any) {
+func (cc *CoreTarget) Attach(entry any) error {
 	// log.Printf("%p: attaching %p\n", cc, entry)
 	action, ok := entry.(corebottom.Action)
 	if !ok {
-		log.Fatalf("not an Action: %T", entry)
+		return fmt.Errorf("not an Action: %T", entry)
 	}
 	cc.actions = append(cc.actions, action)
+	return nil
 }
 
 func (t *CoreTarget) Loc() *errorsink.Location {

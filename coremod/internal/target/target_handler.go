@@ -19,7 +19,9 @@ func (t *CoreTargetHandler) Handle(attacher driverbottom.AttachResult, tokens []
 	name := driverbottom.SymbolName(t1.Id())
 	target := &CoreTarget{tools: t.tools, loc: t1.Loc(), name: name, actions: []corebottom.Action{}}
 
-	attacher.Attach(target)
+	if err := attacher.Attach(target); err != nil {
+		t.tools.Reporter.Reportf(t1.Loc().Offset, "duplicate target name: %s", t1)
+	}
 	return drivertop.NewVerbCommandInterpreter(t.tools.CoreTools, target, "target", true)
 }
 

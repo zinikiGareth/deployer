@@ -1,0 +1,7 @@
+We can't have duplicate target names in the same directory
+
+	target no_duplicates
+
+
+	target no_duplicates
+	

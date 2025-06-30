@@ -1,6 +1,8 @@
 package policy
 
 import (
+	"fmt"
+
 	"ziniki.org/deployer/coremod/internal/vars"
 	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
@@ -24,12 +26,13 @@ func (pa *PolicyAction) MakeAssign(holder driverbottom.Holder, assignTo driverbo
 	return ret
 }
 
-func (pa *PolicyAction) Attach(entry any) {
+func (pa *PolicyAction) Attach(entry any) error {
 	a, ok := entry.(PolicyRuleAction)
 	if !ok {
-		panic("throw an error")
+		return fmt.Errorf("cannot attach %T to PolicyAction, not a PolicyRuleAction", entry)
 	}
 	pa.actions = append(pa.actions, a)
+	return nil
 }
 
 func (pa *PolicyAction) Loc() *errorsink.Location {

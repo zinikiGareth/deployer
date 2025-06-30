@@ -68,7 +68,7 @@ type Punc interface {
 
 type AttachResult interface {
 	MakeAssign(holder Holder, assignTo Identifier, action any) any
-	Attach(item any)
+	Attach(item any) error
 }
 
 type VerbCommand interface {

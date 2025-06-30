@@ -1,6 +1,8 @@
 package vars
 
 import (
+	"fmt"
+
 	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 )
@@ -14,14 +16,17 @@ func (a *TopLevelAttacher) MakeAssign(holder driverbottom.Holder, assignTo drive
 	return ret
 }
 
-func (a *TopLevelAttacher) Attach(tlf any) {
+func (a *TopLevelAttacher) Attach(tlf any) error {
 	top, ok := tlf.(driverbottom.TopLevelForm)
 	if !ok {
-		panic("not a TLF")
+		return fmt.Errorf("cannot attach %T to top level; not a TLF", tlf)
 	}
 	a.tools.Repository.TopLevel(top)
-	a.tools.Repository.IntroduceSymbol(top.Name(), top)
+	if err := a.tools.Repository.IntroduceSymbol(top.Name(), top); err != nil {
+		return fmt.Errorf("duplicate target %s", top.Name())
+	}
 
+	return nil
 }
 
 type TLACreator struct {

@@ -92,7 +92,6 @@ func (ea *EnsureAction) AddAdverb(adv driverbottom.Adverb, tokens []driverbottom
 			panic("invalid tokens")
 		}
 		ea.teardown = &MyTearDown{mode: tokens[0].(driverbottom.Identifier).Id()}
-
 	}
 	return drivertop.NewDisallowInnerScope(ea.tools.CoreTools)
 }

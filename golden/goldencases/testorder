@@ -30,3 +30,4 @@ policies/allow-condition
 policies/with-principal
 policies/additional-actions
 policies/attach-to-bucket
+errorcases/no-duplicate-targets

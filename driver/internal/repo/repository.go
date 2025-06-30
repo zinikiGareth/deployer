@@ -1,6 +1,10 @@
 package repo
 
-import "ziniki.org/deployer/driver/pkg/driverbottom"
+import (
+	"fmt"
+
+	"ziniki.org/deployer/driver/pkg/driverbottom"
+)
 
 type SimpleRepository struct {
 	symbolLsnrs []driverbottom.SymbolListener
@@ -14,14 +18,15 @@ func (d *SimpleRepository) ReadingFile(file string) {
 	}
 }
 
-func (d *SimpleRepository) IntroduceSymbol(who driverbottom.SymbolName, is driverbottom.Describable) {
+func (d *SimpleRepository) IntroduceSymbol(who driverbottom.SymbolName, is driverbottom.Describable) error {
 	if d.symbols[who] != nil {
-		panic("duplicate definition of " + who)
+		return fmt.Errorf("duplicate definition of %s", who)
 	}
 	d.symbols[who] = is
 	for _, lsnr := range d.symbolLsnrs {
 		lsnr.Symbol(who, is)
 	}
+	return nil
 }
 
 func (d *SimpleRepository) TopLevel(defn driverbottom.TopLevelForm) {
