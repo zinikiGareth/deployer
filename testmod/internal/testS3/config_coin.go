@@ -8,7 +8,7 @@ import (
 
 type ConfigurationCoin struct{}
 
-func (b *ConfigurationCoin) Mint(ct *corebottom.Tools, loc *errorsink.Location, id corebottom.CoinId, named string, props map[driverbottom.Identifier]driverbottom.Expr) any {
+func (b *ConfigurationCoin) Mint(ct *corebottom.Tools, loc *errorsink.Location, id corebottom.CoinId, named string, props map[driverbottom.Identifier]driverbottom.Expr) corebottom.MemoryCoinCreator {
 	return &configCreator{tools: ct, loc: loc, coin: id, name: named, props: props}
 }
 

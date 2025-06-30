@@ -117,14 +117,7 @@ func (mca *MemoryCoinAction) Resolve(r driverbottom.Resolver) driverbottom.Bindi
 		y.Resolve(r)
 	}
 	mca.resolved = res
-	obj := mca.resolved.Mint(mca.tools, mca.Loc(), corebottom.CoinId(mca.tools.Storage.NewObjId(mca.named.Loc())), mca.named.Text(), mca.props)
-	coin, ok := obj.(corebottom.MemoryCoinCreator)
-	if !ok {
-		log.Printf("could not make %T a memorycoincreator", obj)
-		mca.tools.Storage.Errorf(mca.loc, "the type "+mca.what.Id()+" is not ensurable")
-		return driverbottom.ERROR_OCCURRED
-	}
-	mca.coin = coin
+	mca.coin = mca.resolved.Mint(mca.tools, mca.Loc(), corebottom.CoinId(mca.tools.Storage.NewObjId(mca.named.Loc())), mca.named.Text(), mca.props)
 	return driverbottom.MUST_BE_BOUND
 }
 

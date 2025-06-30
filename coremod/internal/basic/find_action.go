@@ -100,14 +100,7 @@ func (ea *FindAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequi
 		return driverbottom.ERROR_OCCURRED
 	}
 	ea.resolved = res
-	obj := ea.resolved.Find(ea.tools, ea.Loc(), corebottom.CoinId(ea.tools.Storage.NewObjId(ea.named.Loc())), ea.named.Text())
-	ens, ok := obj.(corebottom.FindCoin)
-	if !ok {
-		log.Printf("could not make %T a FindCoin", obj)
-		ea.tools.Storage.Errorf(ea.loc, "the type "+ea.what.Id()+" is not findable")
-		return driverbottom.ERROR_OCCURRED
-	}
-	ea.coin = ens
+	ea.coin = ea.resolved.Find(ea.tools, ea.Loc(), corebottom.CoinId(ea.tools.Storage.NewObjId(ea.named.Loc())), ea.named.Text())
 	return driverbottom.MAY_BE_BOUND
 }
 

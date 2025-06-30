@@ -8,12 +8,12 @@ import (
 
 type BucketBlank struct{}
 
-func (b *BucketBlank) Find(ct *corebottom.Tools, loc *errorsink.Location, id corebottom.CoinId, named string) any {
+func (b *BucketBlank) Find(ct *corebottom.Tools, loc *errorsink.Location, id corebottom.CoinId, named string) corebottom.FindCoin {
 	// log.Printf("find coin id = %s\n", id)
 	return &bucketCreator{tools: ct, loc: loc, coin: id, name: named}
 }
 
-func (b *BucketBlank) Mint(ct *corebottom.Tools, loc *errorsink.Location, id corebottom.CoinId, named string, props map[driverbottom.Identifier]driverbottom.Expr, teardown corebottom.TearDown) any {
+func (b *BucketBlank) Mint(ct *corebottom.Tools, loc *errorsink.Location, id corebottom.CoinId, named string, props map[driverbottom.Identifier]driverbottom.Expr, teardown corebottom.TearDown) corebottom.Ensurable {
 	// log.Printf("mint coin id = %s\n", id.VarName().Id())
 	return &bucketCreator{tools: ct, loc: loc, coin: id, name: named, props: props}
 }

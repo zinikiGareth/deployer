@@ -9,11 +9,11 @@ type CoinId driverbottom.Holder
 
 type Blank interface {
 	ShortDescription() string
-	Find(tools *Tools, loc *errorsink.Location, id CoinId, named string) any
-	Mint(tools *Tools, loc *errorsink.Location, id CoinId, named string, props map[driverbottom.Identifier]driverbottom.Expr, teardown TearDown) any
+	Find(tools *Tools, loc *errorsink.Location, id CoinId, named string) FindCoin
+	Mint(tools *Tools, loc *errorsink.Location, id CoinId, named string, props map[driverbottom.Identifier]driverbottom.Expr, teardown TearDown) Ensurable
 }
 
 type MemoryCoin interface {
 	ShortDescription() string
-	Mint(tools *Tools, loc *errorsink.Location, id CoinId, named string, props map[driverbottom.Identifier]driverbottom.Expr) any
+	Mint(tools *Tools, loc *errorsink.Location, id CoinId, named string, props map[driverbottom.Identifier]driverbottom.Expr) MemoryCoinCreator
 }

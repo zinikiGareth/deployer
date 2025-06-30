@@ -120,14 +120,7 @@ func (ea *EnsureAction) Resolve(r driverbottom.Resolver) driverbottom.BindingReq
 		y.Resolve(r)
 	}
 	ea.resolved = res
-	obj := ea.resolved.Mint(ea.tools, ea.Loc(), corebottom.CoinId(ea.tools.Storage.NewObjId(ea.named.Loc())), ea.named.Text(), ea.props, ea.teardown)
-	ens, ok := obj.(corebottom.Ensurable)
-	if !ok {
-		log.Printf("could not make %T an ensurable", obj)
-		ea.tools.Storage.Errorf(ea.loc, "the type "+ea.what.Id()+" is not ensurable")
-		return driverbottom.ERROR_OCCURRED
-	}
-	ea.ens = ens
+	ea.ens = ea.resolved.Mint(ea.tools, ea.Loc(), corebottom.CoinId(ea.tools.Storage.NewObjId(ea.named.Loc())), ea.named.Text(), ea.props, ea.teardown)
 	return driverbottom.MAY_BE_BOUND
 }
 
