@@ -20,7 +20,9 @@ func (d *SimpleRepository) ReadingFile(file string) {
 
 func (d *SimpleRepository) IntroduceSymbol(who driverbottom.SymbolName, is driverbottom.Describable) error {
 	if d.symbols[who] != nil {
-		return fmt.Errorf("duplicate definition of %s", who)
+		ret := fmt.Errorf("duplicate definition of %s", who)
+		log.Printf("%v", ret)
+		return ret
 	}
 	d.symbols[who] = is
 	for _, lsnr := range d.symbolLsnrs {
