@@ -1,0 +1,43 @@
+>We want to be able to specify a map in a more lucid form when we are assigning it in a property.
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
+>
+>For example, we want to be able to write:
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
+>
+>.   x <- {}
+#^^^^^^^^^^^ source.deployer-dply comment.block
+>.      a <- 1
+#^^^^^^^^^^^^^ source.deployer-dply comment.block
+>.      b <- 2
+#^^^^^^^^^^^^^ source.deployer-dply comment.block
+>.      c <- "hello"
+#^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
+>
+>And this is then equivalent to:
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
+>
+>.   x <- {"a" : 1, "b" : 2, "c": "hello"}
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
+>
+>	target propmap
+#^ source.deployer-dply
+# ^^^^^^ source.deployer-dply keyword.target
+#       ^^^^^^^^^ source.deployer-dply
+>		ensure test.S3.Bucket "org.ziniki.launch_bucket"
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>			@teardown preserve
+#^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>			types <- {}
+#^^^^^^^^^^^^^^^ source.deployer-dply
+>
+>all the keys *are* strings, but we handle identifiers as strings in this context because that's "normal".
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
+>obviously it doesn't apply if the property has weird characters.
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
+>
+>				"*.html" <- "text/html"
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>				"*.js" <- "application/javascript"
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>				index <- "text/html"
+#^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply

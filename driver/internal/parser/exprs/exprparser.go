@@ -85,6 +85,13 @@ func (p *exprParser) AsExpr(x driverbottom.Token) (driverbottom.Expr, bool) {
 		// There may not be adjacent commas, or a comma after the OSB or before the CSB
 		// But OSB CSB is valid - an empty list
 		return p.ReduceListExpr(x)
+	case AsMap:
+		// I think this is correct - here we have a "list" and want to convert it into an expression.
+		// Yes, that makes sense.  We need to do that by having something that can build an expression from all the subexpressions.
+		// And we need to recursively call Parse() on those, splitting up based on the position of the commas.
+		// There may not be adjacent commas, or a comma after the OSB or before the CSB
+		// But OSB CSB is valid - an empty list
+		return p.ReduceMapExpr(x)
 	default:
 		panic(fmt.Sprintf("cannot interpret type %T as Expr", x))
 	}
@@ -107,6 +114,25 @@ func (p *exprParser) ReduceListExpr(le AsList) (driverbottom.Expr, bool) {
 		inner = after
 	}
 	return &ListExpr{exprs: exprs}, true
+}
+
+func (p *exprParser) ReduceMapExpr(me AsMap) (driverbottom.Expr, bool) {
+	toks := me.Tokens
+	exprs := []driverbottom.Expr{}
+	if len(toks) == 2 {
+		return &MapExpr{exprs: exprs}, true
+	}
+	inner := toks[1 : len(toks)-1]
+	for len(inner) > 0 {
+		before, after := p.splitComma(inner)
+		e, ok := p.parseOne(before)
+		if !ok {
+			return nil, false
+		}
+		exprs = append(exprs, e)
+		inner = after
+	}
+	return &MapExpr{exprs: exprs}, true
 }
 
 func (p *exprParser) splitComma(tokens []driverbottom.Token) ([]driverbottom.Token, []driverbottom.Token) {
@@ -165,6 +191,13 @@ func (p *exprParser) ScanLoop(tokens []driverbottom.Token, ret []driverbottom.To
 					return nil, -1
 				}
 				ret = append(ret, AsList{Tokens: inner})
+				i = j
+			} else if IsPuncChar(t, '{') {
+				inner, j := p.ScanFor(tokens, i, '}')
+				if j == -1 {
+					return nil, -1
+				}
+				ret = append(ret, AsMap{Tokens: inner})
 				i = j
 			} else if IsPuncChar(t, ',') {
 				ret = append(ret, t)

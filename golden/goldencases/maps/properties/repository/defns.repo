@@ -1,0 +1,12 @@
+symbol propmap is bound to:
+target propmap {
+	_where_: propmap.dply:14.7
+	actions: [
+		EnsureAction {
+			_where_: propmap.dply:15.0
+			what: test.S3.Bucket
+			not-resolved: test.S3.Bucket
+			named: org.ziniki.launch_bucket
+		}
+	]
+}

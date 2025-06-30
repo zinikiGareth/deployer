@@ -1,0 +1,24 @@
+We want to be able to specify a map in a more lucid form when we are assigning it in a property.
+
+For example, we want to be able to write:
+
+.   x <- {}
+.      a <- 1
+.      b <- 2
+.      c <- "hello"
+
+And this is then equivalent to:
+
+.   x <- {"a" : 1, "b" : 2, "c": "hello"}
+
+	target propmap
+		ensure test.S3.Bucket "org.ziniki.launch_bucket"
+			@teardown preserve
+			types <- {}
+
+all the keys *are* strings, but we handle identifiers as strings in this context because that's "normal".
+obviously it doesn't apply if the property has weird characters.
+
+				"*.html" <- "text/html"
+				"*.js" <- "application/javascript"
+				index <- "text/html"

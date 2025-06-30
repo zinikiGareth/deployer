@@ -5,6 +5,7 @@ errorcases/blocking
 errorcases/invalid-char
 errorcases/missing-target
 errorcases/target-multiple-symbols
+errorcases/no-duplicate-targets
 errorcases/ensure-needs-object
 errorcases/ensure-needs-name
 errorcases/ensure-needs-teardown
@@ -24,10 +25,10 @@ show-string-literal
 read-env-var
 copy-files
 lists/properties
+maps/properties
 policies/empty
 policies/allow-one
 policies/allow-condition
 policies/with-principal
 policies/additional-actions
 policies/attach-to-bucket
-errorcases/no-duplicate-targets
