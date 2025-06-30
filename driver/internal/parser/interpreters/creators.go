@@ -17,3 +17,7 @@ func NewPropertiesInnerScope(tools *driverbottom.CoreTools, parent driverbottom.
 func NewCollectListInnerScope(tools *driverbottom.CoreTools, parent driverbottom.PropertyParent, prop driverbottom.Identifier) driverbottom.Interpreter {
 	return &collectListInterpreter{tools: tools, parent: parent, prop: prop}
 }
+
+func NewCollectMapInnerScope(tools *driverbottom.CoreTools, parent driverbottom.PropertyParent, prop driverbottom.Identifier) driverbottom.Interpreter {
+	return &collectMapInterpreter{tools: tools, parent: parent, prop: prop}
+}

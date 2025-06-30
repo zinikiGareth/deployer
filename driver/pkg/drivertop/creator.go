@@ -15,6 +15,10 @@ func NewDriver(sink errorsink.ErrorSink, userErrorsTo io.StringWriter) driverbot
 	return impl.NewDriver(sink, userErrorsTo)
 }
 
+func NewIdentifierToken(loc *errorsink.Location, name string) driverbottom.Identifier {
+	return lexicator.NewIdentifierToken(loc.Line, loc.Offset, name)
+}
+
 func MakeVar(name string) driverbottom.Holder {
 	// id := lexicator.NewIdentifierToken(nil, 0, name)
 	return &interpreters.VarHolder{}

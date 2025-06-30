@@ -1,0 +1,8 @@
+Step propmap-0:
+	*propmap-0-0:
+		@propmap-0
+			bucket {
+				_where_: propmap.dply:15.0
+				name: org.ziniki.launch_bucket
+				policy: <nil>
+			}

@@ -93,6 +93,18 @@ type List interface {
 	Members() []Expr
 }
 
+type MapEntry interface {
+	Key() Identifier
+	Value() Expr
+}
+
+type Map interface {
+	Expr
+	IsEmpty() bool
+	Size() int
+	Members() []MapEntry
+}
+
 type ExprParser interface {
 	Parse(tokens []Token) (Expr, bool)
 	ParseMultiple(tokens []Token) ([]Expr, bool)

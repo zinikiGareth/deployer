@@ -30,10 +30,10 @@ func (pis *propertiesInterpreter) HaveTokens(tokens []driverbottom.Token) driver
 
 	op, ok := tokens[1].(driverbottom.Operator)
 	if !ok {
-		pis.tools.Reporter.Reportf(tokens[0].Loc().Offset, "property <- expr")
+		pis.tools.Reporter.Reportf(tokens[1].Loc().Offset, "property <- expr")
 		return NewIgnoreInnerScope()
 	} else if !op.Is("<-") {
-		pis.tools.Reporter.Reportf(tokens[0].Loc().Offset, "property <- expr")
+		pis.tools.Reporter.Reportf(tokens[1].Loc().Offset, "property <- expr")
 		return NewIgnoreInnerScope()
 	}
 
@@ -42,13 +42,18 @@ func (pis *propertiesInterpreter) HaveTokens(tokens []driverbottom.Token) driver
 		return NewIgnoreInnerScope()
 	}
 
-	listExpr, ok := expr.(*exprs.ListExpr)
-	if ok && listExpr.IsEmpty() {
-		return NewCollectListInnerScope(pis.tools, pis.parent, prop)
-	} else {
-		pis.parent.AddProperty(prop, expr)
-		return NewDisallowInnerScope(pis.tools)
+	switch expr := expr.(type) {
+	case *exprs.ListExpr:
+		if expr.IsEmpty() {
+			return NewCollectListInnerScope(pis.tools, pis.parent, prop)
+		}
+	case *exprs.MapExpr:
+		if expr.IsEmpty() {
+			return NewCollectMapInnerScope(pis.tools, pis.parent, prop)
+		}
 	}
+	pis.parent.AddProperty(prop, expr)
+	return NewDisallowInnerScope(pis.tools)
 }
 
 func (pis *propertiesInterpreter) Completed() {

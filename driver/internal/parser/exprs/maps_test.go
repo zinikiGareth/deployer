@@ -30,8 +30,8 @@ func TestAnEmptyMapIsParsed(t *testing.T) {
 		t.Fatalf("Expr was not a map: %T", expr)
 	}
 
-	if me.Length() != 0 {
-		t.Fatalf("Expected map of size 0, not %d", me.Length())
+	if me.Size() != 0 {
+		t.Fatalf("Expected map of size 0, not %d", me.Size())
 	}
 }
 

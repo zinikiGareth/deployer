@@ -118,21 +118,24 @@ func (p *exprParser) ReduceListExpr(le AsList) (driverbottom.Expr, bool) {
 
 func (p *exprParser) ReduceMapExpr(me AsMap) (driverbottom.Expr, bool) {
 	toks := me.Tokens
-	exprs := []driverbottom.Expr{}
+	pairs := []driverbottom.MapEntry{}
 	if len(toks) == 2 {
-		return &MapExpr{exprs: exprs}, true
+		return &MapExpr{pairs: pairs}, true
 	}
-	inner := toks[1 : len(toks)-1]
-	for len(inner) > 0 {
-		before, after := p.splitComma(inner)
-		e, ok := p.parseOne(before)
-		if !ok {
-			return nil, false
+	panic("not implemented")
+	/*
+		inner := toks[1 : len(toks)-1]
+		for len(inner) > 0 {
+			before, after := p.splitComma(inner)
+			e, ok := p.parseOne(before)
+			if !ok {
+				return nil, false
+			}
+			pairs = append(pairs, e)
+			inner = after
 		}
-		exprs = append(exprs, e)
-		inner = after
-	}
-	return &MapExpr{exprs: exprs}, true
+		return &MapExpr{pairs: pairs}, true
+	*/
 }
 
 func (p *exprParser) splitComma(tokens []driverbottom.Token) ([]driverbottom.Token, []driverbottom.Token) {
