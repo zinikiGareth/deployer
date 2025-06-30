@@ -13,6 +13,7 @@ type EnvModel struct {
 	loc      *errorsink.Location
 	reporter errorsink.ErrorRepI
 	from     fmt.Stringer
+	failed   bool
 }
 
 // Loc implements driverbottom.Describable.
@@ -43,8 +44,9 @@ func (e *EnvModel) DumpTo(iw driverbottom.IndentWriter) {
 func (e *EnvModel) String() string {
 	str := e.from.String()
 	val := os.Getenv(str)
-	if val == "" {
+	if !e.failed && val == "" {
 		e.reporter.ReportAtf(e.loc, "the env var %s is not set", str)
+		e.failed = true
 	}
 	return val
 }
