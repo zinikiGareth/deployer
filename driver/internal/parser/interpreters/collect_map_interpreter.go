@@ -10,7 +10,18 @@ type collectMapInterpreter struct {
 	tools  *driverbottom.CoreTools
 	parent driverbottom.PropertyParent
 	prop   driverbottom.Identifier
+	addTo  driverbottom.ValueParent
 	pairs  []driverbottom.MapEntry
+}
+
+// AddAdverb implements driverbottom.PropertyParent.
+func (cmi *collectMapInterpreter) AddAdverb(adverb driverbottom.Adverb, args []driverbottom.Token) driverbottom.Interpreter {
+	panic("unimplemented - and should not be called")
+}
+
+// AddProperty implements driverbottom.PropertyParent.
+func (cmi *collectMapInterpreter) AddProperty(name driverbottom.Identifier, expr driverbottom.Expr) {
+	cmi.pairs = append(cmi.pairs, exprs.NewMapPair(name, expr))
 }
 
 func (cmi *collectMapInterpreter) HaveTokens(tokens []driverbottom.Token) driverbottom.Interpreter {
@@ -42,12 +53,28 @@ func (cmi *collectMapInterpreter) HaveTokens(tokens []driverbottom.Token) driver
 	if !ok {
 		return NewIgnoreInnerScope()
 	}
-	cmi.pairs = append(cmi.pairs, exprs.NewMapPair(prop, expr))
+	switch expr := expr.(type) {
+	case *exprs.ListExpr:
+		if expr.IsEmpty() {
+			return NewCollectListInnerScope(cmi.tools, cmi, prop, nil)
+		}
+	case *exprs.MapExpr:
+		if expr.IsEmpty() {
+			return NewCollectMapInnerScope(cmi.tools, cmi, prop, nil)
+		}
+	}
 
+	cmi.pairs = append(cmi.pairs, exprs.NewMapPair(prop, expr))
 	return NewDisallowInnerScope(cmi.tools)
 }
 
 func (cli *collectMapInterpreter) Completed() {
-	cli.parent.AddProperty(cli.prop, exprs.NewMapExpr(cli.pairs))
-	cli.parent.Completed()
+	val := exprs.NewMapExpr(cli.pairs)
+	if cli.addTo != nil {
+		cli.addTo.Add(val)
+		// cli.addTo.Completed()
+	} else {
+		cli.parent.AddProperty(cli.prop, val)
+		// cli.parent.Completed()
+	}
 }

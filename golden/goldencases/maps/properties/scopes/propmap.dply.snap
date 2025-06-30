@@ -41,3 +41,16 @@
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
 >				index <- "text/html"
 #^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>				current <- []
+#^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>					"hello"
+#^^^^^^^^^^^^^ source.deployer-dply
+>					"world"
+#^^^^^^^^^^^^^ source.deployer-dply
+>			
+>			list <- []
+#^^^^^^^^^^^^^^ source.deployer-dply
+>				{}
+#^^^^^^^ source.deployer-dply
+>					key <- "value"
+#^^^^^^^^^^^^^^^^^^^^ source.deployer-dply

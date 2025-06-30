@@ -22,3 +22,10 @@ obviously it doesn't apply if the property has weird characters.
 				"*.html" <- "text/html"
 				"*.js" <- "application/javascript"
 				index <- "text/html"
+				current <- []
+					"hello"
+					"world"
+			
+			list <- []
+				{}
+					key <- "value"

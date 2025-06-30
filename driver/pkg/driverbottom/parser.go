@@ -21,6 +21,11 @@ type PropertyParent interface {
 	Completed()
 }
 
+type ValueParent interface {
+	Add(expr Expr)
+	Completed()
+}
+
 type Scoper interface {
 	FindVerbCommand(v Identifier) VerbCommand
 }
