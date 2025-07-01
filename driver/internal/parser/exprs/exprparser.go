@@ -10,7 +10,7 @@ type exprParser struct {
 	tools *driverbottom.CoreTools
 }
 
-func (p *exprParser) ParseMultiple(tokens []driverbottom.Token) ([]driverbottom.Expr, bool) {
+func (p *exprParser) ParseMultiple(scope driverbottom.Scope, tokens []driverbottom.Token) ([]driverbottom.Expr, bool) {
 	if len(tokens) == 0 {
 		return nil, true
 	}
@@ -27,7 +27,7 @@ func (p *exprParser) ParseMultiple(tokens []driverbottom.Token) ([]driverbottom.
 		} else {
 			bs = []driverbottom.Token{b}
 		}
-		expr, ok := p.parseOne(bs)
+		expr, ok := p.parseOne(scope, bs)
 		if !ok {
 			return nil, false
 		}
@@ -36,7 +36,7 @@ func (p *exprParser) ParseMultiple(tokens []driverbottom.Token) ([]driverbottom.
 	return ret, true
 }
 
-func (p *exprParser) Parse(tokens []driverbottom.Token) (driverbottom.Expr, bool) {
+func (p *exprParser) Parse(scope driverbottom.Scope, tokens []driverbottom.Token) (driverbottom.Expr, bool) {
 	if len(tokens) == 0 {
 		p.tools.Reporter.Reportf(0, "no expression found")
 		return nil, false
@@ -49,14 +49,14 @@ func (p *exprParser) Parse(tokens []driverbottom.Token) (driverbottom.Expr, bool
 	// for len(tokens) >= 2 && IsPuncChar(tokens[0], '(') && IsPuncChar(tokens[len(tokens)-1], ')') {
 	// 	tokens = tokens[1 : len(tokens)-1]
 	// }
-	return p.parseOne(blocks)
+	return p.parseOne(scope, blocks)
 }
 
-func (p *exprParser) parseOne(blocks []driverbottom.Token) (driverbottom.Expr, bool) {
+func (p *exprParser) parseOne(scope driverbottom.Scope, blocks []driverbottom.Token) (driverbottom.Expr, bool) {
 	tok, fn, before, after := p.split(blocks)
 	if fn != nil {
-		pre, ok1 := p.makeArgs(before)
-		post, ok2 := p.makeArgs(after)
+		pre, ok1 := p.makeArgs(scope, before)
+		post, ok2 := p.makeArgs(scope, after)
 		if !ok1 || !ok2 {
 			return nil, false
 		}
@@ -66,38 +66,38 @@ func (p *exprParser) parseOne(blocks []driverbottom.Token) (driverbottom.Expr, b
 			p.tools.Reporter.Reportf(before[0].Loc().Offset, "no function symbol found in this expression")
 			return nil, false
 		}
-		return p.AsExpr(before[0])
+		return p.AsExpr(scope, before[0])
 	}
 }
 
-func (p *exprParser) AsExpr(x driverbottom.Token) (driverbottom.Expr, bool) {
+func (p *exprParser) AsExpr(scope driverbottom.Scope, x driverbottom.Token) (driverbottom.Expr, bool) {
 	switch x := x.(type) {
 	case driverbottom.Expr:
 		return x, true
 	case driverbottom.Identifier:
-		return VarRefer(x), true
+		return VarRefer(scope, x), true
 	case Bracketed:
-		return p.parseOne(x.Tokens[1 : len(x.Tokens)-1])
+		return p.parseOne(scope, x.Tokens[1:len(x.Tokens)-1])
 	case AsList:
 		// I think this is correct - here we have a "list" and want to convert it into an expression.
 		// Yes, that makes sense.  We need to do that by having something that can build an expression from all the subexpressions.
 		// And we need to recursively call Parse() on those, splitting up based on the position of the commas.
 		// There may not be adjacent commas, or a comma after the OSB or before the CSB
 		// But OSB CSB is valid - an empty list
-		return p.ReduceListExpr(x)
+		return p.ReduceListExpr(scope, x)
 	case AsMap:
 		// I think this is correct - here we have a "list" and want to convert it into an expression.
 		// Yes, that makes sense.  We need to do that by having something that can build an expression from all the subexpressions.
 		// And we need to recursively call Parse() on those, splitting up based on the position of the commas.
 		// There may not be adjacent commas, or a comma after the OSB or before the CSB
 		// But OSB CSB is valid - an empty list
-		return p.ReduceMapExpr(x)
+		return p.ReduceMapExpr(scope, x)
 	default:
 		panic(fmt.Sprintf("cannot interpret type %T as Expr", x))
 	}
 }
 
-func (p *exprParser) ReduceListExpr(le AsList) (driverbottom.Expr, bool) {
+func (p *exprParser) ReduceListExpr(scope driverbottom.Scope, le AsList) (driverbottom.Expr, bool) {
 	toks := le.Tokens
 	exprs := []driverbottom.Expr{}
 	if len(toks) == 2 {
@@ -106,7 +106,7 @@ func (p *exprParser) ReduceListExpr(le AsList) (driverbottom.Expr, bool) {
 	inner := toks[1 : len(toks)-1]
 	for len(inner) > 0 {
 		before, after := p.splitComma(inner)
-		e, ok := p.parseOne(before)
+		e, ok := p.parseOne(scope, before)
 		if !ok {
 			return nil, false
 		}
@@ -116,7 +116,7 @@ func (p *exprParser) ReduceListExpr(le AsList) (driverbottom.Expr, bool) {
 	return &ListExpr{exprs: exprs}, true
 }
 
-func (p *exprParser) ReduceMapExpr(me AsMap) (driverbottom.Expr, bool) {
+func (p *exprParser) ReduceMapExpr(scope driverbottom.Scope, me AsMap) (driverbottom.Expr, bool) {
 	toks := me.Tokens
 	pairs := []driverbottom.MapEntry{}
 	if len(toks) == 2 {
@@ -217,11 +217,11 @@ func (p *exprParser) ScanLoop(tokens []driverbottom.Token, ret []driverbottom.To
 	return ret, i
 }
 
-func (p *exprParser) makeArgs(tokens []driverbottom.Token) ([]driverbottom.Expr, bool) {
+func (p *exprParser) makeArgs(scope driverbottom.Scope, tokens []driverbottom.Token) ([]driverbottom.Expr, bool) {
 	args := make([]driverbottom.Expr, len(tokens))
 	for k, tok := range tokens {
 		var ok bool
-		args[k], ok = p.AsExpr(tok)
+		args[k], ok = p.AsExpr(scope, tok)
 		if !ok {
 			return nil, false
 		}

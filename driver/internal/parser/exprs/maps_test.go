@@ -20,7 +20,7 @@ func TestAnEmptyMapIsParsed(t *testing.T) {
 	l := f.AtLine(1, 0, "{}")
 
 	tokens := lx.BlockedLine(l)
-	expr, ok := p.Parse(tokens)
+	expr, ok := p.Parse(nil, tokens)
 	if !ok {
 		t.Fatalf("parsing failed")
 	}

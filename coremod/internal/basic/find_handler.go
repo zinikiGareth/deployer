@@ -12,7 +12,7 @@ type FindCommandHandler struct {
 	tools *corebottom.Tools
 }
 
-func (ech *FindCommandHandler) Handle(parent driverbottom.AttachResult, tokens []driverbottom.Token) driverbottom.Interpreter {
+func (ech *FindCommandHandler) Handle(parent driverbottom.AttachResult, scope driverbottom.Scope, tokens []driverbottom.Token) driverbottom.Interpreter {
 	if len(tokens) < 2 || len(tokens) > 3 {
 		ech.tools.Reporter.Report(tokens[0].Loc().Offset, "Find: <class-identifier> [instance-name]")
 		return drivertop.NewIgnoreInnerScope()
@@ -33,7 +33,7 @@ func (ech *FindCommandHandler) Handle(parent driverbottom.AttachResult, tokens [
 		}
 	}
 
-	ea := &FindAction{tools: ech.tools, loc: tokens[0].Loc(), what: clz, named: name, props: make(map[driverbottom.Identifier]driverbottom.Expr)}
+	ea := &FindAction{tools: ech.tools, scope: scope, loc: tokens[0].Loc(), what: clz, named: name, props: make(map[driverbottom.Identifier]driverbottom.Expr)}
 	parent.Attach(ea)
 
 	return drivertop.NewPropertiesInnerScope(ech.tools.CoreTools, ea)

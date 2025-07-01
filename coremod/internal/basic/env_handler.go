@@ -10,13 +10,13 @@ type envCommandHandler struct {
 	tools *corebottom.Tools
 }
 
-func (ech *envCommandHandler) Handle(parent driverbottom.AttachResult, tokens []driverbottom.Token) driverbottom.Interpreter {
+func (ech *envCommandHandler) Handle(parent driverbottom.AttachResult, scope driverbottom.Scope, tokens []driverbottom.Token) driverbottom.Interpreter {
 	if len(tokens) < 2 {
 		ech.tools.Reporter.Report(tokens[0].Loc().Offset, "env: expr")
 		return drivertop.NewIgnoreInnerScope()
 	}
 
-	expr, ok := ech.tools.Parser.Parse(tokens[1:])
+	expr, ok := ech.tools.Parser.Parse(scope, tokens[1:])
 	if !ok {
 		return drivertop.NewIgnoreInnerScope()
 	}

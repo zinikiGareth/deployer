@@ -1,0 +1,33 @@
+>I haven't fully thought through scoping in advance.
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
+>
+>But my intuition is that top-level things go into one scope, then each top-level thing
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
+>has its own internal scope.
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
+>
+>I think I am aiming for a Miranda/Haskell/FLAS-like "scope is upward visibility" mechanism.
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
+>
+>So here we define two targets, each with a variable called "tmp".  They are separate,
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
+>and each one should work with its own environment.
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
+>
+>	target the_first
+#^ source.deployer-dply
+# ^^^^^^ source.deployer-dply keyword.target
+#       ^^^^^^^^^^^ source.deployer-dply
+>		env "HELLO" => tmp
+#^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>		show tmp
+#^^^^^^^^^^^ source.deployer-dply
+>
+>	target the_second
+#^ source.deployer-dply
+# ^^^^^^ source.deployer-dply keyword.target
+#       ^^^^^^^^^^^^ source.deployer-dply
+>		env "GOODBYE" => tmp
+#^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>		show tmp
+#^^^^^^^^^^^ source.deployer-dply

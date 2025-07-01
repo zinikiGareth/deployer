@@ -10,7 +10,7 @@ type policyCommandHandler struct {
 	tools *corebottom.Tools
 }
 
-func (pch *policyCommandHandler) Handle(parent driverbottom.AttachResult, tokens []driverbottom.Token) driverbottom.Interpreter {
+func (pch *policyCommandHandler) Handle(parent driverbottom.AttachResult, scope driverbottom.Scope, tokens []driverbottom.Token) driverbottom.Interpreter {
 	if len(tokens) != 1 {
 		pch.tools.Reporter.Report(tokens[0].Loc().Offset, "policy: this may in fact be valid, but if so I don't know how ")
 		return drivertop.NewIgnoreInnerScope()

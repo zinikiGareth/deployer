@@ -11,7 +11,7 @@ type bucketContentsScope struct {
 	aba   *assertBucketAction
 }
 
-func (b *bucketContentsScope) HaveTokens(tokens []driverbottom.Token) driverbottom.Interpreter {
+func (b *bucketContentsScope) HaveTokens(scope driverbottom.Scope, tokens []driverbottom.Token) driverbottom.Interpreter {
 	if len(tokens) != 1 {
 		b.tools.Reporter.Reportf(0, "may only have one file per line")
 		return drivertop.NewIgnoreInnerScope()

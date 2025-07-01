@@ -64,7 +64,7 @@ func (t *tmp) applySink(sink errorsink.ErrorSink) {
 	}
 }
 
-func (t *tmp) HaveTokens(toks []driverbottom.Token) driverbottom.Interpreter {
+func (t *tmp) HaveTokens(scope driverbottom.Scope, toks []driverbottom.Token) driverbottom.Interpreter {
 	tok := toks[0].(*LineToken)
 	lineNo := tok.Loc().Line.Line
 	lenIndent := tok.Loc().Line.Indent

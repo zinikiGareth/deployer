@@ -5,6 +5,7 @@ import (
 	"io"
 	"log"
 	"maps"
+	"os"
 	"slices"
 
 	"ziniki.org/deployer/driver/internal/parser/interpreters"
@@ -104,6 +105,8 @@ func (s *Storage) Get(v driverbottom.Holder) any {
 	if s.runtime[v] == nil { // TODO: want to be very sure it's not just value "nil", which is difficult in Go
 		// I would have thought this was serious, but apparently copy_files needs to cope with "no bucket" in the initial phase
 		log.Printf("no value has been set for %v in mode %d", v, s.CurrentMode())
+		iw := utils.NewIndentWriter(os.Stdout)
+		s.ExportSymbolsTo(iw)
 		if s.CurrentMode() == 2 || s.CurrentMode() == 3 {
 			panic("and this cannot be right in this mode")
 		}

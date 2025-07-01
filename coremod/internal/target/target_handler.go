@@ -10,14 +10,14 @@ type CoreTargetHandler struct {
 	tools *corebottom.Tools
 }
 
-func (t *CoreTargetHandler) Handle(attacher driverbottom.AttachResult, tokens []driverbottom.Token) driverbottom.Interpreter {
+func (t *CoreTargetHandler) Handle(attacher driverbottom.AttachResult, scope driverbottom.Scope, tokens []driverbottom.Token) driverbottom.Interpreter {
 	if len(tokens) != 2 {
 		t.tools.Reporter.Reportf(0, "target: <name>")
 		return drivertop.NewIgnoreInnerScope()
 	}
 	t1 := tokens[1].(driverbottom.Identifier)
 	name := driverbottom.SymbolName(t1.Id())
-	target := &CoreTarget{tools: t.tools, loc: t1.Loc(), name: name, actions: []corebottom.Action{}}
+	target := &CoreTarget{tools: t.tools, loc: t1.Loc(), name: name, scope: scope, actions: []corebottom.Action{}}
 
 	if err := attacher.Attach(target); err != nil {
 		t.tools.Reporter.Reportf(t1.Loc().Offset, "duplicate target name: %s", t1)

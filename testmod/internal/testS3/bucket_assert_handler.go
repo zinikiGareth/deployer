@@ -10,7 +10,7 @@ type assertBucketHandler struct {
 	tools *corebottom.Tools
 }
 
-func (abh *assertBucketHandler) Handle(parent driverbottom.AttachResult, tokens []driverbottom.Token) driverbottom.Interpreter {
+func (abh *assertBucketHandler) Handle(parent driverbottom.AttachResult, scope driverbottom.Scope, tokens []driverbottom.Token) driverbottom.Interpreter {
 	if len(tokens) < 1 {
 		abh.tools.Reporter.Report(tokens[0].Loc().Offset, "test.assertBucketHas: <bucket>")
 		return drivertop.NewIgnoreInnerScope()
@@ -20,7 +20,7 @@ func (abh *assertBucketHandler) Handle(parent driverbottom.AttachResult, tokens 
 	// 	return drivertop.NewIgnoreInnerScope()
 	// }
 
-	expr, ok := abh.tools.Parser.Parse(tokens[1:])
+	expr, ok := abh.tools.Parser.Parse(scope, tokens[1:])
 	if !ok {
 		return drivertop.NewIgnoreInnerScope()
 	}

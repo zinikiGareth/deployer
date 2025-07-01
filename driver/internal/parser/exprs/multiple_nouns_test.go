@@ -11,7 +11,7 @@ import (
 func TestZeroTokensMakeZeroExprs(t *testing.T) {
 	p, _ := makeParser(t)
 	lineloc.Text = ""
-	exprs, ok := p.ParseMultiple([]driverbottom.Token{})
+	exprs, ok := p.ParseMultiple(nil, []driverbottom.Token{})
 	if !ok {
 		t.Fatalf("Parsing failed")
 	}
@@ -26,7 +26,7 @@ func TestTwoNounsComeBackSeparately(t *testing.T) {
 	defer cleanup()
 	hello := lexicator.NewIdentifierToken(lineloc, 0, "hello")
 	world := lexicator.NewStringToken(lineloc, 6, "world")
-	es, ok := p.ParseMultiple([]driverbottom.Token{hello, world})
+	es, ok := p.ParseMultiple(nil, []driverbottom.Token{hello, world})
 	if !ok {
 		t.Fatalf("Parsing failed")
 	}

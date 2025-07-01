@@ -24,7 +24,7 @@ func (cmi *collectMapInterpreter) AddProperty(name driverbottom.Identifier, expr
 	cmi.pairs = append(cmi.pairs, exprs.NewMapPair(name, expr))
 }
 
-func (cmi *collectMapInterpreter) HaveTokens(tokens []driverbottom.Token) driverbottom.Interpreter {
+func (cmi *collectMapInterpreter) HaveTokens(scope driverbottom.Scope, tokens []driverbottom.Token) driverbottom.Interpreter {
 	if len(tokens) < 3 {
 		cmi.tools.Reporter.Report(0, "line must be of form <key> <- <expr>")
 		return NewDisallowInnerScope(cmi.tools)
@@ -49,7 +49,7 @@ func (cmi *collectMapInterpreter) HaveTokens(tokens []driverbottom.Token) driver
 		return NewIgnoreInnerScope()
 	}
 
-	expr, ok := cmi.tools.Parser.Parse(tokens[2:])
+	expr, ok := cmi.tools.Parser.Parse(scope, tokens[2:])
 	if !ok {
 		return NewIgnoreInnerScope()
 	}

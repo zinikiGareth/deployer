@@ -1,0 +1,17 @@
+I haven't fully thought through scoping in advance.
+
+But my intuition is that top-level things go into one scope, then each top-level thing
+has its own internal scope.
+
+I think I am aiming for a Miranda/Haskell/FLAS-like "scope is upward visibility" mechanism.
+
+So here we define two targets, each with a variable called "tmp".  They are separate,
+and each one should work with its own environment.
+
+	target the_first
+		env "HELLO" => tmp
+		show tmp
+
+	target the_second
+		env "GOODBYE" => tmp
+		show tmp

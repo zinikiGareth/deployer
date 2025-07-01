@@ -1,7 +1,6 @@
 package exprs
 
 import (
-	"fmt"
 	"log"
 
 	"ziniki.org/deployer/driver/pkg/driverbottom"
@@ -9,13 +8,14 @@ import (
 )
 
 type VarReference struct {
+	scope     driverbottom.Scope
 	id        driverbottom.Identifier
 	value     driverbottom.Describable
 	actualVar driverbottom.Holder
 }
 
 func (v *VarReference) Resolve(r driverbottom.Resolver) {
-	val := r.Resolve(v.id)
+	val := r.Resolve(v.scope, v.id)
 	h, ok := val.(driverbottom.Holder)
 	if ok { // it is a "real var"
 		v.actualVar = h
@@ -30,21 +30,12 @@ func (v *VarReference) Eval(s driverbottom.RuntimeStorage) any {
 		// it didn't resolve to a variable but a value
 		return v.value
 	}
-	// log.Printf("Eval(vr) %s %v => %T %v\n", v.id, v, s.Get(v), s.Get(v))
+	log.Printf("Eval(vr) %s %v => %T %v\n", v.id, v, s.Get(v.actualVar), s.Get(v.actualVar))
 	out := s.Get(v.actualVar)
-	if out != nil {
-		return out
-	}
-	out = s.Read(driverbottom.SymbolName(v.id.Id()))
-	if out != nil {
-		e, isExpr := out.(driverbottom.Expr)
-		if isExpr {
-			return e.Eval(s)
-		} else {
-			return out
-		}
-	}
-	panic(fmt.Sprintf("cannot find %v\n", v))
+	// if out != nil {
+	return out
+	// }
+	// panic(fmt.Sprintf("cannot find %v\n", v))
 }
 
 func (v *VarReference) Loc() *errorsink.Location {
@@ -80,8 +71,8 @@ func (v *VarReference) Binding() driverbottom.Holder {
 	return v.actualVar
 }
 
-func VarRefer(id driverbottom.Identifier) driverbottom.Var {
-	return &VarReference{id: id}
+func VarRefer(fromScope driverbottom.Scope, id driverbottom.Identifier) driverbottom.Var {
+	return &VarReference{scope: fromScope, id: id}
 }
 
 func IsVar(e driverbottom.Expr, id driverbottom.Identifier) bool {

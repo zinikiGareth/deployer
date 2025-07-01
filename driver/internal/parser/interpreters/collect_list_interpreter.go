@@ -13,8 +13,8 @@ type collectListInterpreter struct {
 	exprs  []driverbottom.Expr
 }
 
-func (cli *collectListInterpreter) HaveTokens(tokens []driverbottom.Token) driverbottom.Interpreter {
-	expr, ok := cli.tools.Parser.Parse(tokens)
+func (cli *collectListInterpreter) HaveTokens(scope driverbottom.Scope, tokens []driverbottom.Token) driverbottom.Interpreter {
+	expr, ok := cli.tools.Parser.Parse(scope, tokens)
 	if !ok {
 		return NewIgnoreInnerScope()
 	}

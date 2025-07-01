@@ -10,13 +10,13 @@ type copyCommandHandler struct {
 	tools *corebottom.Tools
 }
 
-func (cch *copyCommandHandler) Handle(parent driverbottom.AttachResult, tokens []driverbottom.Token) driverbottom.Interpreter {
+func (cch *copyCommandHandler) Handle(parent driverbottom.AttachResult, scope driverbottom.Scope, tokens []driverbottom.Token) driverbottom.Interpreter {
 	if len(tokens) < 2 {
 		cch.tools.Reporter.Report(tokens[0].Loc().Offset, "files.dir: <from> <to>")
 		return drivertop.NewIgnoreInnerScope()
 	}
 
-	exprs, ok := cch.tools.Parser.ParseMultiple(tokens[1:])
+	exprs, ok := cch.tools.Parser.ParseMultiple(scope, tokens[1:])
 	if !ok {
 		return drivertop.NewIgnoreInnerScope()
 	}

@@ -11,7 +11,7 @@ import (
 func TestAStringIsAnExpr(t *testing.T) {
 	p, _ := makeParser(t)
 	hello := lexicator.NewStringToken(lineloc, 0, "hello")
-	expr, ok := p.Parse([]driverbottom.Token{hello})
+	expr, ok := p.Parse(nil, []driverbottom.Token{hello})
 	if !ok {
 		t.Fatalf("Parse failed")
 	}
@@ -23,7 +23,7 @@ func TestAStringIsAnExpr(t *testing.T) {
 func TestANumberIsAnExpr(t *testing.T) {
 	p, _ := makeParser(t)
 	nbr := lexicator.NewNumberToken(lineloc, 0, 46)
-	expr, ok := p.Parse([]driverbottom.Token{nbr})
+	expr, ok := p.Parse(nil, []driverbottom.Token{nbr})
 	if !ok {
 		t.Fatalf("Parse failed")
 	}
@@ -35,7 +35,7 @@ func TestANumberIsAnExpr(t *testing.T) {
 func TestAnUnboundIDIsAnExpr(t *testing.T) {
 	p, _ := makeParser(t)
 	id := lexicator.NewIdentifierToken(lineloc, 0, "x")
-	expr, ok := p.Parse([]driverbottom.Token{id})
+	expr, ok := p.Parse(nil, []driverbottom.Token{id})
 	if !ok {
 		t.Fatalf("Parse failed")
 	}
@@ -49,7 +49,7 @@ func TestAnIDBoundToAVerbProducesAnExpr(t *testing.T) {
 
 	recall.things["hello"] = idFunc
 	id := lexicator.NewIdentifierToken(lineloc, 0, "hello")
-	expr, ok := p.Parse([]driverbottom.Token{id})
+	expr, ok := p.Parse(nil, []driverbottom.Token{id})
 	if !ok {
 		t.Fatalf("Parse failed")
 	}

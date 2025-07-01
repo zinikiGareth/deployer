@@ -15,7 +15,11 @@ func (repo *SimpleRepository) ResolveAll(tools *driverbottom.CoreTools) {
 }
 
 func (d *SimpleRepository) GetDefinition(name driverbottom.SymbolName) driverbottom.Describable {
-	return d.symbols[name]
+	scope := d.symbols[name]
+	if scope == nil {
+		return nil
+	}
+	return scope
 }
 
 type Searcher struct {
@@ -24,9 +28,9 @@ type Searcher struct {
 	reporter errorsink.ErrorRepI
 }
 
-func (s *Searcher) Resolve(name driverbottom.Identifier) any {
+func (s *Searcher) Resolve(scope driverbottom.Scope, name driverbottom.Identifier) any {
 	// log.Printf("attempting to resolve %s\n", name)
-	defn := s.repo.GetDefinition(driverbottom.SymbolName(name.Id()))
+	defn := scope.FindDefinition(driverbottom.SymbolName(name.Id()))
 	if defn != nil {
 		// log.Printf("defn for %s => %T %v\n", name, defn, defn)
 		return defn

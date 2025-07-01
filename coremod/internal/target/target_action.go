@@ -14,12 +14,17 @@ type CoreTarget struct {
 	tools *corebottom.Tools
 	loc   *errorsink.Location
 	name  driverbottom.SymbolName
+	scope driverbottom.Scope
 
 	actions []corebottom.Action
 }
 
 func (cc *CoreTarget) Name() driverbottom.SymbolName {
 	return cc.name
+}
+
+func (cc *CoreTarget) Scope() driverbottom.Scope {
+	return cc.scope
 }
 
 func (cc *CoreTarget) String() string {

@@ -1,0 +1,45 @@
+symbol the_first is bound to:
+target the_first {
+	_where_: separate.dply:11.7
+	actions: [
+		AssignTo {
+			_where_: separate.dply:12.15
+			assignTo: tmp
+			EnvAction {
+				_where_: separate.dply:12.0
+				varname: HELLO
+			}
+		}
+		ShowAction {
+			_where_: separate.dply:13.0
+			exprs: [
+				separate.dply:13.5 Var[tmp]
+			]
+		}
+	]
+}
+symbol the_second is bound to:
+target the_second {
+	_where_: separate.dply:15.7
+	actions: [
+		AssignTo {
+			_where_: separate.dply:16.17
+			assignTo: tmp
+			EnvAction {
+				_where_: separate.dply:16.0
+				varname: GOODBYE
+			}
+		}
+		ShowAction {
+			_where_: separate.dply:17.0
+			exprs: [
+				separate.dply:17.5 Var[tmp]
+			]
+		}
+	]
+}
+symbol tmp is bound to:
+VarHolder {
+	_where_: separate.dply:12.15
+	storeFor: tmp
+}

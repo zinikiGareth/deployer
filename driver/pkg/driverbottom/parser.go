@@ -11,7 +11,7 @@ type ProvideLine interface {
 }
 
 type Interpreter interface {
-	HaveTokens(tokens []Token) Interpreter
+	HaveTokens(scope Scope, tokens []Token) Interpreter
 	Completed()
 }
 
@@ -77,7 +77,7 @@ type AttachResult interface {
 }
 
 type VerbCommand interface {
-	Handle(attacher AttachResult, tokens []Token) Interpreter
+	Handle(attacher AttachResult, scope Scope, tokens []Token) Interpreter
 }
 
 type Function interface {
@@ -111,6 +111,6 @@ type Map interface {
 }
 
 type ExprParser interface {
-	Parse(tokens []Token) (Expr, bool)
-	ParseMultiple(tokens []Token) ([]Expr, bool)
+	Parse(scope Scope, tokens []Token) (Expr, bool)
+	ParseMultiple(scope Scope, tokens []Token) ([]Expr, bool)
 }

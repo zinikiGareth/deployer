@@ -10,8 +10,8 @@ type policyAllowCommandHandler struct {
 	tools *corebottom.Tools
 }
 
-func (pah *policyAllowCommandHandler) Handle(parent driverbottom.AttachResult, tokens []driverbottom.Token) driverbottom.Interpreter {
-	exprs, ok := pah.tools.Parser.ParseMultiple(tokens[1:])
+func (pah *policyAllowCommandHandler) Handle(parent driverbottom.AttachResult, scope driverbottom.Scope, tokens []driverbottom.Token) driverbottom.Interpreter {
+	exprs, ok := pah.tools.Parser.ParseMultiple(scope, tokens[1:])
 	if !ok {
 		return drivertop.NewIgnoreInnerScope()
 	}

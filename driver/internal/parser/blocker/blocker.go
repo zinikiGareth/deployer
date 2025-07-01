@@ -1,6 +1,7 @@
 package blocker
 
 import (
+	"log"
 	"unicode"
 
 	"ziniki.org/deployer/driver/internal/parser/lexicator"
@@ -40,11 +41,13 @@ func (b *Blocker) HaveLine(lineNo int, txt string) {
 	}
 	ll := b.file.AtLine(lineNo, level, line)
 	b.tools.Reporter.At(ll)
+	scope := b.tools.Repository.AtLevel(level)
+	log.Printf("Line %d: %d %p %s\n", lineNo, level, scope, line)
 	toks := b.lex.BlockedLine(ll)
 	if toks == nil {
 		return
 	}
-	hdlr := b.handlers[level].HaveTokens(toks)
+	hdlr := b.handlers[level].HaveTokens(scope, toks)
 	if hdlr == nil {
 		panic("handler cannot return nil; if no nested scope, return NoInnerScope")
 	}
@@ -81,11 +84,12 @@ func Split(txt string) (string, string) {
 }
 
 func mapSpace(ch rune) rune {
-	if ch == '\t' {
+	switch ch {
+	case '\t':
 		return 'T'
-	} else if ch == ' ' {
+	case ' ':
 		return 'S'
-	} else {
+	default:
 		return 'U' // unicode space character of some form (including invisible)
 	}
 }

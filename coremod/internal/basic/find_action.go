@@ -15,6 +15,7 @@ import (
 
 type FindAction struct {
 	tools    *corebottom.Tools
+	scope    driverbottom.Scope
 	loc      *errorsink.Location
 	what     driverbottom.Identifier
 	resolved corebottom.Blank
@@ -93,7 +94,7 @@ func (ea *FindAction) Completed() {
 }
 
 func (ea *FindAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
-	tmp := r.Resolve(ea.what)
+	tmp := r.Resolve(ea.scope, ea.what)
 	res, ok := tmp.(corebottom.Blank)
 	if !ok {
 		log.Printf("could not make %T a Blank", tmp)

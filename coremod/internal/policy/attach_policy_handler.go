@@ -10,8 +10,8 @@ type AttachPolicyCommandHandler struct {
 	tools *corebottom.Tools
 }
 
-func (apch *AttachPolicyCommandHandler) Handle(parent driverbottom.AttachResult, tokens []driverbottom.Token) driverbottom.Interpreter {
-	exprs, ok := apch.tools.Parser.ParseMultiple(tokens[1:])
+func (apch *AttachPolicyCommandHandler) Handle(parent driverbottom.AttachResult, scope driverbottom.Scope, tokens []driverbottom.Token) driverbottom.Interpreter {
+	exprs, ok := apch.tools.Parser.ParseMultiple(scope, tokens[1:])
 	if !ok {
 		return drivertop.NewIgnoreInnerScope()
 	}

@@ -10,7 +10,7 @@ type propertiesInterpreter struct {
 	parent driverbottom.PropertyParent
 }
 
-func (pis *propertiesInterpreter) HaveTokens(tokens []driverbottom.Token) driverbottom.Interpreter {
+func (pis *propertiesInterpreter) HaveTokens(scope driverbottom.Scope, tokens []driverbottom.Token) driverbottom.Interpreter {
 	if len(tokens) >= 1 {
 		if adv, ok := tokens[0].(driverbottom.Adverb); ok {
 			return pis.parent.AddAdverb(adv, tokens[1:])
@@ -37,7 +37,7 @@ func (pis *propertiesInterpreter) HaveTokens(tokens []driverbottom.Token) driver
 		return NewIgnoreInnerScope()
 	}
 
-	expr, ok := pis.tools.Parser.Parse(tokens[2:])
+	expr, ok := pis.tools.Parser.Parse(scope, tokens[2:])
 	if !ok {
 		return NewIgnoreInnerScope()
 	}

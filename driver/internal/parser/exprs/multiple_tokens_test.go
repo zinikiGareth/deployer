@@ -11,7 +11,7 @@ import (
 func TestASingleStringGivesOneExpr(t *testing.T) {
 	p, _ := makeParser(t)
 	hello := lexicator.NewStringToken(lineloc, 0, "hello")
-	exprs, ok := p.ParseMultiple([]driverbottom.Token{hello})
+	exprs, ok := p.ParseMultiple(nil, []driverbottom.Token{hello})
 	if !ok {
 		t.Fatalf("Parse failed")
 	}
@@ -26,7 +26,7 @@ func TestASingleStringGivesOneExpr(t *testing.T) {
 func TestASingleNumberGivesOneExpr(t *testing.T) {
 	p, _ := makeParser(t)
 	nbr := lexicator.NewNumberToken(lineloc, 0, 46)
-	exprs, ok := p.ParseMultiple([]driverbottom.Token{nbr})
+	exprs, ok := p.ParseMultiple(nil, []driverbottom.Token{nbr})
 	if !ok {
 		t.Fatalf("Parse failed")
 	}
@@ -41,7 +41,7 @@ func TestASingleNumberGivesOneExpr(t *testing.T) {
 func TestAnUnboundIDIsOneExpr(t *testing.T) {
 	p, _ := makeParser(t)
 	id := lexicator.NewIdentifierToken(lineloc, 0, "x")
-	es, ok := p.ParseMultiple([]driverbottom.Token{id})
+	es, ok := p.ParseMultiple(nil, []driverbottom.Token{id})
 	if !ok {
 		t.Fatalf("Parse failed")
 	}
@@ -57,7 +57,7 @@ func TestAnIDBoundToAVerbProducesASingleExpr(t *testing.T) {
 	p, _ := makeParser(t)
 	recall.things["hello"] = idFunc
 	id := lexicator.NewIdentifierToken(lineloc, 0, "hello")
-	es, ok := p.ParseMultiple([]driverbottom.Token{id})
+	es, ok := p.ParseMultiple(nil, []driverbottom.Token{id})
 	if !ok {
 		t.Fatalf("Parse failed")
 	}

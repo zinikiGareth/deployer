@@ -15,19 +15,21 @@ type RepositoryTraverser interface {
 
 type Repository interface {
 	ReadingFile(file string)
-	IntroduceSymbol(who SymbolName, is Describable) error
+	AtLevel(level int) Scope
 	TopLevel(tlf TopLevelForm)
 	AddSymbolListener(lsnr SymbolListener)
 	Traverse(lsnr RepositoryTraverser)
 
 	ResolveAll(tools *CoreTools)
 	FindTop(name SymbolName) TopLevelForm
+	TopScope() Scope
+	CurrentScope() Scope
 
 	GetDefinition(id SymbolName) Describable
 }
 
 type Resolver interface {
-	Resolve(name Identifier) any
+	Resolve(scope Scope, name Identifier) any
 }
 
 type Resolvable interface {

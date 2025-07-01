@@ -20,7 +20,7 @@ func TestAnEmptyListIsParsed(t *testing.T) {
 	l := f.AtLine(1, 0, "[]")
 
 	tokens := lx.BlockedLine(l)
-	expr, ok := p.Parse(tokens)
+	expr, ok := p.Parse(nil, tokens)
 	if !ok {
 		t.Fatalf("parsing failed")
 	}
@@ -46,7 +46,7 @@ func TestAnEmptyListIsParsedInParens(t *testing.T) {
 	l := f.AtLine(1, 0, "([])")
 
 	tokens := lx.BlockedLine(l)
-	expr, ok := p.Parse(tokens)
+	expr, ok := p.Parse(nil, tokens)
 	if !ok {
 		t.Fatalf("parsing failed")
 	}
@@ -74,7 +74,7 @@ func TestAnEmptyListIsParsedAsAnArgument(t *testing.T) {
 	l := f.AtLine(1, 0, "sum []")
 
 	tokens := lx.BlockedLine(l)
-	expr, ok := p.Parse(tokens)
+	expr, ok := p.Parse(nil, tokens)
 	if !ok {
 		t.Fatalf("parsing failed")
 	}
@@ -108,7 +108,7 @@ func TestAnSingletonListIsParsed(t *testing.T) {
 	l := f.AtLine(1, 0, "[3]")
 
 	tokens := lx.BlockedLine(l)
-	expr, ok := p.Parse(tokens)
+	expr, ok := p.Parse(nil, tokens)
 	if !ok {
 		t.Fatalf("parsing failed")
 	}
@@ -134,7 +134,7 @@ func TestADoubleListIsParsed(t *testing.T) {
 	l := f.AtLine(1, 0, "[3, 8]")
 
 	tokens := lx.BlockedLine(l)
-	expr, ok := p.Parse(tokens)
+	expr, ok := p.Parse(nil, tokens)
 	if !ok {
 		t.Fatalf("parsing failed")
 	}

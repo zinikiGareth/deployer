@@ -29,6 +29,10 @@ type TestRunner struct {
 	RunnerPaths
 }
 
+func (r *TestRunner) Tools() *driverbottom.CoreTools {
+	return r.driver.ObtainCoreTools()
+}
+
 func (r *TestRunner) Run(modules []string) {
 	err := r.Setup(modules)
 	if err != nil {

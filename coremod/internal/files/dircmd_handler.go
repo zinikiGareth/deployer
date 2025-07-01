@@ -10,7 +10,7 @@ type dirCommandHandler struct {
 	tools *corebottom.Tools
 }
 
-func (dch *dirCommandHandler) Handle(parent driverbottom.AttachResult, tokens []driverbottom.Token) driverbottom.Interpreter {
+func (dch *dirCommandHandler) Handle(parent driverbottom.AttachResult, scope driverbottom.Scope, tokens []driverbottom.Token) driverbottom.Interpreter {
 	if len(tokens) < 2 {
 		dch.tools.Reporter.Report(tokens[0].Loc().Offset, "files.dir: expr...")
 		return drivertop.NewIgnoreInnerScope()
@@ -20,7 +20,7 @@ func (dch *dirCommandHandler) Handle(parent driverbottom.AttachResult, tokens []
 	// 	return drivertop.NewIgnoreInnerScope()
 	// }
 
-	exprs, ok := dch.tools.Parser.ParseMultiple(tokens[1:])
+	exprs, ok := dch.tools.Parser.ParseMultiple(scope, tokens[1:])
 	if !ok {
 		return drivertop.NewIgnoreInnerScope()
 	}

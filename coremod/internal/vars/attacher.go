@@ -9,6 +9,7 @@ import (
 
 type TopLevelAttacher struct {
 	tools *corebottom.Tools
+	scope driverbottom.Scope
 }
 
 func (a *TopLevelAttacher) MakeAssign(holder driverbottom.Holder, assignTo driverbottom.Identifier, action any) any {
@@ -22,7 +23,7 @@ func (a *TopLevelAttacher) Attach(tlf any) error {
 		return fmt.Errorf("cannot attach %T to top level; not a TLF", tlf)
 	}
 	a.tools.Repository.TopLevel(top)
-	if err := a.tools.Repository.IntroduceSymbol(top.Name(), top); err != nil {
+	if err := a.scope.IntroduceSymbol(top.Name(), top); err != nil {
 		return fmt.Errorf("duplicate target %s", top.Name())
 	}
 
@@ -33,8 +34,8 @@ type TLACreator struct {
 	tools *corebottom.Tools
 }
 
-func (c *TLACreator) Create() driverbottom.AttachResult {
-	return &TopLevelAttacher{tools: c.tools}
+func (c *TLACreator) Create(scope driverbottom.Scope) driverbottom.AttachResult {
+	return &TopLevelAttacher{tools: c.tools, scope: scope}
 }
 
 func NewMakeTopLevelAttacher(tools *corebottom.Tools) *TLACreator {

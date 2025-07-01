@@ -9,7 +9,7 @@ type verbCommandInterpreter struct {
 	allowAssign  bool
 }
 
-func (si *verbCommandInterpreter) HaveTokens(tokens []driverbottom.Token) driverbottom.Interpreter {
+func (si *verbCommandInterpreter) HaveTokens(scope driverbottom.Scope, tokens []driverbottom.Token) driverbottom.Interpreter {
 	ok, toks, assignTo := si.splitOnArrow(tokens)
 	if !ok { //
 		return NewIgnoreInnerScope()
@@ -39,7 +39,7 @@ func (si *verbCommandInterpreter) HaveTokens(tokens []driverbottom.Token) driver
 		a = WillAssignTo(si.tools, a, assignTo)
 		// a = &WithAssignTo{tools: si.tools, container: a, assignTo: assignTo}
 	}
-	return action.Handle(a, toks)
+	return action.Handle(a, scope, toks)
 }
 
 func (b *verbCommandInterpreter) Completed() {

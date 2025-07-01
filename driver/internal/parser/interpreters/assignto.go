@@ -10,7 +10,7 @@ import (
 func WillAssignTo(tools *driverbottom.CoreTools, container driverbottom.AttachResult, assignTo driverbottom.Identifier) *WithAssignTo {
 	holder := &VarHolder{storeFor: assignTo}
 	ret := WithAssignTo{tools: tools, assignTo: assignTo, container: container, holder: holder}
-	err := tools.Repository.IntroduceSymbol(driverbottom.SymbolName(assignTo.Id()), holder)
+	err := tools.Repository.CurrentScope().IntroduceSymbol(driverbottom.SymbolName(assignTo.Id()), holder)
 	if err != nil {
 		tools.Reporter.ReportAtf(assignTo.Loc(), "%v", err)
 	}
@@ -69,9 +69,14 @@ func (v *VarHolder) String() string {
 	return v.ShortDescription()
 }
 
+func (v *VarHolder) Scope() driverbottom.Scope {
+	return nil
+}
+
 func NewVarHolder(name driverbottom.Identifier) driverbottom.Holder {
 	return &VarHolder{storeFor: name}
 }
 
 var _ driverbottom.Holder = &VarHolder{}
 var _ driverbottom.Expr = &VarHolder{}
+var _ driverbottom.HasScope = &VarHolder{}

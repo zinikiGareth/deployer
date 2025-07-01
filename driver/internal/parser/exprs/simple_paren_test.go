@@ -12,7 +12,7 @@ func TestParseRemovesParensFromAnExpression(t *testing.T) {
 	p, _ := makeParser(t)
 	recall.things["x"] = konstFunc
 	x := lexicator.NewIdentifierToken(lineloc, 0, "x")
-	expr, ok := p.Parse([]driverbottom.Token{orb, x, crb})
+	expr, ok := p.Parse(nil, []driverbottom.Token{orb, x, crb})
 	if !ok {
 		t.Fatalf("could not parse (x)")
 	}
@@ -32,7 +32,7 @@ func TestParseRemovesDoubleParensFromAnExpression(t *testing.T) {
 	p, _ := makeParser(t)
 	recall.things["x"] = konstFunc
 	x := lexicator.NewIdentifierToken(lineloc, 0, "x")
-	expr, ok := p.Parse([]driverbottom.Token{orb, orb, x, crb, crb})
+	expr, ok := p.Parse(nil, []driverbottom.Token{orb, orb, x, crb, crb})
 	if !ok {
 		t.Fatalf("could not parse (x)")
 	}
@@ -52,7 +52,7 @@ func TestParseMultipleRemovesParensFromAnExpression(t *testing.T) {
 	p, _ := makeParser(t)
 	recall.things["x"] = konstFunc
 	x := lexicator.NewIdentifierToken(lineloc, 0, "x")
-	es, ok := p.ParseMultiple([]driverbottom.Token{orb, x, crb})
+	es, ok := p.ParseMultiple(nil, []driverbottom.Token{orb, x, crb})
 	if !ok {
 		t.Fatalf("could not parse (x)")
 	}

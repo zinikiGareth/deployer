@@ -14,7 +14,7 @@ func TestAVerbAndANoun(t *testing.T) {
 	recall.things["hello"] = konstFunc
 	hello := lexicator.NewIdentifierToken(lineloc, 0, "hello")
 	world := lexicator.NewStringToken(lineloc, 6, "world")
-	exs, ok := p.ParseMultiple([]driverbottom.Token{hello, world})
+	exs, ok := p.ParseMultiple(nil, []driverbottom.Token{hello, world})
 	if !ok {
 		t.Fatalf("Parse failed")
 	}

@@ -12,7 +12,7 @@ import (
 
 func Parse(tools *driverbottom.CoreTools, fileName, file string) {
 	attacherCreator := tools.Recall.Find("attacher", "top-level").(driverbottom.AttacherCreator)
-	globalInterpreter := interpreters.NewVerbCommandInterpreter(tools, attacherCreator.Create(), "top-level", false)
+	globalInterpreter := interpreters.NewVerbCommandInterpreter(tools, attacherCreator.Create(tools.Repository.TopScope()), "top-level", false)
 	lineLexicator := lexicator.NewLineLexicator(tools, fileName)
 	tools.Parser = exprs.NewExprParser(tools)
 	blocker := blocker.NewBlocker(tools, lineLexicator, globalInterpreter)

@@ -12,7 +12,7 @@ type MemoryCoinCommandHandler struct {
 	tools *corebottom.Tools
 }
 
-func (mcch *MemoryCoinCommandHandler) Handle(parent driverbottom.AttachResult, tokens []driverbottom.Token) driverbottom.Interpreter {
+func (mcch *MemoryCoinCommandHandler) Handle(parent driverbottom.AttachResult, scope driverbottom.Scope, tokens []driverbottom.Token) driverbottom.Interpreter {
 	if len(tokens) < 2 || len(tokens) > 3 {
 		mcch.tools.Reporter.Report(tokens[0].Loc().Offset, "coin: <class-identifier> [instance-name]")
 		return drivertop.NewIgnoreInnerScope()
@@ -33,7 +33,7 @@ func (mcch *MemoryCoinCommandHandler) Handle(parent driverbottom.AttachResult, t
 		}
 	}
 
-	mca := &MemoryCoinAction{tools: mcch.tools, loc: tokens[0].Loc(), what: clz, named: name, props: make(map[driverbottom.Identifier]driverbottom.Expr)}
+	mca := &MemoryCoinAction{tools: mcch.tools, scope: scope, loc: tokens[0].Loc(), what: clz, named: name, props: make(map[driverbottom.Identifier]driverbottom.Expr)}
 	parent.Attach(mca)
 
 	return drivertop.NewPropertiesInnerScope(mcch.tools.CoreTools, mca)

@@ -2,6 +2,7 @@ package files
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -116,6 +117,9 @@ func (dp *DirModel) PourOut(name string, into corebottom.FileDest) {
 }
 
 func NewDirModel(loc *errorsink.Location, paths []any) *DirModel {
+	for k, v := range paths {
+		log.Printf("path %d %v\n", k, v)
+	}
 	ret := &DirModel{loc: loc, paths: paths}
 	// TODO: this needs a little bit of care, because there could be issues with things not being resolved yet
 	// We need to trap those

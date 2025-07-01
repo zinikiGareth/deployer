@@ -16,6 +16,7 @@ import (
 
 type MemoryCoinAction struct {
 	tools    *corebottom.Tools
+	scope    driverbottom.Scope
 	loc      *errorsink.Location
 	what     driverbottom.Identifier
 	resolved corebottom.MemoryCoin
@@ -104,7 +105,7 @@ func (mca *MemoryCoinAction) Completed() {
 }
 
 func (mca *MemoryCoinAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
-	tmp := r.Resolve(mca.what)
+	tmp := r.Resolve(mca.scope, mca.what)
 	if tmp == nil {
 		return driverbottom.ERROR_OCCURRED
 	}

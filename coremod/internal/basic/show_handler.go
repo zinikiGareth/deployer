@@ -10,7 +10,7 @@ type showCommandHandler struct {
 	tools *corebottom.Tools
 }
 
-func (sch *showCommandHandler) Handle(parent driverbottom.AttachResult, tokens []driverbottom.Token) driverbottom.Interpreter {
+func (sch *showCommandHandler) Handle(parent driverbottom.AttachResult, scope driverbottom.Scope, tokens []driverbottom.Token) driverbottom.Interpreter {
 	if len(tokens) < 2 {
 		sch.tools.Reporter.Report(tokens[0].Loc().Offset, "show: expr...")
 		return drivertop.NewIgnoreInnerScope()
@@ -20,7 +20,7 @@ func (sch *showCommandHandler) Handle(parent driverbottom.AttachResult, tokens [
 	// 	return drivertop.NewIgnoreInnerScope()
 	// }
 
-	exprs, ok := sch.tools.Parser.ParseMultiple(tokens[1:])
+	exprs, ok := sch.tools.Parser.ParseMultiple(scope, tokens[1:])
 	if !ok {
 		return drivertop.NewIgnoreInnerScope()
 	}

@@ -12,5 +12,5 @@ type Holder interface {
 }
 
 type AttacherCreator interface {
-	Create() AttachResult
+	Create(scope Scope) AttachResult
 }

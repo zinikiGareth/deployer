@@ -13,7 +13,7 @@ func TestASimpleFunctionWithOneArg(t *testing.T) {
 	recall.things["hello"] = konstFunc
 	hello := lexicator.NewIdentifierToken(lineloc, 0, "hello")
 	world := lexicator.NewStringToken(lineloc, 6, "world")
-	expr, ok := p.Parse([]driverbottom.Token{hello, world})
+	expr, ok := p.Parse(nil, []driverbottom.Token{hello, world})
 	if !ok {
 		t.Fatalf("Parse failed")
 	}
@@ -37,7 +37,7 @@ func TestAPostfixFunctionWithOneArg(t *testing.T) {
 	recall.things["!"] = konstFunc
 	world := lexicator.NewStringToken(lineloc, 0, "world")
 	hello := lexicator.NewOperatorToken(lineloc, 6, "!")
-	expr, ok := p.Parse([]driverbottom.Token{world, hello})
+	expr, ok := p.Parse(nil, []driverbottom.Token{world, hello})
 	if !ok {
 		t.Fatalf("Parse failed")
 	}
