@@ -3,6 +3,7 @@ package basic
 import (
 	"fmt"
 	"log"
+	"slices"
 
 	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
@@ -50,8 +51,15 @@ func (ea *EnsureAction) DumpTo(w driverbottom.IndentWriter) {
 	if len(ea.props) > 0 {
 		w.IndPrintf("additional properties:\n")
 		w.Indent()
-		for k, v := range ea.props {
-			w.IndPrintf("%s <- %s\n", k.Id(), v.String())
+		keys := []string{}
+		ids := map[string]string{}
+		for id, val := range ea.props {
+			keys = append(keys, id.Id())
+			ids[id.Id()] = val.String()
+		}
+		slices.Sort(keys)
+		for _, k := range keys {
+			w.IndPrintf("%s <- %s\n", k, ids[k])
 		}
 		w.UnIndent()
 	}
