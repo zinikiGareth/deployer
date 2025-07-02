@@ -136,7 +136,8 @@ func blockerTest(lines []line) {
 	mock := innerBlock(lines)
 	mock.applySink(sink)
 	reporter := errorsink.NewErrorReporter(sink)
-	tools := driverbottom.NewTools(reporter, nil, nil, nil, nil)
+	repo := &RepoDouble{}
+	tools := driverbottom.NewTools(reporter, nil, nil, repo, nil)
 	blocker := blocker.NewBlocker(tools, mocklex, mock)
 	for _, b := range mock.lines {
 		blocker.HaveLine(b.lineNo, b.indent+b.text)
