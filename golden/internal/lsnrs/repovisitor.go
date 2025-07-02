@@ -18,7 +18,7 @@ type RepositoryStorer interface {
 }
 
 type goldenRepoStorer struct {
-	defns map[driverbottom.SymbolName]driverbottom.Describable
+	defns map[driverbottom.SymbolName][]driverbottom.Describable
 }
 
 func (s *goldenRepoStorer) DumpNamesTo(outdir string) {
@@ -31,7 +31,9 @@ func (s *goldenRepoStorer) DumpNamesTo(outdir string) {
 	keys := slices.Collect(maps.Keys(s.defns))
 	slices.Sort(keys)
 	for _, key := range keys {
-		fmt.Fprintf(writeTo, "%s => %s\n", key, s.defns[key].ShortDescription())
+		for _, m := range s.defns[key] {
+			fmt.Fprintf(writeTo, "%s => %s\n", key, m.ShortDescription())
+		}
 	}
 	writeTo.Close()
 }
@@ -47,17 +49,18 @@ func (s *goldenRepoStorer) DumpDefnsTo(outdir string) {
 	keys := slices.Collect(maps.Keys(s.defns))
 	slices.Sort(keys)
 	for _, key := range keys {
-		d := s.defns[key]
-		iw.IndPrintf("symbol %s is bound to:\n", key)
-		d.DumpTo(iw)
+		for _, d := range s.defns[key] {
+			iw.IndPrintf("symbol %s is bound to:\n", key)
+			d.DumpTo(iw)
+		}
 	}
 	writeTo.Close()
 }
 
 func (s *goldenRepoStorer) Visit(who driverbottom.SymbolName, what driverbottom.Describable) {
-	s.defns[who] = what
+	s.defns[who] = append(s.defns[who], what)
 }
 
 func NewGoldenRepoStorer() RepositoryStorer {
-	return &goldenRepoStorer{defns: make(map[driverbottom.SymbolName]driverbottom.Describable)}
+	return &goldenRepoStorer{defns: make(map[driverbottom.SymbolName][]driverbottom.Describable)}
 }
