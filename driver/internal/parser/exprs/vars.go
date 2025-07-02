@@ -32,10 +32,7 @@ func (v *VarReference) Eval(s driverbottom.RuntimeStorage) any {
 	}
 	log.Printf("Eval(vr) %s %v => %T %v\n", v.id, v, s.Get(v.actualVar), s.Get(v.actualVar))
 	out := s.Get(v.actualVar)
-	// if out != nil {
 	return out
-	// }
-	// panic(fmt.Sprintf("cannot find %v\n", v))
 }
 
 func (v *VarReference) Loc() *errorsink.Location {

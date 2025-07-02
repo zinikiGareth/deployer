@@ -11,7 +11,6 @@ type RuntimeStorage interface {
 	Bind(name Holder, value any)
 	Get(name Holder) any
 	IgnoreDuplicate(value any)
-	Read(name SymbolName) any
 	GetCoin(coin Holder, mode int) any
 	GetCoinFrom(coin Holder, modes []int) any
 	Errorf(loc *errorsink.Location, msg string, args ...any)
@@ -23,7 +22,7 @@ type RuntimeStorage interface {
 	EvalAsNumber(e Expr) AsNumber
 	DumpTo(w io.Writer)
 	SetStepName(s string)
-	EnableSymbol(to Identifier)
+	EnableSymbol(to Holder)
 	ExportSymbolsTo(iw IndentWriter)
 	NewObjId(loc *errorsink.Location) Holder
 }

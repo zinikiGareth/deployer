@@ -44,7 +44,7 @@ func (d *DoAssign) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirem
 		if status == driverbottom.NO_VALUE {
 			panic("assignTo specified but expr does not produce a value") // should be an error
 		}
-		d.tools.Storage.EnableSymbol(d.assignTo)
+		d.tools.Storage.EnableSymbol(d.holder)
 	}
 
 	return driverbottom.NO_VALUE
