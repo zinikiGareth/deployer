@@ -1,2 +1,2 @@
 bucket.dply:
-3.7 ensureABucketExists
+3.7 {} ensureABucketExists

@@ -9,9 +9,15 @@ import (
 
 type RepoScope struct {
 	repo    *SimpleRepository
+	name    string
 	entries map[driverbottom.SymbolName]driverbottom.Describable
 	parent  *RepoScope
 	inners  []*RepoScope
+}
+
+// Name implements driverbottom.Scope.
+func (s *RepoScope) Name() string {
+	return s.name
 }
 
 func (s *RepoScope) IntroduceSymbol(who driverbottom.SymbolName, is driverbottom.Describable) error {
@@ -22,7 +28,7 @@ func (s *RepoScope) IntroduceSymbol(who driverbottom.SymbolName, is driverbottom
 	}
 	s.entries[who] = is
 	for _, lsnr := range s.repo.symbolLsnrs {
-		lsnr.Symbol(who, is)
+		lsnr.Symbol(s, who, is)
 	}
 	return nil
 }
@@ -78,7 +84,7 @@ func (d *SimpleRepository) AtLevel(level int) driverbottom.Scope {
 		if len(d.stack) > 0 {
 			p = d.stack[len(d.stack)-1]
 		}
-		inner := &RepoScope{repo: d, parent: p, entries: make(map[driverbottom.SymbolName]driverbottom.Describable)}
+		inner := &RepoScope{repo: d, name: "undefined", parent: p, entries: make(map[driverbottom.SymbolName]driverbottom.Describable)}
 		if p != nil {
 			p.inners = append(p.inners, inner)
 		}
@@ -118,7 +124,7 @@ func (d *SimpleRepository) CurrentScope() driverbottom.Scope {
 
 func NewRepository() driverbottom.Repository {
 	ret := &SimpleRepository{symbols: make(map[driverbottom.SymbolName]driverbottom.Describable), stack: []*RepoScope{}}
-	topScope := &RepoScope{repo: ret, entries: make(map[driverbottom.SymbolName]driverbottom.Describable)}
+	topScope := &RepoScope{repo: ret, name: "{}", entries: make(map[driverbottom.SymbolName]driverbottom.Describable)}
 	// log.Printf("top = %p\n", topScope)
 	ret.stack = append(ret.stack, topScope)
 	return ret

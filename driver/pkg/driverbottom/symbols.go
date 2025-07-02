@@ -2,7 +2,7 @@ package driverbottom
 
 type SymbolListener interface {
 	ReadingFile(file string)
-	Symbol(who SymbolName, is Describable)
+	Symbol(scope Scope, who SymbolName, is Describable)
 }
 
 // These may want to change in the fullness of time

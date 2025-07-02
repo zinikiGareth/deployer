@@ -17,8 +17,8 @@ func (r *RepoListener) ReadingFile(file string) {
 	r.writeTo.WriteString(":\n")
 }
 
-func (r *RepoListener) Symbol(who driverbottom.SymbolName, is driverbottom.Describable) {
-	r.writeTo.WriteString(fmt.Sprintf("%s %s\n", is.Loc().InFile(), who))
+func (r *RepoListener) Symbol(scope driverbottom.Scope, who driverbottom.SymbolName, is driverbottom.Describable) {
+	r.writeTo.WriteString(fmt.Sprintf("%s %s %s\n", is.Loc().InFile(), scope.Name(), who))
 }
 
 func (r *RepoListener) Close() {

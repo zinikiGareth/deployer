@@ -8,6 +8,7 @@ type TopLevelForm interface {
 }
 
 type Scope interface {
+	Name() string
 	IntroduceSymbol(who SymbolName, is Describable) error
 	Traverse(lsnr RepositoryTraverser)
 	FindDefinition(name SymbolName) any
