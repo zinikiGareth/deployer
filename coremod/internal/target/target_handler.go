@@ -17,6 +17,7 @@ func (t *CoreTargetHandler) Handle(attacher driverbottom.AttachResult, scope dri
 	}
 	t1 := tokens[1].(driverbottom.Identifier)
 	name := driverbottom.SymbolName(t1.Id())
+	scope.MakeName(name)
 	target := &CoreTarget{tools: t.tools, loc: t1.Loc(), name: name, scope: scope, actions: []corebottom.Action{}}
 
 	if err := attacher.Attach(target); err != nil {

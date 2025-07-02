@@ -9,14 +9,20 @@ import (
 
 type RepoScope struct {
 	repo    *SimpleRepository
-	name    string
+	name    driverbottom.SymbolName
 	entries map[driverbottom.SymbolName]driverbottom.Describable
 	parent  *RepoScope
 	inners  []*RepoScope
 }
 
-// Name implements driverbottom.Scope.
-func (s *RepoScope) Name() string {
+func (s *RepoScope) MakeName(name driverbottom.SymbolName) {
+	if s.name != "undefined" {
+		log.Fatalf("changing scope name from %s to %s\n", s.name, name)
+	}
+	s.name = driverbottom.SymbolName(fmt.Sprintf("%s:{%s}", s.parent.name, name))
+}
+
+func (s *RepoScope) Name() driverbottom.SymbolName {
 	return s.name
 }
 

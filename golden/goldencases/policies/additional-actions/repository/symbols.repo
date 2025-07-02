@@ -1,3 +1,3 @@
 second-action.dply:
-5.7 createAPolicyWithANestedAction
-6.10 allow_one_policy
+5.7 {} createAPolicyWithANestedAction
+6.10 {}:{createAPolicyWithANestedAction} allow_one_policy

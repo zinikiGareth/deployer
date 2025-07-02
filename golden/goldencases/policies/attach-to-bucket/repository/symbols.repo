@@ -1,4 +1,4 @@
 bucket-with-policy.dply:
-13.7 bucketPolicy
-17.33 my_bucket
-26.10 attachable_policy
+13.7 {} bucketPolicy
+17.33 {}:{bucketPolicy} my_bucket
+26.10 {}:{bucketPolicy} attachable_policy
