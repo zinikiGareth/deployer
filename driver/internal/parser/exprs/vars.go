@@ -30,7 +30,7 @@ func (v *VarReference) Eval(s driverbottom.RuntimeStorage) any {
 		// it didn't resolve to a variable but a value
 		return v.value
 	}
-	log.Printf("Eval(vr) %s %v => %T %v\n", v.id, v, s.Get(v.actualVar), s.Get(v.actualVar))
+	// log.Printf("Eval(vr) %s %v => %T %v\n", v.id, v, s.Get(v.actualVar), s.Get(v.actualVar))
 	out := s.Get(v.actualVar)
 	return out
 }

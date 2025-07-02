@@ -1,7 +1,6 @@
 package blocker
 
 import (
-	"log"
 	"unicode"
 
 	"ziniki.org/deployer/driver/internal/parser/lexicator"
@@ -42,7 +41,7 @@ func (b *Blocker) HaveLine(lineNo int, txt string) {
 	ll := b.file.AtLine(lineNo, level, line)
 	b.tools.Reporter.At(ll)
 	scope := b.tools.Repository.AtLevel(level)
-	log.Printf("Line %d: %d %p %s\n", lineNo, level, scope, line)
+	// log.Printf("Line %d: %d %p %s\n", lineNo, level, scope, line)
 	toks := b.lex.BlockedLine(ll)
 	if toks == nil {
 		return

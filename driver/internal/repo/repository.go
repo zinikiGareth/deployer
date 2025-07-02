@@ -15,8 +15,6 @@ type RepoScope struct {
 }
 
 func (s *RepoScope) IntroduceSymbol(who driverbottom.SymbolName, is driverbottom.Describable) error {
-	log.Printf("I %p: %s\n", s, who)
-
 	if s.entries[who] != nil {
 		ret := fmt.Errorf("duplicate definition of %s", who)
 		log.Printf("%v", ret)
@@ -41,7 +39,7 @@ func (s *RepoScope) FindDefinition(name driverbottom.SymbolName) any {
 }
 
 func (s *RepoScope) Traverse(lsnr driverbottom.RepositoryTraverser) {
-	log.Printf("scope %p has entries %d %v\n", s, len(s.entries), s.entries)
+	// log.Printf("scope %p has entries %d %v\n", s, len(s.entries), s.entries)
 	for k, v := range s.entries {
 		lsnr.Visit(k, v)
 		inner, ok := v.(driverbottom.HasScope)
@@ -75,20 +73,17 @@ func (d *SimpleRepository) ReadingFile(file string) {
 func (d *SimpleRepository) AtLevel(level int) driverbottom.Scope {
 	level = level + 1
 	d.stack = d.stack[0:level]
-	log.Printf("A %d %v\n", level, d.stack)
 	for level >= len(d.stack) {
 		var p *RepoScope
 		if len(d.stack) > 0 {
 			p = d.stack[len(d.stack)-1]
 		}
 		inner := &RepoScope{repo: d, parent: p, entries: make(map[driverbottom.SymbolName]driverbottom.Describable)}
-		log.Printf("inner = %p\n", inner)
 		if p != nil {
 			p.inners = append(p.inners, inner)
 		}
 		d.stack = append(d.stack, inner)
 	}
-	log.Printf("B %d %v\n", level, d.stack)
 	return d.stack[len(d.stack)-1]
 }
 
@@ -124,7 +119,7 @@ func (d *SimpleRepository) CurrentScope() driverbottom.Scope {
 func NewRepository() driverbottom.Repository {
 	ret := &SimpleRepository{symbols: make(map[driverbottom.SymbolName]driverbottom.Describable), stack: []*RepoScope{}}
 	topScope := &RepoScope{repo: ret, entries: make(map[driverbottom.SymbolName]driverbottom.Describable)}
-	log.Printf("top = %p\n", topScope)
+	// log.Printf("top = %p\n", topScope)
 	ret.stack = append(ret.stack, topScope)
 	return ret
 }

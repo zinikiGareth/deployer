@@ -29,10 +29,8 @@ type Storage struct {
 	mode        int
 	currentStep string
 	drivers     map[string]any
-	// TODO: I think I want to replace this with some version from "symbols", but I'm not entirely sure I know how yet ...
-	// runtime   map[driverbottom.Holder]any
-	stepNames []string
-	symbols   map[string]map[driverbottom.Holder]*SymbolProvenance
+	stepNames   []string
+	symbols     map[string]map[driverbottom.Holder]*SymbolProvenance
 
 	// Track the values we bind to be sure it doesn't get bound more than once
 	unique map[driverbottom.Describable]any
@@ -50,18 +48,12 @@ func (s *Storage) Bind(v driverbottom.Holder, value any) {
 		s.unique[desc] = true
 	}
 
-	log.Printf("binding var %s to %v in mode %d, step %s\n", v.VarName().Id(), value, s.mode, s.currentStep)
-	// So I think the steps here are:
-	// 1. For the var, figure out the associated provenance
+	// log.Printf("binding var %s to %v in mode %d, step %s\n", v.VarName().Id(), value, s.mode, s.currentStep)
 	curr := s.findCoin(v)
 	if curr.values[s.mode] == nil {
 		curr.values[s.mode] = make(map[string]any)
 	}
 	curr.values[s.mode][s.currentStep] = value
-	// 2. That should have some version that exists for this step in resolve or something
-	// 3. The value (in %p form) should not be anywhere in our memory, because that would be an update
-	// 4. Keep track of it ...
-	// s.runtime[v] = value
 }
 
 func (s *Storage) IgnoreDuplicate(value any) {
@@ -72,18 +64,16 @@ func (s *Storage) IgnoreDuplicate(value any) {
 }
 
 func (s *Storage) findCoin(v driverbottom.Holder) *SymbolProvenance {
-	proveni := s.symbols[s.currentStep]
-	curr := proveni[v]
+	var curr *SymbolProvenance
+	// we need to back up the list and find it BEFORE here
+	for k := s.stepIndex(); curr == nil && k >= 0; k-- {
+		proveni := s.symbols[s.stepNames[k]]
+		curr = proveni[v]
+	}
+
 	if curr == nil {
-		// we need to back up the list and find it BEFORE here
-		for k := s.stepIndex(); curr == nil && k >= 0; k-- {
-			proveni = s.symbols[s.stepNames[k]]
-			curr = proveni[v]
-		}
-		if curr == nil {
-			log.Printf("could not find symbol %s defined before step %s (%d)\n", v.VarName().Id(), s.currentStep, s.stepIndex())
-			panic("symbol not found")
-		}
+		log.Printf("could not find symbol %s defined before step %s (%d)\n", v.VarName().Id(), s.currentStep, s.stepIndex())
+		panic("symbol not found")
 	}
 	return curr
 }
@@ -98,12 +88,7 @@ func (s *Storage) stepIndex() int {
 }
 
 func (s *Storage) Get(v driverbottom.Holder) any {
-	var curr *SymbolProvenance
-	// we need to back up the list and find it BEFORE here
-	for k := s.stepIndex(); curr == nil && k >= 0; k-- {
-		proveni := s.symbols[s.stepNames[k]]
-		curr = proveni[v]
-	}
+	curr := s.findCoin(v)
 	if curr != nil {
 		for mode := s.mode; mode >= 0; mode-- {
 			values := curr.values[mode]
@@ -115,16 +100,9 @@ func (s *Storage) Get(v driverbottom.Holder) any {
 			}
 		}
 	}
-	// if curr == nil {
-	// 	log.Printf("could not find symbol %s defined before step %s (%d)\n", v.VarName().Id(), s.currentStep, s.stepIndex())
-	// 	panic("symbol not found")
-	// }
-	// }
-	// return curr
 
-	// I would have thought this was serious, but apparently copy_files needs to cope with "no bucket" in the initial phase
 	log.Printf("no value has been set for %v in mode %d", v, s.CurrentMode())
-	iw := utils.NewIndentWriter(os.Stdout)
+	iw := utils.NewIndentWriter(os.Stderr)
 	s.ExportSymbolsTo(iw)
 	if s.CurrentMode() == 2 || s.CurrentMode() == 3 {
 		panic("and this cannot be right in this mode")
@@ -133,21 +111,15 @@ func (s *Storage) Get(v driverbottom.Holder) any {
 }
 
 func (s *Storage) GetCoin(coin driverbottom.Holder, mode int) any {
-	// recent := false
 	if mode == driverbottom.CURRENT_MODE {
 		mode = s.CurrentMode()
-		// recent = true
 	}
 	prov := s.findCoin(coin)
 	if prov == nil {
 		log.Fatalf("no coin %s\n", coin.VarName().Id())
 	}
-	// if recent {
-	// 	log.Printf("found provenance %v\n", prov)
-	// }
 	val := prov.values[mode]
 	if val == nil {
-		// log.Printf("no coin found for: %s in mode %d; returning nil\n", coin.VarName().Id(), mode)
 		return nil
 	}
 	for k := s.stepIndex(); k >= 0; k-- {
@@ -305,7 +277,7 @@ func (s *Storage) NewObjId(loc *errorsink.Location) driverbottom.Holder {
 }
 
 func NewRuntimeStorage(registry driverbottom.Recall, repo driverbottom.Repository, sink errorsink.ErrorSink) driverbottom.RuntimeStorage {
-	ret := &Storage{sink: sink, registry: registry, repo: repo, drivers: make(map[string]any) /*runtime: make(map[driverbottom.Holder]any), */, symbols: make(map[string]map[driverbottom.Holder]*SymbolProvenance), unique: make(map[driverbottom.Describable]any)}
+	ret := &Storage{sink: sink, registry: registry, repo: repo, drivers: make(map[string]any), symbols: make(map[string]map[driverbottom.Holder]*SymbolProvenance), unique: make(map[driverbottom.Describable]any)}
 	return ret
 }
 
@@ -316,15 +288,19 @@ type ObjId struct {
 }
 
 func (o *ObjId) Loc() *errorsink.Location {
-	panic("unimplemented")
+	return o.loc
 }
 
 func (o *ObjId) ShortDescription() string {
-	panic("unimplemented")
+	return fmt.Sprintf("ObjId[%s]", o.VarName())
 }
 
-func (o *ObjId) DumpTo(to driverbottom.IndentWriter) {
-	panic("unimplemented")
+func (o *ObjId) DumpTo(iw driverbottom.IndentWriter) {
+	iw.Intro("ObjId")
+	iw.AttrsWhere(o)
+	iw.TextAttr("step", o.stepName)
+	iw.TextAttr("mode", fmt.Sprintf("%d", o.which))
+	iw.EndAttrs()
 }
 
 func (o *ObjId) VarName() driverbottom.Identifier {
