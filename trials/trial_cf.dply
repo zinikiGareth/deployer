@@ -116,7 +116,7 @@ Finally, we can put all these parts together to build up the entire picture of t
 						Value <- "text/html"
 
 //			CacheBehaviors <- [cb]
-//			TargetOriginId <- "s3-bucket-target"
+			TargetOriginId <- "s3-bucket-target"
 
 //		policy => cloudfront_policy
 //			allow aws.action.S3.GetObject (consolidator_bucket->allResources)

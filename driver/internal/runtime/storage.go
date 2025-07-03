@@ -209,7 +209,7 @@ func (s *Storage) DumpTo(w io.Writer) {
 }
 
 func (s *Storage) SetStepName(stepName string) {
-	// log.Printf("mode %d: set step name to %s\n", s.mode, s.currentStep)
+	// log.Printf("mode %d: set step name to %s\n", s.mode, stepName)
 	s.currentStep = stepName
 	if s.mode == 0 {
 		s.stepNames = append(s.stepNames, s.currentStep)
