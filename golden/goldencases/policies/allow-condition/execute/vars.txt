@@ -1,2 +1,6 @@
 Step createAPolicyAllowingOneThingConditionally-0:
 	allow_one_policy:
+		@createAPolicyAllowingOneThingConditionally-0[2]
+			PolicyDocument[] {
+				_where_: allow-cond.dply:6.0
+			}

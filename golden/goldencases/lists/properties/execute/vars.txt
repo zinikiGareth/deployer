@@ -1,2 +1,8 @@
 Step proplist-0:
 	*proplist-0-0:
+		@proplist-0[2]
+			bucket {
+				_where_: proplist.dply:17.0
+				name: org.ziniki.launch_bucket
+				policy: <nil>
+			}

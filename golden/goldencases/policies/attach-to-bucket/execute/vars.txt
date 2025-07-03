@@ -1,6 +1,12 @@
 Step bucketPolicy-0:
 	*bucketPolicy-0-0:
-		@bucketPolicy-2
+		@bucketPolicy-0[2]
+			bucket {
+				_where_: bucket-with-policy.dply:17.0
+				name: hello
+				policy: <nil>
+			}
+		@bucketPolicy-2[3]
 			bucket {
 				_where_: bucket-with-policy.dply:17.0
 				name: hello
@@ -10,6 +16,16 @@ Step bucketPolicy-0:
 					}
 			}
 	my_bucket:
+		@bucketPolicy-0[2]
+			bucket {
+				_where_: bucket-with-policy.dply:17.0
+				name: hello
+				policy: <nil>
+			}
 Step bucketPolicy-1:
 	attachable_policy:
+		@bucketPolicy-1[2]
+			PolicyDocument[] {
+				_where_: bucket-with-policy.dply:26.0
+			}
 Step bucketPolicy-2:

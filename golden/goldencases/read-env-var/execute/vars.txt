@@ -1,3 +1,13 @@
 Step readAndShowEnvVar-0:
 	var:
+		@readAndShowEnvVar-0[1]
+			EnvModel {
+				_where_: readenv.dply:6.5
+				from: SETME
+			}
+		@readAndShowEnvVar-0[2]
+			EnvModel {
+				_where_: readenv.dply:6.5
+				from: SETME
+			}
 Step readAndShowEnvVar-1:

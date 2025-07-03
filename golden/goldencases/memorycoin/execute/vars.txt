@@ -1,3 +1,13 @@
 Step makeCoin-0:
 	*makeCoin-0-0:
+		@makeCoin-0[2]
+			config {
+				_where_: coin.dply:16.0
+				name: my-config
+			}
 	s3_config:
+		@makeCoin-0[2]
+			config {
+				_where_: coin.dply:16.0
+				name: my-config
+			}

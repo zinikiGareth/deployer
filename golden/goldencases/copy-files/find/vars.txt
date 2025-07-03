@@ -3,14 +3,14 @@ Step copyFilesToBucket-0:
 	bucket:
 Step copyFilesToBucket-1:
 	root:
-		@copyFilesToBucket-1
+		@copyFilesToBucket-1[1]
 			EnvModel {
 				_where_: copy.dply:7.5
 				from: GOLDEN_ROOT
 			}
 Step copyFilesToBucket-2:
 	src_dir:
-		@copyFilesToBucket-2
+		@copyFilesToBucket-2[1]
 			DirModel {
 				_where_: copy.dply:8.0
 				path: EnvModel[GOLDEN_ROOT]
@@ -18,6 +18,6 @@ Step copyFilesToBucket-2:
 			}
 Step copyFilesToBucket-3:
 	*copyFilesToBucket-3-0:
-		@copyFilesToBucket-3
+		@copyFilesToBucket-3[1]
 			CopyModel
 Step copyFilesToBucket-4:

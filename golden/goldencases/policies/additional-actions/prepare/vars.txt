@@ -1,6 +1,6 @@
 Step createAPolicyWithANestedAction-0:
 	allow_one_policy:
-		@createAPolicyWithANestedAction-0
+		@createAPolicyWithANestedAction-0[2]
 			PolicyDocument[] {
 				_where_: second-action.dply:6.0
 			}

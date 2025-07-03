@@ -1,6 +1,6 @@
 Step showBlob-0:
 	a_blob:
-		@showBlob-0
+		@showBlob-0[2]
 			ABlobber {
 				_where_: invoke.dply:13.0
 				expr:

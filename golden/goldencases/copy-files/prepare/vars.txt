@@ -1,13 +1,13 @@
 Step copyFilesToBucket-0:
 	*copyFilesToBucket-0-0:
-		@copyFilesToBucket-0
+		@copyFilesToBucket-0[2]
 			bucket {
 				_where_: copy.dply:5.0
 				name: org.ziniki.launch_bucket
 				policy: <nil>
 			}
 	bucket:
-		@copyFilesToBucket-0
+		@copyFilesToBucket-0[2]
 			bucket {
 				_where_: copy.dply:5.0
 				name: org.ziniki.launch_bucket
@@ -15,14 +15,25 @@ Step copyFilesToBucket-0:
 			}
 Step copyFilesToBucket-1:
 	root:
-		@copyFilesToBucket-1
+		@copyFilesToBucket-1[1]
+			EnvModel {
+				_where_: copy.dply:7.5
+				from: GOLDEN_ROOT
+			}
+		@copyFilesToBucket-1[2]
 			EnvModel {
 				_where_: copy.dply:7.5
 				from: GOLDEN_ROOT
 			}
 Step copyFilesToBucket-2:
 	src_dir:
-		@copyFilesToBucket-2
+		@copyFilesToBucket-2[1]
+			DirModel {
+				_where_: copy.dply:8.0
+				path: EnvModel[GOLDEN_ROOT]
+				path: filesrc
+			}
+		@copyFilesToBucket-2[2]
 			DirModel {
 				_where_: copy.dply:8.0
 				path: EnvModel[GOLDEN_ROOT]
@@ -30,6 +41,8 @@ Step copyFilesToBucket-2:
 			}
 Step copyFilesToBucket-3:
 	*copyFilesToBucket-3-0:
-		@copyFilesToBucket-3
+		@copyFilesToBucket-3[1]
+			CopyModel
+		@copyFilesToBucket-3[2]
 			CopyModel
 Step copyFilesToBucket-4:

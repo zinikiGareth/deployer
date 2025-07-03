@@ -1,6 +1,26 @@
 Step the_first-0:
 	tmp:
+		@the_first-0[1]
+			EnvModel {
+				_where_: separate.dply:12.5
+				from: HELLO
+			}
+		@the_first-0[2]
+			EnvModel {
+				_where_: separate.dply:12.5
+				from: HELLO
+			}
 Step the_first-1:
 Step the_second-0:
 	tmp:
+		@the_second-0[1]
+			EnvModel {
+				_where_: separate.dply:16.5
+				from: GOODBYE
+			}
+		@the_second-0[2]
+			EnvModel {
+				_where_: separate.dply:16.5
+				from: GOODBYE
+			}
 Step the_second-1:
