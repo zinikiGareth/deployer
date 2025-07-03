@@ -98,7 +98,7 @@ Finally, we can put all these parts together to build up the entire picture of t
 
 		cloudfront.distribution.fromS3 "for-consolidator-news" => cloudfront
 			@teardown delete
-			Bucket <- consolidatpr_bucket
+			Bucket <- consolidator_bucket
 			Comment <- "a distribution for consolidator.news"
 //			OriginDNS <- consolidator_bucket->dnsName
 //			OriginAccessControl <- oac->id
