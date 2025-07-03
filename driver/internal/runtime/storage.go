@@ -56,6 +56,23 @@ func (s *Storage) Bind(v driverbottom.Holder, value any) {
 	curr.values[s.mode][s.currentStep] = value
 }
 
+func (s *Storage) Adopt(v driverbottom.Holder, found any) {
+	if v == nil || v.VarName() == nil {
+		panic("need a var")
+	}
+	curr := s.findCoin(v)
+	if curr.values[s.mode] == nil {
+		curr.values[s.mode] = make(map[string]any)
+	}
+	for i := 0; i < s.mode; i++ {
+		if curr.values[i] != nil && curr.values[i][s.currentStep] == found {
+			curr.values[s.mode][s.currentStep] = found
+			return
+		}
+	}
+	log.Fatalf("cannot adopt a value for %s in mode %d which is not already a value for that var", v.VarName(), s.mode)
+}
+
 func (s *Storage) IgnoreDuplicate(value any) {
 	desc, ok := value.(driverbottom.Describable)
 	if ok {
@@ -244,23 +261,25 @@ func (s *Storage) ExportSymbolsTo(iw driverbottom.IndentWriter) {
 			p := s.symbols[k][m[y]]
 			iw.IndPrintf("%s:\n", y)
 			iw.Indent()
-			modeValues := p.values[s.mode]
-			for _, sn := range s.stepNames {
-				ps := modeValues[sn]
-				if ps != nil {
-					iw.IndPrintf("@%s\n", sn)
-					iw.Indent()
-					switch v := ps.(type) {
-					case driverbottom.Describable:
-						v.DumpTo(iw)
-					case string:
-						iw.IndPrintf("%s\n", v)
-					case int:
-						iw.IndPrintf("%d\n", v)
-					default:
-						iw.IndPrintf("%T %v\n", v, v)
+			for fmode := 0; fmode <= s.mode; fmode++ {
+				modeValues := p.values[fmode]
+				for _, sn := range s.stepNames {
+					ps := modeValues[sn]
+					if ps != nil {
+						iw.IndPrintf("@%s[%d]\n", sn, fmode)
+						iw.Indent()
+						switch v := ps.(type) {
+						case driverbottom.Describable:
+							v.DumpTo(iw)
+						case string:
+							iw.IndPrintf("%s\n", v)
+						case int:
+							iw.IndPrintf("%d\n", v)
+						default:
+							iw.IndPrintf("%T %v\n", v, v)
+						}
+						iw.UnIndent()
 					}
-					iw.UnIndent()
 				}
 			}
 			iw.UnIndent()

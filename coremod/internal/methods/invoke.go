@@ -2,6 +2,7 @@ package methods
 
 import (
 	"log"
+	"os"
 	"strings"
 
 	"ziniki.org/deployer/coremod/pkg/corebottom"
@@ -62,16 +63,23 @@ func (i *InvokeExpr) Resolve(r driverbottom.Resolver) {
 }
 
 func (i *InvokeExpr) Eval(s driverbottom.RuntimeStorage) any {
+	// log.Printf("on = %T %v\n", i.on, i.on)
 	obj := i.on.Eval(s)
 	hm, ok := obj.(driverbottom.HasMethods)
 	if !ok {
-		log.Fatalf("Value for %v was of type %T which was not a HasMethods\n", i.on, obj)
+		s.DumpTo(os.Stderr)
+		log.Printf("Value for %v was of type %T which was not a HasMethods\n", i.on, obj)
+		panic("could not evaluate")
 	}
 	meth := hm.ObtainMethod(i.call.Id())
 	if meth == nil {
 		log.Fatalf("No method %s on %v", i.call.Id(), i.on)
 	}
 	return meth.Invoke(s, i.on, i.args)
+}
+
+func MakeInvokeExpr(on driverbottom.Expr, call driverbottom.Identifier, args []driverbottom.Expr) driverbottom.Expr {
+	return &InvokeExpr{Locatable: on, on: on, call: call, args: args}
 }
 
 type InvokeFunc struct {

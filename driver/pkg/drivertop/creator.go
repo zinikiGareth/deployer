@@ -24,8 +24,8 @@ func MakeVar(name string) driverbottom.Holder {
 	return &interpreters.VarHolder{}
 }
 
-func MakeString(str string) driverbottom.String {
-	return lexicator.NewStringToken(nil, 0, str)
+func MakeString(loc *errorsink.Location, str string) driverbottom.String {
+	return lexicator.NewStringToken(loc.Line, loc.Offset, str)
 }
 
 func NewListExpr(es []driverbottom.Expr) driverbottom.List {

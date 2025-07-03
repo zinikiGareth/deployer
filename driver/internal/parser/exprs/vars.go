@@ -10,6 +10,7 @@ import (
 type VarReference struct {
 	scope     driverbottom.Scope
 	id        driverbottom.Identifier
+	isValue   bool
 	value     driverbottom.Describable
 	actualVar driverbottom.Holder
 }
@@ -20,15 +21,20 @@ func (v *VarReference) Resolve(r driverbottom.Resolver) {
 	if ok { // it is a "real var"
 		v.actualVar = h
 	} else {
+		v.isValue = true
 		// it resolved to some other value, such as a constant number or string
 		v.value = h
 	}
 }
 
 func (v *VarReference) Eval(s driverbottom.RuntimeStorage) any {
-	if v.actualVar == nil {
+	if v.isValue {
 		// it didn't resolve to a variable but a value
 		return v.value
+	}
+	if v.actualVar == nil {
+		log.Printf("variable %s was not resolved, it seems\n", v.id.Id())
+		panic("not resolved var")
 	}
 	// log.Printf("Eval(vr) %s %v => %T %v\n", v.id, v, s.Get(v.actualVar), s.Get(v.actualVar))
 	out := s.Get(v.actualVar)

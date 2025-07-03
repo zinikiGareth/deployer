@@ -21,7 +21,9 @@ func (iw *indentingWriter) AttrsWhere(at driverbottom.Locatable) {
 	iw.Printf(" {\n")
 	iw.levels = append(iw.levels, "A")
 	iw.showIndent()
-	iw.Printf("_where_: %s\n", at.Loc().String())
+	if at.Loc() != nil {
+		iw.Printf("_where_: %s\n", at.Loc().String())
+	}
 }
 
 func (iw *indentingWriter) TextAttr(field string, value string) {

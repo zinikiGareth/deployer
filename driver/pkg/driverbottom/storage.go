@@ -9,6 +9,7 @@ import (
 
 type RuntimeStorage interface {
 	Bind(name Holder, value any)
+	Adopt(name Holder, found any)
 	Get(name Holder) any
 	IgnoreDuplicate(value any)
 	GetCoin(coin Holder, mode int) any
