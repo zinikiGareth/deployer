@@ -21,6 +21,28 @@ type Location struct {
 	Offset int
 }
 
+func (loc *Location) ComparedTo(other *Location) int {
+	if loc.Line.File.File < other.Line.File.File {
+		return -1
+	}
+	if loc.Line.File.File > other.Line.File.File {
+		return 1
+	}
+	if loc.Line.Line < other.Line.Line {
+		return -1
+	}
+	if loc.Line.Line > other.Line.Line {
+		return 1
+	}
+	if loc.Offset < other.Offset {
+		return -1
+	}
+	if loc.Offset > other.Offset {
+		return 1
+	}
+	return 0
+}
+
 func (loc Location) InFile() string {
 	return fmt.Sprintf("%d.%d", loc.Line.Line, loc.Offset)
 }

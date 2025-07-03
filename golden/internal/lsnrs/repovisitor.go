@@ -49,7 +49,11 @@ func (s *goldenRepoStorer) DumpDefnsTo(outdir string) {
 	keys := slices.Collect(maps.Keys(s.defns))
 	slices.Sort(keys)
 	for _, key := range keys {
-		for _, d := range s.defns[key] {
+		clone := slices.Clone(s.defns[key])
+		slices.SortFunc(clone, func(a driverbottom.Describable, b driverbottom.Describable) int {
+			return a.Loc().ComparedTo(b.Loc())
+		})
+		for _, d := range clone {
 			iw.IndPrintf("symbol %s is bound to:\n", key)
 			d.DumpTo(iw)
 		}
