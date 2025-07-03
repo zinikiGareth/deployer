@@ -28,6 +28,6 @@ func MakeString(loc *errorsink.Location, str string) driverbottom.String {
 	return lexicator.NewStringToken(loc.Line, loc.Offset, str)
 }
 
-func NewListExpr(es []driverbottom.Expr) driverbottom.List {
-	return exprs.NewListExpr(es)
+func NewListExpr(loc *errorsink.Location, es []driverbottom.Expr) driverbottom.List {
+	return exprs.NewListExpr(loc, es)
 }

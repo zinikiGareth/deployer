@@ -2,10 +2,12 @@ package basic
 
 import (
 	"log"
+	"os"
 
 	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
+	"ziniki.org/deployer/driver/pkg/utils"
 )
 
 type GetCoinMethod struct {
@@ -50,8 +52,9 @@ func (gcm *GetCoinMethod) Eval(s driverbottom.RuntimeStorage) any {
 			return ret
 		}
 	}
-	log.Fatalf("could not recover coin %s in mode %d", gcm.coin.VarName(), s.CurrentMode())
-	return nil
+	s.ExportSymbolsTo(utils.NewIndentWriter(os.Stderr))
+	log.Printf("could not recover coin %s in mode %d", gcm.coin.VarName(), s.CurrentMode())
+	panic("coin not found")
 }
 
 func MakeGetCoinMethod(loc *errorsink.Location, coin corebottom.CoinId) driverbottom.Expr {

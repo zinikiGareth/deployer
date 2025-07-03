@@ -34,7 +34,7 @@ func (cli *collectListInterpreter) HaveTokens(scope driverbottom.Scope, tokens [
 }
 
 func (cli *collectListInterpreter) Completed() {
-	cli.parent.AddProperty(cli.prop, exprs.NewListExpr(cli.exprs))
+	cli.parent.AddProperty(cli.prop, exprs.NewListExpr(cli.prop.Loc(), cli.exprs))
 	// cli.parent.Completed()
 }
 

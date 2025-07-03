@@ -8,19 +8,25 @@ import (
 )
 
 type ListExpr struct {
+	loc   *errorsink.Location
 	exprs []driverbottom.Expr
 }
 
 func (l *ListExpr) Loc() *errorsink.Location {
-	panic("unimplemented")
+	return l.loc
 }
 
 func (l *ListExpr) ShortDescription() string {
-	panic("unimplemented")
+	return fmt.Sprintf("List[%d]", len(l.exprs))
 }
 
 func (l *ListExpr) DumpTo(to driverbottom.IndentWriter) {
-	panic("unimplemented")
+	to.Intro("List")
+	to.AttrsWhere(l)
+	for k, e := range l.exprs {
+		to.NestedAttr(fmt.Sprintf("entry %d", k), e)
+	}
+
 }
 
 func (l *ListExpr) Resolve(r driverbottom.Resolver) {
@@ -53,8 +59,8 @@ func (l *ListExpr) Members() []driverbottom.Expr {
 	return l.exprs
 }
 
-func NewListExpr(exprs []driverbottom.Expr) driverbottom.List {
-	return &ListExpr{exprs: exprs}
+func NewListExpr(loc *errorsink.Location, exprs []driverbottom.Expr) driverbottom.List {
+	return &ListExpr{loc: loc, exprs: exprs}
 }
 
 var _ driverbottom.List = &ListExpr{}
