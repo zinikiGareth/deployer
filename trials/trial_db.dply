@@ -1,0 +1,21 @@
+This is a sample to build the kind of database infrastructure we need for Ziniki,
+i.e. a combo of neptune and dynamo dbs
+
+    target trial_dbs
+
+Let's create a neptune cluster.  I think this is all you need - a cluster with a name.
+After that, everything else seems to be gravy.
+
+        ensure aws.Neptune.Cluster "neptune_cluster" => neptune
+            @teardown delete
+
+And then let's create a dynamo db.  Tables are deffo per region, and at some point we
+need to consider regions.
+
+        ensure aws.DynamoDB.Table "ziids" => ziids_table
+            @teardown delete
+            // TODO: AttributeDefinitions
+            // TODO: KeySchema // TODO: I would like to wrap this up in the attributes
+            // I think that is most easily done by having a (nested) adverb @Key <hash> or @Key <range>
+
+            // There are many more, but I don't think they are needed

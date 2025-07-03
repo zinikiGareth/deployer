@@ -98,5 +98,8 @@
             			"group": "test"
         		}
     		]
+	},
+	"settings": {
+		"editor.insertSpaces": false
 	}
 }
