@@ -20,3 +20,7 @@ func MakeGetCoinMethod(loc *errorsink.Location, coin corebottom.CoinId) driverbo
 func NewPolicyDocument(loc *errorsink.Location) corebottom.PolicyDocument {
 	return policy.NewPolicyDocument(loc)
 }
+
+func NewPrincipal(k, v string) corebottom.PolicyPrincipal {
+	return policy.NewPrincipal(k, v)
+}
