@@ -3,11 +3,17 @@ i.e. a combo of neptune and dynamo dbs
 
     target trial_dbs
 
+We need a neptune-specific subnet group.  We should be able to create this, but I did it by hand,
+so let's just stick with that for now.
+
+        find aws.Neptune.SubnetGroup "neptunetest" => subnet
+
 Let's create a neptune cluster.  I think this is all you need - a cluster with a name.
 After that, everything else seems to be gravy.
 
-        ensure aws.Neptune.Cluster "neptune_cluster" => neptune
+        ensure aws.Neptune.Cluster "data-map" => neptune
             @teardown delete
+            SubnetGroupName <- subnet
 
 And then let's create a dynamo db.  Tables are deffo per region, and at some point we
 need to consider regions.
