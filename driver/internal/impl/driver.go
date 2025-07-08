@@ -72,8 +72,8 @@ func (d *DriverImpl) DoStuff() error {
 	if d.tools.Reporter.HasErrors() {
 		return fmt.Errorf("errors during parsing")
 	}
-	d.tools.Repository.ResolveAll(d.tools)
-	if d.tools.Reporter.HasErrors() {
+	hasErrors := d.tools.Repository.ResolveAll(d.tools)
+	if hasErrors || d.tools.Reporter.HasErrors() {
 		return fmt.Errorf("errors during resolving")
 	}
 	return nil

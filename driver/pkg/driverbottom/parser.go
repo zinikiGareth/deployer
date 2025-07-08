@@ -15,6 +15,8 @@ type Interpreter interface {
 	Completed()
 }
 
+type CreateInterpreter func(tools *CoreTools, parent PropertyParent, prop Identifier) Interpreter
+
 type PropertyParent interface {
 	AddProperty(name Identifier, expr Expr)
 	AddAdverb(adverb Adverb, args []Token) Interpreter

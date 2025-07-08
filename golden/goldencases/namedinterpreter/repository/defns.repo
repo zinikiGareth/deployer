@@ -1,0 +1,14 @@
+symbol usenamed is bound to:
+target usenamed {
+	_where_: usenamed.dply:14.7
+	actions: [
+		EnsureAction {
+			_where_: usenamed.dply:16.0
+			what: test.DB.Table
+			resolved: test.S3.Bucket[]
+			named: a-table
+			additional properties:
+				Fields <- AnyExpr[]
+		}
+	]
+}

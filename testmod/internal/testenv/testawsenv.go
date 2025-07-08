@@ -1,4 +1,4 @@
-package testS3
+package testenv
 
 import "ziniki.org/deployer/driver/pkg/driverbottom"
 

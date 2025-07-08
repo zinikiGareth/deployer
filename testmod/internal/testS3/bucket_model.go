@@ -7,6 +7,7 @@ import (
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
 	"ziniki.org/deployer/driver/pkg/testhelpers"
+	"ziniki.org/deployer/testmod/internal/testenv"
 )
 
 type bucketModel struct {
@@ -15,7 +16,7 @@ type bucketModel struct {
 	id         corebottom.CoinId
 	testLogger testhelpers.TestStepLogger
 	name       string
-	cloud      *BucketCloud
+	cloud      *testenv.BucketCloud
 
 	policy corebottom.PolicyDocument
 }

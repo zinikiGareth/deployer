@@ -20,7 +20,7 @@ type Repository interface {
 	AddSymbolListener(lsnr SymbolListener)
 	Traverse(lsnr RepositoryTraverser)
 
-	ResolveAll(tools *CoreTools)
+	ResolveAll(tools *CoreTools) bool
 	FindTop(name SymbolName) TopLevelForm
 	TopScope() Scope
 	CurrentScope() Scope

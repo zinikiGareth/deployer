@@ -1,0 +1,7 @@
+Step usenamed-0:
+	*usenamed-0-0:
+		@usenamed-0[2]
+			table {
+				_where_: usenamed.dply:16.0
+				name: a-table
+			}

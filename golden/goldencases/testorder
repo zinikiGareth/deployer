@@ -33,3 +33,4 @@ policies/with-principal
 policies/additional-actions
 policies/attach-to-bucket
 resolve/separate
+namedinterpreter

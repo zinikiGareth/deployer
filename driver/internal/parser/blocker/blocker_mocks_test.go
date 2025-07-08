@@ -27,7 +27,8 @@ func (m *RepoDouble) GetDefinition(id driverbottom.SymbolName) driverbottom.Desc
 func (m *RepoDouble) ReadingFile(file string) {
 }
 
-func (m *RepoDouble) ResolveAll(tools *driverbottom.CoreTools) {
+func (m *RepoDouble) ResolveAll(tools *driverbottom.CoreTools) bool {
+	return false
 }
 
 func (m *RepoDouble) TopLevel(tlf driverbottom.TopLevelForm) {

@@ -1,4 +1,4 @@
-package testS3
+package testDB
 
 import (
 	"fmt"
@@ -10,7 +10,7 @@ import (
 	"ziniki.org/deployer/testmod/internal/testenv"
 )
 
-type bucketCreator struct {
+type tableCreator struct {
 	tools      *corebottom.Tools
 	env        *testenv.TestAwsEnv
 	testLogger testhelpers.TestStepLogger
@@ -19,18 +19,18 @@ type bucketCreator struct {
 	coin  driverbottom.Holder
 	name  string
 	props map[driverbottom.Identifier]driverbottom.Expr
-	model *bucketModel
+	model *tableModel
 }
 
-func (b *bucketCreator) Loc() *errorsink.Location {
+func (b *tableCreator) Loc() *errorsink.Location {
 	return b.loc
 }
 
-func (b *bucketCreator) ShortDescription() string {
-	return "test.S3.Bucket[" + b.name + "]"
+func (b *tableCreator) ShortDescription() string {
+	return "test.DB.Table[" + b.name + "]"
 }
 
-func (b *bucketCreator) DumpTo(iw driverbottom.IndentWriter) {
+func (b *tableCreator) DumpTo(iw driverbottom.IndentWriter) {
 	iw.Intro("test.S3.Bucket[")
 	iw.AttrsWhere(b)
 	iw.TextAttr("named", b.name)
@@ -40,11 +40,11 @@ func (b *bucketCreator) DumpTo(iw driverbottom.IndentWriter) {
 	iw.EndAttrs()
 }
 
-func (b *bucketCreator) CoinId() corebottom.CoinId {
+func (b *tableCreator) CoinId() corebottom.CoinId {
 	return b.coin
 }
 
-func (b *bucketCreator) DetermineInitialState(pres corebottom.ValuePresenter) {
+func (b *tableCreator) DetermineInitialState(pres corebottom.ValuePresenter) {
 	tmp := b.tools.Recall.ObtainDriver("testS3.TestAwsEnv")
 	testAwsEnv, ok := tmp.(*testenv.TestAwsEnv)
 	if !ok {
@@ -59,40 +59,40 @@ func (b *bucketCreator) DetermineInitialState(pres corebottom.ValuePresenter) {
 	}
 	b.testLogger = testLogger
 
-	testLogger.Log("looking for bucket %s\n", b.String())
+	testLogger.Log("looking for table %s\n", b.String())
 	// TODO: the test infrastructure should have the ability to have these in place
 	pres.NotFound()
 }
 
-func (b *bucketCreator) DetermineDesiredState(pres corebottom.ValuePresenter) {
+func (b *tableCreator) DetermineDesiredState(pres corebottom.ValuePresenter) {
 	if b.coin == nil {
 		panic("need a coin id")
 	}
-	b.testLogger.Log("creating model for bucket %s\n", b.String())
-	b.model = &bucketModel{loc: b.loc, storage: b.tools.Storage, id: b.coin, name: b.name, testLogger: b.testLogger}
+	b.testLogger.Log("creating model for table %s\n", b.String())
+	b.model = &tableModel{loc: b.loc, storage: b.tools.Storage, id: b.coin, name: b.name, testLogger: b.testLogger}
 	pres.Present(b.model)
 }
 
-func (eb *bucketCreator) UpdateReality() {
-	tmp := eb.tools.Recall.ObtainDriver("testhelpers.TestStepLogger")
-	testLogger, ok := tmp.(testhelpers.TestStepLogger)
-	if !ok {
-		panic("could not cast logger to TestStepLogger")
-	}
+func (eb *tableCreator) UpdateReality() {
+	/*
+		tmp := eb.tools.Recall.ObtainDriver("testhelpers.TestStepLogger")
+		testLogger, ok := tmp.(testhelpers.TestStepLogger)
+		if !ok {
+			panic("could not cast logger to TestStepLogger")
+		}
 
-	b := eb.env.FindBucket(eb.name)
-	if b != nil {
-		testLogger.Log("the bucket %s in region %s already exists\n", eb.name, eb.env.Region)
-	} else {
-		testLogger.Log("we need to create a bucket called %s in region %s\n", eb.name, eb.env.Region)
-		// TODO: we should also handle all the properties we have stored somewhere ...
-		b = eb.env.CreateBucket(eb.name)
-	}
-
-	eb.model.cloud = b
+			b := eb.env.FindBucket(eb.name)
+			if b != nil {
+				testLogger.Log("the bucket %s in region %s already exists\n", eb.name, eb.env.Region)
+			} else {
+				testLogger.Log("we need to create a bucket called %s in region %s\n", eb.name, eb.env.Region)
+				// TODO: we should also handle all the properties we have stored somewhere ...
+				b = eb.env.CreateBucket(eb.name)
+			}
+	*/
 }
 
-func (eb *bucketCreator) TearDown() {
+func (eb *tableCreator) TearDown() {
 	tmp := eb.tools.Recall.ObtainDriver("testhelpers.TestStepLogger")
 	testLogger, ok := tmp.(testhelpers.TestStepLogger)
 	if !ok {
@@ -102,9 +102,9 @@ func (eb *bucketCreator) TearDown() {
 	testLogger.Log("we need to delete a bucket called %s in region %s\n", eb.name, eb.env.Region)
 }
 
-func (eb *bucketCreator) String() string {
+func (eb *tableCreator) String() string {
 	return fmt.Sprintf("EnsureBucket[%s:%s]", eb.env.Region, eb.name)
 }
 
-var _ corebottom.FindCoin = &bucketCreator{}
-var _ corebottom.Ensurable = &bucketCreator{}
+var _ corebottom.FindCoin = &tableCreator{}
+var _ corebottom.Ensurable = &tableCreator{}

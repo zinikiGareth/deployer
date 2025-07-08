@@ -43,6 +43,8 @@ func RegisterWithDriver(driver driverbottom.Driver) error {
 
 	tools.Register.ExtensionPoint("blank")
 
+	tools.Register.ExtensionPoint("prop-interpreter")
+
 	// TODO: I think we should be registering "creation methods" not the created objects ...
 
 	// we need to register something that handles the main arguments, in our case targets to execute

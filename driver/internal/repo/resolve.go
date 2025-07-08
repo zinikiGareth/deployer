@@ -7,11 +7,16 @@ import (
 	"ziniki.org/deployer/driver/pkg/errorsink"
 )
 
-func (repo *SimpleRepository) ResolveAll(tools *driverbottom.CoreTools) {
+func (repo *SimpleRepository) ResolveAll(tools *driverbottom.CoreTools) bool {
+	hasError := false
 	for _, what := range repo.tops {
 		searcher := &Searcher{repo: repo, recall: tools.Recall, reporter: tools.Reporter}
-		what.Resolve(searcher)
+		binding := what.Resolve(searcher)
+		if binding == driverbottom.ERROR_OCCURRED {
+			hasError = true
+		}
 	}
+	return hasError
 }
 
 func (d *SimpleRepository) GetDefinition(name driverbottom.SymbolName) driverbottom.Describable {

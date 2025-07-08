@@ -31,3 +31,7 @@ func MakeString(loc *errorsink.Location, str string) driverbottom.String {
 func NewListExpr(loc *errorsink.Location, es []driverbottom.Expr) driverbottom.List {
 	return exprs.NewListExpr(loc, es)
 }
+
+func NewAnyExpr(loc *errorsink.Location, value any) driverbottom.Expr {
+	return exprs.NewAnyExpr(loc, value)
+}

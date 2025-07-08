@@ -1,0 +1,23 @@
+We have a need to include things inside other things that build up using "custom" interpreters.
+The driving example of this is the "Fields" tag inside dynamodb, which is nothing like an ordinary interpreter.
+We could reductively say "everything is a map", but then how are we not the same as JSON or YAML?
+That is not why we are here.
+
+Equally, we could say "implement a special command", but that doesn't feel like it is the most natural thing for users,
+or the easiest thing for developers.
+
+So we introduce another "property" syntax: a <= I, which says "there is a property a whose value can be determined by examining
+all nested lines using an instance of interpreter I".
+
+I must be a symbol, and it must resolve to an Interpreter.
+
+	target usenamed
+
+		ensure test.DB.Table "a-table"
+			@teardown delete
+
+I haven't drifted that far from what dynamo does, but I have used my own syntax for testing simplicity.
+
+			Fields <= test.FieldInterpreter
+				Key hello string
+				Value world number

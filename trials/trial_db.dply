@@ -3,6 +3,28 @@ i.e. a combo of neptune and dynamo dbs
 
     target trial_dbs
 
+The core information (about users and stocks) goes in dynamodb.
+Tables are deffo per region, and at some point we need to consider regions.
+
+We have a table of "stock prices" which are basically a symbol and a price.
+
+        ensure aws.DynamoDB.Table "stocks" => stocks_table
+            @teardown delete
+            Fields<=aws.DynamoFields
+                symbol string
+                    @Key hash
+                price number
+
+And we have a table of users, which (for now) is just a username.
+
+        ensure aws.DynamoDB.Table "users" => users_table
+            @teardown delete
+            Fields <= aws.DynamoFields
+                username string
+                    @Key hash
+
+Now, turning to Neptune ...
+
 We need a neptune-specific subnet group.  We should be able to create this, but I did it by hand,
 so let's just stick with that for now.
 
@@ -11,17 +33,7 @@ so let's just stick with that for now.
 Let's create a neptune cluster.  I think this is all you need - a cluster with a name.
 After that, everything else seems to be gravy.
 
-        ensure aws.Neptune.Cluster "data-map" => neptune
+        ensure aws.Neptune.Cluster "user-stocks" => neptune
             @teardown delete
             SubnetGroupName <- subnet
 
-And then let's create a dynamo db.  Tables are deffo per region, and at some point we
-need to consider regions.
-
-        ensure aws.DynamoDB.Table "ziids" => ziids_table
-            @teardown delete
-            // TODO: AttributeDefinitions
-            // TODO: KeySchema // TODO: I would like to wrap this up in the attributes
-            // I think that is most easily done by having a (nested) adverb @Key <hash> or @Key <range>
-
-            // There are many more, but I don't think they are needed
