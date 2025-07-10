@@ -1,8 +1,6 @@
 package interpreters
 
 import (
-	"log"
-
 	"ziniki.org/deployer/driver/internal/parser/exprs"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 )
@@ -54,7 +52,6 @@ func (pis *propertiesInterpreter) HaveTokens(scope driverbottom.Scope, tokens []
 			pis.tools.Reporter.Reportf(tokens[2].Loc().Offset, "%s is not a property interpreter creator but %T", intname.Id(), useInner)
 			return NewIgnoreInnerScope()
 		}
-		log.Printf("have %T", createInt)
 		return createInt(pis.tools, pis.parent, prop)
 	} else if !op.Is("<-") {
 		pis.tools.Reporter.Report(tokens[1].Loc().Offset, "line must be of form <prop> <- <expr>, <prop> <= <interpreter> or @adverb ...")

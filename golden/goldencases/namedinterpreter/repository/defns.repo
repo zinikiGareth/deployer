@@ -8,7 +8,7 @@ target usenamed {
 			resolved: test.S3.Bucket[]
 			named: a-table
 			additional properties:
-				Fields <- AnyExpr[]
+				Fields <- [<2>]
 		}
 	]
 }
