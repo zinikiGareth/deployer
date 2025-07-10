@@ -26,7 +26,7 @@ func (l *ListExpr) DumpTo(to driverbottom.IndentWriter) {
 	for k, e := range l.exprs {
 		to.NestedAttr(fmt.Sprintf("entry %d", k), e)
 	}
-
+	to.EndAttrs()
 }
 
 func (l *ListExpr) Resolve(r driverbottom.Resolver) {

@@ -4,10 +4,12 @@ import (
 	"ziniki.org/deployer/driver/internal/parser/exprs"
 	"ziniki.org/deployer/driver/internal/parser/lexicator"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
+	"ziniki.org/deployer/driver/pkg/errorsink"
 )
 
 type collectMapInterpreter struct {
 	tools  *driverbottom.CoreTools
+	loc    *errorsink.Location
 	parent driverbottom.PropertyParent
 	prop   driverbottom.Identifier
 	addTo  driverbottom.ValueParent
@@ -21,7 +23,7 @@ func (cmi *collectMapInterpreter) AddAdverb(adverb driverbottom.Adverb, args []d
 
 // AddProperty implements driverbottom.PropertyParent.
 func (cmi *collectMapInterpreter) AddProperty(name driverbottom.Identifier, expr driverbottom.Expr) {
-	cmi.pairs = append(cmi.pairs, exprs.NewMapPair(name, expr))
+	cmi.pairs = append(cmi.pairs, exprs.NewMapPair(name.Loc(), name, expr))
 }
 
 func (cmi *collectMapInterpreter) HaveTokens(scope driverbottom.Scope, tokens []driverbottom.Token) driverbottom.Interpreter {
@@ -56,25 +58,25 @@ func (cmi *collectMapInterpreter) HaveTokens(scope driverbottom.Scope, tokens []
 	switch expr := expr.(type) {
 	case *exprs.ListExpr:
 		if expr.IsEmpty() {
-			return NewCollectListInnerScope(cmi.tools, cmi, prop, nil)
+			return NewCollectListInnerScope(prop.Loc(), cmi.tools, cmi, prop, nil)
 		}
 	case *exprs.MapExpr:
 		if expr.IsEmpty() {
-			return NewCollectMapInnerScope(cmi.tools, cmi, prop, nil)
+			return NewCollectMapInnerScope(prop.Loc(), cmi.tools, cmi, prop, nil)
 		}
 	}
 
-	cmi.pairs = append(cmi.pairs, exprs.NewMapPair(prop, expr))
+	cmi.pairs = append(cmi.pairs, exprs.NewMapPair(prop.Loc(), prop, expr))
 	return NewDisallowInnerScope(cmi.tools)
 }
 
-func (cli *collectMapInterpreter) Completed() {
-	val := exprs.NewMapExpr(cli.pairs)
-	if cli.addTo != nil {
-		cli.addTo.Add(val)
+func (cmi *collectMapInterpreter) Completed() {
+	val := exprs.NewMapExpr(cmi.loc, cmi.pairs)
+	if cmi.addTo != nil {
+		cmi.addTo.Add(val)
 		// cli.addTo.Completed()
 	} else {
-		cli.parent.AddProperty(cli.prop, val)
+		cmi.parent.AddProperty(cmi.prop, val)
 		// cli.parent.Completed()
 	}
 }

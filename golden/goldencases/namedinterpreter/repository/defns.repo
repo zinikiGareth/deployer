@@ -8,7 +8,24 @@ target usenamed {
 			resolved: test.S3.Bucket[]
 			named: a-table
 			additional properties:
-				Fields <- [<2>]
+				Fields:
+					List {
+						_where_: usenamed.dply:21.0
+						entry 0:
+							FieldExpr {
+								_where_: usenamed.dply:22.0
+								kind: Key
+								name: hello
+								type: string
+							}
+						entry 1:
+							FieldExpr {
+								_where_: usenamed.dply:23.0
+								kind: Value
+								name: world
+								type: number
+							}
+					}
 		}
 	]
 }

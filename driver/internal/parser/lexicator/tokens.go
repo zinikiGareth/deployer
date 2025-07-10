@@ -80,11 +80,13 @@ func (tok *NumberToken) Eval(s driverbottom.RuntimeStorage) any {
 }
 
 func (t *NumberToken) ShortDescription() string {
-	panic("not implemented")
+	return fmt.Sprintf("Number[%f]", t.F64())
 }
 
 func (t *NumberToken) DumpTo(iw driverbottom.IndentWriter) {
-	panic("not implemented")
+	iw.Intro("Number[%f]", t.F64())
+	iw.AttrsWhere(t)
+	iw.EndAttrs()
 }
 
 func (tok *NumberToken) String() string {

@@ -3,9 +3,11 @@ package interpreters
 import (
 	"ziniki.org/deployer/driver/internal/parser/exprs"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
+	"ziniki.org/deployer/driver/pkg/errorsink"
 )
 
 type collectListInterpreter struct {
+	loc    *errorsink.Location
 	tools  *driverbottom.CoreTools
 	parent driverbottom.PropertyParent
 	prop   driverbottom.Identifier
@@ -21,11 +23,11 @@ func (cli *collectListInterpreter) HaveTokens(scope driverbottom.Scope, tokens [
 	switch expr := expr.(type) {
 	case *exprs.ListExpr:
 		if expr.IsEmpty() {
-			return NewCollectListInnerScope(cli.tools, nil, nil, cli)
+			return NewCollectListInnerScope(cli.loc, cli.tools, nil, nil, cli)
 		}
 	case *exprs.MapExpr:
 		if expr.IsEmpty() {
-			return NewCollectMapInnerScope(cli.tools, nil, nil, cli)
+			return NewCollectMapInnerScope(cli.loc, cli.tools, nil, nil, cli)
 		}
 	}
 

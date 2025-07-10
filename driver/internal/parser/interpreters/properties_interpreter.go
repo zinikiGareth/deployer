@@ -66,11 +66,11 @@ func (pis *propertiesInterpreter) HaveTokens(scope driverbottom.Scope, tokens []
 	switch expr := expr.(type) {
 	case *exprs.ListExpr:
 		if expr.IsEmpty() {
-			return NewCollectListInnerScope(pis.tools, pis.parent, prop, nil)
+			return NewCollectListInnerScope(prop.Loc(), pis.tools, pis.parent, prop, nil)
 		}
 	case *exprs.MapExpr:
 		if expr.IsEmpty() {
-			return NewCollectMapInnerScope(pis.tools, pis.parent, prop, nil)
+			return NewCollectMapInnerScope(prop.Loc(), pis.tools, pis.parent, prop, nil)
 		}
 	}
 	pis.parent.AddProperty(prop, expr)

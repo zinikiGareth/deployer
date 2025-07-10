@@ -8,8 +8,77 @@ target propmap {
 			resolved: test.S3.Bucket[]
 			named: org.ziniki.launch_bucket
 			additional properties:
-				list <- [<1>]
-				types <- [<4>]
+				list:
+					List {
+						_where_: propmap.dply:29.0
+						entry 0:
+							List {
+								_where_: propmap.dply:29.0
+								pair 0:
+									MapPair {
+										_where_: propmap.dply:31.0
+										key: key
+										value:
+											String {
+												_where_: propmap.dply:31.8
+												"value"
+											}
+									}
+							}
+					}
+				types:
+					List {
+						_where_: propmap.dply:17.0
+						pair 0:
+							MapPair {
+								_where_: propmap.dply:22.1
+								key: *.html
+								value:
+									String {
+										_where_: propmap.dply:22.13
+										"text/html"
+									}
+							}
+						pair 1:
+							MapPair {
+								_where_: propmap.dply:23.1
+								key: *.js
+								value:
+									String {
+										_where_: propmap.dply:23.11
+										"application/javascript"
+									}
+							}
+						pair 2:
+							MapPair {
+								_where_: propmap.dply:24.0
+								key: index
+								value:
+									String {
+										_where_: propmap.dply:24.10
+										"text/html"
+									}
+							}
+						pair 3:
+							MapPair {
+								_where_: propmap.dply:25.0
+								key: current
+								value:
+									List {
+										_where_: propmap.dply:25.0
+										entry 0:
+											String {
+												_where_: propmap.dply:26.1
+												"hello"
+											}
+										entry 1:
+											String {
+												_where_: propmap.dply:27.1
+												"world"
+											}
+									}
+							}
+					}
 		}
 	]
 }

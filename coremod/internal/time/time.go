@@ -25,11 +25,15 @@ func (t *TimeOf) Eval(s driverbottom.RuntimeStorage) any {
 }
 
 func (t *TimeOf) ShortDescription() string {
-	panic("not implemented")
+	return fmt.Sprintf("TimeOf[%d %s]", t.Number, t.Unit)
 }
 
 func (t *TimeOf) DumpTo(iw driverbottom.IndentWriter) {
-	panic("not implemented")
+	iw.Intro("TimeOf")
+	iw.AttrsWhere(t)
+	iw.TextAttr("number", fmt.Sprintf("%d", t.Number))
+	iw.TextAttr("unit", t.Unit)
+	iw.EndAttrs()
 }
 
 func (t TimeOf) String() string {

@@ -101,6 +101,7 @@ type List interface {
 }
 
 type MapEntry interface {
+	Describable
 	Key() Identifier
 	Value() Expr
 }

@@ -53,14 +53,14 @@ func (ea *EnsureAction) DumpTo(w driverbottom.IndentWriter) {
 		w.IndPrintf("additional properties:\n")
 		w.Indent()
 		keys := []string{}
-		ids := map[string]string{}
+		ids := map[string]driverbottom.Expr{}
 		for id, val := range ea.props {
 			keys = append(keys, id.Id())
-			ids[id.Id()] = val.String()
+			ids[id.Id()] = val
 		}
 		slices.Sort(keys)
 		for _, k := range keys {
-			w.IndPrintf("%s <- %s\n", k, ids[k])
+			w.NestedAttr(k, ids[k])
 		}
 		w.UnIndent()
 	}

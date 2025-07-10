@@ -8,30 +8,36 @@ import (
 )
 
 type MapExpr struct {
+	loc   *errorsink.Location
 	pairs []driverbottom.MapEntry
 }
 
-func (l *MapExpr) Loc() *errorsink.Location {
+func (m *MapExpr) Loc() *errorsink.Location {
+	return m.loc
+}
+
+func (m *MapExpr) ShortDescription() string {
 	panic("unimplemented")
 }
 
-func (l *MapExpr) ShortDescription() string {
-	panic("unimplemented")
+func (m *MapExpr) DumpTo(to driverbottom.IndentWriter) {
+	to.Intro("List")
+	to.AttrsWhere(m)
+	for k, e := range m.pairs {
+		to.NestedAttr(fmt.Sprintf("pair %d", k), e)
+	}
+	to.EndAttrs()
 }
 
-func (l *MapExpr) DumpTo(to driverbottom.IndentWriter) {
-	panic("unimplemented")
-}
-
-func (l *MapExpr) Resolve(r driverbottom.Resolver) {
-	for _, e := range l.pairs {
+func (m *MapExpr) Resolve(r driverbottom.Resolver) {
+	for _, e := range m.pairs {
 		e.Value().Resolve(r)
 	}
 }
 
-func (l *MapExpr) Eval(s driverbottom.RuntimeStorage) any {
+func (m *MapExpr) Eval(s driverbottom.RuntimeStorage) any {
 	ret := map[string]any{}
-	for _, e := range l.pairs {
+	for _, e := range m.pairs {
 		key := e.Key().Id()
 		val := s.Eval(e.Value())
 		ret[key] = val
@@ -39,41 +45,58 @@ func (l *MapExpr) Eval(s driverbottom.RuntimeStorage) any {
 	return ret
 }
 
-func (l *MapExpr) IsEmpty() bool {
-	return len(l.pairs) == 0
+func (m *MapExpr) IsEmpty() bool {
+	return len(m.pairs) == 0
 }
 
-func (l *MapExpr) Size() int {
-	return len(l.pairs)
+func (m *MapExpr) Size() int {
+	return len(m.pairs)
 }
 
-func (l *MapExpr) String() string {
-	return fmt.Sprintf("[<%d>]", len(l.pairs))
+func (m *MapExpr) String() string {
+	return fmt.Sprintf("[<%d>]", len(m.pairs))
 }
 
-func (l *MapExpr) Members() []driverbottom.MapEntry {
-	return l.pairs
+func (m *MapExpr) Members() []driverbottom.MapEntry {
+	return m.pairs
 }
 
 type MapPair struct {
+	loc   *errorsink.Location
 	key   driverbottom.Identifier
 	value driverbottom.Expr
 }
 
-func (m *MapPair) Key() driverbottom.Identifier {
-	return m.key
+func (mp *MapPair) Loc() *errorsink.Location {
+	return mp.loc
 }
 
-func (m *MapPair) Value() driverbottom.Expr {
-	return m.value
+func (mp *MapPair) ShortDescription() string {
+	return fmt.Sprintf("MapPair[%s<-%s]", mp.key, mp.value.ShortDescription())
 }
 
-func NewMapPair(key driverbottom.Identifier, value driverbottom.Expr) driverbottom.MapEntry {
-	return &MapPair{key: key, value: value}
+func (mp *MapPair) DumpTo(to driverbottom.IndentWriter) {
+	to.Intro("MapPair")
+	to.AttrsWhere(mp)
+	to.TextAttr("key", mp.key.Id())
+	to.NestedAttr("value", mp.value)
+	to.EndAttrs()
 }
 
-func NewMapExpr(pairs []driverbottom.MapEntry) driverbottom.Map {
-	return &MapExpr{pairs: pairs}
+func (mp *MapPair) Key() driverbottom.Identifier {
+	return mp.key
+}
+
+func (mp *MapPair) Value() driverbottom.Expr {
+	return mp.value
+}
+
+func NewMapPair(loc *errorsink.Location, key driverbottom.Identifier, value driverbottom.Expr) driverbottom.MapEntry {
+	return &MapPair{loc: loc, key: key, value: value}
+}
+
+func NewMapExpr(loc *errorsink.Location, pairs []driverbottom.MapEntry) driverbottom.Map {
+	return &MapExpr{loc: loc, pairs: pairs}
 }
 
 var _ driverbottom.Map = &MapExpr{}
