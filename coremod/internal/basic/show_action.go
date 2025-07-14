@@ -50,6 +50,10 @@ func (sa *ShowAction) DetermineInitialState(pres corebottom.ValuePresenter) {
 func (sa *ShowAction) DetermineDesiredState(pres corebottom.ValuePresenter) {
 }
 
+func (sa *ShowAction) ShouldDestroy() bool {
+	return false
+}
+
 func (sa *ShowAction) UpdateReality() {
 	// This probably needs a lot more work and a lot more infrastructure
 	// I don't think I even know *how* I expect it to work at the moment ...
@@ -81,4 +85,4 @@ func (sa *ShowAction) TearDown() {
 	sa.UpdateReality()
 }
 
-var _ corebottom.ModelBuilder = &ShowAction{}
+var _ corebottom.RealityShifter = &ShowAction{}

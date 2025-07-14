@@ -2,6 +2,7 @@ package target
 
 import (
 	"fmt"
+	"log"
 	"slices"
 
 	"ziniki.org/deployer/coremod/internal/vars"
@@ -115,7 +116,13 @@ func (t *CoreTarget) UpdateReality() {
 		t.tools.Storage.SetStepName(fmt.Sprintf("%s-%d", t.name, k))
 		amis, ok := a.(corebottom.RealityShifter)
 		if ok {
-			amis.UpdateReality()
+			if t.tools.Options.Destroy && amis.ShouldDestroy() {
+				amis.TearDown()
+			} else {
+				amis.UpdateReality()
+			}
+		} else {
+			log.Printf("not a RealityShifter but %T", a)
 		}
 	}
 }

@@ -86,6 +86,10 @@ func (ca *copyAction) basicModel() *CopyModel {
 	return &CopyModel{loc: ca.loc, Src: copyFS, Dest: dest}
 }
 
+func (ca *copyAction) ShouldDestroy() bool {
+	return false
+}
+
 func (ca *copyAction) UpdateReality() {
 	model := ca.tools.Storage.GetCoin(ca.coin, corebottom.DETERMINE_DESIRED_MODE).(*CopyModel)
 	d := model.Dest.ObtainDest()
@@ -97,4 +101,4 @@ func (ca *copyAction) TearDown() {
 	// need user to tell us
 }
 
-var _ corebottom.ModelBuilder = &copyAction{}
+var _ corebottom.RealityShifter = &copyAction{}

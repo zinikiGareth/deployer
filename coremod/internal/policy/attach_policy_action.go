@@ -23,44 +23,44 @@ type AttachPolicyAction struct {
 	actualPolicy corebottom.PolicyDocument
 }
 
-func (ea *AttachPolicyAction) Loc() *errorsink.Location {
-	return ea.loc
+func (apa *AttachPolicyAction) Loc() *errorsink.Location {
+	return apa.loc
 }
 
-func (ea *AttachPolicyAction) DumpTo(w driverbottom.IndentWriter) {
+func (apa *AttachPolicyAction) DumpTo(w driverbottom.IndentWriter) {
 	w.Intro("AttachPolicyAction")
-	w.AttrsWhere(ea)
-	w.NestedAttr("to", ea.to)
-	w.NestedAttr("policy", ea.policy)
+	w.AttrsWhere(apa)
+	w.NestedAttr("to", apa.to)
+	w.NestedAttr("policy", apa.policy)
 	w.EndAttrs()
 }
 
-func (ea *AttachPolicyAction) ShortDescription() string {
-	return fmt.Sprintf("AttachPolicy[%s: %s]", ea.to.ShortDescription(), ea.policy.ShortDescription())
+func (apa *AttachPolicyAction) ShortDescription() string {
+	return fmt.Sprintf("AttachPolicy[%s: %s]", apa.to.ShortDescription(), apa.policy.ShortDescription())
 }
 
-func (ea *AttachPolicyAction) AddProperty(name driverbottom.Identifier, value driverbottom.Expr) {
+func (apa *AttachPolicyAction) AddProperty(name driverbottom.Identifier, value driverbottom.Expr) {
 }
 
-func (ea *AttachPolicyAction) AddAdverb(adv driverbottom.Adverb, tokens []driverbottom.Token) driverbottom.Interpreter {
-	return drivertop.NewDisallowInnerScope(ea.tools.CoreTools)
+func (apa *AttachPolicyAction) AddAdverb(adv driverbottom.Adverb, tokens []driverbottom.Token) driverbottom.Interpreter {
+	return drivertop.NewDisallowInnerScope(apa.tools.CoreTools)
 }
 
-func (ea *AttachPolicyAction) Completed() {
+func (apa *AttachPolicyAction) Completed() {
 }
 
-func (ea *AttachPolicyAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
-	ea.to.Resolve(r)
-	ea.policy.Resolve(r)
+func (apa *AttachPolicyAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
+	apa.to.Resolve(r)
+	apa.policy.Resolve(r)
 	return driverbottom.NO_VALUE
 }
 
-func (ea *AttachPolicyAction) DetermineInitialState(pres corebottom.ValuePresenter) {
+func (apa *AttachPolicyAction) DetermineInitialState(pres corebottom.ValuePresenter) {
 }
 
-func (ea *AttachPolicyAction) DetermineDesiredState(pres corebottom.ValuePresenter) {
-	attachTo := ea.to.Eval(ea.tools.Storage)
-	policy := ea.policy.Eval(ea.tools.Storage)
+func (apa *AttachPolicyAction) DetermineDesiredState(pres corebottom.ValuePresenter) {
+	attachTo := apa.to.Eval(apa.tools.Storage)
+	policy := apa.policy.Eval(apa.tools.Storage)
 
 	attacher, ok := attachTo.(corebottom.PolicyAttacher)
 	if !ok {
@@ -70,16 +70,20 @@ func (ea *AttachPolicyAction) DetermineDesiredState(pres corebottom.ValuePresent
 	if !ok {
 		log.Fatalf("%T was not a policy", policy)
 	}
-	ea.attachTo = attacher
-	ea.actualPolicy = isPolicy
+	apa.attachTo = attacher
+	apa.actualPolicy = isPolicy
 }
 
-func (ea *AttachPolicyAction) UpdateReality() {
-	ea.attachTo.Attach(ea.actualPolicy)
+func (apa *AttachPolicyAction) ShouldDestroy() bool {
+	return false
 }
 
-func (ea *AttachPolicyAction) TearDown() {
+func (apa *AttachPolicyAction) UpdateReality() {
+	apa.attachTo.Attach(apa.actualPolicy)
+}
+
+func (apa *AttachPolicyAction) TearDown() {
 	// ea.ens.TearDown()
 }
 
-var _ corebottom.ModelBuilder = &AttachPolicyAction{}
+var _ corebottom.RealityShifter = &AttachPolicyAction{}

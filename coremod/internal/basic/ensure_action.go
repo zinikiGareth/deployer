@@ -149,6 +149,10 @@ func (ea *EnsureAction) DetermineDesiredState(pres corebottom.ValuePresenter) {
 	ea.ens.DetermineDesiredState(NewCoinPresenter(ea.tools.Storage, ea.ens.CoinId(), pres))
 }
 
+func (ea *EnsureAction) ShouldDestroy() bool {
+	return ea.markDestroy != nil
+}
+
 func (ea *EnsureAction) UpdateReality() {
 	ea.ens.UpdateReality()
 }

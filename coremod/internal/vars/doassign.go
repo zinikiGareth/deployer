@@ -25,85 +25,94 @@ type DoAssign struct {
 	action   driverbottom.Describable
 }
 
-func (d *DoAssign) Loc() *errorsink.Location {
-	return d.assignTo.Loc()
+func (da *DoAssign) Loc() *errorsink.Location {
+	return da.assignTo.Loc()
 }
 
-func (d *DoAssign) DumpTo(w driverbottom.IndentWriter) {
+func (da *DoAssign) DumpTo(w driverbottom.IndentWriter) {
 	w.Intro("AssignTo")
-	w.AttrsWhere(d.assignTo)
-	w.TextAttr("assignTo", d.assignTo.Id())
-	d.action.DumpTo(w)
+	w.AttrsWhere(da.assignTo)
+	w.TextAttr("assignTo", da.assignTo.Id())
+	da.action.DumpTo(w)
 	w.EndAttrs()
 }
 
-func (d *DoAssign) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
-	res, ok := d.action.(driverbottom.Resolvable)
+func (da *DoAssign) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
+	res, ok := da.action.(driverbottom.Resolvable)
 	if ok {
 		status := res.Resolve(r)
 		if status == driverbottom.NO_VALUE {
 			panic("assignTo specified but expr does not produce a value") // should be an error
 		}
-		d.tools.Storage.EnableSymbol(d.holder)
+		da.tools.Storage.EnableSymbol(da.holder)
 	}
 
 	return driverbottom.NO_VALUE
 }
 
-func (d *DoAssign) ShortDescription() string {
-	return "DoAssign[" + d.assignTo.Id() + "<-" + d.action.ShortDescription() + "]"
+func (da *DoAssign) ShortDescription() string {
+	return "DoAssign[" + da.assignTo.Id() + "<-" + da.action.ShortDescription() + "]"
 }
 
-func (d *DoAssign) DetermineInitialState(pres corebottom.ValuePresenter) {
-	fnd, ok := d.action.(corebottom.Findable)
+func (da *DoAssign) DetermineInitialState(pres corebottom.ValuePresenter) {
+	fnd, ok := da.action.(corebottom.Findable)
 	if !ok {
 		// should we call something on pres? such as "notFinder"?
 		return
 	}
-	fnd.DetermineInitialState(d)
+	fnd.DetermineInitialState(da)
 }
 
-func (d *DoAssign) DetermineDesiredState(pres corebottom.ValuePresenter) {
-	mb, ok := d.action.(corebottom.ModelBuilder)
+func (da *DoAssign) DetermineDesiredState(pres corebottom.ValuePresenter) {
+	mb, ok := da.action.(corebottom.ModelBuilder)
 	if ok {
-		mb.DetermineDesiredState(d)
+		mb.DetermineDesiredState(da)
 		return
 	}
-	mc, ok := d.action.(corebottom.MemoryBuilder)
+	mc, ok := da.action.(corebottom.MemoryBuilder)
 	if ok {
-		mc.Create(d)
+		mc.Create(da)
 		return
 	}
 	// should we call something on pres? such as "onlyFinder"?
 }
 
-func (d *DoAssign) UpdateReality() {
-	amis, ok := d.action.(corebottom.RealityShifter)
+func (da *DoAssign) ShouldDestroy() bool {
+	amis, ok := da.action.(corebottom.RealityShifter)
+	if ok {
+		return amis.ShouldDestroy()
+	} else {
+		return false
+	}
+}
+
+func (da *DoAssign) UpdateReality() {
+	amis, ok := da.action.(corebottom.RealityShifter)
 	if ok {
 		amis.UpdateReality()
 	}
 }
 
-func (d *DoAssign) TearDown() {
-	amis, ok := d.action.(corebottom.RealityShifter)
+func (da *DoAssign) TearDown() {
+	amis, ok := da.action.(corebottom.RealityShifter)
 	if ok {
 		amis.TearDown()
 	}
 }
 
-func (d *DoAssign) NotFound() {
+func (da *DoAssign) NotFound() {
 }
 
-func (d *DoAssign) Present(value any) {
-	if d.holder == nil { // can't do anything if we didn't resolve it
+func (da *DoAssign) Present(value any) {
+	if da.holder == nil { // can't do anything if we didn't resolve it
 		return
 	}
-	d.tools.Storage.Bind(d.holder, value)
+	da.tools.Storage.Bind(da.holder, value)
 }
 
-func (d *DoAssign) WantDestruction(loc *errorsink.Location) {
+func (da *DoAssign) WantDestruction(loc *errorsink.Location) {
 	// TODO: I think we need to pass this on to the target
 	panic("need to implement DoAssign.WantDestruction")
 }
 
-var _ corebottom.ModelBuilder = &DoAssign{}
+var _ corebottom.RealityShifter = &DoAssign{}
