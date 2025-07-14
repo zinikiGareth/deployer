@@ -3,6 +3,7 @@ package basic
 import (
 	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
+	"ziniki.org/deployer/driver/pkg/errorsink"
 )
 
 type CoinPresenter struct {
@@ -24,6 +25,10 @@ func (c *CoinPresenter) Present(value any) {
 
 func (c *CoinPresenter) NotFound() {
 	c.presenter.NotFound()
+}
+
+func (c *CoinPresenter) WantDestruction(loc *errorsink.Location) {
+	panic("need to handle website.@destroy")
 }
 
 func NewCoinPresenter(storage driverbottom.RuntimeStorage, coinId corebottom.CoinId, pres corebottom.ValuePresenter) corebottom.ValuePresenter {

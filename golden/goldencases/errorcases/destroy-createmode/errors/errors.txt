@@ -1,0 +1,2 @@
+ 12.1   @destroy specified in active target without the --destroy flag
+  ==> @destroy // we want to destroy this resource using "--destroy"

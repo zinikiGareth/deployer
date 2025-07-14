@@ -57,7 +57,7 @@
 				]
 			},
 			{
-				"name": "trial",
+				"name": "trial bucket",
 				"type": "go",
 				"request": "launch",
 				"program": "${workspaceFolder:Deployer}/cmd/deployer",
@@ -72,6 +72,23 @@
 				"env": {
 					"AWS_PROFILE": "ziniki-admin",
 					"CONSOLIDATOR_SRC": "/Users/gareth/Clients/consolidator.news"
+				}
+			},
+			{
+				"name": "trial db",
+				"type": "go",
+				"request": "launch",
+				"program": "${workspaceFolder:Deployer}/cmd/deployer",
+				"cwd": "${workspaceFolder:Deployer}/..",
+				"args": [
+					"--module",
+					"${workspaceFolder:CoreMod}/plugin/coremod.so",
+					"--module",
+					"${workspaceFolder:AWS}/plugin/deployer_module_aws.so",
+					"trial_dbs"
+				],
+				"env": {
+					"AWS_PROFILE": "ziniki-admin"
 				}
 			}
 		],

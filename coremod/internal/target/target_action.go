@@ -135,6 +135,10 @@ func (d *CoreTarget) Present(value any) {
 	// it must be the case that binding is optional and no variable has been provided.
 }
 
+func (c *CoreTarget) WantDestruction(loc *errorsink.Location) {
+	c.tools.Reporter.ReportAtf(loc, "@destroy specified in active target without the --destroy flag")
+}
+
 var _ corebottom.Target = &CoreTarget{}
 var _ driverbottom.TopLevelForm = &CoreTarget{}
 var _ driverbottom.AttachResult = &CoreTarget{}

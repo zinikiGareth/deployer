@@ -1,0 +1,16 @@
+>It is an error to use an adverb that is not recognized.
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
+>
+>
+>	target invalid_adverb
+#^ source.deployer-dply
+# ^^^^^^ source.deployer-dply keyword.target
+#       ^^^^^^^^^^^^^^^^ source.deployer-dply
+>
+>		ensure test.S3.Bucket "hello"
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>			@teardown delete
+#^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>			@invalid adverb
+#^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>

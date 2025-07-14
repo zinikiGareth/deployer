@@ -1,0 +1,8 @@
+It is an error to use an adverb that is not recognized.
+
+
+	target invalid_adverb
+
+		ensure test.S3.Bucket "hello"
+			@teardown delete
+			@invalid adverb

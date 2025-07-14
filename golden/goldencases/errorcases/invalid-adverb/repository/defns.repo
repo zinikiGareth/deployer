@@ -1,0 +1,12 @@
+symbol invalid_adverb is bound to:
+target invalid_adverb {
+	_where_: invalid-adverb.dply:4.7
+	actions: [
+		EnsureAction {
+			_where_: invalid-adverb.dply:6.0
+			what: test.S3.Bucket
+			not-resolved: test.S3.Bucket
+			named: hello
+		}
+	]
+}

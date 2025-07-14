@@ -101,4 +101,9 @@ func (d *DoAssign) Present(value any) {
 	d.tools.Storage.Bind(d.holder, value)
 }
 
+func (d *DoAssign) WantDestruction(loc *errorsink.Location) {
+	// TODO: I think we need to pass this on to the target
+	panic("need to implement DoAssign.WantDestruction")
+}
+
 var _ corebottom.ModelBuilder = &DoAssign{}

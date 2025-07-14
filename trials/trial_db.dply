@@ -37,3 +37,10 @@ After that, everything else seems to be gravy.
             @teardown delete
             SubnetGroupName <- subnet
 
+We need to create a Neptune instance
+
+        ensure aws.Neptune.Instance "writer"
+            @teardown delete
+            @destroy
+            Cluster <- cluster
+            InstanceClass <- "serverless"

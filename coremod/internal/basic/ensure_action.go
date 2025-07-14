@@ -15,13 +15,14 @@ import (
 // resolution, preparation, execution
 
 type EnsureAction struct {
-	tools    *corebottom.Tools
-	scope    driverbottom.Scope
-	loc      *errorsink.Location
-	what     driverbottom.Identifier
-	resolved corebottom.Blank
-	named    driverbottom.String
-	teardown corebottom.TearDown
+	tools       *corebottom.Tools
+	scope       driverbottom.Scope
+	loc         *errorsink.Location
+	what        driverbottom.Identifier
+	resolved    corebottom.Blank
+	named       driverbottom.String
+	teardown    corebottom.TearDown
+	markDestroy driverbottom.Adverb
 	// TODO: this really isn't a map here, because what we want is to index by string name
 	// Now, we possibly want the "identifier" to that we have the location of the symbol, but it can't be the key
 	// because the same "symbol" at two different locations will be different, and we can't index by it.
@@ -93,7 +94,8 @@ func (ea *EnsureAction) AddProperty(name driverbottom.Identifier, value driverbo
 }
 
 func (ea *EnsureAction) AddAdverb(adv driverbottom.Adverb, tokens []driverbottom.Token) driverbottom.Interpreter {
-	if adv.Name() == "teardown" {
+	switch adv.Name() {
+	case "teardown":
 		if ea.teardown != nil {
 			panic("duplicate teardown")
 		}
@@ -101,6 +103,10 @@ func (ea *EnsureAction) AddAdverb(adv driverbottom.Adverb, tokens []driverbottom
 			panic("invalid tokens")
 		}
 		ea.teardown = &MyTearDown{mode: tokens[0].(driverbottom.Identifier).Id()}
+	case "destroy":
+		ea.markDestroy = adv
+	default:
+		ea.tools.Reporter.ReportAtf(adv.Loc(), "there is no adverb %s", adv.Name())
 	}
 	return drivertop.NewDisallowInnerScope(ea.tools.CoreTools)
 }
@@ -134,6 +140,9 @@ func (ea *EnsureAction) Resolve(r driverbottom.Resolver) driverbottom.BindingReq
 
 func (ea *EnsureAction) DetermineInitialState(pres corebottom.ValuePresenter) {
 	ea.ens.DetermineInitialState(NewCoinPresenter(ea.tools.Storage, ea.ens.CoinId(), pres))
+	if ea.markDestroy != nil {
+		pres.WantDestruction(ea.markDestroy.Loc())
+	}
 }
 
 func (ea *EnsureAction) DetermineDesiredState(pres corebottom.ValuePresenter) {
