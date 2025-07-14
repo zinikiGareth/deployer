@@ -1,0 +1,2 @@
+  8.7   no @destroy elements specified in active target (but --destroy flag specified)
+  ==> target destroy_something

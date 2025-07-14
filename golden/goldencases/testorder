@@ -1,8 +1,10 @@
+errorcases/nodestroy-destroymode
 nothing
 empty
 empty-target
 errorcases/blocking
 errorcases/invalid-char
+errorcases/invalid-adverb
 errorcases/missing-target
 errorcases/target-multiple-symbols
 errorcases/no-duplicate-targets
@@ -14,11 +16,11 @@ errorcases/find-no-such-class
 errorcases/find-cannot-have-teardown
 errorcases/coin-must-have-assign
 errorcases/destroy-createmode
-errorcases/invalid-adverb
 invoke-method/simple
 lists/simple
 ensure-bucket
 teardown-bucket
+destroy-bucket
 find-bucket
 saved-bucket
 bucket-named-in-props

@@ -1,6 +1,8 @@
 package coretop
 
 import (
+	"log"
+
 	"ziniki.org/deployer/coremod/internal/basic"
 	"ziniki.org/deployer/coremod/internal/files"
 	"ziniki.org/deployer/coremod/internal/lists"
@@ -28,8 +30,15 @@ func RegisterWithDriver(driver driverbottom.Driver) error {
 	}
 
 	ct := driver.ObtainCoreTools()
-	tools := corebottom.NewTools(ct, &corebottom.Options{})
-	tools.CoreTools.StoreOther("coremod", tools)
+	var tools *corebottom.Tools
+	tmp := ct.RetrieveOther("coremod")
+	if tmp != nil {
+		tools = tmp.(*corebottom.Tools)
+	} else {
+		tools = corebottom.NewTools(ct, &corebottom.Options{})
+		log.Printf("registering tools = %p %p\n", tools, tools.Options)
+		ct.StoreOther("coremod", tools)
+	}
 
 	// Logically, I think, these three have to go in "deployer", not in a module.
 	tools.Register.ExtensionPoint("main-args")

@@ -27,5 +27,6 @@ func (ct *CoreTools) RetrieveOther(name string) any {
 }
 
 func NewTools(reporter errorsink.ErrorRepI, register Register, recall Recall, repo Repository, storage RuntimeStorage) *CoreTools {
-	return &CoreTools{Reporter: reporter, Register: register, Recall: recall, Repository: repo, Storage: storage, others: map[string]any{}}
+	ret := &CoreTools{Reporter: reporter, Register: register, Recall: recall, Repository: repo, Storage: storage, others: map[string]any{}}
+	return ret
 }

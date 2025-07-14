@@ -1,0 +1,1 @@
+we need to destroy a bucket called hello in region us-east-1

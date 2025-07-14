@@ -1,6 +1,8 @@
 package corebottom
 
-import "ziniki.org/deployer/driver/pkg/driverbottom"
+import (
+	"ziniki.org/deployer/driver/pkg/driverbottom"
+)
 
 type Tools struct {
 	*driverbottom.CoreTools
@@ -9,8 +11,14 @@ type Tools struct {
 
 type Options struct {
 	TearDown bool
+	Destroy  bool
 }
 
 func NewTools(core *driverbottom.CoreTools, options *Options) *Tools {
-	return &Tools{CoreTools: core, Options: options}
+	if core.RetrieveOther("coremod") != nil {
+		panic("NewTools called with coremod already bound")
+	}
+	ret := &Tools{CoreTools: core, Options: options}
+	core.StoreOther("coremod", ret)
+	return ret
 }

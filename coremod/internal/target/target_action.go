@@ -16,33 +16,34 @@ type CoreTarget struct {
 	name  driverbottom.SymbolName
 	scope driverbottom.Scope
 
-	actions []corebottom.Action
+	actions     []corebottom.Action
+	haveDestroy bool
 }
 
-func (cc *CoreTarget) Name() driverbottom.SymbolName {
-	return cc.name
+func (t *CoreTarget) Name() driverbottom.SymbolName {
+	return t.name
 }
 
-func (cc *CoreTarget) Scope() driverbottom.Scope {
-	return cc.scope
+func (t *CoreTarget) Scope() driverbottom.Scope {
+	return t.scope
 }
 
-func (cc *CoreTarget) String() string {
-	return string(cc.name)
+func (t *CoreTarget) String() string {
+	return string(t.name)
 }
 
-func (a *CoreTarget) MakeAssign(holder driverbottom.Holder, assignTo driverbottom.Identifier, action any) any {
-	ret := vars.MakeDoAssign(a.tools, holder, assignTo, action)
+func (t *CoreTarget) MakeAssign(holder driverbottom.Holder, assignTo driverbottom.Identifier, action any) any {
+	ret := vars.MakeDoAssign(t.tools, holder, assignTo, action)
 	return ret
 }
 
-func (cc *CoreTarget) Attach(entry any) error {
+func (t *CoreTarget) Attach(entry any) error {
 	// log.Printf("%p: attaching %p\n", cc, entry)
 	action, ok := entry.(corebottom.Action)
 	if !ok {
 		return fmt.Errorf("not an Action: %T", entry)
 	}
-	cc.actions = append(cc.actions, action)
+	t.actions = append(t.actions, action)
 	return nil
 }
 
@@ -91,6 +92,10 @@ func (t *CoreTarget) DetermineInitialState() {
 }
 
 func (t *CoreTarget) DetermineDesiredState() {
+	if t.tools.Options.Destroy && !t.haveDestroy {
+		t.tools.Reporter.ReportAtf(t.loc, "no @destroy elements specified in active target (but --destroy flag specified)")
+		return
+	}
 	for k, a := range t.actions {
 		t.tools.Storage.SetStepName(fmt.Sprintf("%s-%d", t.name, k))
 		// log.Printf("%p: a is of type %T %p\n", t, a, a)
@@ -125,18 +130,22 @@ func (t *CoreTarget) TearDown() {
 	}
 }
 
-func (d *CoreTarget) NotFound() {
+func (t *CoreTarget) NotFound() {
 	// If I have understood the flow correctly, if you arrive here,
 	// it must be the case that binding is optional and no variable has been provided.
 }
 
-func (d *CoreTarget) Present(value any) {
+func (t *CoreTarget) Present(value any) {
 	// If I have understood the flow correctly, if you arrive here,
 	// it must be the case that binding is optional and no variable has been provided.
 }
 
-func (c *CoreTarget) WantDestruction(loc *errorsink.Location) {
-	c.tools.Reporter.ReportAtf(loc, "@destroy specified in active target without the --destroy flag")
+func (t *CoreTarget) WantDestruction(loc *errorsink.Location) {
+	if !t.tools.Options.Destroy {
+		t.tools.Reporter.ReportAtf(loc, "@destroy specified in active target without the --destroy flag")
+	} else {
+		t.haveDestroy = true
+	}
 }
 
 var _ corebottom.Target = &CoreTarget{}

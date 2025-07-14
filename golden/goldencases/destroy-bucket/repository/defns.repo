@@ -1,0 +1,12 @@
+symbol destroy_something is bound to:
+target destroy_something {
+	_where_: destroy.dply:8.7
+	actions: [
+		EnsureAction {
+			_where_: destroy.dply:10.0
+			what: test.S3.Bucket
+			resolved: test.S3.Bucket[]
+			named: hello
+		}
+	]
+}

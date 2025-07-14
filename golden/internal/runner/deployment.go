@@ -26,10 +26,13 @@ func (r *TestRunner) TestDeployment(eh errors.TestErrorHandler) {
 	}
 	utils.SetEnvs(envs)
 	defer utils.UnsetEnvs(envs)
-	teardownFile := filepath.Join(r.scripts, "teardown")
-	exists := r.ReadTeardown(teardownFile)
-	if exists {
+	teardownFile := filepath.Join(r.scripts, "mode-teardown")
+	if r.FileExists(teardownFile) {
 		r.SetTearDown(true)
+	}
+	destroyFile := filepath.Join(r.scripts, "mode-destroy")
+	if r.FileExists(destroyFile) {
+		r.SetDestroy(true)
 	}
 	targetFile := filepath.Join(r.scripts, "targets")
 	targets, err := r.ReadTargets(targetFile)
