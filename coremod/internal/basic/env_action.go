@@ -51,14 +51,6 @@ func (ea *EnvAction) DetermineDesiredState(pres corebottom.ValuePresenter) {
 	ea.DetermineInitialState(pres)
 }
 
-func (ea *EnvAction) UpdateReality() {
-
-}
-
-func (ea *EnvAction) TearDown() {
-
-}
-
 type EnvVar struct {
 	varname driverbottom.Expr
 }

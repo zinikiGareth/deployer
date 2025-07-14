@@ -23,6 +23,8 @@ func (m *mainHandler) RunWithArgs(driver driverbottom.Driver, args []string) {
 		switch x {
 		case "--teardown":
 			options.TearDown = true
+		case "--destroy":
+			options.Destroy = true
 		default:
 			if strings.HasPrefix(x, "-") {
 				fmt.Printf("unknown option: %s\n", x)

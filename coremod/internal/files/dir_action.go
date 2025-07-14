@@ -61,10 +61,4 @@ func (da *dirAction) DetermineDesiredState(pres corebottom.ValuePresenter) {
 	da.DetermineInitialState(pres)
 }
 
-func (ea *dirAction) UpdateReality() {
-}
-
-func (ea *dirAction) TearDown() {
-}
-
 var _ corebottom.ModelBuilder = &dirAction{}

@@ -47,6 +47,10 @@ func (ca *assertBucketAction) DetermineInitialState(pres corebottom.ValuePresent
 func (ca *assertBucketAction) DetermineDesiredState(pres corebottom.ValuePresenter) {
 }
 
+func (ca *assertBucketAction) ShouldDestroy() bool {
+	return false
+}
+
 func (ca *assertBucketAction) UpdateReality() {
 	bucketVar := ca.tools.Storage.Eval(ca.bucket)
 	bucket, ok := bucketVar.(*bucketModel)
@@ -71,4 +75,4 @@ func (ca *assertBucketAction) TearDown() {
 
 }
 
-var _ corebottom.ModelBuilder = &assertBucketAction{}
+var _ corebottom.RealityShifter = &assertBucketAction{}

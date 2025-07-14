@@ -169,4 +169,4 @@ func (m *MyTearDown) Mode() string {
 	return m.mode
 }
 
-var _ corebottom.ModelBuilder = &EnsureAction{}
+var _ corebottom.RealityShifter = &EnsureAction{}
