@@ -2,6 +2,7 @@ package impl
 
 import (
 	"fmt"
+	"log"
 	"os"
 
 	"ziniki.org/deployer/driver/pkg/driverbottom"
@@ -60,6 +61,7 @@ func RunDeployer(args []string) int {
 		return 1
 	}
 	for _, f := range dirs {
+		log.Printf("loading scripts from %s\n", f)
 		err := d.ReadScriptsFrom(f)
 		if err != nil {
 			return 1
@@ -67,6 +69,7 @@ func RunDeployer(args []string) int {
 	}
 	for _, e := range envs {
 		want := e + ".envs"
+		log.Printf("reading envs from %s\n", want)
 		if !d.FindAndReadEnvs(dirs, want) {
 			fmt.Printf("did not find any files called %s in the specified directories\n", want)
 			return 1

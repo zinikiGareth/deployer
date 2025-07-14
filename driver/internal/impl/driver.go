@@ -41,8 +41,13 @@ func (d *DriverImpl) ReadScriptsFrom(indir string) error {
 func (d *DriverImpl) FindAndReadEnvs(dirs []string, file string) bool {
 	found := false
 	for _, d := range dirs {
-		envs, err := utils.ReadEnvs(filepath.Join(d, file))
-		if err == nil {
+		envfile := filepath.Join(d, file)
+		envs, err := utils.ReadEnvs(envfile)
+		if err != nil {
+			log.Printf("Failed to read %s: %v\n", envfile, err)
+			return false
+		}
+		if envs != nil {
 			found = true
 			utils.SetEnvs(envs)
 		}
