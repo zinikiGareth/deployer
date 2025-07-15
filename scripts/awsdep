@@ -2,4 +2,8 @@
 
 DEPLOYER=`dirname $0`
 DEPLOYER=`dirname $DEPLOYER`
-$DEPLOYER/driver/cmd/deployer/deployer -m $DEPLOYER/coremod/plugin/coremod.so -m $DEPLOYER/../deployer-module-aws/plugin/deployer_module_aws.so "$@"
+$DEPLOYER/driver/cmd/deployer/deployer \
+  -m $DEPLOYER/coremod/plugin/coremod.so \
+  -m $DEPLOYER/../deployer-module-aws/plugin/deployer_module_aws.so \
+  -m $DEPLOYER/../deployer-module-dreamhost/plugin/deployer_module_dreamhost.so\
+  "$@"

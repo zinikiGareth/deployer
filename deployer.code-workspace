@@ -21,6 +21,10 @@
 			"path": "../deployer-module-aws"
 		},
 		{
+			"name": "Dreamhost",
+			"path": "../deployer-module-dreamhost"
+		},
+		{
 			"name": "VSCode",
 			"path": "../deployer-vsix"
 		},
