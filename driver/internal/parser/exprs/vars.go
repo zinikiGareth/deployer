@@ -33,8 +33,8 @@ func (v *VarReference) Eval(s driverbottom.RuntimeStorage) any {
 		return v.value
 	}
 	if v.actualVar == nil {
-		log.Printf("variable %s was not resolved, it seems\n", v.id.Id())
-		panic("not resolved var")
+		log.Printf("in processing of Resolve(), nobody remembered to ask for variable %s to be resolved, it seems (used at %s)\n", v.id.Id(), v.id.Loc().String())
+		panic("resolve never called on " + v.id.Id())
 	}
 	// log.Printf("Eval(vr) %s %v => %T %v\n", v.id, v, s.Get(v.actualVar), s.Get(v.actualVar))
 	out := s.Get(v.actualVar)
