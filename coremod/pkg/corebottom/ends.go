@@ -13,6 +13,7 @@ type FileSource interface {
 
 type FileDest interface {
 	PourInto(name string, contents io.Reader)
+	Relative(s string) (FileDest, error)
 }
 
 type DestHolder interface {

@@ -26,7 +26,19 @@ func (dp *DirectoryPourer) PourAll(into corebottom.FileDest) {
 	}
 
 	for _, f := range files {
-		dp.PourOut(f.Name(), into)
+		if f.IsDir() {
+			fromdir, err := dp.Relative(f.Name())
+			if err != nil {
+				panic(err)
+			}
+			intodir, err := into.Relative(f.Name())
+			if err != nil {
+				panic(err)
+			}
+			fromdir.PourAll(intodir)
+		} else {
+			dp.PourOut(f.Name(), into)
+		}
 	}
 }
 
