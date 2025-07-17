@@ -37,6 +37,10 @@
 			"path": "trials"
 		},
 		{
+			"name": "Website",
+			"path": "../deployer-website"
+		},
+		{
 			"name": "Samples",
 			"path": "samples"
 		},
