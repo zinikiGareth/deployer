@@ -105,7 +105,7 @@
 				"type": "shell",
 				"command": "go",
             			"label": "testall",
-            			"args": ["test", "-v", "./..."],
+            			"args": ["test", "./..."],
             			"group": "test"
         		},
         		{

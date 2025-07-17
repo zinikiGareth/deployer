@@ -1,6 +1,6 @@
 module ziniki.org/deployer/testmod
 
-go 1.23.4
+go 1.24.5
 
 require ziniki.org/deployer/driver v0.0.0
 require ziniki.org/deployer/coremod v0.0.0

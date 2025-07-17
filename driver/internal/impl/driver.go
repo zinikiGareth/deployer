@@ -62,7 +62,7 @@ func (d *DriverImpl) UseModule(mod string) error {
 	}
 	init, err := p.Lookup("RegisterWithDriver")
 	if err != nil {
-		log.Printf("ignoring module " + mod + " as it does not have RegisterWithDriver")
+		log.Printf("ignoring module %s as it does not have RegisterWithDriver", mod)
 		return nil
 	}
 	return init.(func(driverbottom.Driver) error)(d)

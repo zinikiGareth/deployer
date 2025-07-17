@@ -23,7 +23,7 @@ func (s *MockSink) Expect(line, ind, offset int, text, msg string) {
 
 func (s *MockSink) Report(line *errorsink.Location, msg string) {
 	if len(s.errors) == 0 {
-		s.t.Fatalf("unexpected error: " + msg)
+		s.t.Fatalf("unexpected error: %s", msg)
 	}
 	es := s.errors[0]
 	s.errors = s.errors[1:]
