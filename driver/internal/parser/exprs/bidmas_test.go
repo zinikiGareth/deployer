@@ -119,3 +119,77 @@ func TestSimpleAddition(t *testing.T) {
 		t.Fatalf("incorrect parsing: %s", e.ShortDescription())
 	}
 }
+
+func TestPlusIsInvalidByItself(t *testing.T) {
+	p, h := makeParser(t)
+	h.Sink.Expect(1, 1, 0, "+", "+ requires left operand")
+	basicmath.RegisterAll(h.Tools)
+	fl := errorsink.FileLoc{File: "testfile.dply"}
+	line := fl.AtLine(1, 1, "+")
+	toks := h.Lex.BlockedLine(line)
+	if len(toks) != 1 {
+		t.Fatalf("expected one token, not %d", len(toks))
+	}
+	_, ok := p.Parse(nil, toks)
+	if ok {
+		t.Fatalf("parse erroneously reported successful")
+	}
+}
+
+func TestPlusIsInvalidWithLHS(t *testing.T) {
+	p, h := makeParser(t)
+	h.Sink.Expect(1, 1, 0, "5+", "+ requires right operand")
+	basicmath.RegisterAll(h.Tools)
+	fl := errorsink.FileLoc{File: "testfile.dply"}
+	line := fl.AtLine(1, 1, "5+")
+	toks := h.Lex.BlockedLine(line)
+	if len(toks) != 2 {
+		t.Fatalf("expected two tokens, not %d", len(toks))
+	}
+	_, ok := p.Parse(nil, toks)
+	if ok {
+		t.Fatalf("parse erroneously reported successful")
+	}
+}
+
+func TestPlusIsInvalidWithRHS(t *testing.T) {
+	p, h := makeParser(t)
+	h.Sink.Expect(1, 1, 0, "+7", "+ requires left operand")
+	basicmath.RegisterAll(h.Tools)
+	fl := errorsink.FileLoc{File: "testfile.dply"}
+	line := fl.AtLine(1, 1, "+7")
+	toks := h.Lex.BlockedLine(line)
+	if len(toks) != 2 {
+		t.Fatalf("expected two tokens, not %d", len(toks))
+	}
+	_, ok := p.Parse(nil, toks)
+	if ok {
+		t.Fatalf("parse erroneously reported successful")
+	}
+}
+
+func TestAdditionEval(t *testing.T) {
+	p, h := makeParser(t)
+	basicmath.RegisterAll(h.Tools)
+	fl := errorsink.FileLoc{File: "testfile.dply"}
+	line := fl.AtLine(1, 1, "5+7")
+	toks := h.Lex.BlockedLine(line)
+	if len(toks) != 3 {
+		t.Fatalf("expected three token, not %d", len(toks))
+	}
+	e, ok := p.Parse(nil, toks)
+	if !ok {
+		t.Fatalf("error parsing %s", line.Text)
+	}
+	if e.ShortDescription() != "add [Number[5.000000],Number[7.000000]]" {
+		t.Fatalf("incorrect parsing: %s", e.ShortDescription())
+	}
+	val := e.Eval(nil)
+	num, ok := val.(float64)
+	if !ok {
+		t.Fatalf("Eval did not return a float64 but %T", val)
+	}
+	if num != 12.0 {
+		t.Fatalf("5*7 was not 12 but %f", num)
+	}
+}

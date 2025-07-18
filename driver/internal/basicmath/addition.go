@@ -19,7 +19,7 @@ func (m *addExpr) Eval(s driverbottom.RuntimeStorage) any {
 	if !ok {
 		panic("rhs of add was not a number")
 	}
-	return ln * rn
+	return ln + rn
 }
 
 type addFunc struct {
