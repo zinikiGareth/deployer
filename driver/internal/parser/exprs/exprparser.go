@@ -130,6 +130,9 @@ func (p *exprParser) AsExpr(scope driverbottom.Scope, x driverbottom.Token) (dri
 		// There may not be adjacent commas, or a comma after the OSB or before the CSB
 		// But OSB CSB is valid - an empty list
 		return p.ReduceMapExpr(scope, x)
+	case driverbottom.Operator:
+		p.tools.Reporter.ReportAtf(x.Loc(), "undefined operator: %s", x.Op())
+		return nil, false
 	default:
 		panic(fmt.Sprintf("cannot interpret type %T as Expr", x))
 	}

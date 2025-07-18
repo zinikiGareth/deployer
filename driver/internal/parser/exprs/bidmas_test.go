@@ -245,3 +245,29 @@ func TestAddMulEval(t *testing.T) {
 		t.Fatalf("3+5*7 was not 38 but %f", num)
 	}
 }
+
+func TestSubAddEval(t *testing.T) {
+	p, h := makeParser(t)
+	basicmath.RegisterAll(h.Tools)
+	fl := errorsink.FileLoc{File: "testfile.dply"}
+	line := fl.AtLine(1, 1, "3-5+7")
+	toks := h.Lex.BlockedLine(line)
+	if len(toks) != 5 {
+		t.Fatalf("expected five token, not %d", len(toks))
+	}
+	e, ok := p.Parse(nil, toks)
+	if !ok {
+		t.Fatalf("error parsing %s", line.Text)
+	}
+	if e.ShortDescription() != "add [Number[3.000000],mult [Number[5.000000],Number[7.000000]]]" {
+		t.Fatalf("incorrect parsing: %s", e.ShortDescription())
+	}
+	val := e.Eval(nil)
+	num, ok := val.(float64)
+	if !ok {
+		t.Fatalf("Eval did not return a float64 but %T", val)
+	}
+	if num != 5.0 {
+		t.Fatalf("3-5+7 was not 5 but %f", num)
+	}
+}
