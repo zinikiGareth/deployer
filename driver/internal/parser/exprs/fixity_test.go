@@ -55,7 +55,7 @@ func TestSimplePostfixExpr(t *testing.T) {
 		t.Fatalf("incorrect parsing: %s", e.ShortDescription())
 	}
 	k := e.Eval(nil)
-	if k != 6.0 {
+	if k != 6 {
 		t.Fatalf("was not 6 but %v", k)
 	}
 }
@@ -136,6 +136,29 @@ func TestPostfixOpConsidersPrecedence(t *testing.T) {
 	}
 	k := e.Eval(nil)
 	if k != 42.0 {
+		t.Fatalf("was not 42 but %v", k)
+	}
+}
+
+func TestPostfixOpAssociatesRight(t *testing.T) {
+	p, h := makeParser(t)
+	basicmath.RegisterAll(h.Tools)
+	recall.things["~$"] = postFac
+	fl := errorsink.FileLoc{File: "testfile.dply"}
+	line := fl.AtLine(1, 1, "3 ~$ ~$")
+	toks := h.Lex.BlockedLine(line)
+	if len(toks) != 3 {
+		t.Fatalf("expected three tokens, not %d", len(toks))
+	}
+	e, ok := p.Parse(nil, toks)
+	if !ok {
+		t.Fatalf("error parsing %s", line.Text)
+	}
+	if e.ShortDescription() != "<fac>(<fac>(Number[3.000000]))" {
+		t.Fatalf("incorrect parsing: %s", e.ShortDescription())
+	}
+	k := e.Eval(nil)
+	if k != 720{
 		t.Fatalf("was not 42 but %v", k)
 	}
 }
