@@ -9,7 +9,17 @@ type multiplyExpr struct {
 }
 
 func (m *multiplyExpr) Eval(s driverbottom.RuntimeStorage) any {
-	panic("unimplemented")
+	l := m.lhs.Eval(s)
+	ln, ok := l.(float64)
+	if !ok {
+		panic("lhs of multiply was not a number")
+	}
+	r := m.rhs.Eval(s)
+	rn, ok := r.(float64)
+	if !ok {
+		panic("rhs of multiply was not a number")
+	}
+	return ln * rn
 }
 
 type multiplyFunc struct {
