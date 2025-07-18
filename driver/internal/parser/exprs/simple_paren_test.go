@@ -3,7 +3,6 @@ package exprs_test
 import (
 	"testing"
 
-	"ziniki.org/deployer/driver/internal/parser/exprs"
 	"ziniki.org/deployer/driver/internal/parser/lexicator"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 )
@@ -16,14 +15,11 @@ func TestParseRemovesParensFromAnExpression(t *testing.T) {
 	if !ok {
 		t.Fatalf("could not parse (x)")
 	}
-	e2, ok := expr.(*exprs.Apply)
+	e2, ok := expr.(*konstExpr)
 	if !ok {
 		t.Fatalf("was not an apply")
 	}
-	if e2.Func != konstFunc {
-		t.Fatalf("function was not konstFunc")
-	}
-	if len(e2.Args) != 0 {
+	if len(e2.args) != 0 {
 		t.Fatalf("args != 0")
 	}
 }
@@ -36,14 +32,11 @@ func TestParseRemovesDoubleParensFromAnExpression(t *testing.T) {
 	if !ok {
 		t.Fatalf("could not parse (x)")
 	}
-	e2, ok := expr.(*exprs.Apply)
+	e2, ok := expr.(*konstExpr)
 	if !ok {
 		t.Fatalf("was not an apply")
 	}
-	if e2.Func != konstFunc {
-		t.Fatalf("function was not konstFunc")
-	}
-	if len(e2.Args) != 0 {
+	if len(e2.args) != 0 {
 		t.Fatalf("args != 0")
 	}
 }
@@ -59,14 +52,11 @@ func TestParseMultipleRemovesParensFromAnExpression(t *testing.T) {
 	if len(es) != 1 {
 		t.Fatalf("expected 1 expr not %d", len(es))
 	}
-	e2, ok := es[0].(*exprs.Apply)
+	e2, ok := es[0].(*konstExpr)
 	if !ok {
 		t.Fatalf("was not an apply")
 	}
-	if e2.Func != konstFunc {
-		t.Fatalf("function was not konstFunc")
-	}
-	if len(e2.Args) != 0 {
+	if len(e2.args) != 0 {
 		t.Fatalf("args != 0")
 	}
 }

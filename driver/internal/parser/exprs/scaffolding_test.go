@@ -1,6 +1,7 @@
 package exprs_test
 
 import (
+	"fmt"
 	"slices"
 	"testing"
 
@@ -44,6 +45,40 @@ func (rdv returnDataValue) ReduceExpr(me driverbottom.Token, before []driverbott
 	return rdv.value
 }
 
+type konstExpr struct {
+	driverbottom.Locatable
+	args []driverbottom.Expr
+}
+
+func (ke *konstExpr) ShortDescription() string {
+	ret := "<konst>"
+	ret += "("
+	for k, e := range ke.args {
+		if k > 0 {
+			ret += ","
+		}
+		ret += e.ShortDescription()
+	}
+	ret += ")"
+	return ret
+}
+
+func (ke *konstExpr) DumpTo(to driverbottom.IndentWriter) {
+	panic("unimplemented")
+}
+
+func (ke *konstExpr) Resolve(r driverbottom.Resolver) {
+	panic("unimplemented")
+}
+
+func (ke *konstExpr) String() string {
+	return fmt.Sprintf("konst[%d]", len(ke.args))
+}
+
+func (ke *konstExpr) Eval(s driverbottom.RuntimeStorage) any {
+	panic("unimplemented")
+}
+
 type konstantFunc struct {
 }
 
@@ -57,11 +92,59 @@ func (kf *konstantFunc) Associativity() bool {
 }
 
 func (kf *konstantFunc) ReduceExpr(me driverbottom.Token, before []driverbottom.Expr, after []driverbottom.Expr) driverbottom.Expr {
-	return &exprs.Apply{Func: kf, Args: slices.Concat(before, after)}
+	return &konstExpr{args: slices.Concat(before, after)}
+}
+
+type facExpr struct {
+	driverbottom.Locatable
+	arg driverbottom.Expr
+}
+
+func (fe *facExpr) ShortDescription() string {
+	return fmt.Sprintf("<fac>(%s)", fe.arg.ShortDescription())
+}
+
+func (fe *facExpr) DumpTo(to driverbottom.IndentWriter) {
+	panic("unimplemented")
+}
+
+func (fe *facExpr) Resolve(r driverbottom.Resolver) {
+	panic("unimplemented")
+}
+
+func (fe *facExpr) String() string {
+	return fmt.Sprintf("fac[%s]", fe.arg.String())
+}
+
+func (fe *facExpr) Eval(s driverbottom.RuntimeStorage) any {
+	panic("unimplemented")
+}
+
+type postFacFunc struct {
+}
+
+// Precedence implements driverbottom.Function.
+func (pff *postFacFunc) Precedence() int {
+	return 7
+}
+
+func (pff *postFacFunc) Associativity() bool {
+	return true
+}
+
+func (pff *postFacFunc) ReduceExpr(me driverbottom.Token, before []driverbottom.Expr, after []driverbottom.Expr) driverbottom.Expr {
+	if len(before) != 1 {
+		panic("need prefix arg")
+	}
+	if len(after) != 0 {
+		panic("have postfix arg")
+	}
+	return &facExpr{arg: before[0]}
 }
 
 var recall myRecall
 var idFunc driverbottom.Function
+var postFac driverbottom.Function
 var konstFunc driverbottom.Function
 var oneString driverbottom.String
 var lineloc *errorsink.LineLoc
@@ -72,6 +155,7 @@ var comma driverbottom.Punc
 func init() {
 	lineloc = &errorsink.LineLoc{Line: 1, Indent: 1, Text: "", File: &errorsink.FileLoc{File: "test"}}
 	oneString = lexicator.NewStringToken(lineloc, 0, "string_1")
+	postFac = &postFacFunc{}
 	idFunc = returnDataValue{value: oneString}
 	konstFunc = &konstantFunc{}
 	orb = lexicator.NewPuncToken(lineloc, 0, '(')

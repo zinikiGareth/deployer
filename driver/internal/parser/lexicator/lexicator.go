@@ -261,7 +261,7 @@ func isSymbol(r rune) bool {
 	switch r {
 	case '/', '*', '+', '-':
 		return true
-	case '!', '$', '%':
+	case '!', '$', '%', '~':
 		return true
 	case '<', '=', '>':
 		return true

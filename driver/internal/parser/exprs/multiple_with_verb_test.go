@@ -1,10 +1,8 @@
 package exprs_test
 
 import (
-	"fmt"
 	"testing"
 
-	"ziniki.org/deployer/driver/internal/parser/exprs"
 	"ziniki.org/deployer/driver/internal/parser/lexicator"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 )
@@ -21,16 +19,12 @@ func TestAVerbAndANoun(t *testing.T) {
 	if len(exs) != 2 {
 		t.Fatalf("%d args returned, not 2", len(exs))
 	}
-	fmt.Printf("%v\n", exs[0])
-	a, ok := exs[0].(*exprs.Apply)
+	a, ok := exs[0].(*konstExpr)
 	if !ok {
 		t.Fatalf("returned expr was not an Apply")
 	}
-	if a.Func != konstFunc {
-		t.Fatalf("returned Apply Func was not konst")
-	}
-	if len(a.Args) != 0 {
-		t.Fatalf("Apply Func had %d args, not 0", len(a.Args))
+	if len(a.args) != 0 {
+		t.Fatalf("Apply Func had %d args, not 0", len(a.args))
 	}
 
 	if exs[1] != world {

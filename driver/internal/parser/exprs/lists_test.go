@@ -79,16 +79,16 @@ func TestAnEmptyListIsParsedAsAnArgument(t *testing.T) {
 		t.Fatalf("parsing failed")
 	}
 
-	ae, ok := expr.(*exprs.Apply)
+	ae, ok := expr.(*konstExpr)
 	if !ok {
 		t.Fatalf("Expr was not a list: %T", expr)
 	}
-
-	if len(ae.Args) != 1 {
-		t.Fatalf("Expected list of length 0, not %d", len(ae.Args))
+	if len(ae.args) != 1 {
+		t.Fatalf("Expected list of length 0, not %d", len(ae.args))
 	}
 
-	le, ok := ae.Args[0].(*exprs.ListExpr)
+	le, ok := ae.args[0].(*exprs.ListExpr)
+
 	if !ok {
 		t.Fatalf("Expr was not a list: %T", expr)
 	}
