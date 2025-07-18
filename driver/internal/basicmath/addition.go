@@ -2,6 +2,7 @@ package basicmath
 
 import (
 	"ziniki.org/deployer/driver/pkg/driverbottom"
+	"ziniki.org/deployer/driver/pkg/utils"
 )
 
 type addExpr struct {
@@ -10,12 +11,12 @@ type addExpr struct {
 
 func (m *addExpr) Eval(s driverbottom.RuntimeStorage) any {
 	l := m.lhs.Eval(s)
-	ln, ok := l.(float64)
+	ln, ok := utils.AsF64(l)
 	if !ok {
 		panic("lhs of add was not a number")
 	}
 	r := m.rhs.Eval(s)
-	rn, ok := r.(float64)
+	rn, ok := utils.AsF64(r)
 	if !ok {
 		panic("rhs of add was not a number")
 	}

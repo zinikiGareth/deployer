@@ -1,7 +1,6 @@
 package exprs_test
 
 import (
-	"log"
 	"testing"
 
 	"ziniki.org/deployer/driver/internal/basicmath"
@@ -52,7 +51,13 @@ func TestSimplePostfixExpr(t *testing.T) {
 	if !ok {
 		t.Fatalf("error parsing %s", line.Text)
 	}
-	log.Printf("%s", e.ShortDescription())
+	if e.ShortDescription() != "<fac>(Number[3.000000])" {
+		t.Fatalf("incorrect parsing: %s", e.ShortDescription())
+	}
+	k := e.Eval(nil)
+	if k != 6.0 {
+		t.Fatalf("was not 6 but %v", k)
+	}
 }
 
 func TestPostfixExprCannotBePrefix(t *testing.T) {
@@ -86,5 +91,28 @@ func TestPostfixExprCannotBeInfix(t *testing.T) {
 	_, ok := p.Parse(nil, toks)
 	if ok {
 		t.Fatalf("parse erroneously reported successful")
+	}
+}
+
+func TestPostfixOpMustBeDoneFirstIfFirstTerm(t *testing.T) {
+	p, h := makeParser(t)
+	basicmath.RegisterAll(h.Tools)
+	recall.things["~$"] = postFac
+	fl := errorsink.FileLoc{File: "testfile.dply"}
+	line := fl.AtLine(1, 1, "3 ~$ * 7")
+	toks := h.Lex.BlockedLine(line)
+	if len(toks) != 4 {
+		t.Fatalf("expected four tokens, not %d", len(toks))
+	}
+	e, ok := p.Parse(nil, toks)
+	if !ok {
+		t.Fatalf("error parsing %s", line.Text)
+	}
+	if e.ShortDescription() != "mult [<fac>(Number[3.000000]),Number[7.000000]]" {
+		t.Fatalf("incorrect parsing: %s", e.ShortDescription())
+	}
+	k := e.Eval(nil)
+	if k != 42.0 {
+		t.Fatalf("was not 42 but %v", k)
 	}
 }

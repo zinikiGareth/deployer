@@ -10,6 +10,7 @@ import (
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
 	"ziniki.org/deployer/driver/pkg/testhelpers"
+	"ziniki.org/deployer/driver/pkg/utils"
 )
 
 type myRecall struct {
@@ -125,7 +126,20 @@ func (fe *facExpr) String() string {
 }
 
 func (fe *facExpr) Eval(s driverbottom.RuntimeStorage) any {
-	panic("unimplemented")
+	arg := fe.arg.Eval(s)
+	i32, ok := utils.AsI32(arg)
+	if !ok {
+		panic("could not convert to int")
+	}
+	if i32 <= 0 {
+		return 0
+	}
+	ret := 1
+	for i32 > 1 {
+		ret *= int(i32)
+		i32--
+	}
+	return ret
 }
 
 type postFacFunc struct {
