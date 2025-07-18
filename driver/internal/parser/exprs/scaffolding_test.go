@@ -143,6 +143,7 @@ func (fe *facExpr) Eval(s driverbottom.RuntimeStorage) any {
 }
 
 type postFacFunc struct {
+	prec int
 }
 
 func (pff *postFacFunc) Fixity() driverbottom.Fixity {
@@ -150,7 +151,11 @@ func (pff *postFacFunc) Fixity() driverbottom.Fixity {
 }
 
 func (pff *postFacFunc) Precedence() int {
-	return 7
+	if pff.prec == 0 {
+		return 7
+	} else {
+		return pff.prec
+	}
 }
 
 func (pff *postFacFunc) Associativity() bool {

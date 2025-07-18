@@ -139,3 +139,27 @@ func TestPostfixOpConsidersPrecedence(t *testing.T) {
 		t.Fatalf("was not 42 but %v", k)
 	}
 }
+
+func TestPostfixOpWithLowPrecedenceGivesABigNumber(t *testing.T) {
+	p, h := makeParser(t)
+	basicmath.RegisterAll(h.Tools)
+	postFac.(*postFacFunc).prec = 2
+	recall.things["~$"] = postFac
+	fl := errorsink.FileLoc{File: "testfile.dply"}
+	line := fl.AtLine(1, 1, "3 * 3 ~$")
+	toks := h.Lex.BlockedLine(line)
+	if len(toks) != 4 {
+		t.Fatalf("expected four tokens, not %d", len(toks))
+	}
+	e, ok := p.Parse(nil, toks)
+	if !ok {
+		t.Fatalf("error parsing %s", line.Text)
+	}
+	if e.ShortDescription() != "<fac>(mult [Number[3.000000],Number[3.000000]])" {
+		t.Fatalf("incorrect parsing: %s", e.ShortDescription())
+	}
+	k := e.Eval(nil)
+	if k != 362880 { // is an integer because fac() is done second
+		t.Fatalf("was not 362880 but %v", k)
+	}
+}
