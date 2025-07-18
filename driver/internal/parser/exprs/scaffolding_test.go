@@ -15,6 +15,18 @@ type myRecall struct {
 	things map[string]any
 }
 
+func (m *myRecall) ExtensionPoint(name string) {
+	panic("unimplemented")
+}
+
+func (m *myRecall) ProvideDriver(s string, env any) {
+	panic("unimplemented")
+}
+
+func (m *myRecall) Register(_ string, called string, item any) {
+	m.things[called] = item
+}
+
 type returnDataValue struct {
 	value driverbottom.Expr
 }
@@ -51,22 +63,27 @@ func init() {
 	comma = lexicator.NewPuncToken(lineloc, 10, ',')
 }
 
-func (m myRecall) Find(_ string, noun string) any {
+func (m *myRecall) Find(_ string, noun string) any {
 	return m.things[noun]
 }
 
-func (m myRecall) ObtainDriver(driver string) any {
+func (m *myRecall) ObtainDriver(driver string) any {
 	panic("unimplemented")
 }
 
+var _ driverbottom.Register = &myRecall{}
+
 type Helpers struct {
-	Sink *testhelpers.MockSink
+	Tools *driverbottom.CoreTools
+	Sink  *testhelpers.MockSink
+	Lex   lexicator.Lexicator
 }
 
 func makeParser(t *testing.T) (driverbottom.ExprParser, Helpers) {
 	reporter, sink := testhelpers.MockReporter(t)
 	recall = myRecall{things: make(map[string]any)}
-	tools := &driverbottom.CoreTools{Reporter: reporter, Recall: recall}
+	tools := &driverbottom.CoreTools{Reporter: reporter, Register: &recall, Recall: &recall}
+	ll := lexicator.NewLineLexicator(tools, "test")
 	reporter.At(lineloc)
-	return exprs.NewExprParser(tools), Helpers{Sink: sink}
+	return exprs.NewExprParser(tools), Helpers{Sink: sink, Lex: ll, Tools: tools}
 }

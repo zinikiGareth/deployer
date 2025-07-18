@@ -3,7 +3,7 @@ package methods_test
 import (
 	"testing"
 
-	"ziniki.org/deployer/coremod/internal/methods"
+	"ziniki.org/deployer/driver/internal/methods"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 )
 

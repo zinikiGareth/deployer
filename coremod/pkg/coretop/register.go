@@ -4,7 +4,6 @@ import (
 	"ziniki.org/deployer/coremod/internal/basic"
 	"ziniki.org/deployer/coremod/internal/files"
 	"ziniki.org/deployer/coremod/internal/lists"
-	"ziniki.org/deployer/coremod/internal/methods"
 	"ziniki.org/deployer/coremod/internal/policy"
 	"ziniki.org/deployer/coremod/internal/runmain"
 	"ziniki.org/deployer/coremod/internal/target"
@@ -12,6 +11,7 @@ import (
 	"ziniki.org/deployer/coremod/internal/vars"
 	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
+	"ziniki.org/deployer/driver/pkg/drivertop"
 )
 
 var testRunner driverbottom.TestRunner
@@ -79,8 +79,10 @@ func RegisterWithDriver(driver driverbottom.Driver) error {
 	tools.Register.Register("policy-inner", "condition", policy.NewPolicyConditionCommandHandler(tools))
 	tools.Register.Register("policy-inner", "principal", policy.NewPolicyPrincipalCommandHandler(tools))
 
+	// basic things that come from driver
+	drivertop.RegisterBasicFunctions(ct)
+
 	// functions
-	tools.Register.Register("function-defn", "->", methods.MakeInvokeFunc(tools))
 	tools.Register.Register("function-defn", "hours", time.MakeHoursFunc(tools))
 	tools.Register.Register("function-defn", "sum", lists.MakeSumFunc(tools))
 

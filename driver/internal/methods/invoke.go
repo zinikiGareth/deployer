@@ -5,7 +5,6 @@ import (
 	"os"
 	"strings"
 
-	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
 )
@@ -83,7 +82,7 @@ func MakeInvokeExpr(on driverbottom.Expr, call driverbottom.Identifier, args []d
 }
 
 type InvokeFunc struct {
-	tools *corebottom.Tools
+	tools *driverbottom.CoreTools
 }
 
 func (i *InvokeFunc) ReduceExpr(me driverbottom.Token, before []driverbottom.Expr, after []driverbottom.Expr) driverbottom.Expr {
@@ -100,6 +99,8 @@ func (i *InvokeFunc) ReduceExpr(me driverbottom.Token, before []driverbottom.Exp
 	return &InvokeExpr{Locatable: me, on: before[0], call: meth.Named(), args: after[1:]}
 }
 
-func MakeInvokeFunc(tools *corebottom.Tools) *InvokeFunc {
+func MakeInvokeFunc(tools *driverbottom.CoreTools) *InvokeFunc {
 	return &InvokeFunc{tools: tools}
 }
+
+var _ driverbottom.Function = &InvokeFunc{}

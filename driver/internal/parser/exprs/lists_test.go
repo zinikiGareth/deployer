@@ -64,7 +64,7 @@ func TestAnEmptyListIsParsedInParens(t *testing.T) {
 func TestAnEmptyListIsParsedAsAnArgument(t *testing.T) {
 	reporter, _ := testhelpers.MockReporter(t)
 	recall = myRecall{things: make(map[string]any)}
-	tools := &driverbottom.CoreTools{Reporter: reporter, Recall: recall}
+	tools := &driverbottom.CoreTools{Reporter: reporter, Recall: &recall}
 	lx := lexicator.NewLineLexicator(tools, "test")
 	p := exprs.NewExprParser(tools)
 
