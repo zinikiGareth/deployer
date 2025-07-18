@@ -18,7 +18,8 @@ type multiplyFunc struct {
 
 func (i *multiplyFunc) ReduceExpr(me driverbottom.Token, before []driverbottom.Expr, after []driverbottom.Expr) driverbottom.Expr {
 	if len(before) != 1 {
-		panic("should be an error")
+		i.tools.Reporter.ReportAtf(me.Loc(), "* requires left operand")
+		return nil
 	}
 	if len(after) != 1 {
 		panic("should be an error")

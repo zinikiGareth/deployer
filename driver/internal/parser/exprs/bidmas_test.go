@@ -24,3 +24,21 @@ func TestSimpleMultiplication(t *testing.T) {
 		t.Fatalf("incorrect parsing: %s", e.ShortDescription())
 	}
 }
+
+// NOTE: this is a test that we DO NOT support obvious HOFs
+// Do we want that?
+func TestMultiplyIsInvalidByItself(t *testing.T) {
+	p, h := makeParser(t)
+	h.Sink.Expect(1, 1, 0, "*", "* requires left operand")
+	basicmath.RegisterAll(h.Tools)
+	fl := errorsink.FileLoc{File: "testfile.dply"}
+	line := fl.AtLine(1, 1, "*")
+	toks := h.Lex.BlockedLine(line)
+	if len(toks) != 1 {
+		t.Fatalf("expected one token, not %d", len(toks))
+	}
+	_, ok := p.Parse(nil, toks)
+	if ok {
+		t.Fatalf("parse erroneously reported successful")
+	}
+}
