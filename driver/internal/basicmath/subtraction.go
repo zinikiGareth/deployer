@@ -12,12 +12,12 @@ func (m *subExpr) Eval(s driverbottom.RuntimeStorage) any {
 	l := m.lhs.Eval(s)
 	ln, ok := l.(float64)
 	if !ok {
-		panic("lhs of add was not a number")
+		panic("lhs of sub was not a number")
 	}
 	r := m.rhs.Eval(s)
 	rn, ok := r.(float64)
 	if !ok {
-		panic("rhs of add was not a number")
+		panic("rhs of sub was not a number")
 	}
 	return ln - rn
 }
