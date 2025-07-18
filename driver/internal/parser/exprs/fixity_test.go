@@ -116,3 +116,26 @@ func TestPostfixOpMustBeDoneFirstIfFirstTerm(t *testing.T) {
 		t.Fatalf("was not 42 but %v", k)
 	}
 }
+
+func TestPostfixOpConsidersPrecedence(t *testing.T) {
+	p, h := makeParser(t)
+	basicmath.RegisterAll(h.Tools)
+	recall.things["~$"] = postFac
+	fl := errorsink.FileLoc{File: "testfile.dply"}
+	line := fl.AtLine(1, 1, "7 * 3 ~$")
+	toks := h.Lex.BlockedLine(line)
+	if len(toks) != 4 {
+		t.Fatalf("expected four tokens, not %d", len(toks))
+	}
+	e, ok := p.Parse(nil, toks)
+	if !ok {
+		t.Fatalf("error parsing %s", line.Text)
+	}
+	if e.ShortDescription() != "mult [Number[7.000000],<fac>(Number[3.000000])]" {
+		t.Fatalf("incorrect parsing: %s", e.ShortDescription())
+	}
+	k := e.Eval(nil)
+	if k != 42.0 {
+		t.Fatalf("was not 42 but %v", k)
+	}
+}
