@@ -36,6 +36,10 @@ func (rdv returnDataValue) Precedence() int {
 	return 10
 }
 
+func (rdv returnDataValue) Associativity() bool {
+	return true
+}
+
 func (rdv returnDataValue) ReduceExpr(me driverbottom.Token, before []driverbottom.Expr, after []driverbottom.Expr) driverbottom.Expr {
 	return rdv.value
 }
@@ -44,12 +48,16 @@ type konstantFunc struct {
 }
 
 // Precedence implements driverbottom.Function.
-func (rdv konstantFunc) Precedence() int {
+func (kf *konstantFunc) Precedence() int {
 	return 8
 }
 
-func (rdv konstantFunc) ReduceExpr(me driverbottom.Token, before []driverbottom.Expr, after []driverbottom.Expr) driverbottom.Expr {
-	return &exprs.Apply{Func: rdv, Args: slices.Concat(before, after)}
+func (kf *konstantFunc) Associativity() bool {
+	return true
+}
+
+func (kf *konstantFunc) ReduceExpr(me driverbottom.Token, before []driverbottom.Expr, after []driverbottom.Expr) driverbottom.Expr {
+	return &exprs.Apply{Func: kf, Args: slices.Concat(before, after)}
 }
 
 var recall myRecall
@@ -65,7 +73,7 @@ func init() {
 	lineloc = &errorsink.LineLoc{Line: 1, Indent: 1, Text: "", File: &errorsink.FileLoc{File: "test"}}
 	oneString = lexicator.NewStringToken(lineloc, 0, "string_1")
 	idFunc = returnDataValue{value: oneString}
-	konstFunc = konstantFunc{}
+	konstFunc = &konstantFunc{}
 	orb = lexicator.NewPuncToken(lineloc, 0, '(')
 	crb = lexicator.NewPuncToken(lineloc, 12, ')')
 	osb = lexicator.NewPuncToken(lineloc, 2, '[')

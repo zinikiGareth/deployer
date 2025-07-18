@@ -259,7 +259,7 @@ func TestSubAddEval(t *testing.T) {
 	if !ok {
 		t.Fatalf("error parsing %s", line.Text)
 	}
-	if e.ShortDescription() != "add [Number[3.000000],mult [Number[5.000000],Number[7.000000]]]" {
+	if e.ShortDescription() != "add [sub [Number[3.000000],Number[5.000000]],Number[7.000000]]" {
 		t.Fatalf("incorrect parsing: %s", e.ShortDescription())
 	}
 	val := e.Eval(nil)

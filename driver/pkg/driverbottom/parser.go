@@ -85,6 +85,7 @@ type VerbCommand interface {
 type Function interface {
 	ReduceExpr(me Token, before []Expr, after []Expr) Expr
 	Precedence() int
+	Associativity() bool
 }
 
 type Expr interface {

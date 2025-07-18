@@ -104,7 +104,14 @@ func figurePrec(left, right driverbottom.Function) bool {
 	} else if lp < rp {
 		return false
 	} else {
-		panic("unimplemented")
+		// when two operators have the same precedence, we need to consider
+		// associativity.
+
+		// We can't ask both of them, because they might not agree (although
+		// well defined operators will have same assoc rules for each prec level)
+
+		// So we just ask the left one if he wants to go first
+		return left.Associativity()
 	}
 }
 
