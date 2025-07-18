@@ -101,3 +101,21 @@ func TestMultiplyEval(t *testing.T) {
 		t.Fatalf("5*7 was not 35 but %f", num)
 	}
 }
+
+func TestSimpleAddition(t *testing.T) {
+	p, h := makeParser(t)
+	basicmath.RegisterAll(h.Tools)
+	fl := errorsink.FileLoc{File: "testfile.dply"}
+	line := fl.AtLine(1, 1, "1+6")
+	toks := h.Lex.BlockedLine(line)
+	if len(toks) != 3 {
+		t.Fatalf("expected three tokens, not %d", len(toks))
+	}
+	e, ok := p.Parse(nil, toks)
+	if !ok {
+		t.Fatalf("error parsing %s", line.Text)
+	}
+	if e.ShortDescription() != "add [Number[1.000000],Number[6.000000]]" {
+		t.Fatalf("incorrect parsing: %s", e.ShortDescription())
+	}
+}

@@ -46,9 +46,10 @@ func (ll *LineLexicator) BlockedLine(line *errorsink.LineLoc) []driverbottom.Tok
 	mode := starting
 	var tok []rune
 loop:
-	for k, r := range runes {
+	for k := 0; k < len(runes); k++ {
 		goAgain := true
-		for goAgain {
+		for goAgain && k < len(runes) {
+			r := runes[k]
 			goAgain = false
 			switch mode {
 			case starting:
@@ -101,12 +102,35 @@ loop:
 					return nil
 				} else if isNumberChar(r) {
 					tok = append(tok, r)
-				} else {
-					toks = ll.numtok(toks, line, from, tok)
-					tok = []rune{}
-					mode = starting
-					goAgain = true
+					if k+1 < len(runes) {
+						continue loop
+					} else {
+						k++ // simulate once more round the loop if we could
+					}
 				}
+				var err error
+				toks, err = ll.numtok(toks, line, from, tok)
+				if err != nil {
+					needgt := 0
+					if string(tok[0:2]) == "0x" {
+						needgt = 2
+					}
+					for len(tok) > needgt {
+						toks, err = ll.numtok(toks, line, from, tok)
+						if err == nil {
+							break
+						}
+						k--
+						tok = tok[0 : len(tok)-1]
+					}
+					if err != nil {
+						ll.tools.Reporter.Report(from, fmt.Sprintf("not a valid number: %s", string(tok)))
+						return nil
+					}
+				}
+				tok = []rune{}
+				mode = starting
+				goAgain = true
 			case inSymbol:
 				if !isSymbol(r) {
 					if strings.HasPrefix(string(tok), "//") {
@@ -172,7 +196,18 @@ loop:
 				toks = ll.symbol(toks, line, from, tok)
 			}
 		case inNumber:
-			toks = ll.numtok(toks, line, from, tok)
+			// Because of handling the error condition above,
+			// this can only happen if we were in the "start"
+			// mode and saw a single digit
+			if len(tok) == 1 {
+				var e error
+				toks, e = ll.numtok(toks, line, from, tok)
+				if e != nil {
+					panic(e)
+				}
+			} else {
+				panic("should have been handled above")
+			}
 		case inAdverb:
 			toks = ll.adverb(toks, line, from, tok)
 		case inString:
@@ -266,7 +301,7 @@ func (ll *LineLexicator) punctok(toks []driverbottom.Token, line *errorsink.Line
 	return append(toks, tok)
 }
 
-func (ll *LineLexicator) numtok(toks []driverbottom.Token, line *errorsink.LineLoc, start int, text []rune) []driverbottom.Token {
+func (ll *LineLexicator) numtok(toks []driverbottom.Token, line *errorsink.LineLoc, start int, text []rune) ([]driverbottom.Token, error) {
 	tx := string(text)
 	var f64 float64
 	var err error
@@ -278,10 +313,10 @@ func (ll *LineLexicator) numtok(toks []driverbottom.Token, line *errorsink.LineL
 		f64, err = strconv.ParseFloat(tx, 64)
 	}
 	if err != nil {
-		ll.tools.Reporter.Report(start, fmt.Sprintf("not a valid number: %s", string(text)))
+		return toks, err
 	}
 	tok := NewNumberToken(line, start, f64)
-	return append(toks, tok)
+	return append(toks, tok), nil
 }
 
 func (ll *LineLexicator) adverb(toks []driverbottom.Token, line *errorsink.LineLoc, start int, text []rune) []driverbottom.Token {

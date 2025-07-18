@@ -72,3 +72,36 @@ func TestWeCanParse24hours(t *testing.T) {
 		t.Fatalf("val != 24")
 	}
 }
+
+func TestPlusBreaksAnInvalidNumber(t *testing.T) {
+	reporter, _ := testhelpers.MockReporter(t)
+	tools := driverbottom.NewTools(reporter, nil, nil, nil, nil)
+	lex := lexicator.NewLineLexicator(tools, "test")
+	toks := lex.BlockedLine(lineOf("1+6 k"))
+	if len(toks) != 4 {
+		t.Fatalf("%d args returned, not 4", len(toks))
+	}
+	if toks[0].(driverbottom.Number).F64() != 1 {
+		t.Fatalf("val[0] != 1")
+	}
+	if toks[2].(driverbottom.Number).F64() != 6 {
+		t.Fatalf("val[2] != 6")
+	}
+}
+
+
+func TestPlusBreaksAnInvalidNumberEvenAtEnd(t *testing.T) {
+	reporter, _ := testhelpers.MockReporter(t)
+	tools := driverbottom.NewTools(reporter, nil, nil, nil, nil)
+	lex := lexicator.NewLineLexicator(tools, "test")
+	toks := lex.BlockedLine(lineOf("1+6"))
+	if len(toks) != 3 {
+		t.Fatalf("%d args returned, not 3", len(toks))
+	}
+	if toks[0].(driverbottom.Number).F64() != 1 {
+		t.Fatalf("val[0] != 1")
+	}
+	if toks[2].(driverbottom.Number).F64() != 6 {
+		t.Fatalf("val[2] != 6")
+	}
+}
