@@ -31,11 +31,21 @@ type returnDataValue struct {
 	value driverbottom.Expr
 }
 
+// Precedence implements driverbottom.Function.
+func (rdv returnDataValue) Precedence() int {
+	return 10
+}
+
 func (rdv returnDataValue) ReduceExpr(me driverbottom.Token, before []driverbottom.Expr, after []driverbottom.Expr) driverbottom.Expr {
 	return rdv.value
 }
 
 type konstantFunc struct {
+}
+
+// Precedence implements driverbottom.Function.
+func (rdv konstantFunc) Precedence() int {
+	return 8
 }
 
 func (rdv konstantFunc) ReduceExpr(me driverbottom.Token, before []driverbottom.Expr, after []driverbottom.Expr) driverbottom.Expr {

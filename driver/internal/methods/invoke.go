@@ -85,6 +85,10 @@ type InvokeFunc struct {
 	tools *driverbottom.CoreTools
 }
 
+func (i *InvokeFunc) Precedence() int {
+	return 10
+}
+
 func (i *InvokeFunc) ReduceExpr(me driverbottom.Token, before []driverbottom.Expr, after []driverbottom.Expr) driverbottom.Expr {
 	if len(before) != 1 {
 		panic("should be an error")

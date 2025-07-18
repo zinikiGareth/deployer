@@ -26,6 +26,10 @@ type addFunc struct {
 	tools *driverbottom.CoreTools
 }
 
+func (i *addFunc) Precedence() int {
+	return 5
+}
+
 func (i *addFunc) ReduceExpr(me driverbottom.Token, before []driverbottom.Expr, after []driverbottom.Expr) driverbottom.Expr {
 	if len(before) != 1 {
 		i.tools.Reporter.ReportAtf(me.Loc(), "+ requires left operand")

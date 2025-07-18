@@ -26,6 +26,10 @@ type multiplyFunc struct {
 	tools *driverbottom.CoreTools
 }
 
+func (i *multiplyFunc) Precedence() int {
+	return 6
+}
+
 func (i *multiplyFunc) ReduceExpr(me driverbottom.Token, before []driverbottom.Expr, after []driverbottom.Expr) driverbottom.Expr {
 	if len(before) != 1 {
 		i.tools.Reporter.ReportAtf(me.Loc(), "* requires left operand")

@@ -55,6 +55,27 @@ func (p *exprParser) Parse(scope driverbottom.Scope, tokens []driverbottom.Token
 func (p *exprParser) parseOne(scope driverbottom.Scope, blocks []driverbottom.Token) (driverbottom.Expr, bool) {
 	tok, fn, before, after := p.split(blocks)
 	if fn != nil {
+		if len(after) > 0 {
+			tokr, fnr, mid, more := p.split(after)
+			if fnr != nil {
+				leftFirst := figurePrec(fn, fnr)
+				if leftFirst {
+					left, ok := p.parseOne(scope, blocks[0:len(before)+1+len(mid)])
+					if !ok {
+						return nil, ok
+					}
+					rem := append([]driverbottom.Token{left, tokr}, more...)
+					return p.parseOne(scope, rem)
+				} else {
+					right, ok := p.parseOne(scope, blocks[len(before)+1:])
+					if !ok {
+						return nil, ok
+					}
+					first := append(before, tok, right)
+					return p.parseOne(scope, first)
+				}
+			}
+		}
 		pre, ok1 := p.makeArgs(scope, before)
 		post, ok2 := p.makeArgs(scope, after)
 		if !ok1 || !ok2 {
@@ -72,6 +93,18 @@ func (p *exprParser) parseOne(scope driverbottom.Scope, blocks []driverbottom.To
 			return nil, false
 		}
 		return p.AsExpr(scope, before[0])
+	}
+}
+
+func figurePrec(left, right driverbottom.Function) bool {
+	lp := left.Precedence()
+	rp := right.Precedence()
+	if lp > rp {
+		return true
+	} else if lp < rp {
+		return false
+	} else {
+		panic("unimplemented")
 	}
 }
 
