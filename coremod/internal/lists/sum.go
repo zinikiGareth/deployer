@@ -55,6 +55,14 @@ type SumListFunc struct {
 	tools *corebottom.Tools
 }
 
+func (h *SumListFunc) Associativity() bool {
+	return false
+}
+
+func (h *SumListFunc) Precedence() int {
+	return 1 // we want everything else done first
+}
+
 func (h *SumListFunc) ReduceExpr(me driverbottom.Token, before []driverbottom.Expr, after []driverbottom.Expr) driverbottom.Expr {
 	rep := h.tools.Reporter
 	if len(before) != 0 || len(after) < 1 {
@@ -67,3 +75,5 @@ func (h *SumListFunc) ReduceExpr(me driverbottom.Token, before []driverbottom.Ex
 func MakeSumFunc(tools *corebottom.Tools) any {
 	return &SumListFunc{tools: tools}
 }
+
+var _ driverbottom.Function = &SumListFunc{}

@@ -1,4 +1,3 @@
-errorcases/nodestroy-destroymode
 nothing
 empty
 empty-target
@@ -16,6 +15,7 @@ errorcases/find-no-such-class
 errorcases/find-cannot-have-teardown
 errorcases/coin-must-have-assign
 errorcases/destroy-createmode
+errorcases/nodestroy-destroymode
 invoke-method/simple
 lists/simple
 ensure-bucket

@@ -44,6 +44,14 @@ type HoursFunc struct {
 	tools *corebottom.Tools
 }
 
+func (h *HoursFunc) Associativity() bool {
+	return false
+}
+
+func (h *HoursFunc) Precedence() int {
+	return 1 // we want everything else done first
+}
+
 func (h *HoursFunc) ReduceExpr(me driverbottom.Token, before []driverbottom.Expr, after []driverbottom.Expr) driverbottom.Expr {
 	rep := h.tools.Reporter
 	if len(before) != 1 || len(after) != 0 {
@@ -61,3 +69,5 @@ func (h *HoursFunc) ReduceExpr(me driverbottom.Token, before []driverbottom.Expr
 func MakeHoursFunc(tools *corebottom.Tools) *HoursFunc {
 	return &HoursFunc{tools: tools}
 }
+
+var _ driverbottom.Function = &HoursFunc{}
