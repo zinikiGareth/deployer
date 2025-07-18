@@ -4,6 +4,14 @@ import (
 	"fmt"
 )
 
+type Fixity string
+
+const (
+	OP_PREFIX  = Fixity("prefix")
+	OP_INFIX   = Fixity("infix")
+	OP_POSTFIX = Fixity("postfix")
+)
+
 type ProvideLine interface {
 	BeginFile(file string)
 	HaveLine(lineNo int, text string)
@@ -86,6 +94,7 @@ type Function interface {
 	ReduceExpr(me Token, before []Expr, after []Expr) Expr
 	Precedence() int
 	Associativity() bool
+	Fixity() Fixity
 }
 
 type Expr interface {

@@ -85,6 +85,10 @@ type InvokeFunc struct {
 	tools *driverbottom.CoreTools
 }
 
+func (i *InvokeFunc) Fixity() driverbottom.Fixity {
+	return driverbottom.OP_INFIX
+}
+
 func (i *InvokeFunc) Precedence() int {
 	return 10
 }

@@ -54,3 +54,37 @@ func TestSimplePostfixExpr(t *testing.T) {
 	}
 	log.Printf("%s", e.ShortDescription())
 }
+
+func TestPostfixExprCannotBePrefix(t *testing.T) {
+	p, h := makeParser(t)
+	h.Sink.Expect(1, 1, 0, "~$ 3", "postfix operator cannot have arguments afterwards")
+	basicmath.RegisterAll(h.Tools)
+	recall.things["~$"] = postFac
+	fl := errorsink.FileLoc{File: "testfile.dply"}
+	line := fl.AtLine(1, 1, "~$ 3")
+	toks := h.Lex.BlockedLine(line)
+	if len(toks) != 2 {
+		t.Fatalf("expected two tokens, not %d", len(toks))
+	}
+	_, ok := p.Parse(nil, toks)
+	if ok {
+		t.Fatalf("parse erroneously reported successful")
+	}
+}
+
+func TestPostfixExprCannotBeInfix(t *testing.T) {
+	p, h := makeParser(t)
+	h.Sink.Expect(1, 1, 0, "2 ~$ 3", "postfix operator cannot have arguments afterwards")
+	basicmath.RegisterAll(h.Tools)
+	recall.things["~$"] = postFac
+	fl := errorsink.FileLoc{File: "testfile.dply"}
+	line := fl.AtLine(1, 1, "2 ~$ 3")
+	toks := h.Lex.BlockedLine(line)
+	if len(toks) != 3 {
+		t.Fatalf("expected two tokens, not %d", len(toks))
+	}
+	_, ok := p.Parse(nil, toks)
+	if ok {
+		t.Fatalf("parse erroneously reported successful")
+	}
+}

@@ -74,6 +74,11 @@ func (p *exprParser) parseOne(scope driverbottom.Scope, blocks []driverbottom.To
 					first := append(before, tok, right)
 					return p.parseOne(scope, first)
 				}
+			} else {
+				if fn.Fixity() == driverbottom.OP_POSTFIX {
+					p.tools.Reporter.Reportf(after[0].Loc().Offset, "postfix operator cannot have arguments afterwards")
+					return nil, false
+				}
 			}
 		}
 		pre, ok1 := p.makeArgs(scope, before)

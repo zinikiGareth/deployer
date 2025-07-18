@@ -55,6 +55,10 @@ type SumListFunc struct {
 	tools *corebottom.Tools
 }
 
+func (i *SumListFunc) Fixity() driverbottom.Fixity {
+	return driverbottom.OP_PREFIX
+}
+
 func (h *SumListFunc) Associativity() bool {
 	return false
 }

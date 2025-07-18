@@ -26,6 +26,10 @@ type divFunc struct {
 	tools *driverbottom.CoreTools
 }
 
+func (i *divFunc) Fixity() driverbottom.Fixity {
+	return driverbottom.OP_INFIX
+}
+
 func (i *divFunc) Precedence() int {
 	return 6
 }

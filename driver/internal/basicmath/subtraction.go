@@ -26,6 +26,10 @@ type subFunc struct {
 	tools *driverbottom.CoreTools
 }
 
+func (i *subFunc) Fixity() driverbottom.Fixity {
+	return driverbottom.OP_INFIX
+}
+
 func (i *subFunc) Precedence() int {
 	return 5
 }

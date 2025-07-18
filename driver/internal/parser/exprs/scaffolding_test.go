@@ -32,6 +32,11 @@ type returnDataValue struct {
 	value driverbottom.Expr
 }
 
+// Fixity implements driverbottom.Function.
+func (rdv returnDataValue) Fixity() driverbottom.Fixity {
+	return driverbottom.OP_INFIX
+}
+
 // Precedence implements driverbottom.Function.
 func (rdv returnDataValue) Precedence() int {
 	return 10
@@ -82,7 +87,10 @@ func (ke *konstExpr) Eval(s driverbottom.RuntimeStorage) any {
 type konstantFunc struct {
 }
 
-// Precedence implements driverbottom.Function.
+func (pff *konstantFunc) Fixity() driverbottom.Fixity {
+	return driverbottom.OP_INFIX
+}
+
 func (kf *konstantFunc) Precedence() int {
 	return 8
 }
@@ -123,7 +131,10 @@ func (fe *facExpr) Eval(s driverbottom.RuntimeStorage) any {
 type postFacFunc struct {
 }
 
-// Precedence implements driverbottom.Function.
+func (pff *postFacFunc) Fixity() driverbottom.Fixity {
+	return driverbottom.OP_POSTFIX
+}
+
 func (pff *postFacFunc) Precedence() int {
 	return 7
 }

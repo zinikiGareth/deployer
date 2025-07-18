@@ -44,6 +44,10 @@ type HoursFunc struct {
 	tools *corebottom.Tools
 }
 
+func (i *HoursFunc) Fixity() driverbottom.Fixity {
+	return driverbottom.OP_POSTFIX
+}
+
 func (h *HoursFunc) Associativity() bool {
 	return false
 }

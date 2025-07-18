@@ -26,6 +26,10 @@ type multiplyFunc struct {
 	tools *driverbottom.CoreTools
 }
 
+func (i *multiplyFunc) Fixity() driverbottom.Fixity {
+	return driverbottom.OP_INFIX
+}
+
 func (i *multiplyFunc) Precedence() int {
 	return 6
 }
