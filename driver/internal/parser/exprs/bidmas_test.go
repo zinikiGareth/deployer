@@ -42,3 +42,35 @@ func TestMultiplyIsInvalidByItself(t *testing.T) {
 		t.Fatalf("parse erroneously reported successful")
 	}
 }
+
+func TestMultiplyIsInvalidWithLHS(t *testing.T) {
+	p, h := makeParser(t)
+	h.Sink.Expect(1, 1, 0, "5*", "* requires right operand")
+	basicmath.RegisterAll(h.Tools)
+	fl := errorsink.FileLoc{File: "testfile.dply"}
+	line := fl.AtLine(1, 1, "5*")
+	toks := h.Lex.BlockedLine(line)
+	if len(toks) != 2 {
+		t.Fatalf("expected one token, not %d", len(toks))
+	}
+	_, ok := p.Parse(nil, toks)
+	if ok {
+		t.Fatalf("parse erroneously reported successful")
+	}
+}
+
+func TestMultiplyIsInvalidWithRHS(t *testing.T) {
+	p, h := makeParser(t)
+	h.Sink.Expect(1, 1, 0, "*7", "* requires left operand")
+	basicmath.RegisterAll(h.Tools)
+	fl := errorsink.FileLoc{File: "testfile.dply"}
+	line := fl.AtLine(1, 1, "*7")
+	toks := h.Lex.BlockedLine(line)
+	if len(toks) != 2 {
+		t.Fatalf("expected one token, not %d", len(toks))
+	}
+	_, ok := p.Parse(nil, toks)
+	if ok {
+		t.Fatalf("parse erroneously reported successful")
+	}
+}

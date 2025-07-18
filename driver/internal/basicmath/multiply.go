@@ -22,7 +22,8 @@ func (i *multiplyFunc) ReduceExpr(me driverbottom.Token, before []driverbottom.E
 		return nil
 	}
 	if len(after) != 1 {
-		panic("should be an error")
+		i.tools.Reporter.ReportAtf(me.Loc(), "* requires right operand")
+		return nil
 	}
 	return &multiplyExpr{binop: binop{Locatable: me, opname: "mult", lhs: before[0], rhs: after[0]}}
 }
