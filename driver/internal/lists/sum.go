@@ -3,7 +3,6 @@ package lists
 import (
 	"log"
 
-	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 )
 
@@ -52,7 +51,7 @@ func (sle *SumListExpr) SumIt(q any) float64 {
 }
 
 type SumListFunc struct {
-	tools *corebottom.Tools
+	tools *driverbottom.CoreTools
 }
 
 func (i *SumListFunc) Fixity() driverbottom.Fixity {
@@ -69,14 +68,17 @@ func (h *SumListFunc) Precedence() int {
 
 func (h *SumListFunc) ReduceExpr(me driverbottom.Token, before []driverbottom.Expr, after []driverbottom.Expr) driverbottom.Expr {
 	rep := h.tools.Reporter
-	if len(before) != 0 || len(after) < 1 {
+	if len(before) != 0 {
+		panic("bug in fixity")
+	}
+	if len(after) < 1 {
 		rep.Report(me.Loc().Offset, "sum expr...")
 		return nil
 	}
 	return &SumListExpr{Locatable: me, exprs: after}
 }
 
-func MakeSumFunc(tools *corebottom.Tools) any {
+func MakeSumFunc(tools *driverbottom.CoreTools) any {
 	return &SumListFunc{tools: tools}
 }
 

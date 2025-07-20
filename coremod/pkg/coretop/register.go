@@ -3,7 +3,6 @@ package coretop
 import (
 	"ziniki.org/deployer/coremod/internal/basic"
 	"ziniki.org/deployer/coremod/internal/files"
-	"ziniki.org/deployer/coremod/internal/lists"
 	"ziniki.org/deployer/coremod/internal/policy"
 	"ziniki.org/deployer/coremod/internal/runmain"
 	"ziniki.org/deployer/coremod/internal/target"
@@ -40,7 +39,6 @@ func RegisterWithDriver(driver driverbottom.Driver) error {
 	tools.Register.ExtensionPoint("main-args")
 	tools.Register.ExtensionPoint("attacher")
 	tools.Register.ExtensionPoint("top-level")
-	tools.Register.ExtensionPoint("function-defn")
 
 	tools.Register.ExtensionPoint("target")
 	tools.Register.ExtensionPoint("policy-statements")
@@ -84,7 +82,6 @@ func RegisterWithDriver(driver driverbottom.Driver) error {
 
 	// functions
 	tools.Register.Register("function-defn", "hours", time.MakeHoursFunc(tools))
-	tools.Register.Register("function-defn", "sum", lists.MakeSumFunc(tools))
 
 	return nil
 }
