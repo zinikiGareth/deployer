@@ -45,10 +45,6 @@ func (p *exprParser) Parse(scope driverbottom.Scope, tokens []driverbottom.Token
 	if !ok {
 		return nil, false
 	}
-	// remove all encircling parens
-	// for len(tokens) >= 2 && IsPuncChar(tokens[0], '(') && IsPuncChar(tokens[len(tokens)-1], ')') {
-	// 	tokens = tokens[1 : len(tokens)-1]
-	// }
 	return p.parseOne(scope, blocks)
 }
 
@@ -58,6 +54,10 @@ func (p *exprParser) parseOne(scope driverbottom.Scope, blocks []driverbottom.To
 		if len(after) > 0 {
 			tokr, fnr, mid, more := p.split(after)
 			if fnr != nil {
+				if fn.Fixity() == driverbottom.OP_POSTFIX && fnr.Fixity() == driverbottom.OP_PREFIX {
+					p.tools.Reporter.Reportf(after[0].Loc().Offset, "cannot have postfix operator followed by prefix operator")
+					return nil, false
+				}
 				leftFirst := figurePrec(fn, fnr)
 				if leftFirst {
 					left, ok := p.parseOne(scope, blocks[0:len(before)+1+len(mid)])

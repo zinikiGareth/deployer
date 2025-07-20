@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"ziniki.org/deployer/driver/internal/basicmath"
+	"ziniki.org/deployer/driver/internal/lists"
 	"ziniki.org/deployer/driver/pkg/errorsink"
 )
 
@@ -158,7 +159,7 @@ func TestPostfixOpAssociatesRight(t *testing.T) {
 		t.Fatalf("incorrect parsing: %s", e.ShortDescription())
 	}
 	k := e.Eval(nil)
-	if k != 720{
+	if k != 720 {
 		t.Fatalf("was not 42 but %v", k)
 	}
 }
@@ -184,5 +185,23 @@ func TestPostfixOpWithLowPrecedenceGivesABigNumber(t *testing.T) {
 	k := e.Eval(nil)
 	if k != 362880 { // is an integer because fac() is done second
 		t.Fatalf("was not 362880 but %v", k)
+	}
+}
+
+func TestPostfixExprCannotComeBeforePrefixOp(t *testing.T) {
+	p, h := makeParser(t)
+	h.Sink.Expect(1, 1, 0, "2 ~$ sum 3", "cannot have postfix operator followed by prefix operator")
+	basicmath.RegisterAll(h.Tools)
+	recall.things["~$"] = postFac
+	recall.things["sum"] = lists.MakeSumFunc(h.Tools)
+	fl := errorsink.FileLoc{File: "testfile.dply"}
+	line := fl.AtLine(1, 1, "2 ~$ sum 3")
+	toks := h.Lex.BlockedLine(line)
+	if len(toks) != 4 {
+		t.Fatalf("expected four tokens, not %d", len(toks))
+	}
+	_, ok := p.Parse(nil, toks)
+	if ok {
+		t.Fatalf("parse erroneously reported successful")
 	}
 }
