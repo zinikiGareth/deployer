@@ -12,7 +12,15 @@ type SumListExpr struct {
 }
 
 func (sle *SumListExpr) ShortDescription() string {
-	return ""
+	ret := "sum("
+	for k, a := range sle.exprs {
+		if k != 0 {
+			ret = ret + ", "
+		}
+		ret = ret + a.ShortDescription()
+	}
+	ret += ")"
+	return ret
 }
 
 func (sle *SumListExpr) DumpTo(iw driverbottom.IndentWriter) {
@@ -29,7 +37,7 @@ func (sle *SumListExpr) Resolve(r driverbottom.Resolver) {
 func (sle *SumListExpr) Eval(storage driverbottom.RuntimeStorage) any {
 	var sum float64 = 0
 	for _, e := range sle.exprs {
-		q := storage.Eval(e)
+		q := e.Eval(storage)
 		sum += sle.SumIt(q)
 	}
 	return sum
@@ -69,7 +77,7 @@ func (h *SumListFunc) Precedence() int {
 func (h *SumListFunc) ReduceExpr(me driverbottom.Token, before []driverbottom.Expr, after []driverbottom.Expr) driverbottom.Expr {
 	rep := h.tools.Reporter
 	if len(before) != 0 {
-		panic("bug in fixity")
+		panic("should not have any before args")
 	}
 	if len(after) < 1 {
 		rep.Report(me.Loc().Offset, "sum expr...")

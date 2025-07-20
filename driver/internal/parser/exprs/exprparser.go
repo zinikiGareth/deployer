@@ -2,6 +2,7 @@ package exprs
 
 import (
 	"fmt"
+	"log"
 
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 )
@@ -53,12 +54,14 @@ func (p *exprParser) parseOne(scope driverbottom.Scope, blocks []driverbottom.To
 	if fn != nil {
 		if len(after) > 0 {
 			tokr, fnr, mid, more := p.split(after)
+			log.Printf("comparing %T with %T", fn, fnr)
 			if fnr != nil {
 				if fn.Fixity() == driverbottom.OP_POSTFIX && fnr.Fixity() == driverbottom.OP_PREFIX {
 					p.tools.Reporter.Reportf(after[0].Loc().Offset, "cannot have postfix operator followed by prefix operator")
 					return nil, false
 				}
 				leftFirst := figurePrec(fn, fnr)
+				log.Printf("leftFirst = %v", leftFirst)
 				if leftFirst {
 					left, ok := p.parseOne(scope, blocks[0:len(before)+1+len(mid)])
 					if !ok {
@@ -67,12 +70,29 @@ func (p *exprParser) parseOne(scope driverbottom.Scope, blocks []driverbottom.To
 					rem := append([]driverbottom.Token{left, tokr}, more...)
 					return p.parseOne(scope, rem)
 				} else {
-					right, ok := p.parseOne(scope, blocks[len(before)+1:])
-					if !ok {
-						return nil, ok
+					switch fnr.Fixity() {
+					case driverbottom.OP_PREFIX:
+						use := []driverbottom.Token{tokr}
+						use = append(use, more...)
+						right, ok := p.parseOne(scope, use)
+						if !ok {
+							return nil, ok
+						}
+						first := append(before, tok)
+						first = append(first, mid...)
+						first = append(first, right)
+						return p.parseOne(scope, first)
+					case driverbottom.OP_POSTFIX:
+					case driverbottom.OP_INFIX:
+						right, ok := p.parseOne(scope, blocks[len(before)+1:])
+						if !ok {
+							return nil, ok
+						}
+						first := append(before, tok, right)
+						return p.parseOne(scope, first)
+					default:
+						panic("invalid fixity")
 					}
-					first := append(before, tok, right)
-					return p.parseOne(scope, first)
 				}
 			} else {
 				if fn.Fixity() == driverbottom.OP_POSTFIX {

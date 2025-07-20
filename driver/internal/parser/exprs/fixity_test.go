@@ -205,3 +205,47 @@ func TestPostfixExprCannotComeBeforePrefixOp(t *testing.T) {
 		t.Fatalf("parse erroneously reported successful")
 	}
 }
+
+func TestASuitablyLowPrecedenceFuncCanSuckUpSubsequentPostfixExprThenPrefixOp(t *testing.T) {
+	p, h := makeParser(t)
+	basicmath.RegisterAll(h.Tools)
+	recall.things["collect"] = collectFunc
+	recall.things["~$"] = postFac
+	recall.things["sum"] = lists.MakeSumFunc(h.Tools)
+	fl := errorsink.FileLoc{File: "testfile.dply"}
+	line := fl.AtLine(1, 1, "collect 2 ~$ sum 3")
+	toks := h.Lex.BlockedLine(line)
+	if len(toks) != 5 {
+		t.Fatalf("expected five tokens, not %d", len(toks))
+	}
+	_, ok := p.Parse(nil, toks)
+	if ok {
+		t.Fatalf("parse erroneously reported successful")
+	}
+}
+
+func TestParensBeatPrePostIssues(t *testing.T) {
+	p, h := makeParser(t)
+	basicmath.RegisterAll(h.Tools)
+	recall.things["collect"] = collectFunc
+	recall.things["~$"] = postFac
+	recall.things["sum"] = lists.MakeSumFunc(h.Tools)
+	fl := errorsink.FileLoc{File: "testfile.dply"}
+	line := fl.AtLine(1, 1, "collect (2 ~$) sum 3")
+	toks := h.Lex.BlockedLine(line)
+	if len(toks) != 7 {
+		t.Fatalf("expected seven tokens, not %d", len(toks))
+	}
+	e, ok := p.Parse(nil, toks)
+	if !ok {
+		t.Fatalf("error parsing %s", line.Text)
+	}
+	if e.ShortDescription() != "collect(<fac>(Number[2.000000]), sum(Number[3.000000]))" {
+		t.Fatalf("incorrect parsing: %s", e.ShortDescription())
+	}
+	k := e.Eval(nil)
+	sle := k.([]interface{})
+	if len(sle) != 2 {
+		t.Fatalf("length was not 2 but %d", len(sle))
+	}
+}

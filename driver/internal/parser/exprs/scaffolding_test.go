@@ -104,6 +104,74 @@ func (kf *konstantFunc) ReduceExpr(me driverbottom.Token, before []driverbottom.
 	return &konstExpr{args: slices.Concat(before, after)}
 }
 
+type collectExpr struct {
+	driverbottom.Locatable
+	args []driverbottom.Expr
+}
+
+func (fe *collectExpr) ShortDescription() string {
+	ret := "collect("
+	for k, a := range fe.args {
+		if k != 0 {
+			ret = ret + ", "
+		}
+		ret = ret + a.ShortDescription()
+	}
+	ret += ")"
+	return ret
+}
+
+func (fe *collectExpr) DumpTo(to driverbottom.IndentWriter) {
+	panic("unimplemented")
+}
+
+func (fe *collectExpr) Resolve(r driverbottom.Resolver) {
+	panic("unimplemented")
+}
+
+func (fe *collectExpr) String() string {
+	return fmt.Sprintf("fac[%d]", len(fe.args))
+}
+
+func (fe *collectExpr) Eval(s driverbottom.RuntimeStorage) any {
+	ret := []any{}
+	for _, a := range fe.args {
+		arg := a.Eval(s)
+		ret = append(ret, arg)
+	}
+	return ret
+}
+
+type collectFuncDefn struct {
+	prec int
+}
+
+func (pff *collectFuncDefn) Fixity() driverbottom.Fixity {
+	return driverbottom.OP_PREFIX
+}
+
+func (pff *collectFuncDefn) Precedence() int {
+	if pff.prec == 0 {
+		return 1
+	} else {
+		return pff.prec
+	}
+}
+
+func (pff *collectFuncDefn) Associativity() bool {
+	return false
+}
+
+func (pff *collectFuncDefn) ReduceExpr(me driverbottom.Token, before []driverbottom.Expr, after []driverbottom.Expr) driverbottom.Expr {
+	if len(before) != 0 {
+		panic("have prefix args")
+	}
+	if len(after) == 0 {
+		panic("need postfix args")
+	}
+	return &collectExpr{args: after}
+}
+
 type facExpr struct {
 	driverbottom.Locatable
 	arg driverbottom.Expr
@@ -175,6 +243,7 @@ func (pff *postFacFunc) ReduceExpr(me driverbottom.Token, before []driverbottom.
 var recall myRecall
 var idFunc driverbottom.Function
 var postFac driverbottom.Function
+var collectFunc driverbottom.Function
 var konstFunc driverbottom.Function
 var oneString driverbottom.String
 var lineloc *errorsink.LineLoc
@@ -185,6 +254,7 @@ var comma driverbottom.Punc
 func init() {
 	lineloc = &errorsink.LineLoc{Line: 1, Indent: 1, Text: "", File: &errorsink.FileLoc{File: "test"}}
 	oneString = lexicator.NewStringToken(lineloc, 0, "string_1")
+	collectFunc = &collectFuncDefn{}
 	postFac = &postFacFunc{}
 	idFunc = returnDataValue{value: oneString}
 	konstFunc = &konstantFunc{}
