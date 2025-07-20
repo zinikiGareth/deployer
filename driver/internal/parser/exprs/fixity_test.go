@@ -218,9 +218,12 @@ func TestASuitablyLowPrecedenceFuncCanSuckUpSubsequentPostfixExprThenPrefixOp(t 
 	if len(toks) != 5 {
 		t.Fatalf("expected five tokens, not %d", len(toks))
 	}
-	_, ok := p.Parse(nil, toks)
-	if ok {
-		t.Fatalf("parse erroneously reported successful")
+	e, ok := p.Parse(nil, toks)
+	if !ok {
+		t.Fatalf("error parsing %s", line.Text)
+	}
+	if e.ShortDescription() != "collect(<fac>(Number[2.000000]), sum(Number[3.000000]))" {
+		t.Fatalf("incorrect parsing: %s", e.ShortDescription())
 	}
 }
 

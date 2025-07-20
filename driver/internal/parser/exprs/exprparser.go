@@ -83,6 +83,17 @@ func (p *exprParser) parseOne(scope driverbottom.Scope, blocks []driverbottom.To
 						first = append(first, right)
 						return p.parseOne(scope, first)
 					case driverbottom.OP_POSTFIX:
+						use := []driverbottom.Token{}
+						use = append(use, mid...)
+						use = append(use, tokr)
+						right, ok := p.parseOne(scope, use)
+						if !ok {
+							return nil, ok
+						}
+						first := append(before, tok)
+						first = append(first, right)
+						first = append(first, more...)
+						return p.parseOne(scope, first)
 					case driverbottom.OP_INFIX:
 						right, ok := p.parseOne(scope, blocks[len(before)+1:])
 						if !ok {

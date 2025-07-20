@@ -5,7 +5,7 @@ target sumlist {
 		ShowAction {
 			_where_: simplelist.dply:6.0
 			exprs: [
-				
+				sum(List[3])
 			]
 		}
 	]
