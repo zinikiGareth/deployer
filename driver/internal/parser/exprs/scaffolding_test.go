@@ -101,7 +101,7 @@ func (kf *konstantFunc) Associativity() bool {
 }
 
 func (kf *konstantFunc) ReduceExpr(me driverbottom.Token, before []driverbottom.Expr, after []driverbottom.Expr) driverbottom.Expr {
-	return &konstExpr{args: slices.Concat(before, after)}
+	return &konstExpr{Locatable: me, args: slices.Concat(before, after)}
 }
 
 type collectExpr struct {
@@ -130,7 +130,7 @@ func (fe *collectExpr) Resolve(r driverbottom.Resolver) {
 }
 
 func (fe *collectExpr) String() string {
-	return fmt.Sprintf("fac[%d]", len(fe.args))
+	return fmt.Sprintf("collect[%d]", len(fe.args))
 }
 
 func (fe *collectExpr) Eval(s driverbottom.RuntimeStorage) any {
@@ -169,7 +169,77 @@ func (pff *collectFuncDefn) ReduceExpr(me driverbottom.Token, before []driverbot
 	if len(after) == 0 {
 		panic("need postfix args")
 	}
-	return &collectExpr{args: after}
+	return &collectExpr{Locatable: me, args: after}
+}
+
+// asList is the postfix version of collect
+
+type asListExpr struct {
+	driverbottom.Locatable
+	args []driverbottom.Expr
+}
+
+func (fe *asListExpr) ShortDescription() string {
+	ret := "asList("
+	for k, a := range fe.args {
+		if k != 0 {
+			ret = ret + ", "
+		}
+		ret = ret + a.ShortDescription()
+	}
+	ret += ")"
+	return ret
+}
+
+func (fe *asListExpr) DumpTo(to driverbottom.IndentWriter) {
+	panic("unimplemented")
+}
+
+func (fe *asListExpr) Resolve(r driverbottom.Resolver) {
+	panic("unimplemented")
+}
+
+func (fe *asListExpr) String() string {
+	return fmt.Sprintf("asList[%d]", len(fe.args))
+}
+
+func (fe *asListExpr) Eval(s driverbottom.RuntimeStorage) any {
+	ret := []any{}
+	for _, a := range fe.args {
+		arg := a.Eval(s)
+		ret = append(ret, arg)
+	}
+	return ret
+}
+
+type asListFuncDefn struct {
+	prec int
+}
+
+func (pff *asListFuncDefn) Fixity() driverbottom.Fixity {
+	return driverbottom.OP_POSTFIX
+}
+
+func (pff *asListFuncDefn) Precedence() int {
+	if pff.prec == 0 {
+		return 1
+	} else {
+		return pff.prec
+	}
+}
+
+func (pff *asListFuncDefn) Associativity() bool {
+	return false
+}
+
+func (pff *asListFuncDefn) ReduceExpr(me driverbottom.Token, before []driverbottom.Expr, after []driverbottom.Expr) driverbottom.Expr {
+	if len(before) == 0 {
+		panic("need prefix args")
+	}
+	if len(after) != 0 {
+		panic("have postfix args")
+	}
+	return &asListExpr{Locatable: me, args: before}
 }
 
 type facExpr struct {
@@ -237,13 +307,14 @@ func (pff *postFacFunc) ReduceExpr(me driverbottom.Token, before []driverbottom.
 	if len(after) != 0 {
 		panic("have postfix arg")
 	}
-	return &facExpr{arg: before[0]}
+	return &facExpr{Locatable: me, arg: before[0]}
 }
 
 var recall myRecall
 var idFunc driverbottom.Function
 var postFac driverbottom.Function
 var collectFunc driverbottom.Function
+var asListFunc driverbottom.Function
 var konstFunc driverbottom.Function
 var oneString driverbottom.String
 var lineloc *errorsink.LineLoc
@@ -255,6 +326,7 @@ func init() {
 	lineloc = &errorsink.LineLoc{Line: 1, Indent: 1, Text: "", File: &errorsink.FileLoc{File: "test"}}
 	oneString = lexicator.NewStringToken(lineloc, 0, "string_1")
 	collectFunc = &collectFuncDefn{}
+	asListFunc = &asListFuncDefn{}
 	postFac = &postFacFunc{}
 	idFunc = returnDataValue{value: oneString}
 	konstFunc = &konstantFunc{}

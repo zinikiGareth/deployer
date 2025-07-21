@@ -190,7 +190,7 @@ func TestPostfixOpWithLowPrecedenceGivesABigNumber(t *testing.T) {
 
 func TestPostfixExprCannotComeBeforePrefixOp(t *testing.T) {
 	p, h := makeParser(t)
-	h.Sink.Expect(1, 1, 0, "2 ~$ sum 3", "cannot have postfix operator followed by prefix operator")
+	h.Sink.Expect(1, 1, 0, "2 ~$ sum 3", "prefix operator cannot have arguments beforehand")
 	basicmath.RegisterAll(h.Tools)
 	recall.things["~$"] = postFac
 	recall.things["sum"] = lists.MakeSumFunc(h.Tools)
@@ -250,5 +250,27 @@ func TestParensBeatPrePostIssues(t *testing.T) {
 	sle := k.([]interface{})
 	if len(sle) != 2 {
 		t.Fatalf("length was not 2 but %d", len(sle))
+	}
+}
+
+func TestASuitablyLowPrecedenceFuncCanSuckUpPriorPrefixExpr(t *testing.T) {
+	p, h := makeParser(t)
+	basicmath.RegisterAll(h.Tools)
+	asListFunc.(*asListFuncDefn).prec = -1
+	recall.things["asList"] = asListFunc
+	recall.things["~$"] = postFac
+	recall.things["sum"] = lists.MakeSumFunc(h.Tools)
+	fl := errorsink.FileLoc{File: "testfile.dply"}
+	line := fl.AtLine(1, 1, "2 ~$ sum 3 asList")
+	toks := h.Lex.BlockedLine(line)
+	if len(toks) != 5 {
+		t.Fatalf("expected five tokens, not %d", len(toks))
+	}
+	e, ok := p.Parse(nil, toks)
+	if !ok {
+		t.Fatalf("error parsing %s", line.Text)
+	}
+	if e.ShortDescription() != "asList(<fac>(Number[2.000000]), sum(Number[3.000000]))" {
+		t.Fatalf("incorrect parsing: %s", e.ShortDescription())
 	}
 }

@@ -54,21 +54,42 @@ func (p *exprParser) parseOne(scope driverbottom.Scope, blocks []driverbottom.To
 	if fn != nil {
 		if len(after) > 0 {
 			tokr, fnr, mid, more := p.split(after)
-			log.Printf("comparing %T with %T", fn, fnr)
 			if fnr != nil {
-				if fn.Fixity() == driverbottom.OP_POSTFIX && fnr.Fixity() == driverbottom.OP_PREFIX {
-					p.tools.Reporter.Reportf(after[0].Loc().Offset, "cannot have postfix operator followed by prefix operator")
-					return nil, false
-				}
 				leftFirst := figurePrec(fn, fnr)
-				log.Printf("leftFirst = %v", leftFirst)
 				if leftFirst {
-					left, ok := p.parseOne(scope, blocks[0:len(before)+1+len(mid)])
-					if !ok {
-						return nil, ok
+					switch fn.Fixity() {
+					case driverbottom.OP_PREFIX:
+						use := []driverbottom.Token{tok}
+						use = append(use, mid...)
+						left, ok := p.parseOne(scope, use)
+						if !ok {
+							return nil, ok
+						}
+						last := append(before, left)
+						last = append(last, tokr)
+						last = append(last, more...)
+						return p.parseOne(scope, last)
+					case driverbottom.OP_POSTFIX:
+						use := append(before, tok)
+						left, ok := p.parseOne(scope, use)
+						if !ok {
+							return nil, ok
+						}
+						last := []driverbottom.Token{left}
+						last = append(last, mid...)
+						last = append(last, tokr)
+						last = append(last, more...)
+						return p.parseOne(scope, last)
+					case driverbottom.OP_INFIX:
+						left, ok := p.parseOne(scope, blocks[0:len(before)+1+len(mid)])
+						if !ok {
+							return nil, ok
+						}
+						rem := append([]driverbottom.Token{left, tokr}, more...)
+						return p.parseOne(scope, rem)
+					default:
+						log.Fatalf("invalid fixity %s", fn.Fixity())
 					}
-					rem := append([]driverbottom.Token{left, tokr}, more...)
-					return p.parseOne(scope, rem)
 				} else {
 					switch fnr.Fixity() {
 					case driverbottom.OP_PREFIX:
@@ -102,13 +123,25 @@ func (p *exprParser) parseOne(scope driverbottom.Scope, blocks []driverbottom.To
 						first := append(before, tok, right)
 						return p.parseOne(scope, first)
 					default:
-						panic("invalid fixity")
+						log.Fatalf("invalid fixity %s", fn.Fixity())
 					}
 				}
 			} else {
-				if fn.Fixity() == driverbottom.OP_POSTFIX {
+				switch fn.Fixity() {
+				case driverbottom.OP_PREFIX:
+					if len(before) > 0 {
+						p.tools.Reporter.Reportf(before[0].Loc().Offset, "prefix operator cannot have arguments beforehand")
+						return nil, false
+					}
+					// otherwise drop through to the len(after) == 0 case
+				case driverbottom.OP_POSTFIX:
+					// here we know that len(after) > 0
 					p.tools.Reporter.Reportf(after[0].Loc().Offset, "postfix operator cannot have arguments afterwards")
 					return nil, false
+				case driverbottom.OP_INFIX:
+					// drop through to the same case as below where len(after) == 0
+				default:
+					log.Fatalf("invalid fixity %s", fn.Fixity())
 				}
 			}
 		}
