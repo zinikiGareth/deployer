@@ -5,7 +5,7 @@ This is a sample of how we would deploy an APIGateway (V2) and a Lambda (with ve
 			Runtime <- "go"
 			Code <= aws.S3.Location
 				Bucket <- "zips.gareth.dev.ziniki.org"
-				Key <- "sample-go"
+				Key <- "lambda-go.zip"
 			Role <= aws.IAM.WithRole "trial-lambda-role"
 
 
