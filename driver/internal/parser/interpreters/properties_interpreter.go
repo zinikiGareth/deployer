@@ -33,7 +33,7 @@ func (pis *propertiesInterpreter) HaveTokens(scope driverbottom.Scope, tokens []
 		pis.tools.Reporter.Report(tokens[1].Loc().Offset, "line must be of form <prop> <- <expr>, <prop> <= <interpreter> or @adverb ...")
 		return NewIgnoreInnerScope()
 	} else if op.Is("<=") {
-		if len(tokens) != 3 {
+		if len(tokens) < 3 {
 			pis.tools.Reporter.Report(tokens[1].Loc().Offset, "line must be of form <prop> <- <expr>, <prop> <= <interpreter> or @adverb ...")
 			return NewIgnoreInnerScope()
 		}

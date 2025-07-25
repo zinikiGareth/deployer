@@ -110,6 +110,7 @@ Finally, we can put all these parts together to build up the entire picture of t
 			MinTTL <- 300
 			CacheBehaviors <- []
 				{}
+					SubName <- "html"
 					PathPattern <- "*.html"
 					ResponseHeaders <- {}
 						Header <- "Content-Type"

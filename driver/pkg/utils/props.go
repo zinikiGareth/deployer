@@ -1,0 +1,37 @@
+package utils
+
+import "ziniki.org/deployer/driver/pkg/driverbottom"
+
+func PropsMap(props map[driverbottom.Identifier]driverbottom.Expr) map[string]driverbottom.Identifier {
+	ret := make(map[string]driverbottom.Identifier)
+	for k := range props {
+		ret[k.Id()] = k
+	}
+	return ret
+}
+
+func UseProps(r driverbottom.Resolver, props map[driverbottom.Identifier]driverbottom.Expr, notused map[string]driverbottom.Identifier, which ...string) map[driverbottom.Identifier]driverbottom.Expr {
+	ret := make(map[driverbottom.Identifier]driverbottom.Expr)
+	for _, s := range which {
+		for k, v := range props {
+			if k.Id() == s {
+				ret[k] = v
+				v.Resolve(r)
+				notused[s] = nil
+				break
+			}
+		}
+	}
+	return ret
+}
+
+func FindProp(r driverbottom.Resolver, props map[driverbottom.Identifier]driverbottom.Expr, notused map[string]driverbottom.Identifier, which string) driverbottom.Expr {
+	for k, v := range props {
+		if k.Id() == which {
+			v.Resolve(r)
+			notused[which] = nil
+			return v
+		}
+	}
+	panic("could not find " + which)
+}

@@ -42,5 +42,5 @@ We need to create a Neptune instance
         ensure aws.Neptune.Instance "writer"
             @teardown delete
             @destroy
-            Cluster <- cluster
+            Cluster <- neptune
             InstanceClass <- "serverless"
