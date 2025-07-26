@@ -1,4 +1,4 @@
 This uses the test mod to simulate finding an *existing* bucket
 
 	target findABucket
-		find test.S3.Bucket "org.ziniki.launch_bucket"
+		find test.S3.Bucket "org.ziniki.launch_bucket" => bucket

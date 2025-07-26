@@ -1,12 +1,16 @@
 This is a sample of how we would deploy an APIGateway (V2) and a Lambda (with versioning)
 
 	target build_lambda
+
+		find aws.IAM.Role "aws-ziniki-staging-Role-11P80DK9U9T9L" => role
+
 		lambda.function "trial-lambda"
 			Runtime <- "go"
 			Code <= aws.S3.Location
 				Bucket <- "zips.gareth.dev.ziniki.org"
 				Key <- "lambda-go.zip"
-			Role <= aws.IAM.WithRole "trial-lambda-role"
+			Role <- role->arn
+//			Role <= aws.IAM.WithRole "trial-lambda-role"
 
 
 	target build_gateway

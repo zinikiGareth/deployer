@@ -102,11 +102,30 @@ func (ea *FindAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequi
 	}
 	ea.resolved = res
 	ea.coin = ea.resolved.Find(ea.tools, ea.Loc(), corebottom.CoinId(ea.tools.Storage.NewObjId(ea.named.Loc())), ea.named.Text())
-	return driverbottom.MAY_BE_BOUND
+	return driverbottom.MUST_BE_BOUND
 }
 
 func (ea *FindAction) DetermineInitialState(pres corebottom.ValuePresenter) {
-	ea.coin.DetermineInitialState(pres)
+	ea.coin.DetermineInitialState(&findPres{tools: ea.tools, named: ea.named, parent: pres})
 }
 
+type findPres struct {
+	tools  *corebottom.Tools
+	named  driverbottom.String
+	parent corebottom.ValuePresenter
+}
+
+func (f *findPres) NotFound() {
+	f.tools.Reporter.ReportAtf(f.named.Loc(), "%s could not be found", f.named.Text())
+}
+
+func (f *findPres) Present(value any) {
+	f.parent.Present(value)
+}
+
+func (f *findPres) WantDestruction(loc *errorsink.Location) {
+	panic("surely that's an error in find?")
+}
+
+var _ corebottom.ValuePresenter = &findPres{}
 var _ corebottom.Findable = &FindAction{}
