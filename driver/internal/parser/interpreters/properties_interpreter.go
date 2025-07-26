@@ -52,7 +52,7 @@ func (pis *propertiesInterpreter) HaveTokens(scope driverbottom.Scope, tokens []
 			pis.tools.Reporter.Reportf(tokens[2].Loc().Offset, "%s is not a property interpreter creator but %T", intname.Id(), useInner)
 			return NewIgnoreInnerScope()
 		}
-		return createInt(pis.tools, pis.parent, prop)
+		return createInt(pis.tools, scope, pis.parent, prop, tokens[3:])
 	} else if !op.Is("<-") {
 		pis.tools.Reporter.Report(tokens[1].Loc().Offset, "line must be of form <prop> <- <expr>, <prop> <= <interpreter> or @adverb ...")
 		return NewIgnoreInnerScope()

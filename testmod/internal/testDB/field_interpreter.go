@@ -50,7 +50,7 @@ func (f *FieldInterpreter) Completed() {
 	f.parent.AddProperty(f.prop, expr)
 }
 
-func CreateFieldInterpreter(tools *driverbottom.CoreTools, parent driverbottom.PropertyParent, prop driverbottom.Identifier) driverbottom.Interpreter {
+func CreateFieldInterpreter(tools *driverbottom.CoreTools, scope driverbottom.Scope, parent driverbottom.PropertyParent, prop driverbottom.Identifier, tokens []driverbottom.Token) driverbottom.Interpreter {
 	return &FieldInterpreter{tools: tools, parent: parent, prop: prop}
 }
 

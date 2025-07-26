@@ -23,7 +23,7 @@ type Interpreter interface {
 	Completed()
 }
 
-type CreateInterpreter func(tools *CoreTools, parent PropertyParent, prop Identifier) Interpreter
+type CreateInterpreter func(tools *CoreTools, scope Scope, parent PropertyParent, prop Identifier, tokens []Token) Interpreter
 
 type PropertyParent interface {
 	AddProperty(name Identifier, expr Expr)
