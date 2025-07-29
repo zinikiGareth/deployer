@@ -1,3 +1,5 @@
+0.0 {} false
+0.0 {} true
 second-action.dply:
 5.7 {} createAPolicyWithANestedAction
 6.10 {}:{createAPolicyWithANestedAction} allow_one_policy

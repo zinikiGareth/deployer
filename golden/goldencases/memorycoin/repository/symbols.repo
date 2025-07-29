@@ -1,3 +1,5 @@
+0.0 {} false
+0.0 {} true
 coin.dply:
 15.7 {} makeCoin
 16.42 {}:{makeCoin} s3_config

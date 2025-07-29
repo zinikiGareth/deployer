@@ -5,6 +5,6 @@
 #^ source.deployer-dply
 # ^^^^^^ source.deployer-dply keyword.target
 #       ^^^^^^^^^^^^^ source.deployer-dply
->		find test.S3.Bucket "org.ziniki.launch_bucket"
-#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>		find test.S3.Bucket "org.ziniki.launch_bucket" => bucket
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
 >

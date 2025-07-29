@@ -48,7 +48,7 @@ func (loc Location) InFile() string {
 }
 
 func (loc Location) String() string {
-	if loc.Line == nil {
+	if loc.Line == nil || loc.Line.File == nil {
 		return "<no loc>"
 	}
 	return fmt.Sprintf("%s:%d.%d", filepath.Base(loc.Line.File.File), loc.Line.Line, loc.Offset)

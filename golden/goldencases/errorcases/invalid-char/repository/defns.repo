@@ -1,3 +1,7 @@
+symbol false is bound to:
+Number[0.000000] {
+	_where_: <no loc>
+}
 symbol shouldHaveAType is bound to:
 target shouldHaveAType {
 	_where_: invalidchar.dply:3.7
@@ -9,4 +13,8 @@ target shouldHaveAType {
 			named: fred
 		}
 	]
+}
+symbol true is bound to:
+Number[1.000000] {
+	_where_: <no loc>
 }

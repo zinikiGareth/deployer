@@ -1,2 +1,4 @@
 allow_one_policy => VarExpr[allow_one_policy]
 createAPolicyAllowingOneThing => Target[createAPolicyAllowingOneThing]
+false => Number[0.000000]
+true => Number[1.000000]

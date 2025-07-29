@@ -1,2 +1,4 @@
+false => Number[0.000000]
 makeCoin => Target[makeCoin]
 s3_config => VarExpr[s3_config]
+true => Number[1.000000]

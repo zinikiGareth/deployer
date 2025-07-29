@@ -46,6 +46,10 @@ target copyFilesToBucket {
 		}
 	]
 }
+symbol false is bound to:
+Number[0.000000] {
+	_where_: <no loc>
+}
 symbol root is bound to:
 VarHolder {
 	_where_: copy.dply:7.21
@@ -55,4 +59,8 @@ symbol src_dir is bound to:
 VarHolder {
 	_where_: copy.dply:8.28
 	storeFor: src_dir
+}
+symbol true is bound to:
+Number[1.000000] {
+	_where_: <no loc>
 }

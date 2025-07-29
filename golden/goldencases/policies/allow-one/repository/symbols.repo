@@ -1,3 +1,5 @@
+0.0 {} false
+0.0 {} true
 allow-one.dply:
 10.7 {} createAPolicyAllowingOneThing
 11.10 {}:{createAPolicyAllowingOneThing} allow_one_policy

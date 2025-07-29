@@ -38,3 +38,10 @@ type Resolver interface {
 type Resolvable interface {
 	Resolve(r Resolver) BindingRequirement
 }
+
+func (b BindingRequirement) Merge(other BindingRequirement) BindingRequirement {
+	if b == ERROR_OCCURRED || other == ERROR_OCCURRED {
+		return ERROR_OCCURRED
+	}
+	return other // is it more complicated than this?
+}

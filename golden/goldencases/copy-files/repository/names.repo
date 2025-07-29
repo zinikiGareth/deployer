@@ -1,4 +1,6 @@
 bucket => VarExpr[bucket]
 copyFilesToBucket => Target[copyFilesToBucket]
+false => Number[0.000000]
 root => VarExpr[root]
 src_dir => VarExpr[src_dir]
+true => Number[1.000000]

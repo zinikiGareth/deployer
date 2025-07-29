@@ -1,3 +1,7 @@
+symbol false is bound to:
+Number[0.000000] {
+	_where_: <no loc>
+}
 symbol findABucket is bound to:
 target findABucket {
 	_where_: find.dply:3.7
@@ -9,4 +13,8 @@ target findABucket {
 			named: org.ziniki.launch_bucket
 		}
 	]
+}
+symbol true is bound to:
+Number[1.000000] {
+	_where_: <no loc>
 }

@@ -62,8 +62,6 @@ func (s *RepoScope) Traverse(lsnr driverbottom.RepositoryTraverser) {
 			if inner.Scope() != nil {
 				inner.Scope().Traverse(lsnr)
 			}
-		} else {
-			log.Fatalf("%p %T is not HasScope\n", v, v)
 		}
 	}
 }

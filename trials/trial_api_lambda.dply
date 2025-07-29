@@ -13,5 +13,18 @@ This is a sample of how we would deploy an APIGateway (V2) and a Lambda (with ve
 			Role <= aws.IAM.WithRole "trial-lambda-role"
 				policy
 					allow aws.action.APIGateway.GET aws.resource.APIGatewayV2
+			PublishVersion <- true
+			Alias <- "next"
+
+.		lambda.newVersion
+.			PublishVersion <- true
+.			Alias <- "next"
+.			Code <= aws.S3.Location
+.				Bucket <- "zips.gareth.dev.ziniki.org"
+.				Key <- "lambda-go.zip"
+
+.		lambda.updateAlias
+.			Alias <- "stable"
+.			To <- "next"
 
 	target build_gateway

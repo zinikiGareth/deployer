@@ -1,6 +1,14 @@
+symbol false is bound to:
+Number[0.000000] {
+	_where_: <no loc>
+}
 symbol shouldHaveAType is bound to:
 target shouldHaveAType {
 	_where_: noclz.dply:3.7
 	actions: [
 	]
+}
+symbol true is bound to:
+Number[1.000000] {
+	_where_: <no loc>
 }

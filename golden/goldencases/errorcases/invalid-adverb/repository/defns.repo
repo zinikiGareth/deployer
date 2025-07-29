@@ -1,3 +1,7 @@
+symbol false is bound to:
+Number[0.000000] {
+	_where_: <no loc>
+}
 symbol invalid_adverb is bound to:
 target invalid_adverb {
 	_where_: invalid-adverb.dply:4.7
@@ -9,4 +13,8 @@ target invalid_adverb {
 			named: hello
 		}
 	]
+}
+symbol true is bound to:
+Number[1.000000] {
+	_where_: <no loc>
 }

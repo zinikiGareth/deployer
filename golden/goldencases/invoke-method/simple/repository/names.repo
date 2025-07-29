@@ -1,2 +1,4 @@
 a_blob => VarExpr[a_blob]
+false => Number[0.000000]
 showBlob => Target[showBlob]
+true => Number[1.000000]

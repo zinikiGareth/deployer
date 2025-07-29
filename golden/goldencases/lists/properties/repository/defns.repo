@@ -1,3 +1,7 @@
+symbol false is bound to:
+Number[0.000000] {
+	_where_: <no loc>
+}
 symbol proplist is bound to:
 target proplist {
 	_where_: proplist.dply:16.7
@@ -24,4 +28,8 @@ target proplist {
 					}
 		}
 	]
+}
+symbol true is bound to:
+Number[1.000000] {
+	_where_: <no loc>
 }

@@ -1,3 +1,7 @@
+symbol false is bound to:
+Number[0.000000] {
+	_where_: <no loc>
+}
 symbol makeCoin is bound to:
 target makeCoin {
 	_where_: coin.dply:15.7
@@ -21,4 +25,8 @@ symbol s3_config is bound to:
 VarHolder {
 	_where_: coin.dply:16.42
 	storeFor: s3_config
+}
+symbol true is bound to:
+Number[1.000000] {
+	_where_: <no loc>
 }

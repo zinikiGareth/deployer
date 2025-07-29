@@ -1,3 +1,7 @@
+symbol false is bound to:
+Number[0.000000] {
+	_where_: <no loc>
+}
 symbol showAConstantString is bound to:
 target showAConstantString {
 	_where_: showstring.dply:4.7
@@ -9,4 +13,8 @@ target showAConstantString {
 			]
 		}
 	]
+}
+symbol true is bound to:
+Number[1.000000] {
+	_where_: <no loc>
 }

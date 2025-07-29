@@ -19,8 +19,16 @@ target ensureABucketExists {
 		}
 	]
 }
+symbol false is bound to:
+Number[0.000000] {
+	_where_: <no loc>
+}
 symbol launch_bucket is bound to:
 VarHolder {
 	_where_: bucket.dply:4.52
 	storeFor: launch_bucket
+}
+symbol true is bound to:
+Number[1.000000] {
+	_where_: <no loc>
 }

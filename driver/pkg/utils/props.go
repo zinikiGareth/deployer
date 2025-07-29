@@ -33,3 +33,14 @@ func FindProp(props map[driverbottom.Identifier]driverbottom.Expr, notused map[s
 	}
 	panic("could not find " + which)
 }
+
+func HasProp(props map[driverbottom.Identifier]driverbottom.Expr, which ...string) bool {
+	for k := range props {
+		for _, s := range which {
+			if k.Id() == s {
+				return true
+			}
+		}
+	}
+	return false
+}

@@ -81,8 +81,16 @@ target bucketPolicy {
 		}
 	]
 }
+symbol false is bound to:
+Number[0.000000] {
+	_where_: <no loc>
+}
 symbol my_bucket is bound to:
 VarHolder {
 	_where_: bucket-with-policy.dply:17.33
 	storeFor: my_bucket
+}
+symbol true is bound to:
+Number[1.000000] {
+	_where_: <no loc>
 }

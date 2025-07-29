@@ -1,3 +1,7 @@
+symbol false is bound to:
+Number[0.000000] {
+	_where_: <no loc>
+}
 symbol the_first is bound to:
 target the_first {
 	_where_: separate.dply:11.7
@@ -47,4 +51,8 @@ symbol tmp is bound to:
 VarHolder {
 	_where_: separate.dply:16.17
 	storeFor: tmp
+}
+symbol true is bound to:
+Number[1.000000] {
+	_where_: <no loc>
 }

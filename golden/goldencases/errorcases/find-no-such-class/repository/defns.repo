@@ -14,8 +14,16 @@ target cantFindANonClass {
 		}
 	]
 }
+symbol false is bound to:
+Number[0.000000] {
+	_where_: <no loc>
+}
 symbol fred is bound to:
 VarHolder {
 	_where_: find.dply:5.52
 	storeFor: fred
+}
+symbol true is bound to:
+Number[1.000000] {
+	_where_: <no loc>
 }

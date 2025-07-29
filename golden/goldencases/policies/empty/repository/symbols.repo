@@ -1,3 +1,5 @@
+0.0 {} false
+0.0 {} true
 empty-policy.dply:
 10.7 {} createAnEmptyPolicy
 11.10 {}:{createAnEmptyPolicy} hello_world_policy

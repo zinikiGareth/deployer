@@ -3,6 +3,10 @@ VarHolder {
 	_where_: invoke.dply:13.16
 	storeFor: a_blob
 }
+symbol false is bound to:
+Number[0.000000] {
+	_where_: <no loc>
+}
 symbol showBlob is bound to:
 target showBlob {
 	_where_: invoke.dply:12.7
@@ -25,4 +29,8 @@ target showBlob {
 			]
 		}
 	]
+}
+symbol true is bound to:
+Number[1.000000] {
+	_where_: <no loc>
 }

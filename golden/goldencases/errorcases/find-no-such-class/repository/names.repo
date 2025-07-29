@@ -1,2 +1,4 @@
 cantFindANonClass => Target[cantFindANonClass]
+false => Number[0.000000]
 fred => VarExpr[fred]
+true => Number[1.000000]
