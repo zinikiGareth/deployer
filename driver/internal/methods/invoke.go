@@ -38,7 +38,7 @@ func (i *InvokeExpr) ShortDescription() string {
 }
 
 func (i *InvokeExpr) String() string {
-	panic("unimplemented")
+	return i.ShortDescription()
 }
 
 func (i *InvokeExpr) DumpTo(iw driverbottom.IndentWriter) {
@@ -54,11 +54,13 @@ func (i *InvokeExpr) DumpTo(iw driverbottom.IndentWriter) {
 	iw.EndAttrs()
 }
 
-func (i *InvokeExpr) Resolve(r driverbottom.Resolver) {
+func (i *InvokeExpr) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
+	ret := driverbottom.MAY_BE_BOUND
 	i.on.Resolve(r)
 	for _, e := range i.args {
 		e.Resolve(r)
 	}
+	return ret
 }
 
 func (i *InvokeExpr) Eval(s driverbottom.RuntimeStorage) any {
@@ -116,3 +118,4 @@ func MakeInvokeFunc(tools *driverbottom.CoreTools) *InvokeFunc {
 }
 
 var _ driverbottom.Function = &InvokeFunc{}
+var _ driverbottom.Expr = &InvokeExpr{}

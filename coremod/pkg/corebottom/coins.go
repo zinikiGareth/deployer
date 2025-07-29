@@ -5,7 +5,7 @@ import (
 	"ziniki.org/deployer/driver/pkg/errorsink"
 )
 
-type CoinId driverbottom.Holder
+type CoinId driverbottom.ResolvableHolder
 
 type Blank interface {
 	ShortDescription() string

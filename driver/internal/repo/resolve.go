@@ -49,3 +49,7 @@ func (s *Searcher) Resolve(scope driverbottom.Scope, name driverbottom.Identifie
 
 	return nil
 }
+
+func (s *Searcher) ErrorAtf(loc *errorsink.Location, fmt string, opts ...any) {
+	s.reporter.ReportAtf(loc, fmt, opts)
+}

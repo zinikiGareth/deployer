@@ -27,7 +27,7 @@ target createAPolicyWithAPrincipal {
 								"resource"
 							}
 						]
-						actions: [
+						updates: [
 							policyPrincipalAction {
 								_where_: allow-with-principal.dply:8.0
 								type:

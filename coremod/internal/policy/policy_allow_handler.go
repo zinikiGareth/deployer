@@ -22,7 +22,11 @@ func (pah *policyAllowCommandHandler) Handle(parent driverbottom.AttachResult, s
 	}
 
 	pa := &PolicyAllowAction{tools: pah.tools, loc: tokens[0].Loc(), allowActions: []driverbottom.Expr{exprs[0]}, allowResources: []driverbottom.Expr{exprs[1]}}
-	parent.Attach(pa)
+	err := parent.Attach(pa)
+	if err != nil {
+		pah.tools.Reporter.ReportAtf(tokens[0].Loc(), err.Error())
+		return drivertop.NewIgnoreInnerScope()
+	}
 
 	return drivertop.NewVerbCommandInterpreter(pah.tools.CoreTools, pa, "policy-inner", false)
 }

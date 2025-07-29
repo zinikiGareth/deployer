@@ -30,6 +30,6 @@ func (m *binop) String() string {
 	panic("unimplemented")
 }
 
-func (m *binop) Resolve(r driverbottom.Resolver) {
-	panic("unimplemented")
+func (m *binop) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
+	return driverbottom.MAY_BE_BOUND
 }

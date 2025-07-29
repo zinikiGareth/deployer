@@ -11,6 +11,7 @@ This is a sample of how we would deploy an APIGateway (V2) and a Lambda (with ve
 				Key <- "lambda-go.zip"
 //			Role <- role->arn
 			Role <= aws.IAM.WithRole "trial-lambda-role"
-
+				policy
+					allow aws.action.APIGateway.GET aws.resource.APIGatewayV2
 
 	target build_gateway

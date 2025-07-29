@@ -27,7 +27,7 @@ target createAPolicyAllowingOneThingConditionally {
 								"resource"
 							}
 						]
-						actions: [
+						updates: [
 							PolicyCondAction {
 								_where_: allow-cond.dply:8.0
 								test:

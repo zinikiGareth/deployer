@@ -10,13 +10,12 @@ func PropsMap(props map[driverbottom.Identifier]driverbottom.Expr) map[string]dr
 	return ret
 }
 
-func UseProps(r driverbottom.Resolver, props map[driverbottom.Identifier]driverbottom.Expr, notused map[string]driverbottom.Identifier, which ...string) map[driverbottom.Identifier]driverbottom.Expr {
+func UseProps(props map[driverbottom.Identifier]driverbottom.Expr, notused map[string]driverbottom.Identifier, which ...string) map[driverbottom.Identifier]driverbottom.Expr {
 	ret := make(map[driverbottom.Identifier]driverbottom.Expr)
 	for _, s := range which {
 		for k, v := range props {
 			if k.Id() == s {
 				ret[k] = v
-				v.Resolve(r)
 				notused[s] = nil
 				break
 			}
@@ -25,10 +24,9 @@ func UseProps(r driverbottom.Resolver, props map[driverbottom.Identifier]driverb
 	return ret
 }
 
-func FindProp(r driverbottom.Resolver, props map[driverbottom.Identifier]driverbottom.Expr, notused map[string]driverbottom.Identifier, which string) driverbottom.Expr {
+func FindProp(props map[driverbottom.Identifier]driverbottom.Expr, notused map[string]driverbottom.Identifier, which string) driverbottom.Expr {
 	for k, v := range props {
 		if k.Id() == which {
-			v.Resolve(r)
 			notused[which] = nil
 			return v
 		}

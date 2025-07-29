@@ -1,5 +1,7 @@
 package driverbottom
 
+import "ziniki.org/deployer/driver/pkg/errorsink"
+
 type BindingRequirement int
 
 const (
@@ -30,6 +32,7 @@ type Repository interface {
 
 type Resolver interface {
 	Resolve(scope Scope, name Identifier) any
+	ErrorAtf(loc *errorsink.Location, fmt string, opts ...any)
 }
 
 type Resolvable interface {

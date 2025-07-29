@@ -100,7 +100,7 @@ type Function interface {
 type Expr interface {
 	fmt.Stringer
 	Describable
-	Resolve(r Resolver)
+	Resolve(r Resolver) BindingRequirement
 	Eval(s RuntimeStorage) any
 }
 

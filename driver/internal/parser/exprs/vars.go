@@ -1,6 +1,7 @@
 package exprs
 
 import (
+	"fmt"
 	"log"
 
 	"ziniki.org/deployer/driver/pkg/driverbottom"
@@ -15,16 +16,28 @@ type VarReference struct {
 	actualVar driverbottom.Holder
 }
 
-func (v *VarReference) Resolve(r driverbottom.Resolver) {
+func (v *VarReference) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
+	ret := driverbottom.MAY_BE_BOUND
 	val := r.Resolve(v.scope, v.id)
+	if val == nil {
+		return driverbottom.ERROR_OCCURRED
+	}
 	h, ok := val.(driverbottom.Holder)
 	if ok { // it is a "real var"
 		v.actualVar = h
 	} else {
-		v.isValue = true
-		// it resolved to some other value, such as a constant number or string
-		v.value = h
+		d, ok := val.(driverbottom.Describable)
+		if ok {
+			// it resolved to some other value, such as a constant number or string
+			v.isValue = true
+			log.Printf("var resolved to %p %T %v\n", d, d, d)
+			v.value = d
+		} else {
+			r.ErrorAtf(v.Loc(), "resolution was not to a describable")
+			return driverbottom.ERROR_OCCURRED
+		}
 	}
+	return ret
 }
 
 func (v *VarReference) Eval(s driverbottom.RuntimeStorage) any {
@@ -50,8 +63,12 @@ func (v *VarReference) ShortDescription() string {
 }
 
 func (v *VarReference) DumpTo(iw driverbottom.IndentWriter) {
-	iw.Intro("Var %s", v.id)
+	iw.Intro("Var %s", v.id.Id())
 	iw.AttrsWhere(v)
+	iw.TextAttr("isValue", fmt.Sprintf("%v", v.isValue))
+	if v.isValue {
+		iw.NestedAttr("value", v.value)
+	}
 	if v.actualVar != nil {
 		iw.NestedAttr("actualVar", v.actualVar)
 	}

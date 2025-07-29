@@ -73,8 +73,9 @@ func (ke *konstExpr) DumpTo(to driverbottom.IndentWriter) {
 	panic("unimplemented")
 }
 
-func (ke *konstExpr) Resolve(r driverbottom.Resolver) {
-	panic("unimplemented")
+func (ke *konstExpr) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
+	ret := driverbottom.MAY_BE_BOUND
+	return ret
 }
 
 func (ke *konstExpr) String() string {
@@ -125,8 +126,9 @@ func (fe *collectExpr) DumpTo(to driverbottom.IndentWriter) {
 	panic("unimplemented")
 }
 
-func (fe *collectExpr) Resolve(r driverbottom.Resolver) {
-	panic("unimplemented")
+func (fe *collectExpr) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
+	ret := driverbottom.MAY_BE_BOUND
+	return ret
 }
 
 func (fe *collectExpr) String() string {
@@ -195,8 +197,9 @@ func (fe *asListExpr) DumpTo(to driverbottom.IndentWriter) {
 	panic("unimplemented")
 }
 
-func (fe *asListExpr) Resolve(r driverbottom.Resolver) {
-	panic("unimplemented")
+func (fe *asListExpr) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
+	ret := driverbottom.MAY_BE_BOUND
+	return ret
 }
 
 func (fe *asListExpr) String() string {
@@ -255,8 +258,9 @@ func (fe *facExpr) DumpTo(to driverbottom.IndentWriter) {
 	panic("unimplemented")
 }
 
-func (fe *facExpr) Resolve(r driverbottom.Resolver) {
-	panic("unimplemented")
+func (fe *facExpr) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
+	ret := driverbottom.MAY_BE_BOUND
+	return ret
 }
 
 func (fe *facExpr) String() string {

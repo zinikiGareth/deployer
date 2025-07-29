@@ -17,7 +17,8 @@ type TimeOf struct {
 	Unit   string
 }
 
-func (t *TimeOf) Resolve(r driverbottom.Resolver) {
+func (t *TimeOf) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
+	return driverbottom.MAY_BE_BOUND
 }
 
 func (t *TimeOf) Eval(s driverbottom.RuntimeStorage) any {

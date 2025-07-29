@@ -2,10 +2,23 @@ package corebottom
 
 import "ziniki.org/deployer/driver/pkg/driverbottom"
 
+type PolicyActionList interface {
+	driverbottom.Describable
+	Add(r PolicyRuleAction)
+	Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement
+	ApplyTo(doc PolicyDocument)
+}
+
 type PolicyDocument interface {
 	driverbottom.Describable
 	Item(s string) PolicyEffect
 	Items() []PolicyEffect
+}
+
+type PolicyRuleAction interface {
+	driverbottom.Describable
+	Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement
+	ApplyTo(doc PolicyDocument)
 }
 
 type PolicyEffect interface {

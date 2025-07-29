@@ -29,10 +29,13 @@ func (m *MapExpr) DumpTo(to driverbottom.IndentWriter) {
 	to.EndAttrs()
 }
 
-func (m *MapExpr) Resolve(r driverbottom.Resolver) {
+func (m *MapExpr) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
+	ret := driverbottom.MAY_BE_BOUND
+
 	for _, e := range m.pairs {
 		e.Value().Resolve(r)
 	}
+	return ret
 }
 
 func (m *MapExpr) Eval(s driverbottom.RuntimeStorage) any {

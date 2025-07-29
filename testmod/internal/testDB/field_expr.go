@@ -31,7 +31,9 @@ func (f *FieldExpr) DumpTo(to driverbottom.IndentWriter) {
 	to.EndAttrs()
 }
 
-func (f *FieldExpr) Resolve(r driverbottom.Resolver) {
+func (f *FieldExpr) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
+	ret := driverbottom.MAY_BE_BOUND
+	return ret
 }
 
 func (f *FieldExpr) Eval(s driverbottom.RuntimeStorage) any {

@@ -27,7 +27,7 @@ target createAPolicyWithANestedAction {
 								"resource"
 							}
 						]
-						actions: [
+						updates: [
 							policyAction {
 								_where_: second-action.dply:8.0
 								exprs: [

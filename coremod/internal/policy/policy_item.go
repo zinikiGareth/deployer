@@ -1,6 +1,9 @@
 package policy
 
-import "ziniki.org/deployer/coremod/pkg/corebottom"
+import (
+	"ziniki.org/deployer/coremod/pkg/corebottom"
+	"ziniki.org/deployer/driver/pkg/driverbottom"
+)
 
 type policyItem struct {
 	effect     string
@@ -8,6 +11,10 @@ type policyItem struct {
 	resources  []string
 	principals []corebottom.PolicyPrincipal
 	more       map[string][]any
+}
+
+func (pi *policyItem) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
+	return driverbottom.NO_VALUE
 }
 
 func (pi *policyItem) Effect() string {
@@ -48,3 +55,5 @@ func (pi *policyItem) Principals() []corebottom.PolicyPrincipal {
 func (pi *policyItem) More() map[string][]any {
 	return pi.more
 }
+
+var _ corebottom.PolicyEffect = &policyItem{}

@@ -31,8 +31,8 @@ func (gcm *GetCoinMethod) String() string {
 	panic("unimplemented")
 }
 
-func (gcm *GetCoinMethod) Resolve(r driverbottom.Resolver) {
-	panic("unimplemented")
+func (gcm *GetCoinMethod) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
+	return driverbottom.MAY_BE_BOUND
 }
 
 func (gcm *GetCoinMethod) Eval(s driverbottom.RuntimeStorage) any {

@@ -29,10 +29,12 @@ func (l *ListExpr) DumpTo(to driverbottom.IndentWriter) {
 	to.EndAttrs()
 }
 
-func (l *ListExpr) Resolve(r driverbottom.Resolver) {
+func (l *ListExpr) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
+	ret := driverbottom.MAY_BE_BOUND
 	for _, e := range l.exprs {
 		e.Resolve(r)
 	}
+	return ret
 }
 
 func (l *ListExpr) Eval(s driverbottom.RuntimeStorage) any {

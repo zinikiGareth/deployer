@@ -24,7 +24,9 @@ func (a *anyExpr) DumpTo(to driverbottom.IndentWriter) {
 	to.EndAttrs()
 }
 
-func (a *anyExpr) Resolve(r driverbottom.Resolver) {
+func (a *anyExpr) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
+	ret := driverbottom.MAY_BE_BOUND
+	return ret
 }
 
 func (a *anyExpr) Eval(s driverbottom.RuntimeStorage) any {

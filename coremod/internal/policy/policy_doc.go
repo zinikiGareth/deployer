@@ -12,26 +12,19 @@ type policyDocument struct {
 	items []corebottom.PolicyEffect
 }
 
-// DumpTo implements driverbottom.Describable.
 func (p *policyDocument) DumpTo(w driverbottom.IndentWriter) {
 	w.Intro("PolicyDocument[]")
 	w.AttrsWhere(p)
 	w.EndAttrs()
 }
 
-// Loc implements driverbottom.Describable.
 func (p *policyDocument) Loc() *errorsink.Location {
 	return p.loc
 }
 
-// ShortDescription implements driverbottom.Describable.
 func (p *policyDocument) ShortDescription() string {
 	return "PolicyDocument[]"
 }
-
-// func (p *policyDocument) Name() string {
-// 	return p.name
-// }
 
 func (p *policyDocument) Item(effect string) corebottom.PolicyEffect {
 	ret := &policyItem{effect: effect, more: make(map[string][]any)}

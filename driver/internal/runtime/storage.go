@@ -288,7 +288,11 @@ func (s *Storage) ExportSymbolsTo(iw driverbottom.IndentWriter) {
 	}
 }
 
-func (s *Storage) NewObjId(loc *errorsink.Location) driverbottom.Holder {
+func (s *Storage) PendingObjId(loc *errorsink.Location) driverbottom.ResolvableHolder {
+	return &ObjId{loc: loc, pending: true}
+}
+
+func (s *Storage) NewObjId(loc *errorsink.Location) driverbottom.ResolvableHolder {
 	l := len(s.symbols[s.currentStep])
 	ret := &ObjId{loc: loc, stepName: s.currentStep, which: l}
 	s.symbols[s.currentStep][ret] = NewProvenance(ret.VarName())
@@ -302,6 +306,7 @@ func NewRuntimeStorage(registry driverbottom.Recall, repo driverbottom.Repositor
 
 type ObjId struct {
 	loc      *errorsink.Location
+	pending  bool
 	stepName string
 	which    int
 }
@@ -320,6 +325,16 @@ func (o *ObjId) DumpTo(iw driverbottom.IndentWriter) {
 	iw.TextAttr("step", o.stepName)
 	iw.TextAttr("mode", fmt.Sprintf("%d", o.which))
 	iw.EndAttrs()
+}
+
+func (o *ObjId) Resolve(rs driverbottom.RuntimeStorage) {
+	if o.pending {
+		s := rs.(*Storage)
+		o.pending = false
+		o.stepName = s.currentStep
+		o.which = len(s.symbols[s.currentStep])
+		s.symbols[s.currentStep][o] = NewProvenance(o.VarName())
+	}
 }
 
 func (o *ObjId) VarName() driverbottom.Identifier {

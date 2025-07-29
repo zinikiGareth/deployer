@@ -17,7 +17,7 @@ type UpdatePolicyAllowAction interface {
 type PolicyAllowAction struct {
 	tools   *corebottom.Tools
 	loc     *errorsink.Location
-	actions []UpdatePolicyAllowAction
+	updates []UpdatePolicyAllowAction
 
 	allowActions   []driverbottom.Expr
 	allowResources []driverbottom.Expr
@@ -40,8 +40,8 @@ func (paa *PolicyAllowAction) DumpTo(w driverbottom.IndentWriter) {
 		a.DumpTo(w)
 	}
 	w.EndList()
-	w.ListAttr("actions")
-	for _, a := range paa.actions {
+	w.ListAttr("updates")
+	for _, a := range paa.updates {
 		a.DumpTo(w)
 	}
 	w.EndList()
@@ -61,7 +61,7 @@ func (paa *PolicyAllowAction) MakeAssign(holder driverbottom.Holder, assignTo dr
 }
 
 func (paa *PolicyAllowAction) Attach(entry any) error {
-	paa.actions = append(paa.actions, entry.(UpdatePolicyAllowAction))
+	paa.updates = append(paa.updates, entry.(UpdatePolicyAllowAction))
 	return nil
 }
 
@@ -72,6 +72,7 @@ func (paa *PolicyAllowAction) ApplyTo(doc corebottom.PolicyDocument) {
 		if !ok {
 			panic("not a stringer")
 		}
+		// log.Printf("have action %T %p: %s\n", a1, a1, a1.String())
 		item.Action(a1.String())
 	}
 	for _, r := range paa.allowResources {
@@ -79,28 +80,39 @@ func (paa *PolicyAllowAction) ApplyTo(doc corebottom.PolicyDocument) {
 		if !ok {
 			panic("not a stringer")
 		}
+		// log.Printf("have resource %T %p: %s\n", r1, r1, r1.String())
 		item.Resource(r1.String())
 	}
 
-	for _, aa := range paa.actions {
+	for _, aa := range paa.updates {
+		// log.Printf("have update %T %p\n", aa, aa)
 		aa.ApplyTo(item)
 	}
 }
 
 func (paa *PolicyAllowAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
-	for _, a := range paa.actions {
-		a.Resolve(r)
+	ret := driverbottom.MAY_BE_BOUND
+	for _, a := range paa.updates {
+		if a.Resolve(r) == driverbottom.ERROR_OCCURRED {
+			ret = driverbottom.ERROR_OCCURRED
+		}
 	}
 	for _, a := range paa.allowActions {
 		// log.Printf("need to resolve %T %v\n", a, a)
-		a.Resolve(r)
+		if a.Resolve(r) == driverbottom.ERROR_OCCURRED {
+			ret = driverbottom.ERROR_OCCURRED
+		}
 	}
 	for _, ar := range paa.allowResources {
 		// log.Printf("need to resolve %T %v\n", ar, ar)
-		ar.Resolve(r)
+		if ar.Resolve(r) == driverbottom.ERROR_OCCURRED {
+			ret = driverbottom.ERROR_OCCURRED
+		}
 	}
-	return driverbottom.MAY_BE_BOUND
+	return ret
 }
 
 func (paa *PolicyAllowAction) DetermineDesiredState(pres corebottom.ValuePresenter) {
 }
+
+var _ corebottom.PolicyRuleAction = &PolicyAllowAction{}

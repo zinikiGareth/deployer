@@ -16,7 +16,7 @@ type tableCreator struct {
 	testLogger testhelpers.TestStepLogger
 
 	loc   *errorsink.Location
-	coin  driverbottom.Holder
+	coin  driverbottom.ResolvableHolder
 	name  string
 	props map[driverbottom.Identifier]driverbottom.Expr
 	model *tableModel

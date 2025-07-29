@@ -30,8 +30,8 @@ func (sle *SumListExpr) String() string {
 	return ""
 }
 
-func (sle *SumListExpr) Resolve(r driverbottom.Resolver) {
-
+func (sle *SumListExpr) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
+	return driverbottom.MAY_BE_BOUND
 }
 
 func (sle *SumListExpr) Eval(storage driverbottom.RuntimeStorage) any {

@@ -9,16 +9,10 @@ import (
 	"ziniki.org/deployer/driver/pkg/errorsink"
 )
 
-type PolicyRuleAction interface {
-	driverbottom.Describable
-	Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement
-	ApplyTo(doc corebottom.PolicyDocument)
-}
-
 type PolicyAction struct {
 	tools   *corebottom.Tools
 	loc     *errorsink.Location
-	actions []PolicyRuleAction
+	actions []corebottom.PolicyRuleAction
 }
 
 func (pa *PolicyAction) MakeAssign(holder driverbottom.Holder, assignTo driverbottom.Identifier, action any) any {
@@ -27,7 +21,7 @@ func (pa *PolicyAction) MakeAssign(holder driverbottom.Holder, assignTo driverbo
 }
 
 func (pa *PolicyAction) Attach(entry any) error {
-	a, ok := entry.(PolicyRuleAction)
+	a, ok := entry.(corebottom.PolicyRuleAction)
 	if !ok {
 		return fmt.Errorf("cannot attach %T to PolicyAction, not a PolicyRuleAction", entry)
 	}

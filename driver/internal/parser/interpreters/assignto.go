@@ -58,7 +58,9 @@ func (v *VarHolder) VarName() driverbottom.Identifier {
 	return v.storeFor
 }
 
-func (v *VarHolder) Resolve(r driverbottom.Resolver) {
+func (v *VarHolder) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
+	ret := driverbottom.MAY_BE_BOUND
+	return ret
 }
 
 func (v *VarHolder) Eval(s driverbottom.RuntimeStorage) any {

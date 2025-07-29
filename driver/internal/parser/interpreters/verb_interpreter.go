@@ -18,7 +18,7 @@ func (si *verbCommandInterpreter) HaveTokens(scope driverbottom.Scope, tokens []
 		si.tools.Reporter.Reportf(0, "must have a command")
 		return NewIgnoreInnerScope()
 	}
-	verb, ok := tokens[0].(driverbottom.Identifier)
+	verb, ok := toks[0].(driverbottom.Identifier)
 	if !ok {
 		si.tools.Reporter.Report(0, "first token must be an identifier")
 		return NewIgnoreInnerScope()

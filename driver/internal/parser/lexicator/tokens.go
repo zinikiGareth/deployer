@@ -72,7 +72,9 @@ func (tok *NumberToken) F64() float64 {
 	return tok.value
 }
 
-func (tok *NumberToken) Resolve(r driverbottom.Resolver) {
+func (tok *NumberToken) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
+	ret := driverbottom.MAY_BE_BOUND
+	return ret
 }
 
 func (tok *NumberToken) Eval(s driverbottom.RuntimeStorage) any {
@@ -144,7 +146,9 @@ func (tok *StringToken) String() string {
 	return tok.text
 }
 
-func (tok *StringToken) Resolve(r driverbottom.Resolver) {
+func (tok *StringToken) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
+	ret := driverbottom.MAY_BE_BOUND
+	return ret
 }
 
 func (tok *StringToken) Eval(s driverbottom.RuntimeStorage) any {
