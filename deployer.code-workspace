@@ -68,16 +68,31 @@
 				]
 			},
 			{
+				"name": "lambda",
+				"type": "go",
+				"request": "launch",
+				"program": "${workspaceFolder:AWS}/cmd/awsdep",
+				"cwd": "${workspaceFolder:Driver}/..",
+				"args": [
+					"-d",
+					"trials",
+					"--teardown",
+					"build_lambda"
+				],
+				"env": {
+					"AWS_PROFILE": "ziniki-admin",
+					"CONSOLIDATOR_SRC": "/Users/gareth/Clients/consolidator.news",
+				}
+			},
+			{
 				"name": "trial bucket",
 				"type": "go",
 				"request": "launch",
-				"program": "${workspaceFolder:Deployer}/cmd/deployer",
+				"program": "${workspaceFolder:AWS}/cmd/awsdep",
 				"cwd": "${workspaceFolder:Deployer}/..",
 				"args": [
-					"--module",
-					"${workspaceFolder:CoreMod}/plugin/coremod.so",
-					"--module",
-					"${workspaceFolder:AWS}/plugin/deployer_module_aws.so",
+					"-d",
+					"trials",
 					"cloudfront_website_from_bucket"
 				],
 				"env": {
@@ -89,17 +104,16 @@
 				"name": "trial db",
 				"type": "go",
 				"request": "launch",
-				"program": "${workspaceFolder:Deployer}/cmd/deployer",
+				"program": "${workspaceFolder:AWS}/cmd/awsdep",
 				"cwd": "${workspaceFolder:Deployer}/..",
 				"args": [
-					"--module",
-					"${workspaceFolder:CoreMod}/plugin/coremod.so",
-					"--module",
-					"${workspaceFolder:AWS}/plugin/deployer_module_aws.so",
+					"-d",
+					"trials",
 					"trial_dbs"
 				],
 				"env": {
-					"AWS_PROFILE": "ziniki-admin"
+					"AWS_PROFILE": "ziniki-admin",
+					"CONSOLIDATOR_SRC": "/Users/gareth/Clients/consolidator.news",
 				}
 			}
 		],

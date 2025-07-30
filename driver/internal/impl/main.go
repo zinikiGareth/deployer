@@ -14,8 +14,18 @@ func Usage() {
 }
 
 func RunDeployer(args []string) int {
+	return RunDeployerWithConfig(nil, args)
+}
+
+func RunDeployerWithConfig(config func(driverbottom.Driver) error, args []string) int {
 	sink := errorsink.NewConsoleSink()
 	d := NewDriver(sink, os.Stdout)
+	if config != nil {
+		e := config(d)
+		if e != nil {
+			panic(e)
+		}
+	}
 	var dirs []string
 	var envs []string
 	var modules []string
