@@ -74,7 +74,7 @@ func (i *InvokeExpr) Eval(s driverbottom.RuntimeStorage) any {
 	}
 	meth := hm.ObtainMethod(i.call.Id())
 	if meth == nil {
-		log.Fatalf("No method %s on %v", i.call.Id(), i.on)
+		log.Fatalf("No method %s on %T %v", i.call.Id(), i.on, i.on)
 	}
 	return meth.Invoke(s, i.on, i.args)
 }

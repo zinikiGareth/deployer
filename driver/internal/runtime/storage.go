@@ -338,6 +338,9 @@ func (o *ObjId) Resolve(rs driverbottom.RuntimeStorage) {
 }
 
 func (o *ObjId) VarName() driverbottom.Identifier {
+	if o.pending {
+		panic("cannot use VarName before Var is resolved")
+	}
 	kk := fmt.Sprintf("*%s-%d", o.stepName, o.which)
 	return lexicator.NewIdentifierToken(o.loc.Line, o.loc.Offset, kk)
 }

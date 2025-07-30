@@ -1,6 +1,7 @@
 package basic
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -16,19 +17,22 @@ type GetCoinMethod struct {
 }
 
 func (gcm *GetCoinMethod) Loc() *errorsink.Location {
-	panic("unimplemented")
+	return gcm.loc
 }
 
 func (gcm *GetCoinMethod) ShortDescription() string {
-	panic("unimplemented")
+	return fmt.Sprintf("GetCoin[%s]", gcm.coin.VarName())
 }
 
 func (gcm *GetCoinMethod) DumpTo(to driverbottom.IndentWriter) {
-	panic("unimplemented")
+	to.Intro("GetCoin")
+	to.AttrsWhere(gcm)
+	to.TextAttr("coin", gcm.coin.VarName().Id())
+	to.EndAttrs()
 }
 
 func (gcm *GetCoinMethod) String() string {
-	panic("unimplemented")
+	return fmt.Sprintf("GetCoin[%s]", gcm.coin.VarName())
 }
 
 func (gcm *GetCoinMethod) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {

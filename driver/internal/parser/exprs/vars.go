@@ -30,7 +30,6 @@ func (v *VarReference) Resolve(r driverbottom.Resolver) driverbottom.BindingRequ
 		if ok {
 			// it resolved to some other value, such as a constant number or string
 			v.isValue = true
-			log.Printf("var resolved to %p %T %v\n", d, d, d)
 			v.value = d
 		} else {
 			r.ErrorAtf(v.Loc(), "resolution was not to a describable")

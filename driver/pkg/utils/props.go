@@ -27,7 +27,9 @@ func UseProps(props map[driverbottom.Identifier]driverbottom.Expr, notused map[s
 func FindProp(props map[driverbottom.Identifier]driverbottom.Expr, notused map[string]driverbottom.Identifier, which string) driverbottom.Expr {
 	for k, v := range props {
 		if k.Id() == which {
-			notused[which] = nil
+			if notused != nil {
+				notused[which] = nil
+			}
 			return v
 		}
 	}
