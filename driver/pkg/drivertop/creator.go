@@ -35,3 +35,7 @@ func NewListExpr(loc *errorsink.Location, es []driverbottom.Expr) driverbottom.L
 func NewAnyExpr(loc *errorsink.Location, value any) driverbottom.Expr {
 	return exprs.NewAnyExpr(loc, value)
 }
+
+func NewAlwaysNil(loc *errorsink.Location) driverbottom.Expr {
+	return exprs.NewAlwaysNil(loc)
+}
