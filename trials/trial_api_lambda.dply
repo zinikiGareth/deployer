@@ -27,3 +27,8 @@ This is a sample of how we would deploy an APIGateway (V2) and a Lambda (with ve
 	target build_gateway
 		api.gatewayV2 "http-1"
 			@teardown delete
+			Protocol <- "http"
+
+		api.gatewayV2 "ws-1"
+			@teardown delete
+			Protocol <- "websocket"
