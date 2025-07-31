@@ -32,3 +32,4 @@ This is a sample of how we would deploy an APIGateway (V2) and a Lambda (with ve
 		api.gatewayV2 "ws-1"
 			@teardown delete
 			Protocol <- "websocket"
+			RouteSelectionExpression <- "$request.body.action"
