@@ -27,6 +27,11 @@ This is a sample of how we would deploy an APIGateway (V2) and a Lambda (with ve
 	target build_gateway_by_hand
 		find aws.Lambda.Function "trial-lambda" => trial
 
+In order to have a gateway inside a VPC, you must first have a VPC:
+
+		find aws.VPC.VPC "Test" => vpc
+
+
 		ensure aws.ApiGatewayV2.Api "http-1" => api
 			@teardown delete
 			Protocol <- "http"
