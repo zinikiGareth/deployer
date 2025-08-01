@@ -48,6 +48,10 @@ This is a sample of how we would deploy an APIGateway (V2) and a Lambda (with ve
 			Api <- api->id
 			Target <- use_trial_lambda->integrationId
 
+		ensure aws.ApiGatewayV2.Stage "development" => dev_stage
+			@teardown delete
+			Api <- api->id
+
 	target build_gateway
 		find aws.Lambda.Function "trial-lambda" => trial
 
