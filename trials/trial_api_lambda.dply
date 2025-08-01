@@ -36,7 +36,7 @@ This is a sample of how we would deploy an APIGateway (V2) and a Lambda (with ve
 			Api <- api->id
 			Region <- "us-east-1"
 			Type <- "AWS_PROXY"
-			Uri <- trial->integrationUri
+			Uri <- trial->arn
 
 		ensure aws.ApiGatewayV2.Route "GET /index" => index_route
 			@teardown delete
