@@ -38,9 +38,15 @@ This is a sample of how we would deploy an APIGateway (V2) and a Lambda (with ve
 			Type <- "AWS_PROXY"
 			Uri <- trial->integrationUri
 
-.		ensure aws.ApiGatewayV2.Route "/*" => default_route
-.			@teardown delete
-.			Protocol <- "http"
+		ensure aws.ApiGatewayV2.Route "GET /index" => index_route
+			@teardown delete
+			Api <- api->id
+			Target <- use_trial_lambda->integrationId
+
+		ensure aws.ApiGatewayV2.Route "$default" => default_route
+			@teardown delete
+			Api <- api->id
+			Target <- use_trial_lambda->integrationId
 
 	target build_gateway
 		find aws.Lambda.Function "trial-lambda" => trial
