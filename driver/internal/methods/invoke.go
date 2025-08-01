@@ -66,6 +66,9 @@ func (i *InvokeExpr) Resolve(r driverbottom.Resolver) driverbottom.BindingRequir
 func (i *InvokeExpr) Eval(s driverbottom.RuntimeStorage) any {
 	// log.Printf("on = %T %v\n", i.on, i.on)
 	obj := i.on.Eval(s)
+	if obj == nil {
+		return nil
+	}
 	hm, ok := obj.(driverbottom.HasMethods)
 	if !ok {
 		s.DumpTo(os.Stderr)

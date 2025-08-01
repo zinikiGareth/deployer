@@ -118,10 +118,10 @@ func (s *Storage) Get(v driverbottom.Holder) any {
 		}
 	}
 
-	log.Printf("no value has been set for %v in mode %d", v, s.CurrentMode())
-	iw := utils.NewIndentWriter(os.Stderr)
-	s.ExportSymbolsTo(iw)
 	if s.CurrentMode() == 2 || s.CurrentMode() == 3 {
+		log.Printf("no value has been set for %v in mode %d", v, s.CurrentMode())
+		iw := utils.NewIndentWriter(os.Stderr)
+		s.ExportSymbolsTo(iw)
 		panic("and this cannot be right in this mode")
 	}
 	return nil
@@ -192,6 +192,9 @@ func (s *Storage) Eval(e driverbottom.Expr) any {
 
 func (s *Storage) EvalAsStringer(e driverbottom.Expr) (fmt.Stringer, bool) {
 	val := s.Eval(e)
+	if val == nil {
+		return nil, false
+	}
 	str, ok := val.(string)
 	if ok {
 		return utils.AsStringer(str)
