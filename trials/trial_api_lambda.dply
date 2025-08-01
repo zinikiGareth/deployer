@@ -52,6 +52,21 @@ This is a sample of how we would deploy an APIGateway (V2) and a Lambda (with ve
 			@teardown delete
 			Api <- api->id
 
+The "name" here is not really the unique name of the deployment; they don't have them.
+Instead, it is the name of the stage you are deploying into.
+Don't blame me; the AWS model is weird.
+
+		ensure aws.ApiGatewayV2.Deployment "development" => dev_deployment
+			@teardown delete
+			Api <- api->id
+
+It is my impression from studying the documentation that the above is not enough to "re-deploy"
+the gateway if auto-deploy is off.  However, it seems to be working.
+
+.		update aws.ApiGatewayV2.Stage "development"
+.			Api <- api->id
+.			Deployment <- dev_deployment->id
+
 	target build_gateway
 		find aws.Lambda.Function "trial-lambda" => trial
 
