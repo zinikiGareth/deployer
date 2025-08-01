@@ -24,10 +24,32 @@ This is a sample of how we would deploy an APIGateway (V2) and a Lambda (with ve
 .			Alias <- "stable"
 .			To <- "next"
 
+	target build_gateway_by_hand
+		find aws.Lambda.Function "trial-lambda" => trial
+
+		ensure aws.ApiGatewayV2.Api "http-1" => api
+			@teardown delete
+			Protocol <- "http"
+
+		ensure aws.ApiGatewayV2.Integration "lambda" => use_trial_lambda
+			@teardown delete
+			Api <- api->id
+			Region <- "us-east-1"
+			Type <- "AWS"
+			Uri <- trial->integrationUri
+
+.		ensure aws.ApiGatewayV2.Route "/*" => default_route
+.			@teardown delete
+.			Protocol <- "http"
+
 	target build_gateway
+		find aws.Lambda.Function "trial-lambda" => trial
+
 		api.gatewayV2 "http-1"
 			@teardown delete
 			Protocol <- "http"
+			route "/*"
+				lambda trial->arn
 
 		api.gatewayV2 "ws-1"
 			@teardown delete
