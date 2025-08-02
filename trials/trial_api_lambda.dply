@@ -1,6 +1,11 @@
 This is a sample of how we would deploy an APIGateway (V2) and a Lambda (with versioning)
 
 	target build_lambda
+
+In order to build a lambda inside a VPC, you must first have a VPC:
+
+		find aws.VPC.VPC "Test" => vpc
+		
 		lambda.function "trial-lambda"
 			@teardown delete
 			Runtime <- "go"

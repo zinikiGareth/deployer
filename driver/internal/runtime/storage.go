@@ -144,7 +144,7 @@ func (s *Storage) GetCoin(coin driverbottom.Holder, mode int) any {
 			return val[s.stepNames[k]]
 		}
 	}
-	panic("no val found")
+	return nil
 }
 
 func (s *Storage) GetCoinFrom(coin driverbottom.Holder, modes []int) any {
@@ -164,7 +164,7 @@ func (s *Storage) GetCoinFrom(coin driverbottom.Holder, modes []int) any {
 			}
 		}
 	}
-	panic("no val found")
+	return nil
 }
 
 func (s *Storage) Errorf(loc *errorsink.Location, msg string, args ...any) {
