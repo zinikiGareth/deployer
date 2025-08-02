@@ -5,7 +5,7 @@ This is a sample of how we would deploy an APIGateway (V2) and a Lambda (with ve
 In order to build a lambda inside a VPC, you must first have a VPC:
 
 		find aws.VPC.VPC "Test" => vpc
-		
+
 		lambda.function "trial-lambda"
 			@teardown delete
 			Runtime <- "go"
@@ -17,6 +17,9 @@ In order to build a lambda inside a VPC, you must first have a VPC:
 					allow aws.action.APIGateway.GET aws.resource.APIGatewayV2
 			PublishVersion <- true
 			Alias <- "next"
+			VpcConfig <= aws.VPC.Config
+				Subnets <- vpc->subnets
+				SecurityGroups <- vpc->securityGroups
 
 .		lambda.newVersion
 .			PublishVersion <- true
@@ -36,16 +39,21 @@ In order to have a gateway inside a VPC, you must first have a VPC:
 
 		find aws.VPC.VPC "Test" => vpc
 
-
 		ensure aws.ApiGatewayV2.Api "http-1" => api
 			@teardown delete
 			Protocol <- "http"
+
+		ensure aws.ApiGatewayV2.VPCLink "linkToTest" => vpc_link
+			Subnets <- vpc->subnets
+			SecurityGroups <- vpc->securityGroups
 
 		ensure aws.ApiGatewayV2.Integration "lambda" => use_trial_lambda
 			@teardown delete
 			Api <- api->id
 			Region <- "us-east-1"
 			Type <- "AWS_PROXY"
+			ConnectionType <- "VPC_LINK"
+			ConnectionId <- vpc_link->id
 			Uri <- trial->arn
 
 		ensure aws.ApiGatewayV2.Route "GET /index" => index_route
