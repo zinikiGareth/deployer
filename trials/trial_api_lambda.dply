@@ -71,6 +71,10 @@ In order to build a lambda inside a VPC, you must first have a VPC:
 			Type <- "AWS_PROXY"
 			Uri <- trial->arn
 
+		lambda.addPermissions "gateway_execution"
+			allow "lambda:InvokeFunction" (trial->arn)
+				principal "Service" "apigateway.amazonaws.com"
+
 		ensure aws.ApiGatewayV2.Route "GET /index" => index_route
 			@teardown delete
 			Api <- api->id

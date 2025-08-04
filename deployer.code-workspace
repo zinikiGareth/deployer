@@ -77,7 +77,7 @@
 					"-d",
 					"trials",
 					// "--teardown",
-					"build_lambda_by_hand"
+					"build_gateway_by_hand"
 				],
 				"env": {
 					"AWS_PROFILE": "ziniki-admin",

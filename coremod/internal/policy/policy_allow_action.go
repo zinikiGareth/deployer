@@ -112,7 +112,4 @@ func (paa *PolicyAllowAction) Resolve(r driverbottom.Resolver) driverbottom.Bind
 	return ret
 }
 
-func (paa *PolicyAllowAction) DetermineDesiredState(pres corebottom.ValuePresenter) {
-}
-
 var _ corebottom.PolicyRuleAction = &PolicyAllowAction{}
