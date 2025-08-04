@@ -121,8 +121,13 @@ the gateway if auto-deploy is off.  However, it seems to be working.
 		api.gatewayV2 "http-1"
 			@teardown delete
 			Protocol <- "http"
-			route "/*"
-				lambda trial->arn
+			integration "lambda"
+				Type <- "AWS_PROXY"
+				Uri <- trial->arn
+			route "GET /index" "lambda"
+			route "GET /login" "lambda"
+			route "$default" "lambda"
+			stage "development"
 
 		api.gatewayV2 "ws-1"
 			@teardown delete
