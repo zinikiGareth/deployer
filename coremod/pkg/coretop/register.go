@@ -77,6 +77,9 @@ func RegisterWithDriver(driver driverbottom.Driver) error {
 	tools.Register.Register("policy-inner", "condition", policy.NewPolicyConditionCommandHandler(tools))
 	tools.Register.Register("policy-inner", "principal", policy.NewPolicyPrincipalCommandHandler(tools))
 
+	// nested interpreters
+	tools.Register.Register("prop-interpreter", "PolicyStatements", driverbottom.CreateInterpreter(NewPolicyStatementInterpreter))
+
 	// basic things that come from driver
 	drivertop.RegisterBasicFunctions(ct)
 

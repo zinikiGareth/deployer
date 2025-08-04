@@ -42,8 +42,17 @@ func (p *policyActionList) ApplyTo(doc corebottom.PolicyDocument) {
 	}
 }
 
+func (p *policyActionList) String() string {
+	return p.ShortDescription()
+}
+
+func (p *policyActionList) Eval(s driverbottom.RuntimeStorage) any {
+	return p
+}
+
 func NewPolicyActionList(loc *errorsink.Location) corebottom.PolicyActionList {
 	return &policyActionList{loc: loc}
 }
 
+var _ driverbottom.Expr = &policyActionList{}
 var _ corebottom.PolicyActionList = &policyActionList{}

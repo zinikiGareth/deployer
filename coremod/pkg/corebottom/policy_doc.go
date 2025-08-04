@@ -3,7 +3,7 @@ package corebottom
 import "ziniki.org/deployer/driver/pkg/driverbottom"
 
 type PolicyActionList interface {
-	driverbottom.Describable
+	driverbottom.Expr
 	Add(r PolicyRuleAction)
 	Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement
 	ApplyTo(doc PolicyDocument)
