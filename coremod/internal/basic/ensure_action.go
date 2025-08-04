@@ -138,15 +138,19 @@ func (ea *EnsureAction) Resolve(r driverbottom.Resolver) driverbottom.BindingReq
 	return driverbottom.MAY_BE_BOUND
 }
 
+func (ea *EnsureAction) CoinId() corebottom.CoinId {
+	return ea.ens.CoinId()
+}
+
 func (ea *EnsureAction) DetermineInitialState(pres corebottom.ValuePresenter) {
-	ea.ens.DetermineInitialState(NewCoinPresenter(ea.tools.Storage, ea.ens.CoinId(), pres))
+	ea.ens.DetermineInitialState(pres)
 	if ea.markDestroy != nil {
 		pres.WantDestruction(ea.markDestroy.Loc())
 	}
 }
 
 func (ea *EnsureAction) DetermineDesiredState(pres corebottom.ValuePresenter) {
-	ea.ens.DetermineDesiredState(NewCoinPresenter(ea.tools.Storage, ea.ens.CoinId(), pres))
+	ea.ens.DetermineDesiredState(pres)
 }
 
 func (ea *EnsureAction) ShouldDestroy() bool {
@@ -169,4 +173,5 @@ func (m *MyTearDown) Mode() string {
 	return m.mode
 }
 
+var _ corebottom.CoinProvider = &EnsureAction{}
 var _ corebottom.RealityShifter = &EnsureAction{}

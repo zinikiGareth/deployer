@@ -23,6 +23,7 @@ type DoAssign struct {
 	assignTo driverbottom.Identifier
 	holder   driverbottom.Holder
 	action   driverbottom.Describable
+	andThen  corebottom.ValuePresenter
 }
 
 func (da *DoAssign) Loc() *errorsink.Location {
@@ -54,7 +55,12 @@ func (da *DoAssign) ShortDescription() string {
 	return "DoAssign[" + da.assignTo.Id() + "<-" + da.action.ShortDescription() + "]"
 }
 
+func (da *DoAssign) Nested() driverbottom.Describable {
+	return da.action
+}
+
 func (da *DoAssign) DetermineInitialState(pres corebottom.ValuePresenter) {
+	da.andThen = pres
 	fnd, ok := da.action.(corebottom.Findable)
 	if !ok {
 		// should we call something on pres? such as "notFinder"?
@@ -64,6 +70,7 @@ func (da *DoAssign) DetermineInitialState(pres corebottom.ValuePresenter) {
 }
 
 func (da *DoAssign) DetermineDesiredState(pres corebottom.ValuePresenter) {
+	da.andThen = pres
 	mb, ok := da.action.(corebottom.ModelBuilder)
 	if ok {
 		mb.DetermineDesiredState(da)
@@ -108,6 +115,7 @@ func (da *DoAssign) Present(value any) {
 		return
 	}
 	da.tools.Storage.Bind(da.holder, value)
+	da.andThen.Present(value)
 }
 
 func (da *DoAssign) WantDestruction(loc *errorsink.Location) {

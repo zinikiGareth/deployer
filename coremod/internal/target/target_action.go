@@ -5,6 +5,7 @@ import (
 	"log"
 	"slices"
 
+	"ziniki.org/deployer/coremod/internal/basic"
 	"ziniki.org/deployer/coremod/internal/vars"
 	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
@@ -87,7 +88,7 @@ func (t *CoreTarget) DetermineInitialState() {
 		t.tools.Storage.SetStepName(fmt.Sprintf("%s-%d", t.name, k))
 		fnd, ok := a.(corebottom.Findable)
 		if ok {
-			fnd.DetermineInitialState(t)
+			fnd.DetermineInitialState(t.presenter(a))
 		}
 	}
 }
@@ -102,7 +103,7 @@ func (t *CoreTarget) DetermineDesiredState() {
 		// log.Printf("%p: a is of type %T %p\n", t, a, a)
 		mb, ok := a.(corebottom.ModelBuilder)
 		if ok {
-			mb.DetermineDesiredState(t)
+			mb.DetermineDesiredState(t.presenter(a))
 		}
 		_, ok = a.(corebottom.MemoryBuilder)
 		if ok {
@@ -135,6 +136,19 @@ func (t *CoreTarget) TearDown() {
 			amis.TearDown()
 		}
 	}
+}
+
+func (t *CoreTarget) presenter(a driverbottom.Describable) corebottom.ValuePresenter {
+	var pres corebottom.ValuePresenter = t
+	da, ok := a.(*vars.DoAssign)
+	if ok {
+		a = da.Nested()
+	}
+	coinProvider, ok := a.(corebottom.CoinProvider)
+	if ok {
+		pres = basic.NewCoinPresenter(t.tools.Storage, coinProvider.CoinId(), t)
+	}
+	return pres
 }
 
 func (t *CoreTarget) NotFound() {

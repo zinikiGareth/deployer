@@ -17,3 +17,7 @@ type MemoryCoin interface {
 	ShortDescription() string
 	Mint(tools *Tools, loc *errorsink.Location, id CoinId, named string, props map[driverbottom.Identifier]driverbottom.Expr) MemoryCoinCreator
 }
+
+type CoinProvider interface {
+	CoinId() CoinId
+}

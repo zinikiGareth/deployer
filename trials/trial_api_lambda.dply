@@ -27,6 +27,10 @@ In order to build a lambda inside a VPC, you must first have a VPC:
 				Subnets <- vpc->subnets
 				SecurityGroups <- vpc->securityGroups
 
+		lambda.publishVersion
+			Name <- lambda->arn
+			Alias <- "next"
+
 	target build_lambda
 
 In order to build a lambda inside a VPC, you must first have a VPC:
