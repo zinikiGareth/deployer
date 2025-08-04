@@ -36,6 +36,15 @@ func FindProp(props map[driverbottom.Identifier]driverbottom.Expr, notused map[s
 	panic("could not find " + which)
 }
 
+func PropId(props map[driverbottom.Identifier]driverbottom.Expr, which string) driverbottom.Identifier {
+	for k := range props {
+		if k.Id() == which {
+			return k
+		}
+	}
+	panic("could not find " + which)
+}
+
 func HasProp(props map[driverbottom.Identifier]driverbottom.Expr, which ...string) bool {
 	for k := range props {
 		for _, s := range which {
@@ -45,4 +54,16 @@ func HasProp(props map[driverbottom.Identifier]driverbottom.Expr, which ...strin
 		}
 	}
 	return false
+}
+
+func CopyProps(into map[driverbottom.Identifier]driverbottom.Expr, props map[driverbottom.Identifier]driverbottom.Expr, notused map[string]driverbottom.Identifier, which ...string) {
+	for _, s := range which {
+		for k, v := range props {
+			if k.Id() == s {
+				into[k] = v
+				notused[s] = nil
+				break
+			}
+		}
+	}
 }

@@ -9,7 +9,6 @@ In order to build a lambda inside a VPC, you must first have a VPC:
 		ensure aws.IAM.Role "trial-lambda-role" => trial_role
 			@teardown delete
 			Inline <= PolicyStatements
-.				allow aws.action.APIGateway.GET aws.resource.APIGatewayV2
 				allow aws.action.ec2.CreateNetworkInterface "*"
 				allow aws.action.ec2.DescribeNetworkInterfaces "*"
 				allow aws.action.ec2.DeleteNetworkInterface "*"
@@ -39,7 +38,9 @@ In order to build a lambda inside a VPC, you must first have a VPC:
 				Key <- "lambda-go.zip"
 			Role <= aws.IAM.WithRole "trial-lambda-role"
 				policy
-					allow aws.action.APIGateway.GET aws.resource.APIGatewayV2
+					allow aws.action.ec2.CreateNetworkInterface "*"
+					allow aws.action.ec2.DescribeNetworkInterfaces "*"
+					allow aws.action.ec2.DeleteNetworkInterface "*"
 			PublishVersion <- true
 			Alias <- "next"
 			VpcConfig <= aws.VPC.Config
