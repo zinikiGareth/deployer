@@ -21,7 +21,17 @@ func (pah *policyAllowCommandHandler) Handle(parent driverbottom.AttachResult, s
 		return drivertop.NewIgnoreInnerScope()
 	}
 
-	pa := &PolicyAllowAction{tools: pah.tools, loc: tokens[0].Loc(), allowActions: []driverbottom.Expr{exprs[0]}, allowResources: []driverbottom.Expr{exprs[1]}}
+	actions := []driverbottom.Expr{}
+	resources := []driverbottom.Expr{}
+
+	if len(exprs) >= 1 {
+		actions = append(actions, exprs[0])
+	}
+	if len(exprs) == 2 {
+		resources = append(resources, exprs[1])
+	}
+
+	pa := &PolicyAllowAction{tools: pah.tools, loc: tokens[0].Loc(), allowActions: actions, allowResources: resources}
 	err := parent.Attach(pa)
 	if err != nil {
 		pah.tools.Reporter.ReportAtf(tokens[0].Loc(), err.Error())
