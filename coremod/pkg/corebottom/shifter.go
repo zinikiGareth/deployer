@@ -7,3 +7,10 @@ type RealityShifter interface {
 	UpdateReality()
 	TearDown()
 }
+
+type BasicShifter interface {
+	DetermineInitialState(pres ValuePresenter)
+	DetermineDesiredState(pres ValuePresenter)
+	UpdateReality()
+	TearDown()
+}

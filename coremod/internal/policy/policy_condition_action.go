@@ -59,4 +59,4 @@ func (pca *PolicyCondAction) ApplyTo(pi corebottom.PolicyEffect) {
 	pi.AMore("Condition", cond)
 }
 
-var _ UpdatePolicyAllowAction = &PolicyCondAction{}
+var _ corebottom.UpdatePolicyAllowAction = &PolicyCondAction{}

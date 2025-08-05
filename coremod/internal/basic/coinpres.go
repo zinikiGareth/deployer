@@ -13,18 +13,19 @@ type CoinPresenter struct {
 }
 
 func (c *CoinPresenter) Present(value any) {
-	// log.Printf("presenting value %p\n", value)
-	c.presenter.Present(value)
+	if c.presenter != nil {
+		c.presenter.Present(value)
+	}
 	if c.coinId != nil {
-		// log.Printf("ignoring value %p\n", value)
 		c.storage.IgnoreDuplicate(value)
-		// log.Printf("binding value %p for %s\n", value, c.coinId.VarName().Id())
 		c.storage.Bind(c.coinId, value)
 	}
 }
 
 func (c *CoinPresenter) NotFound() {
-	c.presenter.NotFound()
+	if c.presenter != nil {
+		c.presenter.NotFound()
+	}
 }
 
 func (c *CoinPresenter) WantDestruction(loc *errorsink.Location) {

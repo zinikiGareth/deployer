@@ -34,6 +34,12 @@ type PolicyEffect interface {
 	AMore(key string, value any)
 }
 
+type UpdatePolicyAllowAction interface {
+	driverbottom.Describable
+	Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement
+	ApplyTo(doc PolicyEffect)
+}
+
 type PolicyPrincipal interface {
 	Key() string
 	Value() string

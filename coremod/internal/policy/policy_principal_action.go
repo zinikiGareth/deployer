@@ -51,4 +51,8 @@ func (pca *policyPrincipalAction) ApplyTo(pi corebottom.PolicyEffect) {
 	pi.Principal(NewPrincipal(o.String(), i.String()))
 }
 
-var _ UpdatePolicyAllowAction = &policyPrincipalAction{}
+func NewPolicyPrincipalAction(tools *corebottom.Tools, loc *errorsink.Location, ofType driverbottom.Expr, id driverbottom.Expr) corebottom.UpdatePolicyAllowAction {
+	return &policyPrincipalAction{tools: tools, loc: loc, ofType: ofType, id: id}
+}
+
+var _ corebottom.UpdatePolicyAllowAction = &policyPrincipalAction{}

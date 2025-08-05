@@ -7,20 +7,13 @@ import (
 	"ziniki.org/deployer/driver/pkg/errorsink"
 )
 
-// Is probably more general than this, but who knows?
-type UpdatePolicyAllowAction interface {
-	driverbottom.Describable
-	Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement
-	ApplyTo(doc corebottom.PolicyEffect)
-}
-
 type PolicyAllowAction struct {
-	tools   *corebottom.Tools
-	loc     *errorsink.Location
-	updates []UpdatePolicyAllowAction
+	tools *corebottom.Tools
+	loc   *errorsink.Location
 
 	allowActions   []driverbottom.Expr
 	allowResources []driverbottom.Expr
+	updates        []corebottom.UpdatePolicyAllowAction
 }
 
 func (paa *PolicyAllowAction) Loc() *errorsink.Location {
@@ -61,7 +54,7 @@ func (paa *PolicyAllowAction) MakeAssign(holder driverbottom.Holder, assignTo dr
 }
 
 func (paa *PolicyAllowAction) Attach(entry any) error {
-	paa.updates = append(paa.updates, entry.(UpdatePolicyAllowAction))
+	paa.updates = append(paa.updates, entry.(corebottom.UpdatePolicyAllowAction))
 	return nil
 }
 
@@ -110,6 +103,10 @@ func (paa *PolicyAllowAction) Resolve(r driverbottom.Resolver) driverbottom.Bind
 		}
 	}
 	return ret
+}
+
+func NewPolicyAllowAction(tools *corebottom.Tools, loc *errorsink.Location, actions []driverbottom.Expr, resources []driverbottom.Expr, updates []corebottom.UpdatePolicyAllowAction) corebottom.PolicyRuleAction {
+	return &PolicyAllowAction{tools: tools, loc: loc, allowActions: actions, allowResources: resources, updates: updates}
 }
 
 var _ corebottom.PolicyRuleAction = &PolicyAllowAction{}

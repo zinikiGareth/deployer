@@ -60,5 +60,5 @@ func (pca *policyAction) ApplyTo(pi corebottom.PolicyEffect) {
 	}
 }
 
-var _ UpdatePolicyAllowAction = &policyAction{}
+var _ corebottom.UpdatePolicyAllowAction = &policyAction{}
 var _ corebottom.ModelBuilder = &policyAction{}

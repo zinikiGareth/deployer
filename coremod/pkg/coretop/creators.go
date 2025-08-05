@@ -23,6 +23,14 @@ func NewPolicyActionList(loc *errorsink.Location) corebottom.PolicyActionList {
 	return policy.NewPolicyActionList(loc)
 }
 
+func NewPolicyAllowAction(tools *corebottom.Tools, loc *errorsink.Location, actions []driverbottom.Expr, resources []driverbottom.Expr, updates []corebottom.UpdatePolicyAllowAction) corebottom.PolicyRuleAction {
+	return policy.NewPolicyAllowAction(tools, loc, actions, resources, updates)
+}
+
+func NewPolicyPrincipalAction(tools *corebottom.Tools, loc *errorsink.Location, ofType driverbottom.Expr, id driverbottom.Expr) corebottom.UpdatePolicyAllowAction {
+	return policy.NewPolicyPrincipalAction(tools, loc, ofType, id)
+}
+
 func NewPrincipal(k, v string) corebottom.PolicyPrincipal {
 	return policy.NewPrincipal(k, v)
 }
@@ -31,6 +39,14 @@ func NewPolicyStatementInterpreter(tools *driverbottom.CoreTools, scope driverbo
 	pd := NewPolicyActionList(prop.Loc())
 	parent.AddProperty(prop, pd)
 	return drivertop.NewVerbCommandInterpreter(tools, attachToPolicy{list: pd}, "policy-statements", false)
+}
+
+func NewCoinPresenter(storage driverbottom.RuntimeStorage, coinId corebottom.CoinId, pres corebottom.ValuePresenter) corebottom.ValuePresenter {
+	return basic.NewCoinPresenter(storage, coinId, pres)
+}
+
+func NewDummyPresenter() corebottom.ValuePresenter {
+	return basic.NewDummyPresenter()
 }
 
 type attachToPolicy struct {

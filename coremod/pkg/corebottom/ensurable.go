@@ -4,7 +4,7 @@ import "ziniki.org/deployer/driver/pkg/driverbottom"
 
 type HasCoin interface {
 	driverbottom.Describable
-	CoinId() CoinId
+	CoinProvider
 }
 
 type FindCoin interface {
