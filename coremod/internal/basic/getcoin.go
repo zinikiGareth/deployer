@@ -2,7 +2,6 @@ package basic
 
 import (
 	"fmt"
-	"log"
 
 	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
@@ -56,7 +55,7 @@ func (gcm *GetCoinMethod) Eval(s driverbottom.RuntimeStorage) any {
 		}
 	}
 	// s.ExportSymbolsTo(utils.NewIndentWriter(os.Stderr))
-	log.Printf("could not recover coin %s in mode %d\n", gcm.coin.VarName(), s.CurrentMode())
+	// log.Printf("could not recover coin %s in mode %d\n", gcm.coin.VarName(), s.CurrentMode())
 	return drivertop.NewAlwaysNil(gcm.loc)
 }
 

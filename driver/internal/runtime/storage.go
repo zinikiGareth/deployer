@@ -7,6 +7,7 @@ import (
 	"os"
 	"slices"
 
+	"ziniki.org/deployer/driver/internal/parser/exprs"
 	"ziniki.org/deployer/driver/internal/parser/lexicator"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
@@ -192,7 +193,8 @@ func (s *Storage) Eval(e driverbottom.Expr) any {
 
 func (s *Storage) EvalAsStringer(e driverbottom.Expr) (fmt.Stringer, bool) {
 	val := s.Eval(e)
-	if val == nil {
+	_, isNil := val.(*exprs.AlwaysNil)
+	if val == nil || isNil {
 		return nil, false
 	}
 	str, ok := val.(string)

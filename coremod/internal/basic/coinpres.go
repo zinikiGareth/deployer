@@ -29,7 +29,9 @@ func (c *CoinPresenter) NotFound() {
 }
 
 func (c *CoinPresenter) WantDestruction(loc *errorsink.Location) {
-	panic("need to handle website.@destroy")
+	if c.presenter != nil {
+		c.presenter.WantDestruction(loc)
+	}
 }
 
 func NewCoinPresenter(storage driverbottom.RuntimeStorage, coinId corebottom.CoinId, pres corebottom.ValuePresenter) corebottom.ValuePresenter {
