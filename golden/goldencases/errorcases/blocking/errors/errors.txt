@@ -1,2 +1,2 @@
-  5.0   invalid indent
-  ==> target foo
+  9.0   invalid indent: now T (last SSSS)
+  ==> 	target bar

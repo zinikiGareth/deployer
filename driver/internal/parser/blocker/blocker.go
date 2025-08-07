@@ -21,6 +21,7 @@ func (b *Blocker) BeginFile(file string) {
 }
 
 func (b *Blocker) HaveLine(lineNo int, txt string) {
+	b.tools.Reporter.At(b.file.AtLine(lineNo, 0, txt)) // temporarily hack details in so the line number advances
 	ind, line := Split(txt)
 	if ind == "" {
 		return
@@ -65,7 +66,7 @@ func (b *Blocker) matchIndent(ind string) int {
 		if ind == curr {
 			return idx
 		} else if len(curr) >= len(ind) {
-			b.tools.Reporter.Report(0, "invalid indent")
+			b.tools.Reporter.Reportf(0, "invalid indent: now %s (last %s)", ind, curr)
 			return -1
 		}
 	}
