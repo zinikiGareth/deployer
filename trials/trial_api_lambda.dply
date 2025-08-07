@@ -54,6 +54,7 @@ In order to build a lambda inside a VPC, you must first have a VPC:
 			PublishVersion <- true
 			Alias <- "next"
 			VpcConfig <= aws.VPC.Config
+				DualStack <- true
 				Subnets <- vpc->subnets
 				SecurityGroups <- vpc->securityGroups
 
@@ -77,6 +78,7 @@ In order to build a lambda inside a VPC, you must first have a VPC:
 
 		ensure aws.ApiGatewayV2.Integration "lambda" => use_trial_lambda
 			@teardown delete
+			PayloadFormatVersion <- "2.0"
 			Api <- api->id
 			Region <- "us-east-1"
 			Type <- "AWS_PROXY"
@@ -116,12 +118,15 @@ the gateway if auto-deploy is off.  However, it seems to be working.
 .			Deployment <- dev_deployment->id
 
 	target build_gateway
-		find aws.Lambda.Function "trial-lambda" => trial
+		find aws.Lambda.Alias "next" => trial
+			FunctionName <- "trial-lambda"
 
 		api.gatewayV2 "http-1"
 			@teardown delete
 			Protocol <- "http"
+			IpAddressType <- "dualstack"
 			integration "lambda"
+				PayloadFormatVersion <- "2.0"
 				Type <- "AWS_PROXY"
 				Uri <- trial->arn
 			route "GET /index" "lambda"
@@ -133,3 +138,4 @@ the gateway if auto-deploy is off.  However, it seems to be working.
 			@teardown delete
 			Protocol <- "websocket"
 			RouteSelectionExpression <- "$request.body.action"
+			IpAddressType <- "dualstack"
