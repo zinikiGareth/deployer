@@ -8,7 +8,7 @@ import (
 
 type TableBlank struct{}
 
-func (b *TableBlank) Find(ct *corebottom.Tools, loc *errorsink.Location, id corebottom.CoinId, named string) corebottom.FindCoin {
+func (b *TableBlank) Find(ct *corebottom.Tools, loc *errorsink.Location, id corebottom.CoinId, named string, props map[driverbottom.Identifier]driverbottom.Expr) corebottom.FindCoin {
 	// log.Printf("find coin id = %s\n", id)
 	return &tableCreator{tools: ct, loc: loc, coin: id, name: named}
 }

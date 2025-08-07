@@ -9,7 +9,7 @@ type CoinId driverbottom.ResolvableHolder
 
 type Blank interface {
 	ShortDescription() string
-	Find(tools *Tools, loc *errorsink.Location, id CoinId, named string) FindCoin
+	Find(tools *Tools, loc *errorsink.Location, id CoinId, named string, props map[driverbottom.Identifier]driverbottom.Expr) FindCoin
 	Mint(tools *Tools, loc *errorsink.Location, id CoinId, named string, props map[driverbottom.Identifier]driverbottom.Expr, teardown TearDown) Ensurable
 }
 

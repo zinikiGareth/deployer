@@ -103,7 +103,7 @@ func (fa *FindAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequi
 	}
 	fa.resolved = res
 	fa.coinId = corebottom.CoinId(fa.tools.Storage.NewObjId(fa.named.Loc()))
-	fa.coin = fa.resolved.Find(fa.tools, fa.Loc(), fa.coinId, fa.named.Text())
+	fa.coin = fa.resolved.Find(fa.tools, fa.Loc(), fa.coinId, fa.named.Text(), fa.props)
 	return driverbottom.MUST_BE_BOUND
 }
 

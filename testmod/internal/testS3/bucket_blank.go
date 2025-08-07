@@ -8,7 +8,7 @@ import (
 
 type BucketBlank struct{}
 
-func (b *BucketBlank) Find(ct *corebottom.Tools, loc *errorsink.Location, id corebottom.CoinId, named string) corebottom.FindCoin {
+func (b *BucketBlank) Find(ct *corebottom.Tools, loc *errorsink.Location, id corebottom.CoinId, named string, props map[driverbottom.Identifier]driverbottom.Expr) corebottom.FindCoin {
 	// log.Printf("find coin id = %s\n", id)
 	return &bucketCreator{tools: ct, loc: loc, coin: id, name: named}
 }
