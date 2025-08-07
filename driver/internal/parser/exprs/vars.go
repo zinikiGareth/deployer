@@ -42,6 +42,10 @@ func (v *VarReference) Resolve(r driverbottom.Resolver) driverbottom.BindingRequ
 func (v *VarReference) Eval(s driverbottom.RuntimeStorage) any {
 	if v.isValue {
 		// it didn't resolve to a variable but a value
+		expr, ok := v.value.(driverbottom.Expr)
+		if ok && expr != nil {
+			return expr.Eval(s)
+		}
 		return v.value
 	}
 	if v.actualVar == nil {
