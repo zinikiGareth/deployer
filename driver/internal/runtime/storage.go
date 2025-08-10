@@ -119,13 +119,24 @@ func (s *Storage) Get(v driverbottom.Holder) any {
 		}
 	}
 
-	if s.CurrentMode() == 2 || s.CurrentMode() == 3 {
+	if s.CurrentMode() == 3 {
 		log.Printf("no value has been set for %v in mode %d", v, s.CurrentMode())
 		iw := utils.NewIndentWriter(os.Stderr)
 		s.ExportSymbolsTo(iw)
 		panic("and this cannot be right in this mode")
 	}
 	return nil
+}
+
+func (s *Storage) HasCoin(coin driverbottom.Holder, mode int) bool {
+	if mode == driverbottom.CURRENT_MODE {
+		mode = s.CurrentMode()
+	}
+	prov := s.findCoin(coin)
+	if prov == nil {
+		return false
+	}
+	return prov.values[mode] != nil
 }
 
 func (s *Storage) GetCoin(coin driverbottom.Holder, mode int) any {

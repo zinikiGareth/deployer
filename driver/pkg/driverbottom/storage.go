@@ -12,6 +12,7 @@ type RuntimeStorage interface {
 	Adopt(name Holder, found any)
 	Get(name Holder) any
 	IgnoreDuplicate(value any)
+	HasCoin(coin Holder, mode int) bool
 	GetCoin(coin Holder, mode int) any
 	GetCoinFrom(coin Holder, modes []int) any
 	Errorf(loc *errorsink.Location, msg string, args ...any)

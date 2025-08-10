@@ -123,7 +123,18 @@ func (t *CoreTarget) UpdateReality() {
 				amis.UpdateReality()
 			}
 		} else {
-			log.Printf("not a RealityShifter but %T", a)
+			fndr, ok := a.(corebottom.Findable)
+			if ok {
+				isCoin, ok := a.(corebottom.CoinProvider)
+				if ok {
+					// if we didn't find the value first time around, try again
+					if !t.tools.Storage.HasCoin(isCoin.CoinId(), 1) {
+						fndr.DetermineInitialState(t.presenter(a))
+					}
+				}
+			} else {
+				log.Printf("not a RealityShifter or Findable but %T", a)
+			}
 		}
 	}
 }

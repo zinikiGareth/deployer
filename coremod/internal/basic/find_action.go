@@ -122,7 +122,7 @@ type findPres struct {
 }
 
 func (f *findPres) NotFound() {
-	f.tools.Reporter.ReportAtf(f.named.Loc(), "%s could not be found", f.named.Text())
+	log.Printf("could not find %s\n", f.named.Text())
 }
 
 func (f *findPres) Present(value any) {
