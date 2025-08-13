@@ -104,5 +104,7 @@ func NewDriver(sink errorsink.ErrorSink, userErrorsTo io.StringWriter) *DriverIm
 	storage := runtime.NewRuntimeStorage(reg, repo, sink)
 	tools := driverbottom.NewTools(reporter, reg, reg, repo, storage)
 	reg.BindTools(tools)
-	return &DriverImpl{tools: tools, userErrorsTo: userErrorsTo}
+	RegisterBasicFunctions(tools)
+	ret := &DriverImpl{tools: tools, userErrorsTo: userErrorsTo}
+	return ret
 }

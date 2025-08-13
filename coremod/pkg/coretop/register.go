@@ -10,7 +10,6 @@ import (
 	"ziniki.org/deployer/coremod/internal/vars"
 	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
-	"ziniki.org/deployer/driver/pkg/drivertop"
 )
 
 var testRunner driverbottom.TestRunner
@@ -34,11 +33,6 @@ func RegisterWithDriver(driver driverbottom.Driver) error {
 	} else {
 		tools = corebottom.NewTools(ct, &corebottom.Options{})
 	}
-
-	// Logically, I think, these three have to go in "deployer", not in a module.
-	tools.Register.ExtensionPoint("main-args")
-	tools.Register.ExtensionPoint("attacher")
-	tools.Register.ExtensionPoint("top-level")
 
 	tools.Register.ExtensionPoint("target")
 	tools.Register.ExtensionPoint("policy-statements")
@@ -79,9 +73,6 @@ func RegisterWithDriver(driver driverbottom.Driver) error {
 
 	// nested interpreters
 	tools.Register.Register("prop-interpreter", "PolicyStatements", driverbottom.CreateInterpreter(NewPolicyStatementInterpreter))
-
-	// basic things that come from driver
-	drivertop.RegisterBasicFunctions(ct)
 
 	// functions
 	tools.Register.Register("function-defn", "hours", time.MakeHoursFunc(tools))
