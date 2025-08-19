@@ -19,6 +19,9 @@ func RegisterBasicFunctions(tools *driverbottom.CoreTools) {
 	// register the top level attacher that will collect all the items together at the top level.
 	tools.Register.ExtensionPoint("attacher")
 
+	// register handlers that can appear in the property interpreter scope
+	tools.Register.ExtensionPoint("prop-interpreter")
+
 	// functions are within our remit, so we provide this extension point.
 	tools.Register.ExtensionPoint("function-defn")
 
