@@ -16,7 +16,26 @@ cleanDirs() {
 }
 
 checkUpdated() {
-	echo "check up to date"
+	(
+		echo "check up to date"
+		rm -f /tmp/git-result
+		cd ..
+		for i in deployer deployer-module-* deployer-lsp deployer-vsix deployer-website ; do
+			(
+				cd $i
+				git fetch
+				git status --short > /tmp/git-stat
+				if [ -s /tmp/git-stat ] ; then
+					echo "$i failed:" >> /tmp/git-result
+					cat /tmp/git-stat >> /tmp/git-result
+				fi
+			)
+		done
+	)
+	if [ -s /tmp/git-result ] ; then
+		cat /tmp/git-result
+		exit 1
+	fi
 }
 
 build_release_x() {
