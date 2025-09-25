@@ -1,0 +1,72 @@
+#!/bin/bash -e
+
+cd `dirname $0`/..
+
+ROOTDIR=`pwd`
+
+cleanDirs() {
+	rm -rf dist
+	rm -f driver/cmd/deployer/deployer
+	rm -f golden/cmd/golden/golden
+	rm -f coremod/plugin/*.so
+	rm -f testmod/plugin/*.so
+	rm -f ../deployer-module-aws/plugin/deployer_module_aws.so
+	rm -f ../deployer-module-dreamhost/plugin/deployer_module_dreamhost.so
+	rm -f ../deployer-lsp/cmd/deployer-lsp/deployer-lsp
+}
+
+checkUpdated() {
+	echo "check up to date"
+}
+
+build_release_x() {
+	(
+		bn=`basename $1`
+		case $bn in
+		plugin)
+			dn=`dirname $1`
+			bn=`basename $dn`
+			FLAGS="--buildmode=plugin"
+			EXT=".so"
+			;;
+		esac
+		cd $1
+		echo $bn `git rev-parse HEAD` >> $ROOTDIR/dist/git-versions
+		go build $FLAGS -o ${bn}${EXT}
+		go test ./...
+	)
+}
+
+run_tests() {
+	(
+		cd golden
+		cmd/golden/golden --module ../coremod/plugin/coremod.so --module ../testmod/plugin/testmod.so goldencases
+	)
+}
+
+build_release() {
+	mkdir dist
+	touch dist/git-versions
+	build_release_x driver/cmd/deployer
+	build_release_x golden/cmd/golden
+	build_release_x coremod/plugin
+	build_release_x testmod/plugin
+	build_release_x ../deployer-module-aws/plugin
+	build_release_x ../deployer-module-dreamhost/plugin
+	build_release_x ../deployer-lsp/cmd/deployer-lsp
+	run_tests
+	zip -jo dist/deployer-`uname -s | tr '[:upper:]' '[:lower:]'`-`uname -m` \
+		driver/cmd/deployer/deployer \
+		coremod/plugin/coremod.so \
+		../deployer-module-aws/plugin/deployer-module-aws.so \
+		../deployer-module-dreamhost/plugin/deployer-module-dreamhost.so
+}
+
+checkInAndPublish() {
+	echo "check in"
+}
+
+cleanDirs
+checkUpdated
+build_release
+checkInAndPublish

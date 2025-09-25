@@ -1,0 +1,72 @@
+#!/bin/bash -e
+
+cd `dirname $0`/..
+
+if [ $# -ne 1 ] ; then
+  echo "Usage: do_release <hosts>" >&1
+  exit 1
+fi
+
+HOSTS=$1
+
+cd `dirname $0`/..
+scripts/release_build
+
+set -x
+while read x ; do
+  set $x
+  echo $1
+  echo $2
+  echo $3
+  ssh $2 "$3/scripts/release_build"
+  scp $2:$3/dist/deployer-$1.zip dist
+  scp $2:$3/dist/git-versions dist/git-versions-$1
+  cmp dist/git-versions dist/git-versions-$1
+done < $HOSTS
+
+RELDATE=`date +%Y-%m-%d`
+TODIR=../deployer-website/releases/$RELDATE
+mkdir -p $TODIR
+cp dist/deployer-*.zip $TODIR
+
+TOHTML=../deployer-website/content/release-info/${RELDATE}.html
+(
+	ls -1 $TODIR
+	echo "--"
+	cat dist/git-versions
+) | awk '
+BEGIN { mode = "zips"; zips[0] = "zips"; gitNames[0] = "gits"; gitVers[0] = "versions"; }
+$0 == "--" { mode = "gits" ; next }
+mode == "zips" { zips[length(zips)] = $0 ; next }
+mode == "gits" { gitNames[length(gitNames)] = $1 ; gitVers[length(gitVers)] = $2; next }
+END {
+	printf("<div class=%crelease%c>\n", 39, 39);
+	printf("<div class=%crelease-date%c><span class=%crelease-icon material-symbols-outlined%c>add_box</span><span class=%crelease-icon material-symbols-outlined hidden%c>indeterminate_check_box</span>'"$RELDATE"'</div>\n", 39, 39, 39, 39, 39, 39);
+	printf("<div class=%crelease-info hidden%c>\n", 39, 39);
+	printf("<table class=%crelease-zip-table%c>\n", 39, 39);
+	printf("<tr>\n");
+	for (i=1;i<length(zips);i++) {
+		z = zips[i];
+		sub("deployer-", "", z);
+		sub(".zip", "", z);
+		sub("darwin-", "MacOS ",z);
+		sub("linux-", "Linux ",z);
+		printf("<td>%s<br/><a href=%creleases/'"$RELDATE"'/%s%c>%s</a></td>\n", z, 39, zips[i], 39, zips[i]);
+	}
+	printf("</tr>\n");
+	printf("</table>\n");
+	printf("<table class=%crelease-git-table%c>\n", 39, 39);
+	printf("<tr>\n");
+	printf("<th>Module</th><th>Git ID</th>");
+	printf("</tr>\n");
+	for (i=1;i<length(gitNames);i++) {
+		printf("<tr>\n");
+		printf("<td>%s</td><td>%s</td>\n", gitNames[i], gitVers[i]);
+		printf("</tr>\n");
+	}
+	printf("</table>\n");
+
+}
+' > $TOHTML
+
+exit 0
