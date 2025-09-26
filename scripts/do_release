@@ -2,12 +2,13 @@
 
 cd `dirname $0`/..
 
-if [ $# -ne 1 ] ; then
-  echo "Usage: do_release <hosts>" >&1
+if [ $# -ne 2 ] ; then
+  echo "Usage: do_release <hosts> <envs>" >&1
   exit 1
 fi
 
 HOSTS=$1
+ENVS=$2
 
 cd `dirname $0`/..
 scripts/release_build
@@ -68,5 +69,11 @@ END {
 
 }
 ' > $TOHTML
+
+cd ../deployer-website
+scripts/mkimage
+scripts/deploy -e $HOSTS upload_deployer_content
+git add content/release-info/$RELDATE.html
+git commit -m "RELEASE $RELDATE"
 
 exit 0

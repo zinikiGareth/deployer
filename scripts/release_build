@@ -81,11 +81,6 @@ build_release() {
 		../deployer-module-dreamhost/plugin/deployer-module-dreamhost.so
 }
 
-checkInAndPublish() {
-	echo "check in"
-}
-
 cleanDirs
 checkUpdated
 build_release
-checkInAndPublish
