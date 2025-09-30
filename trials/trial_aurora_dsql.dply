@@ -1,0 +1,3 @@
+    target create_aurora_dsql_cluster
+        ensure aws.AuroraDSQL.Cluster "test-db" => cluster
+            @teardown delete

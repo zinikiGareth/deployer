@@ -105,7 +105,7 @@
 				"type": "go",
 				"request": "launch",
 				"program": "${workspaceFolder:AWS}/cmd/awsdep",
-				"cwd": "${workspaceFolder:Deployer}/..",
+				"cwd": "${workspaceFolder:Driver}/..",
 				"args": [
 					"-d",
 					"trials",
@@ -113,7 +113,21 @@
 				],
 				"env": {
 					"AWS_PROFILE": "ziniki-admin",
-					"CONSOLIDATOR_SRC": "/Users/gareth/Clients/consolidator.news",
+				}
+			},
+			{
+				"name": "trial dsql",
+				"type": "go",
+				"request": "launch",
+				"program": "${workspaceFolder:AWS}/cmd/awsdep",
+				"cwd": "${workspaceFolder:Driver}/..",
+				"args": [
+					"-d",
+					"trials",
+					"create_aurora_dsql_cluster"
+				],
+				"env": {
+					"AWS_PROFILE": "ziniki-admin",
 				}
 			}
 		],
