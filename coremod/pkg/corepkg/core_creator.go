@@ -24,7 +24,7 @@ type CreationStrategy interface {
 	DetermineInitialState(creator *CoreCreator, pres corebottom.ValuePresenter)
 	DetermineDesiredState(creator *CoreCreator, pres corebottom.ValuePresenter)
 	UpdateReality(creator *CoreCreator, initial any, desired any)
-	TearDown(creator *CoreCreator, initial any)
+	TearDown(creator *CoreCreator, initial any, teardown corebottom.TearDown)
 }
 
 func (creator *CoreCreator) GetEnv(driver string, ofType reflect.Type, meth string, field string) {
@@ -79,11 +79,20 @@ func (c *CoreCreator) UpdateReality() {
 }
 
 func (c *CoreCreator) TearDown() {
-	panic("unimplemented")
+	initial := c.tools.Storage.GetCoin(c.coin, corebottom.DETERMINE_INITIAL_MODE)
+	c.strategy.TearDown(c, initial, c.teardown)
 }
 
 func (c *CoreCreator) Recall() driverbottom.Recall {
 	return c.tools.Recall
+}
+
+func (c *CoreCreator) Adopt(item any) {
+	c.tools.Storage.Adopt(c.coin, item)
+}
+
+func (c *CoreCreator) Created(item any) {
+	c.tools.Storage.Bind(c.coin, item)
 }
 
 var _ corebottom.Ensurable = &CoreCreator{}

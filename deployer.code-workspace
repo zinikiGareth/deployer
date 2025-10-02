@@ -124,7 +124,7 @@
 				"args": [
 					"-d",
 					"trials",
-					"create_aurora_dsql_cluster"
+					"create_aurora_dsql_cluster",
 				],
 				"env": {
 					"AWS_PROFILE": "ziniki-admin",
