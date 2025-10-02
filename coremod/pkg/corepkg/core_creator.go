@@ -5,7 +5,9 @@ import (
 
 	"ziniki.org/deployer/coremod/pkg/corebottom"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
+	"ziniki.org/deployer/driver/pkg/drivertop"
 	"ziniki.org/deployer/driver/pkg/errorsink"
+	"ziniki.org/deployer/driver/pkg/utils"
 )
 
 type CoreCreator struct {
@@ -93,6 +95,35 @@ func (c *CoreCreator) Adopt(item any) {
 
 func (c *CoreCreator) Created(item any) {
 	c.tools.Storage.Bind(c.coin, item)
+}
+
+func (c *CoreCreator) DeferredMethod(name string) driverbottom.Method {
+	return &deferredMethod{core: c, name: name}
+}
+
+type deferredMethod struct {
+	core *CoreCreator
+	name string
+}
+
+// Invoke implements driverbottom.Method.
+func (d *deferredMethod) Invoke(storage driverbottom.RuntimeStorage, obj driverbottom.Expr, args []driverbottom.Expr) any {
+	return utils.DeferString(func() string {
+		curr := storage.GetCoinFrom(d.core.coin, []int{1, 3}).(driverbottom.HasMethods)
+		return curr.ObtainMethod(d.name).Invoke(storage, drivertop.NewAnyExpr(obj.Loc(), curr), args).(string)
+	})
+}
+
+func SimpleMethod(f func(storage driverbottom.RuntimeStorage, obj driverbottom.Expr) any) driverbottom.Method {
+	return &simpleMethod{f: f}
+}
+
+type simpleMethod struct {
+	f func(storage driverbottom.RuntimeStorage, obj driverbottom.Expr) any
+}
+
+func (s *simpleMethod) Invoke(storage driverbottom.RuntimeStorage, obj driverbottom.Expr, args []driverbottom.Expr) any {
+	return s.f(storage, obj)
 }
 
 var _ corebottom.Ensurable = &CoreCreator{}

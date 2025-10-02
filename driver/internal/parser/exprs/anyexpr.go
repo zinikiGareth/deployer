@@ -40,3 +40,5 @@ func (a *anyExpr) String() string {
 func NewAnyExpr(loc *errorsink.Location, value any) driverbottom.Expr {
 	return &anyExpr{loc: loc, value: value}
 }
+
+var _ driverbottom.Expr = &anyExpr{}

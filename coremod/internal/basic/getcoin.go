@@ -62,3 +62,5 @@ func (gcm *GetCoinMethod) Eval(s driverbottom.RuntimeStorage) any {
 func MakeGetCoinMethod(loc *errorsink.Location, coin corebottom.CoinId) driverbottom.Expr {
 	return &GetCoinMethod{loc: loc, coin: coin}
 }
+
+var _ driverbottom.Expr = &GetCoinMethod{}

@@ -1,3 +1,11 @@
-    target create_aurora_dsql_cluster
-        ensure aws.AuroraDSQL.Cluster "test-db" => cluster
-            @teardown delete
+	target create_aurora_dsql_cluster
+		ensure aws.AuroraDSQL.Cluster "test-db" => cluster
+			@teardown delete
+
+		ensure aws.IAM.Role "trial-aurora-role" => trial_role
+			@teardown delete
+			Assume <= PolicyStatements
+				allow "sts:AssumeRole"
+					principal "AWS" "arn:aws:iam::331358773365:user/gareth"            
+			Inline <= PolicyStatements
+				allow "dsql:DbConnect" (cluster->arn)
