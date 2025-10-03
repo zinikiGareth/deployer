@@ -7,9 +7,13 @@ import (
 
 type CoinId driverbottom.ResolvableHolder
 
-type Blank interface {
+type Finder interface {
 	ShortDescription() string
 	Find(tools *Tools, loc *errorsink.Location, id CoinId, named string, props map[driverbottom.Identifier]driverbottom.Expr) FindCoin
+}
+
+type Blank interface {
+	Finder
 	Mint(tools *Tools, loc *errorsink.Location, id CoinId, named string, props map[driverbottom.Identifier]driverbottom.Expr, teardown TearDown) Ensurable
 }
 

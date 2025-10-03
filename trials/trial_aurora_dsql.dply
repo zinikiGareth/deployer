@@ -2,10 +2,12 @@
 		ensure aws.AuroraDSQL.Cluster "test-db" => cluster
 			@teardown delete
 
+		find aws.IAM.User "gareth" => gareth_user
+
 		ensure aws.IAM.Role "trial-aurora-role" => trial_role
 			@teardown delete
 			Assume <= PolicyStatements
 				allow "sts:AssumeRole"
-					principal "AWS" "arn:aws:iam::331358773365:user/gareth"            
+					principal "AWS" (gareth_user->arn)            
 			Inline <= PolicyStatements
 				allow "dsql:DbConnect" (cluster->arn)

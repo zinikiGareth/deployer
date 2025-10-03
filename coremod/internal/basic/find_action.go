@@ -18,7 +18,7 @@ type FindAction struct {
 	scope    driverbottom.Scope
 	loc      *errorsink.Location
 	what     driverbottom.Identifier
-	resolved corebottom.Blank
+	resolved corebottom.Finder
 	named    driverbottom.String
 	props    map[driverbottom.Identifier]driverbottom.Expr
 	coinId   corebottom.CoinId
@@ -96,7 +96,7 @@ func (fa *FindAction) Completed() {
 
 func (fa *FindAction) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
 	tmp := r.Resolve(fa.scope, fa.what)
-	res, ok := tmp.(corebottom.Blank)
+	res, ok := tmp.(corebottom.Finder)
 	if !ok {
 		log.Printf("could not make %T a Blank", tmp)
 		return driverbottom.ERROR_OCCURRED

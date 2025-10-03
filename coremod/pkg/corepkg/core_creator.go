@@ -19,11 +19,11 @@ type CoreCreator struct {
 	teardown corebottom.TearDown
 	props    map[driverbottom.Identifier]driverbottom.Expr
 
+	findme   FindStrategy
 	strategy CreationStrategy
 }
 
 type CreationStrategy interface {
-	DetermineInitialState(creator *CoreCreator, pres corebottom.ValuePresenter)
 	DetermineDesiredState(creator *CoreCreator, pres corebottom.ValuePresenter)
 	UpdateReality(creator *CoreCreator, initial any, desired any)
 	TearDown(creator *CoreCreator, initial any, teardown corebottom.TearDown)
@@ -39,7 +39,11 @@ func (creator *CoreCreator) GetEnv(driver string, ofType reflect.Type, meth stri
 	}
 	if m, ok := ofType.MethodByName(meth); ok {
 		cli := m.Func.Call([]reflect.Value{reflect.ValueOf(ae)})[0]
-		reflect.ValueOf(creator.strategy).Elem().FieldByName(field).Set(cli)
+		if creator.findme != nil {
+			reflect.ValueOf(creator.findme).Elem().FieldByName(field).Set(cli)
+		} else {
+			reflect.ValueOf(creator.strategy).Elem().FieldByName(field).Set(cli)
+		}
 	} else {
 		panic("there is no method " + meth + " in " + ofType.String())
 	}
@@ -66,7 +70,7 @@ func (c *CoreCreator) CoinId() corebottom.CoinId {
 }
 
 func (c *CoreCreator) DetermineInitialState(pres corebottom.ValuePresenter) {
-	c.strategy.DetermineInitialState(c, pres)
+	c.findme.DetermineInitialState(c, pres)
 }
 
 func (c *CoreCreator) DetermineDesiredState(pres corebottom.ValuePresenter) {

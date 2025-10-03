@@ -15,12 +15,12 @@ type CoreBlank struct {
 
 func (b *CoreBlank) Mint(tools *corebottom.Tools, loc *errorsink.Location, id corebottom.CoinId, named string, props map[driverbottom.Identifier]driverbottom.Expr, teardown corebottom.TearDown) corebottom.Ensurable {
 	strat := reflect.New(b.OfType).Interface().(CreationStrategy)
-	return &CoreCreator{tools: tools, teardown: teardown, loc: loc, coin: id, name: named, props: props, strategy: strat}
+	return &CoreCreator{tools: tools, teardown: teardown, loc: loc, coin: id, name: named, props: props, findme: strat.(FindStrategy), strategy: strat}
 }
 
 func (b *CoreBlank) Find(tools *corebottom.Tools, loc *errorsink.Location, id corebottom.CoinId, named string, props map[driverbottom.Identifier]driverbottom.Expr) corebottom.FindCoin {
-	strat := reflect.New(b.OfType).Interface().(CreationStrategy)
-	return &CoreCreator{tools: tools, loc: loc, coin: id, name: named, props: props, strategy: strat}
+	strat := reflect.New(b.OfType).Interface().(FindStrategy)
+	return &CoreCreator{tools: tools, loc: loc, coin: id, name: named, props: props, findme: strat}
 }
 
 func (b *CoreBlank) ShortDescription() string {
