@@ -43,7 +43,6 @@ func TestParseInsideFnWithNoParensGivesError(t *testing.T) {
 	}
 }
 
-
 func TestNoObjectOnArrowGivesError(t *testing.T) {
 	p, h := makeParser(t)
 	lineloc.Text = "->y"
@@ -53,6 +52,20 @@ func TestNoObjectOnArrowGivesError(t *testing.T) {
 
 	y := lexicator.NewIdentifierToken(lineloc, 0, "y")
 	_, ok := p.Parse(nil, []driverbottom.Token{arrow, y})
+	if ok {
+		t.Fatalf("parsing incorrectly succeeded")
+	}
+}
+
+func TestNoMethodForArrowGivesError(t *testing.T) {
+	p, h := makeParser(t)
+	lineloc.Text = "x->"
+	h.Sink.Expect(1, 1, 26, lineloc.Text, "no method after ->")
+
+	recall.things["->"] = methods.MakeInvokeFunc(h.Tools)
+
+	x := lexicator.NewIdentifierToken(lineloc, 0, "x")
+	_, ok := p.Parse(nil, []driverbottom.Token{x, arrow})
 	if ok {
 		t.Fatalf("parsing incorrectly succeeded")
 	}

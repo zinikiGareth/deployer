@@ -111,7 +111,8 @@ func (i *InvokeFunc) ReduceExpr(me driverbottom.Token, before []driverbottom.Exp
 		return nil, false
 	}
 	if len(after) < 1 {
-		panic("should be an error")
+		i.tools.Reporter.ReportAtf(me.Loc(), "no method after ->")
+		return nil, false
 	}
 	meth, ok := after[0].(driverbottom.Var)
 	if !ok {
