@@ -39,16 +39,16 @@ func (i *multiplyFunc) Associativity() bool {
 	return true
 }
 
-func (i *multiplyFunc) ReduceExpr(me driverbottom.Token, before []driverbottom.Expr, after []driverbottom.Expr) driverbottom.Expr {
+func (i *multiplyFunc) ReduceExpr(me driverbottom.Token, before []driverbottom.Expr, after []driverbottom.Expr) (driverbottom.Expr, bool) {
 	if len(before) != 1 {
 		i.tools.Reporter.ReportAtf(me.Loc(), "* requires left operand")
-		return nil
+		return nil, false
 	}
 	if len(after) != 1 {
 		i.tools.Reporter.ReportAtf(me.Loc(), "* requires right operand")
-		return nil
+		return nil, false
 	}
-	return &multiplyExpr{binop: binop{Locatable: me, opname: "mult", lhs: before[0], rhs: after[0]}}
+	return &multiplyExpr{binop: binop{Locatable: me, opname: "mult", lhs: before[0], rhs: after[0]}}, true
 }
 
 func MakeMultiplyFunc(tools *driverbottom.CoreTools) *multiplyFunc {

@@ -91,7 +91,7 @@ type VerbCommand interface {
 }
 
 type Function interface {
-	ReduceExpr(me Token, before []Expr, after []Expr) Expr
+	ReduceExpr(me Token, before []Expr, after []Expr) (Expr, bool)
 	Precedence() int
 	Associativity() bool
 	Fixity() Fixity

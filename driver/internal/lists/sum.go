@@ -74,16 +74,17 @@ func (h *SumListFunc) Precedence() int {
 	return 1 // we want everything else done first
 }
 
-func (h *SumListFunc) ReduceExpr(me driverbottom.Token, before []driverbottom.Expr, after []driverbottom.Expr) driverbottom.Expr {
+func (h *SumListFunc) ReduceExpr(me driverbottom.Token, before []driverbottom.Expr, after []driverbottom.Expr) (driverbottom.Expr, bool) {
 	rep := h.tools.Reporter
 	if len(before) != 0 {
-		panic("should not have any before args")
+		rep.Report(me.Loc().Offset, "sum should not have any before args")
+		return nil, false
 	}
 	if len(after) < 1 {
 		rep.Report(me.Loc().Offset, "sum expr...")
-		return nil
+		return nil, false
 	}
-	return &SumListExpr{Locatable: me, exprs: after}
+	return &SumListExpr{Locatable: me, exprs: after}, true
 }
 
 func MakeSumFunc(tools *driverbottom.CoreTools) any {

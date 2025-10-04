@@ -39,16 +39,16 @@ func (i *subFunc) Associativity() bool {
 	return true
 }
 
-func (i *subFunc) ReduceExpr(me driverbottom.Token, before []driverbottom.Expr, after []driverbottom.Expr) driverbottom.Expr {
+func (i *subFunc) ReduceExpr(me driverbottom.Token, before []driverbottom.Expr, after []driverbottom.Expr) (driverbottom.Expr, bool) {
 	if len(before) != 1 {
 		i.tools.Reporter.ReportAtf(me.Loc(), "- requires left operand")
-		return nil
+		return nil, false
 	}
 	if len(after) != 1 {
 		i.tools.Reporter.ReportAtf(me.Loc(), "- requires right operand")
-		return nil
+		return nil, false
 	}
-	return &subExpr{binop: binop{Locatable: me, opname: "sub", lhs: before[0], rhs: after[0]}}
+	return &subExpr{binop: binop{Locatable: me, opname: "sub", lhs: before[0], rhs: after[0]}}, true
 }
 
 func MakeSubFunc(tools *driverbottom.CoreTools) *subFunc {

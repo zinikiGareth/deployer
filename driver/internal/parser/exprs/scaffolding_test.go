@@ -47,8 +47,8 @@ func (rdv returnDataValue) Associativity() bool {
 	return true
 }
 
-func (rdv returnDataValue) ReduceExpr(me driverbottom.Token, before []driverbottom.Expr, after []driverbottom.Expr) driverbottom.Expr {
-	return rdv.value
+func (rdv returnDataValue) ReduceExpr(me driverbottom.Token, before []driverbottom.Expr, after []driverbottom.Expr) (driverbottom.Expr, bool) {
+	return rdv.value, true
 }
 
 type konstExpr struct {
@@ -101,8 +101,8 @@ func (kf *konstantFunc) Associativity() bool {
 	return true
 }
 
-func (kf *konstantFunc) ReduceExpr(me driverbottom.Token, before []driverbottom.Expr, after []driverbottom.Expr) driverbottom.Expr {
-	return &konstExpr{Locatable: me, args: slices.Concat(before, after)}
+func (kf *konstantFunc) ReduceExpr(me driverbottom.Token, before []driverbottom.Expr, after []driverbottom.Expr) (driverbottom.Expr, bool) {
+	return &konstExpr{Locatable: me, args: slices.Concat(before, after)}, true
 }
 
 type collectExpr struct {
@@ -164,14 +164,14 @@ func (pff *collectFuncDefn) Associativity() bool {
 	return false
 }
 
-func (pff *collectFuncDefn) ReduceExpr(me driverbottom.Token, before []driverbottom.Expr, after []driverbottom.Expr) driverbottom.Expr {
+func (pff *collectFuncDefn) ReduceExpr(me driverbottom.Token, before []driverbottom.Expr, after []driverbottom.Expr) (driverbottom.Expr, bool) {
 	if len(before) != 0 {
 		panic("have prefix args")
 	}
 	if len(after) == 0 {
 		panic("need postfix args")
 	}
-	return &collectExpr{Locatable: me, args: after}
+	return &collectExpr{Locatable: me, args: after}, true
 }
 
 // asList is the postfix version of collect
@@ -235,14 +235,14 @@ func (pff *asListFuncDefn) Associativity() bool {
 	return false
 }
 
-func (pff *asListFuncDefn) ReduceExpr(me driverbottom.Token, before []driverbottom.Expr, after []driverbottom.Expr) driverbottom.Expr {
+func (pff *asListFuncDefn) ReduceExpr(me driverbottom.Token, before []driverbottom.Expr, after []driverbottom.Expr) (driverbottom.Expr, bool) {
 	if len(before) == 0 {
 		panic("need prefix args")
 	}
 	if len(after) != 0 {
 		panic("have postfix args")
 	}
-	return &asListExpr{Locatable: me, args: before}
+	return &asListExpr{Locatable: me, args: before}, true
 }
 
 type facExpr struct {
@@ -304,14 +304,14 @@ func (pff *postFacFunc) Associativity() bool {
 	return true
 }
 
-func (pff *postFacFunc) ReduceExpr(me driverbottom.Token, before []driverbottom.Expr, after []driverbottom.Expr) driverbottom.Expr {
+func (pff *postFacFunc) ReduceExpr(me driverbottom.Token, before []driverbottom.Expr, after []driverbottom.Expr) (driverbottom.Expr, bool) {
 	if len(before) != 1 {
 		panic("need prefix arg")
 	}
 	if len(after) != 0 {
 		panic("have postfix arg")
 	}
-	return &facExpr{Locatable: me, arg: before[0]}
+	return &facExpr{Locatable: me, arg: before[0]}, true
 }
 
 var recall myRecall
@@ -324,6 +324,7 @@ var oneString driverbottom.String
 var lineloc *errorsink.LineLoc
 var orb, crb driverbottom.Punc
 var osb, csb driverbottom.Punc
+var arrow driverbottom.Operator
 var comma driverbottom.Punc
 
 func init() {
@@ -339,6 +340,7 @@ func init() {
 	osb = lexicator.NewPuncToken(lineloc, 2, '[')
 	csb = lexicator.NewPuncToken(lineloc, 10, ']')
 	comma = lexicator.NewPuncToken(lineloc, 10, ',')
+	arrow = lexicator.NewOperatorToken(lineloc, 8, "->")
 }
 
 func (m *myRecall) Find(_ string, noun string) any {

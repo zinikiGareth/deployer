@@ -57,18 +57,18 @@ func (h *HoursFunc) Precedence() int {
 	return 1 // we want everything else done first
 }
 
-func (h *HoursFunc) ReduceExpr(me driverbottom.Token, before []driverbottom.Expr, after []driverbottom.Expr) driverbottom.Expr {
+func (h *HoursFunc) ReduceExpr(me driverbottom.Token, before []driverbottom.Expr, after []driverbottom.Expr) (driverbottom.Expr, bool) {
 	rep := h.tools.Reporter
 	if len(before) != 1 || len(after) != 0 {
 		rep.Report(me.Loc().Offset, "<nn> hours")
-		return nil
+		return nil, false
 	}
 	value := before[0]
 	konst, ok := value.(driverbottom.Number)
 	if !ok {
 		panic("not implemented: not-const hours")
 	}
-	return &TimeOf{Locatable: konst, Number: int(konst.F64()), Unit: HOURS}
+	return &TimeOf{Locatable: konst, Number: int(konst.F64()), Unit: HOURS}, true
 }
 
 func MakeHoursFunc(tools *corebottom.Tools) *HoursFunc {

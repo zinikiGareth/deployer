@@ -150,12 +150,7 @@ func (p *exprParser) parseOne(scope driverbottom.Scope, blocks []driverbottom.To
 		if !ok1 || !ok2 {
 			return nil, false
 		}
-		r := fn.ReduceExpr(tok, pre, post)
-		if r == nil {
-			return r, false
-		} else {
-			return r, true
-		}
+		return fn.ReduceExpr(tok, pre, post)
 	} else {
 		if len(before) > 1 {
 			p.tools.Reporter.Reportf(before[0].Loc().Offset, "no function symbol found in this expression")

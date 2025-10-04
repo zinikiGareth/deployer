@@ -8,6 +8,6 @@
 			@teardown delete
 			Assume <= PolicyStatements
 				allow "sts:AssumeRole"
-					principal "AWS" (gareth_user->arn)            
+					principal "AWS" gareth_user->arn       
 			Inline <= PolicyStatements
 				allow "dsql:DbConnect" (cluster->arn)

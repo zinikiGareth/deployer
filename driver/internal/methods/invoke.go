@@ -102,9 +102,13 @@ func (i *InvokeFunc) Associativity() bool {
 	return true
 }
 
-func (i *InvokeFunc) ReduceExpr(me driverbottom.Token, before []driverbottom.Expr, after []driverbottom.Expr) driverbottom.Expr {
-	if len(before) != 1 {
-		panic("should be an error")
+func (i *InvokeFunc) ReduceExpr(me driverbottom.Token, before []driverbottom.Expr, after []driverbottom.Expr) (driverbottom.Expr, bool) {
+	if len(before) == 0 {
+		i.tools.Reporter.ReportAtf(me.Loc(), "no expr to left of ->")
+		return nil, false
+	} else if len(before) > 1 {
+		i.tools.Reporter.ReportAtf(me.Loc(), "too many exprs to left of ->")
+		return nil, false
 	}
 	if len(after) < 1 {
 		panic("should be an error")
@@ -113,7 +117,7 @@ func (i *InvokeFunc) ReduceExpr(me driverbottom.Token, before []driverbottom.Exp
 	if !ok {
 		panic("should be an error")
 	}
-	return &InvokeExpr{Locatable: me, on: before[0], call: meth.Named(), args: after[1:]}
+	return &InvokeExpr{Locatable: me, on: before[0], call: meth.Named(), args: after[1:]}, true
 }
 
 func MakeInvokeFunc(tools *driverbottom.CoreTools) *InvokeFunc {
