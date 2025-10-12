@@ -2,6 +2,7 @@ package files
 
 import (
 	"ziniki.org/deployer/coremod/pkg/corebottom"
+	"ziniki.org/deployer/coremod/pkg/corepkg"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/drivertop"
 )
@@ -25,7 +26,7 @@ func (dch *dirCommandHandler) Handle(parent driverbottom.AttachResult, scope dri
 		return drivertop.NewIgnoreInnerScope()
 	}
 
-	da := &dirAction{tools: dch.tools, loc: tokens[0].Loc(), exprs: exprs}
+	da := corepkg.NewCoreAction(dch.tools, tokens[0].Loc(), "DirAction", &dirAction{exprs: exprs})
 	parent.Attach(da)
 
 	return drivertop.NewDisallowInnerScope(dch.tools.CoreTools)
