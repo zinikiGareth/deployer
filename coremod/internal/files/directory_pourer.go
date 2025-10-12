@@ -2,7 +2,6 @@ package files
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"path/filepath"
 
@@ -17,7 +16,7 @@ func (dp *DirectoryPourer) Relative(s string) (*DirectoryPourer, error) {
 	return NewDirectoryPourer(filepath.Join(dp.Path, s))
 }
 
-func (dp *DirectoryPourer) PourAll(into corebottom.FileDest) {
+func (dp *DirectoryPourer) PourAll(into corebottom.FileDest) error {
 	// TODO: just file case
 	// TODO: recursive dir case
 	files, err := os.ReadDir(dp.Path)
@@ -40,17 +39,17 @@ func (dp *DirectoryPourer) PourAll(into corebottom.FileDest) {
 			dp.PourOut(f.Name(), into)
 		}
 	}
+	return nil
 }
 
-func (dp *DirectoryPourer) PourOut(name string, into corebottom.FileDest) {
+func (dp *DirectoryPourer) PourOut(name string, into corebottom.FileDest) error {
 	full := filepath.Join(dp.Path, name)
 	fd, err := os.Open(full)
 	if err != nil {
-		log.Printf("could not open %s\n", full)
-		return
+		return fmt.Errorf("could not open %s", full)
 	}
 	defer fd.Close()
-	into.PourInto(name, fd)
+	return into.PourInto(name, fd)
 }
 
 func NewDirectoryPourer(path string) (*DirectoryPourer, error) {

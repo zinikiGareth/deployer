@@ -124,6 +124,7 @@
 				"args": [
 					"-d",
 					"trials",
+					"-e", "ampleforth",
 					"create_aurora_dsql_cluster",
 				],
 				"env": {

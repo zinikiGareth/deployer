@@ -53,8 +53,12 @@ func (da *dirAction) DetermineInitialState(pres corebottom.ValuePresenter) {
 		v := da.tools.Storage.Eval(e)
 		paths = append(paths, v)
 	}
-	dir := NewDirModel(da.loc, paths)
-	pres.Present(dir)
+	dir, err := NewDirModel(da.loc, paths)
+	if err != nil {
+		da.tools.Reporter.ReportAtf(da.loc, err.Error())
+	} else {
+		pres.Present(dir)
+	}
 }
 
 func (da *dirAction) DetermineDesiredState(pres corebottom.ValuePresenter) {

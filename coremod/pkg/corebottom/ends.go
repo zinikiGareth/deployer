@@ -7,12 +7,12 @@ type FileSource interface {
 	// All() FileSource
 	// Match(pattern string) FileSource
 	// One(name string) FileSource
-	PourAll(into FileDest)
-	PourOut(name string, into FileDest)
+	PourAll(into FileDest) error
+	PourOut(name string, into FileDest) error
 }
 
 type FileDest interface {
-	PourInto(name string, contents io.Reader)
+	PourInto(name string, contents io.Reader) error
 	Relative(s string) (FileDest, error)
 }
 

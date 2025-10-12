@@ -28,9 +28,10 @@ func (b *BucketCloud) Relative(name string) (corebottom.FileDest, error) {
 	return nested, nil
 }
 
-func (b *BucketCloud) PourInto(name string, contents io.Reader) {
+func (b *BucketCloud) PourInto(name string, contents io.Reader) error {
 	entry := &BucketEntry{Key: name}
 	b.contents[name] = entry
+	return nil
 }
 
 func NewCloudBucket(name string) *BucketCloud {

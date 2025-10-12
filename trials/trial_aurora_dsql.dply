@@ -1,4 +1,6 @@
 	target create_aurora_dsql_cluster
+		env "EVOLUTION_SCRIPTS_DIR" => scriptDir
+
 		ensure aws.AuroraDSQL.Cluster "test-db" => cluster
 			@teardown delete
 
@@ -11,3 +13,7 @@
 					principal "AWS" (gareth_user->arn)       
 			Inline <= PolicyStatements
 				allow "dsql:DbConnect" (cluster->arn)
+
+		files.dir scriptDir "auroraevolver_zt.sh" => evolveScript
+
+		bash evolveScript

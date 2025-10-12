@@ -5,6 +5,7 @@ import (
 	"ziniki.org/deployer/coremod/internal/files"
 	"ziniki.org/deployer/coremod/internal/policy"
 	"ziniki.org/deployer/coremod/internal/runmain"
+	"ziniki.org/deployer/coremod/internal/shells"
 	"ziniki.org/deployer/coremod/internal/target"
 	"ziniki.org/deployer/coremod/internal/time"
 	"ziniki.org/deployer/coremod/internal/vars"
@@ -40,7 +41,6 @@ func RegisterWithDriver(driver driverbottom.Driver) error {
 
 	tools.Register.ExtensionPoint("blank")
 
-
 	// TODO: I think we should be registering "creation methods" not the created objects ...
 
 	// we need to register something that handles the main arguments, in our case targets to execute
@@ -60,7 +60,10 @@ func RegisterWithDriver(driver driverbottom.Driver) error {
 	tools.Register.Register("target", "show", basic.NewShowCommandHandler(tools))
 
 	tools.Register.Register("target", "files.dir", files.NewDirCommandHandler(tools))
+	tools.Register.Register("target", "files.file", files.NewFileCommandHandler(tools))
 	tools.Register.Register("target", "files.copy", files.NewCopyCommandHandler(tools))
+
+	tools.Register.Register("target", "bash", shells.NewBashCommandHandler(tools))
 
 	tools.Register.Register("target", "policy", policy.NewPolicyCommandHandler(tools))
 	tools.Register.Register("target", "attachPolicy", policy.NewAttachPolicyCommandHandler(tools))

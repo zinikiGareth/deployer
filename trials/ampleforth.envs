@@ -1,2 +1,3 @@
 CONSOLIDATOR_SRC=/home/gareth/Clients/consolidator.news
+EVOLUTION_SCRIPTS_DIR=/home/gareth/Ziniki/Over/Tools/evolver/src/main/resources/scripts
 AWS_PROFILE=ziniki-admin
