@@ -21,22 +21,25 @@ func (dp *DirectoryPourer) PourAll(into corebottom.FileDest) error {
 	// TODO: recursive dir case
 	files, err := os.ReadDir(dp.Path)
 	if err != nil {
-		panic(err)
+		return err
 	}
 
 	for _, f := range files {
 		if f.IsDir() {
 			fromdir, err := dp.Relative(f.Name())
 			if err != nil {
-				panic(err)
+				return err
 			}
 			intodir, err := into.Relative(f.Name())
 			if err != nil {
-				panic(err)
+				return err
 			}
 			fromdir.PourAll(intodir)
 		} else {
-			dp.PourOut(f.Name(), into)
+			err := dp.PourOut(f.Name(), into)
+			if err != nil {
+				return err
+			}
 		}
 	}
 	return nil

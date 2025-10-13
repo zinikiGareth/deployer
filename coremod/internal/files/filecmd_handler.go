@@ -7,13 +7,13 @@ import (
 	"ziniki.org/deployer/driver/pkg/drivertop"
 )
 
-type dirCommandHandler struct {
+type fileCommandHandler struct {
 	tools *corebottom.Tools
 }
 
-func (dch *dirCommandHandler) Handle(parent driverbottom.AttachResult, scope driverbottom.Scope, tokens []driverbottom.Token) driverbottom.Interpreter {
+func (dch *fileCommandHandler) Handle(parent driverbottom.AttachResult, scope driverbottom.Scope, tokens []driverbottom.Token) driverbottom.Interpreter {
 	if len(tokens) < 2 {
-		dch.tools.Reporter.Report(tokens[0].Loc().Offset, "files.dir: expr...")
+		dch.tools.Reporter.Report(tokens[0].Loc().Offset, "files.file: expr...")
 		return drivertop.NewIgnoreInnerScope()
 	}
 
@@ -22,12 +22,12 @@ func (dch *dirCommandHandler) Handle(parent driverbottom.AttachResult, scope dri
 		return drivertop.NewIgnoreInnerScope()
 	}
 
-	da := corepkg.NewCoreAction(dch.tools, tokens[0].Loc(), "DirAction", &dirAction{exprs: exprs})
+	da := corepkg.NewCoreAction(dch.tools, tokens[0].Loc(), "FileAction", &fileAction{exprs: exprs})
 	parent.Attach(da)
 
 	return drivertop.NewDisallowInnerScope(dch.tools.CoreTools)
 }
 
-func NewDirCommandHandler(tools *corebottom.Tools) driverbottom.VerbCommand {
-	return &dirCommandHandler{tools: tools}
+func NewFileCommandHandler(tools *corebottom.Tools) driverbottom.VerbCommand {
+	return &fileCommandHandler{tools: tools}
 }
