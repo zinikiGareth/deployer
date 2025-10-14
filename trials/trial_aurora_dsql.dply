@@ -14,6 +14,6 @@
 			Inline <= PolicyStatements
 				allow "dsql:DbConnect" (cluster->arn)
 
-		files.dir scriptDir "auroraevolver_zt.sh" => evolveScript
+		files.file scriptDir "auroraevolver_zt.sh" => evolveScript
 
 		bash evolveScript
