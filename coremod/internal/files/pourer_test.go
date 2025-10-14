@@ -29,6 +29,19 @@ func TestCanFindADirectoryPourerForTest1Dir(t *testing.T) {
 	testPourAll(t, dp, []string{"xx.txt", "yy.txt"})
 }
 
+func TestCanFindAFilePourerForTest1Dir(t *testing.T) {
+	cwd, err := os.Getwd()
+	if err != nil {
+		t.Fatalf("could not get cwd: %v", err)
+	}
+	cwd = path.Dir(path.Dir(cwd))
+	dp, err := files.NewFileModel(&loc, []any{cwd, "test/testdata", "filesystem", "test1/dir", "xx.txt"})
+	if err != nil {
+		t.Fatalf("error obtaining model: %v", err)
+	}
+	testPourAll(t, dp, []string{"xx.txt"})
+}
+
 func testPourAll(t *testing.T, dp *files.DirModel, exp []string) {
 	dest := &DestDumper{expect: exp}
 	err := dp.PourAll(dest)

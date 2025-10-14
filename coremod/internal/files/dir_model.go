@@ -11,10 +11,20 @@ import (
 	"ziniki.org/deployer/driver/pkg/errorsink"
 )
 
+type PathType int
+
+const (
+	DIR_TYPE PathType = iota
+	FILE_TYPE
+	ANY_TYPE
+)
+
 type DirModel struct {
-	loc    *errorsink.Location
-	paths  []any
-	pourer *DirectoryPourer
+	loc       *errorsink.Location
+	paths     []any
+	pourer    *DirectoryPourer
+	mustExist bool
+	mustBe    PathType
 }
 
 func (d *DirModel) Loc() *errorsink.Location {
@@ -63,18 +73,18 @@ func (d *DirModel) ObtainPourer() error {
 			case *DirectoryPourer:
 				d.pourer = p
 			case fmt.Stringer:
-				d.pourer, err = handleBaseString(p.String())
+				d.pourer, err = d.handleBaseString(p.String())
 			case string:
-				d.pourer, err = handleBaseString(p)
+				d.pourer, err = d.handleBaseString(p)
 			default:
 				err = fmt.Errorf("cannot handle base path %T", v)
 			}
 		} else {
 			switch p := v.(type) {
 			case fmt.Stringer:
-				d.pourer, err = handleNestedString(d.pourer, p.String())
+				d.pourer, err = d.handleNestedString(d.pourer, p.String())
 			case string:
-				d.pourer, err = handleNestedString(d.pourer, p)
+				d.pourer, err = d.handleNestedString(d.pourer, p)
 			default:
 				err = fmt.Errorf("cannot handle nested path %T", v)
 			}
@@ -83,12 +93,12 @@ func (d *DirModel) ObtainPourer() error {
 			return err
 		}
 	}
-	return nil
+	return d.pourer.AssertConstraints()
 }
 
-func handleBaseString(s string) (*DirectoryPourer, error) {
+func (d *DirModel) handleBaseString(s string) (*DirectoryPourer, error) {
 	if filepath.IsAbs(s) {
-		pourer, err := NewDirectoryPourer(s)
+		pourer, err := NewDirectoryPourer(s, d.mustExist, d.mustBe)
 		if err != nil {
 			return nil, err
 		}
@@ -98,7 +108,7 @@ func handleBaseString(s string) (*DirectoryPourer, error) {
 	}
 }
 
-func handleNestedString(dp *DirectoryPourer, s string) (*DirectoryPourer, error) {
+func (d *DirModel) handleNestedString(dp *DirectoryPourer, s string) (*DirectoryPourer, error) {
 	if !filepath.IsAbs(s) {
 		pourer, err := dp.Relative(s)
 		if err != nil {
@@ -123,11 +133,24 @@ func (dp *DirModel) PourOut(name string, into corebottom.FileDest) error {
 	if err != nil {
 		return err
 	}
-	return dp.pourer.PourOut(name, into)
+	pourer, err := dp.pourer.Relative(name)
+	if err != nil {
+		return err
+	}
+	return pourer.PourOut(into)
 }
 
 func NewDirModel(loc *errorsink.Location, paths []any) (*DirModel, error) {
-	ret := &DirModel{loc: loc, paths: paths}
+	ret := &DirModel{loc: loc, paths: paths, mustExist: true, mustBe: DIR_TYPE}
+	err := ret.ObtainPourer() // check that the paths exist as early as possible
+	if err != nil {
+		return nil, err
+	}
+	return ret, nil
+}
+
+func NewFileModel(loc *errorsink.Location, paths []any) (*DirModel, error) {
+	ret := &DirModel{loc: loc, paths: paths, mustExist: true, mustBe: FILE_TYPE}
 	err := ret.ObtainPourer() // check that the paths exist as early as possible
 	if err != nil {
 		return nil, err

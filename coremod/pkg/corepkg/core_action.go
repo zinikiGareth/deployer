@@ -43,11 +43,11 @@ func (da *coreAction) Resolve(resolver driverbottom.Resolver) driverbottom.Bindi
 }
 
 func (da *coreAction) DetermineInitialState(pres corebottom.ValuePresenter) {
-
+	da.strat.DetermineInitialState(da.tools, da.loc, pres)
 }
 
 func (da *coreAction) DetermineDesiredState(pres corebottom.ValuePresenter) {
-
+	da.strat.DetermineDesiredState(da.tools, da.loc, pres)
 }
 
 func NewCoreAction(tools *corebottom.Tools, loc *errorsink.Location, label string, strat CoreActionStrategy) corebottom.ModelBuilder {

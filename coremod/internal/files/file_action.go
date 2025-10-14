@@ -40,7 +40,7 @@ func (da *fileAction) DetermineInitialState(tools *corebottom.Tools, loc *errors
 		v := tools.Storage.Eval(e)
 		paths = append(paths, v)
 	}
-	dir, err := NewDirModel(loc, paths)
+	dir, err := NewFileModel(loc, paths)
 	if err != nil {
 		tools.Reporter.ReportAtf(loc, err.Error())
 	} else {
