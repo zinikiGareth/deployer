@@ -29,6 +29,30 @@ func TestCanFindADirectoryPourerForTest1Dir(t *testing.T) {
 	testPourAll(t, dp, []string{"xx.txt", "yy.txt"})
 }
 
+func TestErrorAskingAFileToBeADir(t *testing.T) {
+	cwd, err := os.Getwd()
+	if err != nil {
+		t.Fatalf("could not get cwd: %v", err)
+	}
+	cwd = path.Dir(path.Dir(cwd))
+	_, err = files.NewDirModel(&loc, []any{cwd, "test/testdata", "filesystem", "test1/dir", "xx.txt"})
+	if err == nil {
+		t.Fatalf("no error obtaining model")
+	}
+}
+
+func TestErrorAskingNonExistentPathToBeADir(t *testing.T) {
+	cwd, err := os.Getwd()
+	if err != nil {
+		t.Fatalf("could not get cwd: %v", err)
+	}
+	cwd = path.Dir(path.Dir(cwd))
+	_, err = files.NewDirModel(&loc, []any{cwd, "test/testdata", "filesystem", "test1/dir", "zz.txt"})
+	if err == nil {
+		t.Fatalf("no error obtaining model")
+	}
+}
+
 func TestCanFindAFilePourerForTest1Dir(t *testing.T) {
 	cwd, err := os.Getwd()
 	if err != nil {
@@ -40,6 +64,18 @@ func TestCanFindAFilePourerForTest1Dir(t *testing.T) {
 		t.Fatalf("error obtaining model: %v", err)
 	}
 	testPourAll(t, dp, []string{"xx.txt"})
+}
+
+func TestErrorAskingADirToBeAFile(t *testing.T) {
+	cwd, err := os.Getwd()
+	if err != nil {
+		t.Fatalf("could not get cwd: %v", err)
+	}
+	cwd = path.Dir(path.Dir(cwd))
+	_, err = files.NewFileModel(&loc, []any{cwd, "test/testdata", "filesystem", "test1/dir"})
+	if err == nil {
+		t.Fatalf("no error obtaining model")
+	}
 }
 
 func testPourAll(t *testing.T, dp *files.DirModel, exp []string) {
