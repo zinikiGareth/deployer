@@ -62,9 +62,9 @@ func (d *DirModel) DumpTo(iw driverbottom.IndentWriter) {
 	iw.EndAttrs()
 }
 
-func (d *DirModel) ObtainPourer() error {
+func (d *DirModel) ObtainPourer() (*DirectoryPourer, error) {
 	if d.pourer != nil {
-		return nil
+		return d.pourer, nil
 	}
 	for _, v := range d.paths {
 		var err error
@@ -90,10 +90,15 @@ func (d *DirModel) ObtainPourer() error {
 			}
 		}
 		if err != nil {
-			return err
+			return nil, err
 		}
 	}
-	return d.pourer.AssertConstraints()
+	err := d.pourer.AssertConstraints()
+	if err != nil {
+		return nil, err
+	} else {
+		return d.pourer, nil
+	}
 }
 
 func (d *DirModel) handleBaseString(s string) (*DirectoryPourer, error) {
@@ -121,19 +126,19 @@ func (d *DirModel) handleNestedString(dp *DirectoryPourer, s string) (*Directory
 
 }
 func (dp *DirModel) PourAll(into corebottom.FileDest) error {
-	err := dp.ObtainPourer()
+	pourer, err := dp.ObtainPourer()
 	if err != nil {
 		return err
 	}
-	return dp.pourer.PourAll(into)
+	return pourer.PourAll(into)
 }
 
 func (dp *DirModel) PourOut(name string, into corebottom.FileDest) error {
-	err := dp.ObtainPourer()
+	pourer, err := dp.ObtainPourer()
 	if err != nil {
 		return err
 	}
-	pourer, err := dp.pourer.Relative(name)
+	pourer, err = pourer.Relative(name)
 	if err != nil {
 		return err
 	}
@@ -142,7 +147,7 @@ func (dp *DirModel) PourOut(name string, into corebottom.FileDest) error {
 
 func NewDirModel(loc *errorsink.Location, paths []any) (*DirModel, error) {
 	ret := &DirModel{loc: loc, paths: paths, mustExist: true, mustBe: DIR_TYPE}
-	err := ret.ObtainPourer() // check that the paths exist as early as possible
+	_, err := ret.ObtainPourer() // check that the paths exist as early as possible
 	if err != nil {
 		return nil, err
 	}
@@ -151,7 +156,7 @@ func NewDirModel(loc *errorsink.Location, paths []any) (*DirModel, error) {
 
 func NewFileModel(loc *errorsink.Location, paths []any) (*DirModel, error) {
 	ret := &DirModel{loc: loc, paths: paths, mustExist: true, mustBe: FILE_TYPE}
-	err := ret.ObtainPourer() // check that the paths exist as early as possible
+	_, err := ret.ObtainPourer() // check that the paths exist as early as possible
 	if err != nil {
 		return nil, err
 	}

@@ -12,8 +12,16 @@ type CoreActionStrategy interface {
 	ShortDescription() string
 	DumpArgs(iw driverbottom.IndentWriter)
 	Resolve(resolver driverbottom.Resolver) driverbottom.BindingRequirement
+}
+
+type StatefulActionStrategy interface {
 	DetermineInitialState(tools *corebottom.Tools, loc *errorsink.Location, pres corebottom.ValuePresenter)
 	DetermineDesiredState(tools *corebottom.Tools, loc *errorsink.Location, pres corebottom.ValuePresenter)
+}
+
+type RealityUpdaterStrategy interface {
+	CoreActionStrategy
+	UpdateReality(tools *corebottom.Tools)
 }
 
 type coreAction struct {
@@ -43,15 +51,36 @@ func (da *coreAction) Resolve(resolver driverbottom.Resolver) driverbottom.Bindi
 }
 
 func (da *coreAction) DetermineInitialState(pres corebottom.ValuePresenter) {
-	da.strat.DetermineInitialState(da.tools, da.loc, pres)
+	sas, ok := da.strat.(StatefulActionStrategy)
+	if ok {
+		sas.DetermineInitialState(da.tools, da.loc, pres)
+	}
 }
 
 func (da *coreAction) DetermineDesiredState(pres corebottom.ValuePresenter) {
-	da.strat.DetermineDesiredState(da.tools, da.loc, pres)
+	sas, ok := da.strat.(StatefulActionStrategy)
+	if ok {
+		sas.DetermineDesiredState(da.tools, da.loc, pres)
+	}
+}
+
+func (da *coreAction) UpdateReality() {
+	urs, ok := da.strat.(RealityUpdaterStrategy)
+	if ok {
+		urs.UpdateReality(da.tools)
+	}
+}
+
+func (da *coreAction) ShouldDestroy() bool {
+	panic("unimplemented")
+}
+
+func (da *coreAction) TearDown() {
+	panic("unimplemented")
 }
 
 func NewCoreAction(tools *corebottom.Tools, loc *errorsink.Location, label string, strat CoreActionStrategy) corebottom.ModelBuilder {
 	return &coreAction{tools: tools, loc: loc, label: label, strat: strat}
 }
 
-var _ corebottom.ModelBuilder = &coreAction{}
+var _ corebottom.RealityShifter = &coreAction{}

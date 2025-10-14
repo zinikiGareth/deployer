@@ -1,9 +1,8 @@
 package shells
 
 import (
-	"log"
-
 	"ziniki.org/deployer/coremod/pkg/corebottom"
+	"ziniki.org/deployer/coremod/pkg/corepkg"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/drivertop"
 )
@@ -22,7 +21,9 @@ func (bch *BashCommandHandler) Handle(parent driverbottom.AttachResult, scope dr
 		return drivertop.NewIgnoreInnerScope()
 	}
 
-	log.Printf("have bash script %s\n", es[0])
+	da := corepkg.NewCoreAction(bch.tools, tokens[0].Loc(), "FileAction", &bashAction{scope: scope, script: es[0]})
+	parent.Attach(da)
+
 	return drivertop.NewDisallowInnerScope(bch.tools.CoreTools)
 }
 
