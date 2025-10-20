@@ -1,0 +1,42 @@
+symbol evolveScript is bound to:
+VarHolder {
+	_where_: run-bash.dply:4.42
+	storeFor: evolveScript
+}
+symbol false is bound to:
+Number[0.000000] {
+	_where_: <no loc>
+}
+symbol rootDir is bound to:
+VarHolder {
+	_where_: run-bash.dply:2.25
+	storeFor: rootDir
+}
+symbol runBashCommand is bound to:
+target runBashCommand {
+	_where_: run-bash.dply:1.7
+	actions: [
+		AssignTo {
+			_where_: run-bash.dply:2.25
+			assignTo: rootDir
+			EnvAction {
+				_where_: run-bash.dply:2.0
+				varname: GOLDEN_TEST_DIR
+			}
+		}
+		AssignTo {
+			_where_: run-bash.dply:4.42
+			assignTo: evolveScript
+			FileAction {
+				_where_: run-bash.dply:4.0
+				run-bash.dply:4.11 Var[rootDir]
+				run-bash.dply:4.20 scripts
+				run-bash.dply:4.30 bash.sh
+			}
+		}
+	]
+}
+symbol true is bound to:
+Number[1.000000] {
+	_where_: <no loc>
+}

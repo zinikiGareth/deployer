@@ -1,0 +1,4 @@
+	target runBashCommand
+		env "GOLDEN_TEST_DIR" => rootDir
+
+		files.file rootDir "scripts" "bash.sh" => evolveScript

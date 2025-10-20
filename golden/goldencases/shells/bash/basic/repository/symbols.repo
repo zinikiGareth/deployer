@@ -1,0 +1,4 @@
+run-bash.dply:
+1.7 {} runBashCommand
+2.25 {}:{runBashCommand} rootDir
+4.42 {}:{runBashCommand} evolveScript

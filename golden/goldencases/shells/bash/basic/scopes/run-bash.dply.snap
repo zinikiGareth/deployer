@@ -1,0 +1,10 @@
+>	target runBashCommand
+#^ source.deployer-dply
+# ^^^^^^ source.deployer-dply keyword.target
+#       ^^^^^^^^^^^^^^^^ source.deployer-dply
+>		env "GOLDEN_TEST_DIR" => rootDir
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>
+>		files.file rootDir "scripts" "bash.sh" => evolveScript
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>

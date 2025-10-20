@@ -1,0 +1,16 @@
+Step runBashCommand-0:
+	rootDir:
+		@runBashCommand-0[1]
+			EnvModel {
+				_where_: run-bash.dply:2.5
+				from: GOLDEN_TEST_DIR
+			}
+Step runBashCommand-1:
+	evolveScript:
+		@runBashCommand-1[1]
+			DirModel {
+				_where_: run-bash.dply:4.0
+				path: EnvModel[GOLDEN_TEST_DIR]
+				path: scripts
+				path: bash.sh
+			}
