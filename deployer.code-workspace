@@ -130,6 +130,22 @@
 				"env": {
 					"AWS_PROFILE": "ziniki-admin",
 				}
+			},
+			{
+				"name": "awsdep ziniki",
+				"type": "go",
+				"request": "launch",
+				"program": "${workspaceFolder:AWS}/cmd/awsdep",
+				"cwd": "${workspaceFolder:Driver}/../../Tools",
+				"args": [
+					"-d",
+					"deployment",
+					"-e", "ampleforth",
+					"create_ziniki_prod",
+				],
+				"env": {
+					"AWS_PROFILE": "ziniki-admin",
+				}
 			}
 		],
 		"compounds": []
