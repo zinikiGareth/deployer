@@ -50,7 +50,7 @@ func (creator *CoreCreator) GetEnv(driver string, ofType reflect.Type, meth stri
 }
 
 func (c *CoreCreator) Loc() *errorsink.Location {
-	panic("unimplemented")
+	return c.loc
 }
 
 func (c *CoreCreator) ShortDescription() string {
