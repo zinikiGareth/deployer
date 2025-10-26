@@ -114,6 +114,9 @@ func (t *CoreTarget) DetermineDesiredState() {
 
 func (t *CoreTarget) UpdateReality() {
 	for k, a := range t.actions {
+		if t.tools.Reporter.HasErrors() {
+			break
+		}
 		t.tools.Storage.SetStepName(fmt.Sprintf("%s-%d", t.name, k))
 		amis, ok := a.(corebottom.RealityShifter)
 		if ok {
