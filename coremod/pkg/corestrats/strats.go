@@ -11,6 +11,10 @@ import (
 type CompositeStrategy interface {
 }
 
+type FindStrategy interface {
+	DetermineInitialState(creator CommonCreator, pres corebottom.ValuePresenter)
+}
+
 type CoreActionStrategy interface {
 	ShortDescription() string
 	DumpArgs(iw driverbottom.IndentWriter)

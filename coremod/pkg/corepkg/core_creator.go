@@ -20,7 +20,7 @@ type CoreCreator struct {
 	teardown corebottom.TearDown
 	props    map[driverbottom.Identifier]driverbottom.Expr
 
-	findme   FindStrategy
+	findme   corestrats.FindStrategy
 	strategy corestrats.CreationStrategy
 }
 

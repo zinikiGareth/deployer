@@ -16,11 +16,11 @@ type CoreBlank struct {
 
 func (b *CoreBlank) Mint(tools *corebottom.Tools, loc *errorsink.Location, id corebottom.CoinId, named string, props map[driverbottom.Identifier]driverbottom.Expr, teardown corebottom.TearDown) corebottom.Ensurable {
 	strat := reflect.New(b.OfType).Interface().(corestrats.CreationStrategy)
-	return &CoreCreator{tools: tools, teardown: teardown, loc: loc, coin: id, name: named, props: props, findme: strat.(FindStrategy), strategy: strat}
+	return &CoreCreator{tools: tools, teardown: teardown, loc: loc, coin: id, name: named, props: props, findme: strat.(corestrats.FindStrategy), strategy: strat}
 }
 
 func (b *CoreBlank) Find(tools *corebottom.Tools, loc *errorsink.Location, id corebottom.CoinId, named string, props map[driverbottom.Identifier]driverbottom.Expr) corebottom.FindCoin {
-	strat := reflect.New(b.OfType).Interface().(FindStrategy)
+	strat := reflect.New(b.OfType).Interface().(corestrats.FindStrategy)
 	return &CoreCreator{tools: tools, loc: loc, coin: id, name: named, props: props, findme: strat}
 }
 
