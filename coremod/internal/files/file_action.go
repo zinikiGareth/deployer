@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"ziniki.org/deployer/coremod/pkg/corebottom"
-	"ziniki.org/deployer/coremod/pkg/corepkg"
+	"ziniki.org/deployer/coremod/pkg/corestrats"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
 )
@@ -52,4 +52,4 @@ func (da *fileAction) DetermineDesiredState(tools *corebottom.Tools, loc *errors
 	da.DetermineInitialState(tools, loc, pres)
 }
 
-var _ corepkg.CoreActionStrategy = &fileAction{}
+var _ corestrats.CoreActionStrategy = &fileAction{}

@@ -4,31 +4,16 @@ import (
 	"fmt"
 
 	"ziniki.org/deployer/coremod/pkg/corebottom"
+	"ziniki.org/deployer/coremod/pkg/corestrats"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/errorsink"
 )
-
-type CoreActionStrategy interface {
-	ShortDescription() string
-	DumpArgs(iw driverbottom.IndentWriter)
-	Resolve(resolver driverbottom.Resolver) driverbottom.BindingRequirement
-}
-
-type StatefulActionStrategy interface {
-	DetermineInitialState(tools *corebottom.Tools, loc *errorsink.Location, pres corebottom.ValuePresenter)
-	DetermineDesiredState(tools *corebottom.Tools, loc *errorsink.Location, pres corebottom.ValuePresenter)
-}
-
-type RealityUpdaterStrategy interface {
-	CoreActionStrategy
-	UpdateReality(tools *corebottom.Tools)
-}
 
 type coreAction struct {
 	tools *corebottom.Tools
 	loc   *errorsink.Location
 	label string
-	strat CoreActionStrategy
+	strat corestrats.CoreActionStrategy
 }
 
 func (da *coreAction) Loc() *errorsink.Location {
@@ -51,21 +36,21 @@ func (da *coreAction) Resolve(resolver driverbottom.Resolver) driverbottom.Bindi
 }
 
 func (da *coreAction) DetermineInitialState(pres corebottom.ValuePresenter) {
-	sas, ok := da.strat.(StatefulActionStrategy)
+	sas, ok := da.strat.(corestrats.StatefulActionStrategy)
 	if ok {
 		sas.DetermineInitialState(da.tools, da.loc, pres)
 	}
 }
 
 func (da *coreAction) DetermineDesiredState(pres corebottom.ValuePresenter) {
-	sas, ok := da.strat.(StatefulActionStrategy)
+	sas, ok := da.strat.(corestrats.StatefulActionStrategy)
 	if ok {
 		sas.DetermineDesiredState(da.tools, da.loc, pres)
 	}
 }
 
 func (da *coreAction) UpdateReality() {
-	urs, ok := da.strat.(RealityUpdaterStrategy)
+	urs, ok := da.strat.(corestrats.RealityUpdaterStrategy)
 	if ok {
 		urs.UpdateReality(da.tools)
 	}
@@ -79,7 +64,7 @@ func (da *coreAction) TearDown() {
 	panic("unimplemented")
 }
 
-func NewCoreAction(tools *corebottom.Tools, loc *errorsink.Location, label string, strat CoreActionStrategy) corebottom.ModelBuilder {
+func NewCoreAction(tools *corebottom.Tools, loc *errorsink.Location, label string, strat corestrats.CoreActionStrategy) corebottom.ModelBuilder {
 	return &coreAction{tools: tools, loc: loc, label: label, strat: strat}
 }
 

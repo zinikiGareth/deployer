@@ -4,6 +4,7 @@ import (
 	"reflect"
 
 	"ziniki.org/deployer/coremod/pkg/corebottom"
+	"ziniki.org/deployer/coremod/pkg/corestrats"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 	"ziniki.org/deployer/driver/pkg/drivertop"
 	"ziniki.org/deployer/driver/pkg/errorsink"
@@ -20,13 +21,7 @@ type CoreCreator struct {
 	props    map[driverbottom.Identifier]driverbottom.Expr
 
 	findme   FindStrategy
-	strategy CreationStrategy
-}
-
-type CreationStrategy interface {
-	DetermineDesiredState(creator *CoreCreator, pres corebottom.ValuePresenter)
-	UpdateReality(creator *CoreCreator, initial any, desired any)
-	TearDown(creator *CoreCreator, initial any, teardown corebottom.TearDown)
+	strategy corestrats.CreationStrategy
 }
 
 func (creator *CoreCreator) GetEnv(driver string, ofType reflect.Type, meth string, field string) {

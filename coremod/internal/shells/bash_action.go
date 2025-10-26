@@ -6,7 +6,7 @@ import (
 
 	"ziniki.org/deployer/coremod/internal/files"
 	"ziniki.org/deployer/coremod/pkg/corebottom"
-	"ziniki.org/deployer/coremod/pkg/corepkg"
+	"ziniki.org/deployer/coremod/pkg/corestrats"
 	"ziniki.org/deployer/driver/pkg/driverbottom"
 )
 
@@ -62,4 +62,4 @@ func (b *bashAction) UpdateReality(tools *corebottom.Tools) {
 	log.Printf("%s ran successfully\n", pourer.Path)
 }
 
-var _ corepkg.RealityUpdaterStrategy = &bashAction{}
+var _ corestrats.RealityUpdaterStrategy = &bashAction{}
