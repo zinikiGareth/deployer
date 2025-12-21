@@ -1,6 +1,11 @@
 symbol entry is bound to:
 VarHolder {
-	_where_: patterns.dply:6.17
+	_where_: patterns.dply:7.17
+	storeFor: entry
+}
+symbol entry is bound to:
+VarHolder {
+	_where_: patterns.dply:13.17
 	storeFor: entry
 }
 symbol false is bound to:
@@ -12,23 +17,49 @@ target match_string {
 	_where_: patterns.dply:3.7
 	actions: [
 		AssignTo {
-			_where_: patterns.dply:6.17
+			_where_: patterns.dply:7.17
 			assignTo: entry
 			EnvAction {
-				_where_: patterns.dply:6.0
+				_where_: patterns.dply:7.0
 				varname: INBOUND
 			}
 		}
 		ShowAction {
-			_where_: patterns.dply:7.0
+			_where_: patterns.dply:8.0
 			exprs: [
 				regex.match[Var[entry],[a-z]+\.[a-z]+]
 			]
 		}
 		ShowAction {
-			_where_: patterns.dply:8.0
+			_where_: patterns.dply:9.0
 			exprs: [
 				regex.match[Var[entry],[0-9]+]
+			]
+		}
+	]
+}
+symbol replace_string is bound to:
+target replace_string {
+	_where_: patterns.dply:11.7
+	actions: [
+		AssignTo {
+			_where_: patterns.dply:13.17
+			assignTo: entry
+			EnvAction {
+				_where_: patterns.dply:13.0
+				varname: INBOUND
+			}
+		}
+		ShowAction {
+			_where_: patterns.dply:14.0
+			exprs: [
+				regex.match[Var[entry],([a-z]+)\.([a-z]+)]
+			]
+		}
+		ShowAction {
+			_where_: patterns.dply:15.0
+			exprs: [
+				regex.match[Var[entry],([a-z]+)\.([a-z]+)]
 			]
 		}
 	]

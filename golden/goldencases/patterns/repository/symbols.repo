@@ -1,3 +1,5 @@
 patterns.dply:
 3.7 {} match_string
-6.17 {}:{match_string} entry
+7.17 {}:{match_string} entry
+11.7 {} replace_string
+13.17 {}:{replace_string} entry

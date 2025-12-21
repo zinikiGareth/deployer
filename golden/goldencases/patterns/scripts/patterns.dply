@@ -3,6 +3,13 @@ This is a test of pattern matching and transforming
 	target match_string
 
 Read a string from the environment.  This is "hello.world"
+
 		env "INBOUND" => entry
 		show (regex.match entry "[a-z]+\.[a-z]+")
 		show (regex.match entry "[0-9]+")
+
+	target replace_string
+
+		env "INBOUND" => entry
+		show (regex.replace entry "([a-z]+)\.([a-z]+)" "\{^2}\{^1}")
+		show (regex.replace entry "([a-z]+)\.([a-z]+)" "maybe \{2}-\{^^1}.")

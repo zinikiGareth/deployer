@@ -2,3 +2,7 @@ Step match_string-0:
 	entry:
 Step match_string-1:
 Step match_string-2:
+Step replace_string-0:
+	entry:
+Step replace_string-1:
+Step replace_string-2:

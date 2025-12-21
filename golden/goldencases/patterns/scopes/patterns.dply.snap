@@ -8,9 +8,22 @@
 >
 >Read a string from the environment.  This is "hello.world"
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
+>
 >		env "INBOUND" => entry
 #^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
 >		show (regex.match entry "[a-z]+\.[a-z]+")
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
 >		show (regex.match entry "[0-9]+")
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>
+>	target replace_string
+#^ source.deployer-dply
+# ^^^^^^ source.deployer-dply keyword.target
+#       ^^^^^^^^^^^^^^^^ source.deployer-dply
+>
+>		env "INBOUND" => entry
+#^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>		show (regex.replace entry "([a-z]+)\.([a-z]+)" "\{^2}\{^1}")
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>		show (regex.replace entry "([a-z]+)\.([a-z]+)" "maybe \{2}-\{^^1}.")
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
