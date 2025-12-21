@@ -1,0 +1,16 @@
+>This is a test of pattern matching and transforming
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
+>
+>	target match_string
+#^ source.deployer-dply
+# ^^^^^^ source.deployer-dply keyword.target
+#       ^^^^^^^^^^^^^^ source.deployer-dply
+>
+>Read a string from the environment.  This is "hello.world"
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
+>		env "INBOUND" => entry
+#^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>		show (regex.match entry "[a-z]+\.[a-z]+")
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>		show (regex.match entry "[0-9]+")
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply

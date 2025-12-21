@@ -1,0 +1,39 @@
+symbol entry is bound to:
+VarHolder {
+	_where_: patterns.dply:6.17
+	storeFor: entry
+}
+symbol false is bound to:
+Number[0.000000] {
+	_where_: <no loc>
+}
+symbol match_string is bound to:
+target match_string {
+	_where_: patterns.dply:3.7
+	actions: [
+		AssignTo {
+			_where_: patterns.dply:6.17
+			assignTo: entry
+			EnvAction {
+				_where_: patterns.dply:6.0
+				varname: INBOUND
+			}
+		}
+		ShowAction {
+			_where_: patterns.dply:7.0
+			exprs: [
+				regex.match[Var[entry],[a-z]+\.[a-z]+]
+			]
+		}
+		ShowAction {
+			_where_: patterns.dply:8.0
+			exprs: [
+				regex.match[Var[entry],[0-9]+]
+			]
+		}
+	]
+}
+symbol true is bound to:
+Number[1.000000] {
+	_where_: <no loc>
+}

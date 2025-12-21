@@ -1,0 +1,4 @@
+entry => VarExpr[entry]
+false => Number[0.000000]
+match_string => Target[match_string]
+true => Number[1.000000]

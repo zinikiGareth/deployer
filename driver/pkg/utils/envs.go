@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"log"
 	"os"
 	"strings"
 	"syscall"
@@ -36,7 +35,7 @@ func ReadEnvs(file string) (map[string]string, error) {
 
 func SetEnvs(envs map[string]string) {
 	for k, v := range envs {
-		log.Printf("setting %s to %s\n", k, v)
+		// log.Printf("setting %s to %s\n", k, v)
 		os.Setenv(k, v)
 	}
 }

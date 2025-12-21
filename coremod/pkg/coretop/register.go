@@ -4,6 +4,7 @@ import (
 	"ziniki.org/deployer/coremod/internal/basic"
 	"ziniki.org/deployer/coremod/internal/files"
 	"ziniki.org/deployer/coremod/internal/policy"
+	"ziniki.org/deployer/coremod/internal/regex"
 	"ziniki.org/deployer/coremod/internal/runmain"
 	"ziniki.org/deployer/coremod/internal/shells"
 	"ziniki.org/deployer/coremod/internal/target"
@@ -78,6 +79,7 @@ func RegisterWithDriver(driver driverbottom.Driver) error {
 
 	// functions
 	tools.Register.Register("function-defn", "hours", time.MakeHoursFunc(tools))
+	tools.Register.Register("function-defn", "regex.match", regex.MakeMatchFunc(tools))
 
 	return nil
 }

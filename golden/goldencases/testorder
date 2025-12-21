@@ -39,3 +39,4 @@ policies/attach-to-bucket
 resolve/separate
 namedinterpreter
 shells/bash/basic
+patterns
