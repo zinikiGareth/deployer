@@ -13,7 +13,7 @@ type EnsureCommandHandler struct {
 }
 
 func (ech *EnsureCommandHandler) Handle(parent driverbottom.AttachResult, scope driverbottom.Scope, tokens []driverbottom.Token) driverbottom.Interpreter {
-	if len(tokens) < 2 || len(tokens) > 3 {
+	if len(tokens) < 2 {
 		ech.tools.Reporter.Report(tokens[0].Loc().Offset, "ensure: <class-identifier> [instance-name]")
 		return drivertop.NewIgnoreInnerScope()
 	}
@@ -25,12 +25,18 @@ func (ech *EnsureCommandHandler) Handle(parent driverbottom.AttachResult, scope 
 	}
 
 	var name driverbottom.String
-	if len(tokens) == 3 {
-		name, ok = tokens[2].(driverbottom.String)
+	if len(tokens) > 2 {
+		expr, ok := ech.tools.Parser.Parse(scope, tokens[2:])
 		if !ok {
-			ech.tools.Reporter.Report(tokens[1].Loc().Offset, "ensure: <class-identifier> [instance-name]")
+			ech.tools.Reporter.Report(tokens[2].Loc().Offset, "ensure: <class-identifier> [instance-name]")
 			return drivertop.NewIgnoreInnerScope()
 		}
+		str, ok := ech.tools.Storage.EvalAsStringer(expr)
+		if !ok {
+			ech.tools.Reporter.Report(tokens[2].Loc().Offset, "ensure: <class-identifier> [instance-name]")
+			return drivertop.NewIgnoreInnerScope()
+		}
+		name = drivertop.MakeString(tokens[2].Loc(), str.String())
 	}
 
 	ea := &EnsureAction{tools: ech.tools, scope: scope, loc: tokens[0].Loc(), what: clz, named: name, props: make(map[driverbottom.Identifier]driverbottom.Expr)}
