@@ -87,7 +87,7 @@ func (h *SumListFunc) ReduceExpr(me driverbottom.Token, before []driverbottom.Ex
 	return &SumListExpr{Locatable: me, exprs: after}, true
 }
 
-func MakeSumFunc(tools *driverbottom.CoreTools) any {
+func MakeSumFunc(tools *driverbottom.CoreTools) driverbottom.Function {
 	return &SumListFunc{tools: tools}
 }
 

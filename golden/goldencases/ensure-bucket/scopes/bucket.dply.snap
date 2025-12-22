@@ -9,3 +9,12 @@
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
 >			@teardown preserve
 #^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>
+>	target nameABucketFromExpr
+#^ source.deployer-dply
+# ^^^^^^ source.deployer-dply keyword.target
+#       ^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>		ensure test.S3.Bucket ("org." ++ ".bucket")
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>			@teardown delete
+#^^^^^^^^^^^^^^^^^^^^ source.deployer-dply

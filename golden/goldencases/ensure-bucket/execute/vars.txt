@@ -6,3 +6,11 @@ Step ensureABucketExists-0:
 				name: org.ziniki.launch_bucket
 				policy: <nil>
 			}
+Step nameABucketFromExpr-0:
+	*nameABucketFromExpr-0-0:
+		@nameABucketFromExpr-0[2]
+			bucket {
+				_where_: bucket.dply:8.0
+				name: org..bucket
+				policy: <nil>
+			}

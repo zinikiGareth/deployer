@@ -1,1 +1,2 @@
 creating model for bucket EnsureBucket[us-east-1:org.ziniki.launch_bucket]
+creating model for bucket EnsureBucket[us-east-1:org..bucket]

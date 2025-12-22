@@ -1,1 +1,2 @@
 looking for bucket EnsureBucket[us-east-1:org.ziniki.launch_bucket]
+looking for bucket EnsureBucket[us-east-1:org..bucket]

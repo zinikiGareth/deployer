@@ -6,3 +6,4 @@ This uses the test mod to simulate testing an aws bucket exists
 
 	target nameABucketFromExpr
 		ensure test.S3.Bucket ("org." ++ ".bucket")
+			@teardown delete
