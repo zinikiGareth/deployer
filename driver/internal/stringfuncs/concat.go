@@ -1,11 +1,13 @@
 package stringfuncs
 
 import (
+	"fmt"
+
 	"ziniki.org/deployer/driver/pkg/driverbottom"
-	"ziniki.org/deployer/driver/pkg/errorsink"
 )
 
 type ConcatExpr struct {
+	driverbottom.Locatable
 	tools *driverbottom.CoreTools
 	lhs   driverbottom.Expr
 	rhs   driverbottom.Expr
@@ -27,16 +29,20 @@ func (c *ConcatExpr) Eval(s driverbottom.RuntimeStorage) any {
 	return l.String() + r.String()
 }
 
-func (c *ConcatExpr) Loc() *errorsink.Location {
-	panic("unimplemented")
-}
-
 func (c *ConcatExpr) Resolve(r driverbottom.Resolver) driverbottom.BindingRequirement {
-	panic("unimplemented")
+	br := c.lhs.Resolve(r)
+	if br == driverbottom.NO_VALUE {
+		c.tools.Reporter.ReportAtf(c.lhs.Loc(), "lhs of ++ must return a value")
+	}
+	br = c.rhs.Resolve(r)
+	if br == driverbottom.NO_VALUE {
+		c.tools.Reporter.ReportAtf(c.rhs.Loc(), "rhs of ++ must return a value")
+	}
+	return driverbottom.MAY_BE_BOUND
 }
 
 func (c *ConcatExpr) ShortDescription() string {
-	panic("unimplemented")
+	return fmt.Sprintf("Concat[%s,%s]", c.lhs.ShortDescription(), c.rhs.ShortDescription())
 }
 
 func (c *ConcatExpr) String() string {
@@ -48,7 +54,7 @@ type ConcatFunc struct {
 }
 
 func (c *ConcatFunc) Associativity() bool {
-	panic("unimplemented")
+	return false
 }
 
 func (c *ConcatFunc) Fixity() driverbottom.Fixity {
@@ -56,14 +62,14 @@ func (c *ConcatFunc) Fixity() driverbottom.Fixity {
 }
 
 func (c *ConcatFunc) Precedence() int {
-	panic("unimplemented")
+	return 5
 }
 
 func (c *ConcatFunc) ReduceExpr(me driverbottom.Token, before []driverbottom.Expr, after []driverbottom.Expr) (driverbottom.Expr, bool) {
 	if len(before) != 1 || len(after) != 1 {
 		panic("not handled")
 	}
-	return &ConcatExpr{tools: c.tools, lhs: before[0], rhs: after[0]}, true
+	return &ConcatExpr{Locatable: me, tools: c.tools, lhs: before[0], rhs: after[0]}, true
 }
 
 func MakeConcatFunc(tools *driverbottom.CoreTools) driverbottom.Function {

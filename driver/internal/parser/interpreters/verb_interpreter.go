@@ -20,12 +20,11 @@ func (si *verbCommandInterpreter) HaveTokens(scope driverbottom.Scope, tokens []
 		si.tools.Reporter.Reportf(0, "must have a command")
 		return NewIgnoreInnerScope()
 	}
+	var cmd any
 	verb, ok := toks[0].(driverbottom.Identifier)
-	if !ok {
-		si.tools.Reporter.Report(0, "first token must be an identifier")
-		return NewIgnoreInnerScope()
+	if ok {
+		cmd = si.tools.Recall.Find(si.forExtension, verb.Id())
 	}
-	cmd := si.tools.Recall.Find(si.forExtension, verb.Id())
 	if cmd == nil && assignTo != nil {
 		_, succeeded := si.tools.Parser.Parse(scope, toks)
 		if succeeded {

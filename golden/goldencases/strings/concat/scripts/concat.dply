@@ -1,0 +1,14 @@
+Test some simple concatenations
+
+	target simple_concats
+		"a" ++ "b" => conc
+		show conc
+		show ("c" ++ "d")
+		show ("a" ++ "b" ++ "c")
+
+	target concats_with_env
+		env "HELLO" => a
+		env "WORLD" => b
+
+		a ++ ", " ++ b => msg
+		show msg

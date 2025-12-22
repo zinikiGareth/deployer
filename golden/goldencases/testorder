@@ -40,3 +40,4 @@ resolve/separate
 namedinterpreter
 shells/bash/basic
 patterns
+strings/concat

@@ -130,6 +130,9 @@ func (ea *EnsureAction) Resolve(r driverbottom.Resolver) driverbottom.BindingReq
 		log.Printf("could not make %T a Blank", tmp)
 		return driverbottom.ERROR_OCCURRED
 	}
+	if ea.named != nil {
+		ea.named.Resolve(r)
+	}
 	for _, y := range ea.props {
 		y.Resolve(r)
 	}

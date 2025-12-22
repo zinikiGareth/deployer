@@ -1,0 +1,29 @@
+>Test some simple concatenations
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply comment.block
+>
+>	target simple_concats
+#^ source.deployer-dply
+# ^^^^^^ source.deployer-dply keyword.target
+#       ^^^^^^^^^^^^^^^^ source.deployer-dply
+>		"a" ++ "b" => conc
+#^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>		show conc
+#^^^^^^^^^^^^ source.deployer-dply
+>		show ("c" ++ "d")
+#^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>		show ("a" ++ "b" ++ "c")
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>
+>	target concats_with_env
+#^ source.deployer-dply
+# ^^^^^^ source.deployer-dply keyword.target
+#       ^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>		env "HELLO" => a
+#^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>		env "WORLD" => b
+#^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>
+>		a ++ ", " ++ b => msg
+#^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>		show msg
+#^^^^^^^^^^^ source.deployer-dply

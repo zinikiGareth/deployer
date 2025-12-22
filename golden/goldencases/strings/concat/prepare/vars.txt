@@ -1,0 +1,40 @@
+Step simple_concats-0:
+	conc:
+		@simple_concats-0[1]
+			ab
+		@simple_concats-0[2]
+			ab
+Step simple_concats-1:
+Step simple_concats-2:
+Step simple_concats-3:
+Step concats_with_env-0:
+	a:
+		@concats_with_env-0[1]
+			EnvModel {
+				_where_: concat.dply:10.5
+				from: HELLO
+			}
+		@concats_with_env-0[2]
+			EnvModel {
+				_where_: concat.dply:10.5
+				from: HELLO
+			}
+Step concats_with_env-1:
+	b:
+		@concats_with_env-1[1]
+			EnvModel {
+				_where_: concat.dply:11.5
+				from: WORLD
+			}
+		@concats_with_env-1[2]
+			EnvModel {
+				_where_: concat.dply:11.5
+				from: WORLD
+			}
+Step concats_with_env-2:
+	msg:
+		@concats_with_env-2[1]
+			hello, world
+		@concats_with_env-2[2]
+			hello, world
+Step concats_with_env-3:

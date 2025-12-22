@@ -1,0 +1,94 @@
+symbol a is bound to:
+VarHolder {
+	_where_: concat.dply:10.15
+	storeFor: a
+}
+symbol b is bound to:
+VarHolder {
+	_where_: concat.dply:11.15
+	storeFor: b
+}
+symbol conc is bound to:
+VarHolder {
+	_where_: concat.dply:4.14
+	storeFor: conc
+}
+symbol concats_with_env is bound to:
+target concats_with_env {
+	_where_: concat.dply:9.7
+	actions: [
+		AssignTo {
+			_where_: concat.dply:10.15
+			assignTo: a
+			EnvAction {
+				_where_: concat.dply:10.0
+				varname: HELLO
+			}
+		}
+		AssignTo {
+			_where_: concat.dply:11.15
+			assignTo: b
+			EnvAction {
+				_where_: concat.dply:11.0
+				varname: WORLD
+			}
+		}
+		AssignTo {
+			_where_: concat.dply:13.18
+			assignTo: msg
+			EvalAction {
+				_where_: concat.dply:13.2
+			}
+		}
+		ShowAction {
+			_where_: concat.dply:14.0
+			exprs: [
+				concat.dply:14.5 Var[msg]
+			]
+		}
+	]
+}
+symbol false is bound to:
+Number[0.000000] {
+	_where_: <no loc>
+}
+symbol msg is bound to:
+VarHolder {
+	_where_: concat.dply:13.18
+	storeFor: msg
+}
+symbol simple_concats is bound to:
+target simple_concats {
+	_where_: concat.dply:3.7
+	actions: [
+		AssignTo {
+			_where_: concat.dply:4.14
+			assignTo: conc
+			EvalAction {
+				_where_: concat.dply:4.4
+			}
+		}
+		ShowAction {
+			_where_: concat.dply:5.0
+			exprs: [
+				concat.dply:5.5 Var[conc]
+			]
+		}
+		ShowAction {
+			_where_: concat.dply:6.0
+			exprs: [
+				Concat[concat.dply:6.7 c,concat.dply:6.14 d]
+			]
+		}
+		ShowAction {
+			_where_: concat.dply:7.0
+			exprs: [
+				Concat[concat.dply:7.7 a,Concat[concat.dply:7.14 b,concat.dply:7.21 c]]
+			]
+		}
+	]
+}
+symbol true is bound to:
+Number[1.000000] {
+	_where_: <no loc>
+}
