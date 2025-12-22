@@ -27,3 +27,15 @@
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
 >		show (regex.replace entry "([a-z]+)\.([a-z]+)" "maybe \{2}-\{^^1}.")
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>
+>	target eval_replace
+#^ source.deployer-dply
+# ^^^^^^ source.deployer-dply keyword.target
+#       ^^^^^^^^^^^^^^ source.deployer-dply
+>
+>		env "INBOUND" => val
+#^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>		regex.replace val "([a-z]+)\.([a-z]+)" "\{^2}\{^1}" => sub
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.deployer-dply
+>		show sub
+#^^^^^^^^^^^ source.deployer-dply

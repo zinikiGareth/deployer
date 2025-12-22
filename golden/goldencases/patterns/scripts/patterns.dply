@@ -13,3 +13,9 @@ Read a string from the environment.  This is "hello.world"
 		env "INBOUND" => entry
 		show (regex.replace entry "([a-z]+)\.([a-z]+)" "\{^2}\{^1}")
 		show (regex.replace entry "([a-z]+)\.([a-z]+)" "maybe \{2}-\{^^1}.")
+
+	target eval_replace
+
+		env "INBOUND" => val
+		regex.replace val "([a-z]+)\.([a-z]+)" "\{^2}\{^1}" => sub
+		show sub

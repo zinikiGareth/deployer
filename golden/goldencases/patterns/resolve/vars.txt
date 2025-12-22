@@ -6,3 +6,8 @@ Step replace_string-0:
 	entry:
 Step replace_string-1:
 Step replace_string-2:
+Step eval_replace-0:
+	val:
+Step eval_replace-1:
+	sub:
+Step eval_replace-2:

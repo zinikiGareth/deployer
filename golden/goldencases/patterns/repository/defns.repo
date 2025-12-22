@@ -8,6 +8,33 @@ VarHolder {
 	_where_: patterns.dply:13.17
 	storeFor: entry
 }
+symbol eval_replace is bound to:
+target eval_replace {
+	_where_: patterns.dply:17.7
+	actions: [
+		AssignTo {
+			_where_: patterns.dply:19.17
+			assignTo: val
+			EnvAction {
+				_where_: patterns.dply:19.0
+				varname: INBOUND
+			}
+		}
+		AssignTo {
+			_where_: patterns.dply:20.55
+			assignTo: sub
+			EvalAction {
+				_where_: patterns.dply:20.0
+			}
+		}
+		ShowAction {
+			_where_: patterns.dply:21.0
+			exprs: [
+				patterns.dply:21.5 Var[sub]
+			]
+		}
+	]
+}
 symbol false is bound to:
 Number[0.000000] {
 	_where_: <no loc>
@@ -64,7 +91,17 @@ target replace_string {
 		}
 	]
 }
+symbol sub is bound to:
+VarHolder {
+	_where_: patterns.dply:20.55
+	storeFor: sub
+}
 symbol true is bound to:
 Number[1.000000] {
 	_where_: <no loc>
+}
+symbol val is bound to:
+VarHolder {
+	_where_: patterns.dply:19.17
+	storeFor: val
 }

@@ -16,3 +16,15 @@ Step replace_string-0:
 			}
 Step replace_string-1:
 Step replace_string-2:
+Step eval_replace-0:
+	val:
+		@eval_replace-0[1]
+			EnvModel {
+				_where_: patterns.dply:19.5
+				from: INBOUND
+			}
+Step eval_replace-1:
+	sub:
+		@eval_replace-1[1]
+			WorldHello
+Step eval_replace-2:

@@ -1,6 +1,8 @@
 package interpreters
 
-import "ziniki.org/deployer/driver/pkg/driverbottom"
+import (
+	"ziniki.org/deployer/driver/pkg/driverbottom"
+)
 
 type verbCommandInterpreter struct {
 	tools        *driverbottom.CoreTools
@@ -24,22 +26,27 @@ func (si *verbCommandInterpreter) HaveTokens(scope driverbottom.Scope, tokens []
 		return NewIgnoreInnerScope()
 	}
 	cmd := si.tools.Recall.Find(si.forExtension, verb.Id())
-	if cmd == nil {
-		si.tools.Reporter.Reportf(0, "there is no command %s", verb.Id())
-		return NewIgnoreInnerScope()
+	if cmd == nil && assignTo != nil {
+		_, succeeded := si.tools.Parser.Parse(scope, toks)
+		if succeeded {
+			cmd = si.tools.Recall.Find(si.forExtension, "eval")
+		}
 	}
-	action, ok := cmd.(driverbottom.VerbCommand)
-	if !ok {
+	if cmd != nil {
+		action, ok := cmd.(driverbottom.VerbCommand)
+		if !ok {
+			si.tools.Reporter.Reportf(0, "%s is not a command", verb.Id())
+			return NewIgnoreInnerScope()
+		}
+		a := si.attacher
+		if assignTo != nil {
+			a = WillAssignTo(si.tools, a, assignTo)
+		}
+		return action.Handle(a, scope, toks)
+	} else {
 		si.tools.Reporter.Reportf(0, "%s is not a command", verb.Id())
 		return NewIgnoreInnerScope()
 	}
-
-	a := si.attacher
-	if assignTo != nil {
-		a = WillAssignTo(si.tools, a, assignTo)
-		// a = &WithAssignTo{tools: si.tools, container: a, assignTo: assignTo}
-	}
-	return action.Handle(a, scope, toks)
 }
 
 func (b *verbCommandInterpreter) Completed() {

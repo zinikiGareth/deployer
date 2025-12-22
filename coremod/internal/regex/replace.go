@@ -128,7 +128,7 @@ func (s *StrReplace) ShortDescription() string {
 }
 
 func (s *StrReplace) String() string {
-	panic("unimplemented")
+	return s.ShortDescription()
 }
 
 type ReplaceFunc struct {

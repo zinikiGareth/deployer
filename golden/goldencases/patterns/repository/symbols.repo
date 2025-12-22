@@ -3,3 +3,6 @@ patterns.dply:
 7.17 {}:{match_string} entry
 11.7 {} replace_string
 13.17 {}:{replace_string} entry
+17.7 {} eval_replace
+19.17 {}:{eval_replace} val
+20.55 {}:{eval_replace} sub
