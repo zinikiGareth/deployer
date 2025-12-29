@@ -6,7 +6,11 @@ target ensureABucketExists {
 			_where_: bucket.dply:4.0
 			what: test.S3.Bucket
 			resolved: test.S3.Bucket[]
-			named: org.ziniki.launch_bucket
+			named:
+				String {
+					_where_: bucket.dply:4.23
+					"org.ziniki.launch_bucket"
+				}
 		}
 	]
 }

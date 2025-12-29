@@ -1,5 +1,4 @@
 Step bucketPolicy-0:
-	*bucketPolicy-0-0:
 	my_bucket:
 Step bucketPolicy-1:
 	attachable_policy:

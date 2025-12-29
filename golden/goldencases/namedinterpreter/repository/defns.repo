@@ -14,7 +14,11 @@ target usenamed {
 			_where_: usenamed.dply:16.0
 			what: test.DB.Table
 			resolved: test.S3.Bucket[]
-			named: a-table
+			named:
+				String {
+					_where_: usenamed.dply:16.22
+					"a-table"
+				}
 			additional properties:
 				Fields:
 					List {

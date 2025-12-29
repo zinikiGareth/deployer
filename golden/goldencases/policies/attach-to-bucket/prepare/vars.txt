@@ -1,5 +1,5 @@
 Step bucketPolicy-0:
-	*bucketPolicy-0-0:
+	*bucketPolicy-0-1:
 		@bucketPolicy-0[2]
 			bucket {
 				_where_: bucket-with-policy.dply:17.0

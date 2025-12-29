@@ -1,5 +1,5 @@
 Step copyFilesToBucket-0:
-	*copyFilesToBucket-0-0:
+	*copyFilesToBucket-0-1:
 	bucket:
 Step copyFilesToBucket-1:
 	root:

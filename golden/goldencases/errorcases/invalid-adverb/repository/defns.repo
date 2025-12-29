@@ -10,7 +10,11 @@ target invalid_adverb {
 			_where_: invalid-adverb.dply:6.0
 			what: test.S3.Bucket
 			not-resolved: test.S3.Bucket
-			named: hello
+			named:
+				String {
+					_where_: invalid-adverb.dply:6.23
+					"hello"
+				}
 		}
 	]
 }

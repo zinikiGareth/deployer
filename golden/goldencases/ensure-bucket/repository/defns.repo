@@ -6,7 +6,11 @@ target ensureABucketExists {
 			_where_: bucket.dply:4.0
 			what: test.S3.Bucket
 			resolved: test.S3.Bucket[]
-			named: org.ziniki.launch_bucket
+			named:
+				String {
+					_where_: bucket.dply:4.23
+					"org.ziniki.launch_bucket"
+				}
 		}
 	]
 }
@@ -22,7 +26,20 @@ target nameABucketFromExpr {
 			_where_: bucket.dply:8.0
 			what: test.S3.Bucket
 			resolved: test.S3.Bucket[]
-			named: org..bucket
+			named:
+				concat {
+					_where_: bucket.dply:8.30
+					lhs:
+						String {
+							_where_: bucket.dply:8.24
+							"org."
+						}
+					rhs:
+						String {
+							_where_: bucket.dply:8.34
+							".bucket"
+						}
+				}
 		}
 	]
 }

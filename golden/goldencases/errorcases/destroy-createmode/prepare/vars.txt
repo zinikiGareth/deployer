@@ -1,8 +1,2 @@
 Step destroy_something-0:
 	*destroy_something-0-0:
-		@destroy_something-0[2]
-			bucket {
-				_where_: destroy.dply:10.0
-				name: hello
-				policy: <nil>
-			}

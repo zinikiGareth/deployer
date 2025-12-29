@@ -14,7 +14,11 @@ target copyFilesToBucket {
 				_where_: copy.dply:5.0
 				what: test.S3.Bucket
 				resolved: test.S3.Bucket[]
-				named: org.ziniki.launch_bucket
+				named:
+					String {
+						_where_: copy.dply:5.23
+						"org.ziniki.launch_bucket"
+					}
 			}
 		}
 		AssignTo {

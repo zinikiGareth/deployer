@@ -6,7 +6,11 @@ target destroy_something {
 			_where_: destroy.dply:10.0
 			what: test.S3.Bucket
 			resolved: test.S3.Bucket[]
-			named: hello
+			named:
+				String {
+					_where_: destroy.dply:10.23
+					"hello"
+				}
 		}
 	]
 }

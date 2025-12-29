@@ -10,7 +10,11 @@ target shouldHaveAType {
 			_where_: invalidchar.dply:4.0
 			what: test.S3.Bucket
 			not-resolved: test.S3.Bucket
-			named: fred
+			named:
+				String {
+					_where_: invalidchar.dply:4.23
+					"fred"
+				}
 		}
 	]
 }

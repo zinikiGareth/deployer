@@ -1,2 +1,1 @@
 Step destroy_something-0:
-	*destroy_something-0-0:

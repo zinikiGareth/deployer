@@ -14,7 +14,11 @@ target bucketPolicy {
 				_where_: bucket-with-policy.dply:17.0
 				what: test.S3.Bucket
 				resolved: test.S3.Bucket[]
-				named: hello
+				named:
+					String {
+						_where_: bucket-with-policy.dply:17.23
+						"hello"
+					}
 			}
 		}
 		AssignTo {

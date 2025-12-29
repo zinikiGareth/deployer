@@ -14,7 +14,11 @@ type ConcatExpr struct {
 }
 
 func (c *ConcatExpr) DumpTo(to driverbottom.IndentWriter) {
-	panic("unimplemented")
+	to.Intro("concat")
+	to.AttrsWhere(c)
+	to.NestedAttr("lhs", c.lhs)
+	to.NestedAttr("rhs", c.rhs)
+	to.EndAttrs()
 }
 
 func (c *ConcatExpr) Eval(s driverbottom.RuntimeStorage) any {
