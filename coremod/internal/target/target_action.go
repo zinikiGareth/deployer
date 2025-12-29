@@ -85,6 +85,9 @@ func (t *CoreTarget) Resolve(r driverbottom.Resolver) driverbottom.BindingRequir
 
 func (t *CoreTarget) DetermineInitialState() {
 	for k, a := range t.actions {
+		if t.tools.Reporter.HasErrors() {
+			return
+		}
 		t.tools.Storage.SetStepName(fmt.Sprintf("%s-%d", t.name, k))
 		fnd, ok := a.(corebottom.Findable)
 		if ok {
@@ -99,6 +102,9 @@ func (t *CoreTarget) DetermineDesiredState() {
 		return
 	}
 	for k, a := range t.actions {
+		if t.tools.Reporter.HasErrors() {
+			return
+		}
 		t.tools.Storage.SetStepName(fmt.Sprintf("%s-%d", t.name, k))
 		// log.Printf("%p: a is of type %T %p\n", t, a, a)
 		mb, ok := a.(corebottom.ModelBuilder)

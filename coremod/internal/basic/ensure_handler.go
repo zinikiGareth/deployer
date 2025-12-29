@@ -24,19 +24,13 @@ func (ech *EnsureCommandHandler) Handle(parent driverbottom.AttachResult, scope 
 		return drivertop.NewIgnoreInnerScope()
 	}
 
-	var name driverbottom.String
+	var name driverbottom.Expr
 	if len(tokens) > 2 {
-		expr, ok := ech.tools.Parser.Parse(scope, tokens[2:])
+		name, ok = ech.tools.Parser.Parse(scope, tokens[2:])
 		if !ok {
 			ech.tools.Reporter.Report(tokens[2].Loc().Offset, "ensure: <class-identifier> [instance-name]")
 			return drivertop.NewIgnoreInnerScope()
 		}
-		str, ok := ech.tools.Storage.EvalAsStringer(expr)
-		if !ok {
-			ech.tools.Reporter.Report(tokens[2].Loc().Offset, "ensure: <class-identifier> [instance-name]")
-			return drivertop.NewIgnoreInnerScope()
-		}
-		name = drivertop.MakeString(tokens[2].Loc(), str.String())
 	}
 
 	ea := &EnsureAction{tools: ech.tools, scope: scope, loc: tokens[0].Loc(), what: clz, named: name, props: make(map[driverbottom.Identifier]driverbottom.Expr)}

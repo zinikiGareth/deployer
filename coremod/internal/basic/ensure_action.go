@@ -20,7 +20,7 @@ type EnsureAction struct {
 	loc         *errorsink.Location
 	what        driverbottom.Identifier
 	resolved    corebottom.Blank
-	named       driverbottom.String
+	named       driverbottom.Expr
 	teardown    corebottom.TearDown
 	markDestroy driverbottom.Adverb
 	// TODO: this really isn't a map here, because what we want is to index by string name
@@ -48,7 +48,7 @@ func (ea *EnsureAction) DumpTo(w driverbottom.IndentWriter) {
 		w.TextAttr("resolved", ea.resolved.ShortDescription())
 	}
 	if ea.named != nil {
-		w.TextAttr("named", ea.named.Text())
+		w.NestedAttr("named", ea.named)
 	}
 	if len(ea.props) > 0 {
 		w.IndPrintf("additional properties:\n")
@@ -69,7 +69,7 @@ func (ea *EnsureAction) DumpTo(w driverbottom.IndentWriter) {
 }
 
 func (ea *EnsureAction) ShortDescription() string {
-	return fmt.Sprintf("Ensure[%s: %s]", ea.what.Id(), ea.named.Text())
+	return fmt.Sprintf("Ensure[%s: %s]", ea.what.Id(), ea.named.ShortDescription())
 }
 
 func (ea *EnsureAction) AddProperty(name driverbottom.Identifier, value driverbottom.Expr) {
@@ -130,22 +130,39 @@ func (ea *EnsureAction) Resolve(r driverbottom.Resolver) driverbottom.BindingReq
 		log.Printf("could not make %T a Blank", tmp)
 		return driverbottom.ERROR_OCCURRED
 	}
-	if ea.named != nil {
-		ea.named.Resolve(r)
-	}
+	ea.named.Resolve(r)
 	for _, y := range ea.props {
 		y.Resolve(r)
 	}
 	ea.resolved = res
-	ea.ens = ea.resolved.Mint(ea.tools, ea.Loc(), corebottom.CoinId(ea.tools.Storage.NewObjId(ea.named.Loc())), ea.named.Text(), ea.props, ea.teardown)
 	return driverbottom.MAY_BE_BOUND
 }
 
 func (ea *EnsureAction) CoinId() corebottom.CoinId {
+	if !ea.makeMint() {
+		panic("could not make coin")
+	}
 	return ea.ens.CoinId()
 }
 
+func (ea *EnsureAction) makeMint() bool {
+	if ea.ens != nil {
+		return true
+	}
+	str, ok := ea.tools.Storage.EvalAsStringer(ea.named)
+	if !ok {
+		ea.tools.Reporter.ReportAtf(ea.named.Loc(), "ensure: <class-identifier> [instance-name]")
+		return false
+	}
+	name := str.String()
+	ea.ens = ea.resolved.Mint(ea.tools, ea.Loc(), corebottom.CoinId(ea.tools.Storage.NewObjId(ea.named.Loc())), name, ea.props, ea.teardown)
+	return true
+}
+
 func (ea *EnsureAction) DetermineInitialState(pres corebottom.ValuePresenter) {
+	if !ea.makeMint() {
+		pres.NotFound()
+	}
 	ea.ens.DetermineInitialState(pres)
 	if ea.markDestroy != nil {
 		pres.WantDestruction(ea.markDestroy.Loc())
@@ -153,6 +170,9 @@ func (ea *EnsureAction) DetermineInitialState(pres corebottom.ValuePresenter) {
 }
 
 func (ea *EnsureAction) DetermineDesiredState(pres corebottom.ValuePresenter) {
+	if !ea.makeMint() {
+		pres.NotFound()
+	}
 	ea.ens.DetermineDesiredState(pres)
 }
 

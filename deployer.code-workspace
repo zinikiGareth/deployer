@@ -146,6 +146,8 @@
 				"env": {
 					"AWS_PROFILE": "ziniki-admin",
 					"AWS_ENDPOINT": "https://localhost.localstack.cloud:4566/",
+					"ENVIRON": "gareth.dev",
+					//"ENVIRON": "staging",
 				}
 			}
 		],
