@@ -2,3 +2,4 @@
 
 (cd driver/cmd/deployer ; go build -gcflags=all="-N -l")
 (cd golden/cmd/golden ; go build -gcflags=all="-N -l")
+(cd ../deployer-module-aws/cmd/awsdep ; go build -gcflags=all="-N -l")
