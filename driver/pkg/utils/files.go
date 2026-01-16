@@ -127,3 +127,14 @@ func CompareFiles(left, right string) bool {
 
 	return true
 }
+
+func MakeAbs(path string) (string, error) {
+	if !filepath.IsAbs(path) {
+		cwd, err := os.Getwd()
+		if err != nil {
+			return "", err
+		}
+		path = filepath.Join(cwd, path)
+	}
+	return path, nil
+}

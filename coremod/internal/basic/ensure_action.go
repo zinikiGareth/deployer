@@ -2,7 +2,6 @@ package basic
 
 import (
 	"fmt"
-	"log"
 	"slices"
 
 	"ziniki.org/deployer/coremod/pkg/corebottom"
@@ -127,7 +126,6 @@ func (ea *EnsureAction) Resolve(r driverbottom.Resolver) driverbottom.BindingReq
 	tmp := r.Resolve(ea.scope, ea.what)
 	res, ok := tmp.(corebottom.Blank)
 	if !ok {
-		log.Printf("could not make %T a Blank", tmp)
 		return driverbottom.ERROR_OCCURRED
 	}
 	ea.named.Resolve(r)

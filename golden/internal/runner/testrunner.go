@@ -94,11 +94,10 @@ func (r *TestRunner) Setup(modules []string) error {
 	}
 	tools.Register.ProvideDriver("testhelpers.TestStepLogger", tsl)
 
-	cwd, err := os.Getwd()
+	goldenDir, err := utils.MakeAbs(r.base)
 	if err != nil {
 		return err
 	}
-	goldenDir := filepath.Join(cwd, r.base)
 	os.Setenv("GOLDEN_TEST_DIR", goldenDir)
 	ts, err := testing.NewTestStorer(tools, filepath.Join(r.resolveOut, "vars.txt"), filepath.Join(r.findOut, "vars.txt"), filepath.Join(r.prepOut, "vars.txt"), filepath.Join(r.execOut, "vars.txt"))
 	if err != nil {
