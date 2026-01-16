@@ -82,6 +82,7 @@ func RegisterWithDriver(driver driverbottom.Driver) error {
 	tools.Register.Register("function-defn", "hours", time.MakeHoursFunc(tools))
 	tools.Register.Register("function-defn", "regex.match", regex.MakeMatchFunc(tools))
 	tools.Register.Register("function-defn", "regex.replace", regex.MakeReplaceFunc(tools))
+	tools.Register.Register("function-defn", "files.project_dir", files.MakeProjectDirFunc(tools))
 
 	return nil
 }
