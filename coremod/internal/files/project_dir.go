@@ -1,6 +1,7 @@
 package files
 
 import (
+	"fmt"
 	"path/filepath"
 
 	"ziniki.org/deployer/coremod/pkg/corebottom"
@@ -22,12 +23,13 @@ func (t *ProjectDir) Eval(s driverbottom.RuntimeStorage) any {
 }
 
 func (t *ProjectDir) ShortDescription() string {
-	return "ProjectDir[]"
+	return fmt.Sprintf("ProjectDir[%s]", t.absprojdir)
 }
 
 func (t *ProjectDir) DumpTo(iw driverbottom.IndentWriter) {
 	iw.Intro("ProjectDir")
 	iw.AttrsWhere(t)
+	iw.TextAttr("absdir", t.absprojdir)
 	iw.EndAttrs()
 }
 

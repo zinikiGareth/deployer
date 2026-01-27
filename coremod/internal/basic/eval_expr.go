@@ -22,7 +22,9 @@ func (e *EvalModel) DetermineInitialState(pres corebottom.ValuePresenter) {
 }
 
 func (e *EvalModel) DetermineDesiredState(pres corebottom.ValuePresenter) {
-	pres.Present(e.expr.Eval(e.tools.Storage))
+	val := e.expr.Eval(e.tools.Storage)
+	e.tools.Storage.IgnoreDuplicate(val)
+	pres.Present(val)
 }
 
 func (e *EvalModel) DumpTo(to driverbottom.IndentWriter) {
