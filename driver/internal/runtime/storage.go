@@ -44,7 +44,7 @@ func (s *Storage) Bind(v driverbottom.Holder, value any) {
 	desc, ok := value.(driverbottom.Describable)
 	if ok {
 		if s.unique[desc] == true {
-			panic("duplicate")
+			panic("duplicate entry for: " + desc.ShortDescription())
 		}
 		s.unique[desc] = true
 	}

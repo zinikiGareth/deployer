@@ -149,6 +149,30 @@
 					"ENVIRON": "gareth.dev",
 					//"ENVIRON": "staging",
 				}
+			},
+			{
+				"name": "awsdep stories",
+				"type": "go",
+				"request": "launch",
+				"program": "${workspaceFolder:AWS}/cmd/awsdep",
+				"cwd": "${workspaceFolder:Driver}/../../../../Projects/SerStories",
+				"args": [
+					"-d",
+					"deployment",
+					"-m",
+					"../..//Ziniki/Over/deployer-module-dreamhost/plugin/deployer_module_dreamhost.so",
+					"-e", "ampleforth",
+					"--teardown",
+					"serialized_stories"
+				],
+				"env": {
+					"AWS_PROFILE": "ziniki-admin",
+					//"AWS_ENDPOINT": "https://localhost.localstack.cloud:4566/",
+					//"USE_LOCALSTACK": "true",
+
+					// "ENVIRON": "gareth.dev",
+					//"ENVIRON": "staging",
+				}
 			}
 		],
 		"compounds": []
