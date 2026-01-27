@@ -61,7 +61,10 @@ func (da *coreAction) ShouldDestroy() bool {
 }
 
 func (da *coreAction) TearDown() {
-	panic("unimplemented")
+	urs, ok := da.strat.(corestrats.RealityUpdaterStrategy)
+	if ok {
+		urs.TearDown(da.tools)
+	}
 }
 
 func NewCoreAction(tools *corebottom.Tools, loc *errorsink.Location, label string, strat corestrats.CoreActionStrategy) corebottom.ModelBuilder {

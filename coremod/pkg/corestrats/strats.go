@@ -29,6 +29,7 @@ type StatefulActionStrategy interface {
 type RealityUpdaterStrategy interface {
 	CoreActionStrategy
 	UpdateReality(tools *corebottom.Tools)
+	TearDown(tools *corebottom.Tools)
 }
 
 type CreationStrategy interface {

@@ -62,4 +62,8 @@ func (b *bashAction) UpdateReality(tools *corebottom.Tools) {
 	log.Printf("%s ran successfully\n", pourer.Path)
 }
 
+func (b *bashAction) TearDown(tools *corebottom.Tools) {
+	panic("not implemented")
+}
+
 var _ corestrats.RealityUpdaterStrategy = &bashAction{}
